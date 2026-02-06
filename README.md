@@ -1,73 +1,92 @@
-# React + TypeScript + Vite
+# DH Tutorial Lab
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive web-based tutorial environment for introduction to digital humanities. Features personalized learning pathways, in-browser Python code execution, note-taking, and Obsidian export.
 
-Currently, two official plugins are available:
+All data stays on your device. No accounts, no tracking, no servers.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites
 
-## React Compiler
+- [Node.js](https://nodejs.org/) 18+
+- npm (included with Node.js)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Local Development
 
-## Expanding the ESLint configuration
+```bash
+# Install dependencies
+npm install
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Start the dev server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The app will be available at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Running Tests
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Run all tests once
+npm test
+
+# Run tests in watch mode
+npm run test:watch
 ```
+
+## Building for Production
+
+```bash
+npm run build
+```
+
+Output goes to the `dist/` directory.
+
+## Deploying
+
+The build output is a static site (HTML + JS + CSS). No backend server is needed.
+
+### GitHub Pages
+
+1. Build the project: `npm run build`
+2. Push the `dist/` folder to a `gh-pages` branch, or use a GitHub Action to automate it.
+
+### Netlify / Vercel / Cloudflare Pages
+
+1. Connect your repository.
+2. Set the build command to `npm run build`.
+3. Set the publish directory to `dist`.
+4. Deploy.
+
+### Self-hosting
+
+Serve the `dist/` directory with any static file server:
+
+```bash
+# Using the built-in preview server
+npm run preview
+
+# Or with any static server, e.g. Python
+cd dist && python3 -m http.server 8080
+```
+
+For SPA routing to work, configure your server to fall back to `index.html` for all routes. Example nginx config:
+
+```nginx
+server {
+    listen 80;
+    root /path/to/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+```
+
+## Tech Stack
+
+- React 19, TypeScript, Vite
+- Tailwind CSS v4
+- Zustand (state management, persisted to localStorage)
+- React Router v7
+- react-markdown + remark-gfm
+- JSZip (Obsidian export)
+- Vitest + React Testing Library
