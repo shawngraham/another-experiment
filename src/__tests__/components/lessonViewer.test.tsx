@@ -4,6 +4,14 @@ import { LessonViewer } from '../../components/lesson/LessonViewer.tsx';
 import { LessonContent } from '../../components/lesson/LessonContent.tsx';
 import { useProgressStore } from '../../stores/progressStore.ts';
 
+// Mock runtime hooks so LessonViewer -> CodeSandbox doesn't load CDN scripts
+vi.mock('../../hooks/usePyodide.ts', () => ({
+  usePyodide: () => ({ status: 'ready', loadError: null, runPython: vi.fn().mockResolvedValue({ stdout: '', stderr: '', error: null }) }),
+}));
+vi.mock('../../hooks/useWebR.ts', () => ({
+  useWebR: () => ({ status: 'ready', loadError: null, runR: vi.fn().mockResolvedValue({ stdout: '', stderr: '', error: null }) }),
+}));
+
 const renderWithRouter = (ui: React.ReactElement, { route = '/' } = {}) => {
   return render(<MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>);
 };

@@ -3,6 +3,17 @@ import { CodeSandbox } from '../../components/sandbox/CodeSandbox.tsx';
 import { useProgressStore } from '../../stores/progressStore.ts';
 import type { ChallengeDefinition } from '../../types/index.ts';
 
+// Mock the runtime hooks so tests don't try to load Pyodide/WebR from CDN
+const mockRunPython = vi.fn().mockResolvedValue({ stdout: '', stderr: '', error: null });
+const mockRunR = vi.fn().mockResolvedValue({ stdout: '', stderr: '', error: null });
+
+vi.mock('../../hooks/usePyodide.ts', () => ({
+  usePyodide: () => ({ status: 'ready', loadError: null, runPython: mockRunPython }),
+}));
+vi.mock('../../hooks/useWebR.ts', () => ({
+  useWebR: () => ({ status: 'ready', loadError: null, runR: mockRunR }),
+}));
+
 const mockChallenges: ChallengeDefinition[] = [
   {
     id: 'test-c1',
@@ -29,6 +40,8 @@ const mockChallenges: ChallengeDefinition[] = [
 describe('CodeSandbox', () => {
   beforeEach(() => {
     useProgressStore.getState().resetProgress();
+    mockRunPython.mockReset().mockResolvedValue({ stdout: '', stderr: '', error: null });
+    mockRunR.mockReset().mockResolvedValue({ stdout: '', stderr: '', error: null });
   });
 
   it('renders challenge title', () => {
@@ -91,10 +104,18 @@ describe('CodeSandbox', () => {
     expect(editor).toHaveValue('print("world")');
   });
 
-  it('runs code and shows output', async () => {
+  it('runs code via Pyodide and shows output', async () => {
+    mockRunPython.mockResolvedValue({ stdout: 'hello', stderr: '', error: null });
     render(<CodeSandbox challenges={mockChallenges} lessonId="test-lesson" />);
     fireEvent.click(screen.getByText('Run Code'));
-    // Without Pyodide, should show fallback message
-    expect(await screen.findByText(/Code submitted/)).toBeInTheDocument();
+    expect(await screen.findByText('hello')).toBeInTheDocument();
+    expect(mockRunPython).toHaveBeenCalledWith('print("hello")');
+  });
+
+  it('shows error output from Pyodide', async () => {
+    mockRunPython.mockResolvedValue({ stdout: '', stderr: '', error: 'NameError: x is not defined' });
+    render(<CodeSandbox challenges={mockChallenges} lessonId="test-lesson" />);
+    fireEvent.click(screen.getByText('Run Code'));
+    expect(await screen.findByText(/NameError/)).toBeInTheDocument();
   });
 });
