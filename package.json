@@ -9,7 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "compile-lessons": "node scripts/compile-lessons.mjs",
+    "compile-lessons:write": "node scripts/compile-lessons.mjs --write",
+    "compile-lessons:validate": "node scripts/compile-lessons.mjs --validate"
   },
   "dependencies": {
     "dexie": "^4.3.0",
