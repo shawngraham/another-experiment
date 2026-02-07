@@ -88,6 +88,85 @@ interface ChallengeDefinition {
 
 ## Adding a New Lesson
 
+You can write lessons in markdown files and use a script to convert them, or you can manually add lessons to the `lessons.ts` file.
+
+### Using the script
+
+`scripts/compile-lessons.mjs` — The compiler utility
+
+A zero-dependency Node.js script that:
+
++ Reads `.md` files from `lessons-in-development/`
++ Parses YAML frontmatter for lesson metadata (id, title, moduleId, prerequisites, difficulty, etc.)
++ Extracts the markdown body as the lesson content field
++ Parses a `---challenges---` section for structured challenges (starter code, expected output, hints, solution)
++ Validates all required fields, difficulty values, and language types
++ Detects duplicate IDs (both within new files and against existing lessons.ts)
++ Generates correctly escaped TypeScript matching the existing code style
+
+Three modes:
+|Command|	What it does|
+|---|---|
+|`npm run compile-lessons`|	Preview generated TypeScript (dry run)|
+|`npm run compile-lessons:write`|	Append directly to src/data/lessons.ts|
+|`npm run compile-lessons:validate`|	Validate files only, no output|
+
+There's also `--out <file>` to write to a separate file for review.
+
+`lessons-in-development/_template.md` — Format reference
+
+A complete template showing the expected markdown structure for authoring new lessons.
+
+`lessons-in-development/text-analysis-05.md` — Sample lesson
+
+A realistic NLP/NLTK lesson with two challenges, demonstrating the format in practice.
+Markdown format at a glance
+
+```markdown
+---
+id: text-analysis-05
+title: Basic NLP with NLTK
+moduleId: text-analysis-fundamentals
+prerequisites:
+  - text-analysis-04
+estimatedTimeMinutes: 40
+difficulty: intermediate
+learningObjectives:
+  - Tokenize text using NLTK
+keywords:
+  - nltk
+---
+
+# Lesson content in markdown here...
+
+---challenges---
+
+### Challenge: Tokenize a sentence
+- id: text-analysis-05-c1
+- language: python
+- difficulty: intermediate
+
+#### Starter Code
+```python
+# code here
+
+Expected Output
+
+`expected output`
+
+Hints
+
+    First hint
+    Second hint
+
+Solution
+
+# solution here
+
+```
+
+### Manually
+
 ### Step 1: Define the lesson in `lessons.ts`
 
 Add a new object to the `lessons` array. Full example:
