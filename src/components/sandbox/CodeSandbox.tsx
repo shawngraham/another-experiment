@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
 import type { ChallengeDefinition } from '../../types/index.ts';
 import { useProgressStore } from '../../stores/progressStore.ts';
+import { usePyodide } from '../../hooks/usePyodide.ts';
+import { useWebR } from '../../hooks/useWebR.ts';
 
 interface CodeSandboxProps {
   challenges: ChallengeDefinition[];
@@ -16,6 +18,13 @@ export function CodeSandbox({ challenges, lessonId }: CodeSandboxProps) {
   const { updateChallengeProgress, addCodeSnapshot } = useProgressStore();
 
   const challenge = challenges[activeChallenge];
+  const isPython = challenge.language === 'python';
+
+  const { status: pyStatus, loadError: pyError, runPython } = usePyodide();
+  const { status: rStatus, loadError: rError, runR } = useWebR();
+
+  const runtimeStatus = isPython ? pyStatus : rStatus;
+  const runtimeError = isPython ? pyError : rError;
 
   const handleChallengeChange = (index: number) => {
     setActiveChallenge(index);
@@ -25,26 +34,28 @@ export function CodeSandbox({ challenges, lessonId }: CodeSandboxProps) {
   };
 
   const runCode = useCallback(async () => {
+    if (runtimeStatus !== 'ready') return;
     setIsRunning(true);
     setOutput('');
 
     try {
-      // Check if Pyodide is available
-      const pyodide = (window as unknown as Record<string, unknown>).pyodide;
-      if (pyodide && typeof (pyodide as { runPythonAsync: (code: string) => Promise<unknown> }).runPythonAsync === 'function') {
-        const result = await (pyodide as { runPythonAsync: (code: string) => Promise<unknown> }).runPythonAsync(code);
-        setOutput(String(result ?? ''));
-      } else {
-        // Simulated execution for when Pyodide isn't loaded
-        setOutput('[Pyodide not loaded] Code submitted:\n' + code);
+      const result = isPython ? await runPython(code) : await runR(code);
+
+      let combined = result.stdout;
+      if (result.stderr) {
+        combined += (combined ? '\n' : '') + result.stderr;
       }
+      if (result.error) {
+        combined += (combined ? '\n' : '') + 'Error: ' + result.error;
+      }
+      setOutput(combined || '(no output)');
     } catch (err) {
       setOutput(`Error: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setIsRunning(false);
       addCodeSnapshot(lessonId, code, challenge.language);
     }
-  }, [code, challenge, lessonId, addCodeSnapshot]);
+  }, [code, challenge, lessonId, addCodeSnapshot, isPython, runPython, runR, runtimeStatus]);
 
   const checkSolution = useCallback(() => {
     const isCorrect = output.trim() === challenge.expectedOutput.trim();
@@ -73,8 +84,31 @@ export function CodeSandbox({ challenges, lessonId }: CodeSandboxProps) {
     setHintsShown(0);
   };
 
+  const statusLabel =
+    runtimeStatus === 'loading'
+      ? `Loading ${isPython ? 'Python (Pyodide)' : 'R (WebR)'}...`
+      : runtimeStatus === 'error'
+      ? `Failed to load: ${runtimeError}`
+      : null;
+
   return (
     <div className="flex flex-col h-full">
+      {/* Runtime loading banner */}
+      {statusLabel && (
+        <div
+          className={`px-3 py-2 text-xs ${
+            runtimeStatus === 'error'
+              ? 'bg-red-100 text-red-800'
+              : 'bg-amber-50 text-amber-800'
+          }`}
+        >
+          {runtimeStatus === 'loading' && (
+            <span className="inline-block w-3 h-3 mr-2 border-2 border-amber-600 border-t-transparent rounded-full animate-spin align-middle" />
+          )}
+          {statusLabel}
+        </div>
+      )}
+
       {challenges.length > 1 && (
         <div className="flex gap-1 p-2 bg-gray-100 border-b border-gray-200">
           {challenges.map((c, i) => (
@@ -114,10 +148,10 @@ export function CodeSandbox({ challenges, lessonId }: CodeSandboxProps) {
         <div className="flex items-center gap-2 p-2 bg-gray-100 border-y border-gray-200">
           <button
             onClick={runCode}
-            disabled={isRunning}
+            disabled={isRunning || runtimeStatus !== 'ready'}
             className="bg-green-600 text-white px-4 py-1.5 rounded text-sm hover:bg-green-700 disabled:opacity-50 transition-colors"
           >
-            {isRunning ? 'Running...' : 'Run Code'}
+            {isRunning ? 'Running...' : runtimeStatus === 'loading' ? 'Loading...' : 'Run Code'}
           </button>
           <button
             onClick={checkSolution}
