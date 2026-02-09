@@ -671,6 +671,130 @@ Try calculating the "Vocabulary Diversity" of a sentence by putting its cleaned 
     ],
   },
   {
+    id: 'text-analysis-05',
+    title: 'Basic NLP with NLTK',
+    moduleId: 'text-analysis-fundamentals',
+    prerequisites: ['text-analysis-04'],
+    estimatedTimeMinutes: 40,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Understand the difference between simple strings and linguistic tokens',
+      'Use NLTK to perform Part-of-Speech (POS) tagging',
+      'Filter texts for specific grammatical categories (e.g., all adjectives)',
+    ],
+    keywords: ['nltk', 'tokenization', 'pos-tagging', 'nlp', 'linguistics'],
+    content: `# Natural Language Processing (NLP)
+
+## Moving Beyond Strings
+While \`.split()\` and \`.lower()\` are useful, they don't "understand" language. **NLP** treats text as a linguistic structure.
+
+### Tokenization
+The NLTK (\`Natural Language Toolkit\`) tokenizer is smarter than \`.split()\`. It knows that "don't" is actually two words ("do" and "n't") and that a period at the end of a sentence shouldn't be attached to the last word.
+
+\`\`\`python
+import nltk
+from nltk.tokenize import word_tokenize
+
+text = "Mary Shelley wrote Frankenstein."
+tokens = word_tokenize(text)
+# Result: ['Mary', 'Shelley', 'wrote', 'Frankenstein', '.']
+\`\`\`
+
+### Part-of-Speech (POS) Tagging
+POS tagging identifies if a word is a Noun, Verb, Adjective, etc. This is incredibly useful for analyzing *how* an author writes (e.g., "Does this poet use more adjectives than that poet?").
+
+\`\`\`python
+tagged = nltk.pos_tag(tokens)
+# Result: [('Mary', 'NNP'), ('wrote', 'VBD')]
+# NNP = Proper Noun, VBD = Verb Past Tense
+\`\`\`
+`,
+    challenges: [
+      {
+        id: 'text-analysis-05-c1',
+        title: 'Tokenize a sentence',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import nltk\nnltk.download('punkt_tab', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Mary Shelley wrote Frankenstein in 1818."\n\n# Goal: Use word_tokenize and print the list of tokens\n`,
+        expectedOutput: "['Mary', 'Shelley', 'wrote', 'Frankenstein', 'in', '1818', '.']",
+        hints: [
+          'Import word_tokenize from nltk.tokenize.',
+          'Call word_tokenize(text) and print the result.',
+        ],
+        solution: `import nltk\nnltk.download('punkt_tab', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Mary Shelley wrote Frankenstein in 1818."\nprint(word_tokenize(text))\n`,
+      },
+      {
+        id: 'text-analysis-05-c2',
+        title: 'Extract proper nouns',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import nltk\nnltk.download('punkt_tab', quiet=True)\nnltk.download('averaged_perceptron_tagger_eng', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Jane Austen published Pride and Prejudice in 1813."\ntokens = word_tokenize(text)\n\n# 1. Use nltk.pos_tag(tokens) to get tags\n# 2. Filter for tags that are 'NNP'\n# 3. Print the list of words\n`,
+        expectedOutput: "['Jane', 'Austen', 'Pride', 'Prejudice']",
+        hints: [
+          'pos_tag returns a list of tuples: (word, tag).',
+          'Use a list comprehension: [word for word, tag in tagged if tag == "NNP"].',
+        ],
+        solution: `import nltk\nnltk.download('punkt_tab', quiet=True)\nnltk.download('averaged_perceptron_tagger_eng', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Jane Austen published Pride and Prejudice in 1813."\ntokens = word_tokenize(text)\ntagged = nltk.pos_tag(tokens)\nproper_nouns = [word for word, tag in tagged if tag == 'NNP']\nprint(proper_nouns)\n`,
+      },
+    ],
+  },
+  {
+    id: 'text-analysis-06',
+    title: 'Sentiment Analysis',
+    moduleId: 'text-analysis-fundamentals',
+    prerequisites: ['text-analysis-05'],
+    estimatedTimeMinutes: 35,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Understand rule-based sentiment scoring',
+      'Use a lexicon to calculate "polarity"',
+      'Analyze emotional shifts across a text sequence',
+    ],
+    keywords: ['sentiment', 'polarity', 'lexicon', 'emotion'],
+    content: `# Sentiment Analysis
+
+## Listening for Tone
+Sentiment analysis is the computational study of opinions, sentiments, and emotions in text. In DH, we use it to track the emotional "arc" of a novel or the public mood in historical newspapers.
+
+### Lexicon-Based Approach
+The simplest way to do this is using a **lexicon** (a dictionary of words labeled with scores).
+- "Excellent": +1.0
+- "Terrible": -1.0
+- "Okay": 0.0
+
+### Sentiment Polarity
+Polarity refers to how positive or negative a text is.
+
+\`\`\`python
+# A toy example of rule-based sentiment
+lexicon = {"love": 1, "joy": 1, "hate": -1, "sad": -1}
+text = "i love the joy but hate the sad"
+
+score = 0
+for word in text.split():
+    score += lexicon.get(word, 0)
+
+print(f"Total Sentiment: {score}") # Output: 0
+\`\`\`
+
+::: tip
+Real-world tools like **VADER** or **TextBlob** handle complexities like "not happy" (negation) or "VERY HAPPY" (intensity).
+:::
+`,
+    challenges: [
+      {
+        id: 'text-analysis-06-c1',
+        title: 'Calculate sentiment score',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `lexicon = {"dark": -1, "stormy": -1, "bright": 1, "hope": 1}\ntext = "it was a dark and stormy night but i had hope"\n\n# 1. Split the text into words\n# 2. Sum the scores based on the lexicon\n# 3. Print the final score\n`,
+        expectedOutput: '-1',
+        hints: ['Use a loop or a list comprehension.', 'The .get() method on a dictionary is useful for avoiding errors with words not in the lexicon.'],
+        solution: `lexicon = {"dark": -1, "stormy": -1, "bright": 1, "hope": 1}\ntext = "it was a dark and stormy night but i had hope"\nscore = sum(lexicon.get(word, 0) for word in text.split())\nprint(score)`,
+      },
+    ],
+  },
+  {
     id: 'structured-data-01',
     title: 'Introduction to CSV and Tabular Data',
     moduleId: 'structured-data',
@@ -865,6 +989,56 @@ print(summary)
         expectedOutput: '2',
         hints: ['Use a dictionary to keep track of counts as you loop through the list.'],
         solution: `books = [('Gothic', 'A'), ('Gothic', 'B'), ('Romance', 'C')]\ncounts = {}\nfor genre, _ in books:\n    counts[genre] = counts.get(genre, 0) + 1\nprint(counts['Gothic'])`,
+      },
+    ],
+  },
+  {
+    id: 'structured-data-05',
+    title: 'JSON and Nested Structures',
+    moduleId: 'structured-data',
+    prerequisites: ['python-basics-02'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Navigate nested dictionaries and lists',
+      'Understand the key-value structure of JSON',
+      'Safely access deep data points',
+    ],
+    keywords: ['json', 'nested', 'keys', 'parsing'],
+    content: `# Navigating Nested Data
+
+## The Onion Structure
+If a CSV is a flat table, **JSON** is an onion. It is the format most used by web archives and digital libraries. To get to the "heart" of the data, you must peel back the layers.
+
+\`\`\`python
+archive_entry = {
+    "id": "A100",
+    "metadata": {
+        "creator": "Shelley, Mary",
+        "dates": [1818, 1823, 1831]
+    }
+}
+\`\`\`
+
+To get the first date:
+\`\`\`python
+print(archive_entry["metadata"]["dates"][0])
+\`\`\`
+
+::: tip
+If you aren't sure if a key exists, use \`.get("key")\`. It will return \`None\` instead of crashing your program.
+:::
+`,
+    challenges: [
+      {
+        id: 'structured-data-05-c1',
+        title: 'Access nested data',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `data = {\n    "title": "Frankenstein",\n    "chapters": [\n        {"num": 1, "title": "Letters"},\n        {"num": 2, "title": "Birth"}\n    ]\n}\n\n# Goal: Print the title of the second chapter\n# Your code here\n`,
+        expectedOutput: 'Birth',
+        hints: ['chapters is a list, so you need an index first, then a key.'],
+        solution: `data = {"title": "Frankenstein", "chapters": [{"num": 1, "title": "Letters"}, {"num": 2, "title": "Birth"}]}\nprint(data["chapters"][1]["title"])`,
       },
     ],
   },
@@ -1221,75 +1395,6 @@ if response.status_code == 200:
     ],
   },
   {
-    id: 'text-analysis-05',
-    title: 'Basic NLP with NLTK',
-    moduleId: 'text-analysis-fundamentals',
-    prerequisites: ['text-analysis-04'],
-    estimatedTimeMinutes: 40,
-    difficulty: 'intermediate',
-    learningObjectives: [
-      'Understand the difference between simple strings and linguistic tokens',
-      'Use NLTK to perform Part-of-Speech (POS) tagging',
-      'Filter texts for specific grammatical categories (e.g., all adjectives)',
-    ],
-    keywords: ['nltk', 'tokenization', 'pos-tagging', 'nlp', 'linguistics'],
-    content: `# Natural Language Processing (NLP)
-
-## Moving Beyond Strings
-While \`.split()\` and \`.lower()\` are useful, they don't "understand" language. **NLP** treats text as a linguistic structure.
-
-### Tokenization
-The NLTK (\`Natural Language Toolkit\`) tokenizer is smarter than \`.split()\`. It knows that "don't" is actually two words ("do" and "n't") and that a period at the end of a sentence shouldn't be attached to the last word.
-
-\`\`\`python
-import nltk
-from nltk.tokenize import word_tokenize
-
-text = "Mary Shelley wrote Frankenstein."
-tokens = word_tokenize(text)
-# Result: ['Mary', 'Shelley', 'wrote', 'Frankenstein', '.']
-\`\`\`
-
-### Part-of-Speech (POS) Tagging
-POS tagging identifies if a word is a Noun, Verb, Adjective, etc. This is incredibly useful for analyzing *how* an author writes (e.g., "Does this poet use more adjectives than that poet?").
-
-\`\`\`python
-tagged = nltk.pos_tag(tokens)
-# Result: [('Mary', 'NNP'), ('wrote', 'VBD')]
-# NNP = Proper Noun, VBD = Verb Past Tense
-\`\`\`
-`,
-    challenges: [
-      {
-        id: 'text-analysis-05-c1',
-        title: 'Tokenize a sentence',
-        language: 'python',
-        difficulty: 'intermediate',
-        starterCode: `import nltk\nnltk.download('punkt_tab', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Mary Shelley wrote Frankenstein in 1818."\n\n# Goal: Use word_tokenize and print the list of tokens\n`,
-        expectedOutput: '[\'Mary\', \'Shelley\', \'wrote\', \'Frankenstein\', \'in\', \'1818\', \'.\']',
-        hints: [
-          'Import word_tokenize from nltk.tokenize.',
-          'Call word_tokenize(text) and print the result.',
-        ],
-        solution: `import nltk\nnltk.download('punkt_tab', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Mary Shelley wrote Frankenstein in 1818."\nprint(word_tokenize(text))\n`,
-      },
-      {
-        id: 'text-analysis-05-c2',
-        title: 'Extract proper nouns',
-        language: 'python',
-        difficulty: 'intermediate',
-        starterCode: `import nltk\nnltk.download('punkt_tab', quiet=True)\nnltk.download('averaged_perceptron_tagger_eng', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Jane Austen published Pride and Prejudice in 1813."\ntokens = word_tokenize(text)\n\n# 1. Use nltk.pos_tag(tokens) to get tags\n# 2. Filter for tags that are 'NNP'\n# 3. Print the list of words\n`,
-        expectedOutput: '[\'Jane\', \'Austen\', \'Pride\', \'Prejudice\']',
-        hints: [
-          'pos_tag returns a list of tuples: (word, tag).',
-          'Use a list comprehension: [word for word, tag in tagged if tag == "NNP"].',
-        ],
-        solution: `import nltk\nnltk.download('punkt_tab', quiet=True)\nnltk.download('averaged_perceptron_tagger_eng', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Jane Austen published Pride and Prejudice in 1813."\ntokens = word_tokenize(text)\ntagged = nltk.pos_tag(tokens)\nproper_nouns = [word for word, tag in tagged if tag == 'NNP']\nprint(proper_nouns)\n`,
-      },
-    ],
-  },
-  // --- Compiled from lessons-in-development (2026-02-07) ---
-  {
     id: 'sonification-01',
     title: 'The Basics of Data Mapping for Sound',
     moduleId: 'data-sonification',
@@ -1579,7 +1684,7 @@ notes = [generate_note(b) for b in corpus]
 for n in notes:
     print(n)
 `,
-        expectedOutput: '{\'pitch\': 60, \'velocity\': 71}\n{\'pitch\': 64, \'velocity\': 101}\n{\'pitch\': 72, \'velocity\': 81}',
+        expectedOutput: "{'pitch': 60, 'velocity': 71}\n{'pitch': 64, 'velocity': 101}\n{'pitch': 72, 'velocity': 81}",
         hints: [
           'For pitch, the range is 12 (72 - 60).',
           'For velocity, ensure you are using the page count divided by 500.',
@@ -1604,7 +1709,6 @@ for n in notes:
       },
     ],
   },
-  // --- Compiled from lessons-in-development (2026-02-07) ---
   {
     id: 'topic-modeling-01',
     title: 'Topic Modeling: Conceptual Foundations',
@@ -1685,7 +1789,7 @@ shared_words = set()
 
 print(sorted(list(shared_words)))
 `,
-        expectedOutput: '[\'dark\', \'mountain\', \'the\']',
+        expectedOutput: "['dark', 'mountain', 'the']",
         hints: [
           'You can find the intersection of two sets using `set_a & set_b`.',
           'Ensure you are using the sets `words_a` and `words_b`.',
@@ -1779,7 +1883,7 @@ cleaned = []
 
 print(cleaned)
 `,
-        expectedOutput: '[\'scary\', \'dark\', \'night\', \'forest\']',
+        expectedOutput: "['scary', 'dark', 'night', 'forest']",
         hints: [
           'Use a `for` loop to look at each word in `tokens`.',
           'Use `if word not in stopwords` and `if len(word) > 3`.',
