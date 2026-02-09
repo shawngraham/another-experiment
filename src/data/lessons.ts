@@ -2710,12 +2710,22 @@ Load and inspect a built-in dataset.
         starterCode: `import geopandas as gpd
 
 # GeoPandas comes with a tiny dataset called 'naturalearth_lowres'
-dataset_path = gpd.datasets.get_path('naturalearth_lowres')
+# We have prepackaged it directly, so we can first make it available
+# to the sandbox like this:
+from pyodide.http import pyfetch
+
+response = await pyfetch("/naturalearth_lowres.zip")
+if response.status == 200:
+    with open("naturalearth_lowres.zip", "wb") as f:
+        f.write(await response.bytes())
+        print("dataset now available")
+
+# now you could read this: gpd.read_file("zip://naturalearth_lowres.zip")
 
 # 1. Read this file into a variable named 'world'
-world = None
-
 # Your code here
+
+world =
 
 # 2. Print the type of the object to verify it's a GeoDataFrame
 print(type(world).__name__)
@@ -3325,6 +3335,7 @@ Try loading an image with Pillow and printing its size. Then, try loading it wit
 **Because we are working in a self-contained sandbox, you'll need to run this code to make the my_photo.jpg that we packaged for you available, like so:**
 
 \`\`\`python
+from PIL import Image
 from pyodide.http import pyfetch
 
 # This will load the prepackaged photo into our sandbox. 
