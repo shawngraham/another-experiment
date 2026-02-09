@@ -1,12 +1,42 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../../stores/userStore.ts';
+import { useNoteStore } from '../../stores/noteStore.ts';
 import { generatePathway } from '../../utils/pathwayGenerator.ts';
 import { modules } from '../../data/modules.ts';
+
+const INTEREST_LABELS: Record<string, string> = {
+  'text-analysis': 'Analyzing word frequency',
+  'visualization': 'Creating visualizations',
+  'timelines': 'Creating timelines',
+  'mapping': 'Mapping historical events',
+  'web-scraping': 'Collecting web data',
+  'regex': 'Finding text patterns',
+  'sentiment': 'Sentiment analysis',
+  'networks': 'Network analysis',
+  'topic-modeling': 'Topic modeling',
+  'data-cleaning': 'Data cleaning',
+  'metadata': 'Working with metadata',
+  'archives': 'Working with archives',
+};
+
+const EXPERIENCE_LABELS: Record<string, string> = {
+  'none': 'No experience',
+  'beginner': 'Some experience (tutorials, basic scripts)',
+  'intermediate': 'Comfortable writing code',
+};
+
+function formatSlug(slug: string): string {
+  return slug
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
 
 export function PathwayPreview() {
   const navigate = useNavigate();
   const { profile, setPathway, completeOnboarding } = useUserStore();
+  const { createNote } = useNoteStore();
 
   const pathway = useMemo(() => {
     if (!profile) return null;
@@ -21,9 +51,59 @@ export function PathwayPreview() {
   }, [pathway]);
 
   const handleStart = () => {
-    if (pathway) {
+    if (pathway && profile) {
       setPathway(pathway);
       completeOnboarding();
+
+      // Save onboarding responses and pathway as a note
+      const interestsList = profile.background.researchInterests
+        .map((id) => INTEREST_LABELS[id] || formatSlug(id))
+        .map((label) => `- ${label}`)
+        .join('\n');
+
+      const goalsList = profile.learningGoals
+        .map((goal) => `- ${goal}`)
+        .join('\n');
+
+      const modulesList = pathwayModules
+        .map((mod, index) => `${index + 1}. **${mod!.title}** — ${mod!.description} (~${mod!.estimatedHours} hours)`)
+        .join('\n');
+
+      const content = `# My Learning Profile & Pathway
+
+## Background
+
+- **Discipline:** ${formatSlug(profile.background.discipline)}
+- **Role:** ${formatSlug(profile.background.role)}
+- **Programming Experience:** ${EXPERIENCE_LABELS[profile.background.programmingExperience] || profile.background.programmingExperience}
+
+## Research Interests
+
+${interestsList}
+
+## Learning Goals
+
+${goalsList}
+
+## Personalized Learning Pathway
+
+- **Recommended Language:** ${pathway.recommendedLanguage === 'python' ? 'Python' : 'R'}
+- **Estimated Total Time:** ${pathway.estimatedHours} hours
+- **Number of Modules:** ${pathwayModules.length}
+
+### Module Sequence
+
+${modulesList}
+`;
+
+      createNote({
+        type: 'reflection',
+        title: 'My Onboarding Profile & Learning Pathway',
+        content,
+        tags: ['onboarding', 'pathway', 'profile'],
+        linkedLessons: [],
+      });
+
       navigate('/dashboard');
     }
   };
