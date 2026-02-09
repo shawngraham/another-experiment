@@ -15,6 +15,7 @@ const INTEREST_CARDS = [
   { id: 'data-cleaning', label: 'Data cleaning', description: 'Prepare messy data for analysis' },
   { id: 'metadata', label: 'Working with metadata', description: 'Manage structured information about resources' },
   { id: 'archives', label: 'Working with archives', description: 'Process digitized archival materials' },
+  { id: 'network-analysis', label: 'Working with relational data', description: 'Explore the implications of structures in your data' },
 ];
 
 export function InterestMapping() {

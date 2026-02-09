@@ -17,6 +17,7 @@ const INTEREST_MODULE_MAP: Record<string, string[]> = {
   'word frequency': ['text-analysis-fundamentals'],
   'creating timelines': ['data-visualization'],
   'mapping historical events': ['data-visualization'],
+  'exploring relationships in data': ['network-analysis'],
   'analyzing word frequency': ['text-analysis-fundamentals'],
   'working with archives': ['web-data-collection', 'structured-data'],
 };
