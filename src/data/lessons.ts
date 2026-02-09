@@ -3322,6 +3322,28 @@ grayscale_img_cv = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
 Try loading an image with Pillow and printing its size. Then, try loading it with OpenCV and printing its shape. Notice the order of height and width!
 :::
 
+**Because we are working in a self-contained sandbox, you'll need to run this code to make the my_photo.jpg that we packaged for you available, like so:**
+
+\`\`\`python
+from pyodide.http import pyfetch
+
+# This will load the prepackaged photo into our sandbox. 
+# You wouldn't need to do this _like this_ on your own computer.
+response = await pyfetch("/my_photo.jpg")
+if response.status == 200:
+    with open("my_photo.jpg", "wb") as f:
+        f.write(await response.bytes())
+        print("Image downloaded!")
+
+# then continue as per normal:
+
+img_pil = Image.open("my_photo.jpg") 
+
+\`\`\`
+
+
+
+
 ## Transfer
 
 *   **Art History**: Standardize a collection of scanned artwork to the same dimensions for comparison.
