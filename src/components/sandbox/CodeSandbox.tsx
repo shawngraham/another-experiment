@@ -104,6 +104,16 @@ export function CodeSandbox({ challenges, lessonId }: CodeSandboxProps) {
     }
   }, [isPlotModalOpen]);
 
+useEffect(() => {
+  // Reset all state when the lesson changes
+  setActiveChallenge(0);
+  setCode(challenges[0]?.starterCode || '');
+  setOutput('');
+  setHintsShown(0);
+  setIsPlotModalOpen(false);
+  capturedPlotsRef.current = [];
+}, [lessonId, challenges]);
+
   const handleDownloadPlot = () => {
     if (!plotContainerRef.current) return;
     const visuals = plotContainerRef.current.querySelectorAll('canvas, svg');
@@ -139,7 +149,6 @@ export function CodeSandbox({ challenges, lessonId }: CodeSandboxProps) {
     });
   };
 
-  // --- NEW: Save to Notes Logic ---
   const handleSaveToNotes = () => {
     if (!plotContainerRef.current) return;
     
