@@ -1516,7 +1516,7 @@ print(years)`,
   A famous DH application of this technique is mapping the "emotional arc" of a text. By calculating the sentiment of every paragraph in a novel and plotting it on a graph, researchers can visualize the narrative structure.
 
   - **The "Rags to Riches" Arc**: A steady rise in sentiment.
-  - **The "Man in a Hole" Arc**: A fall into negative sentiment followed by a recovery.
+  - **The "Person in a Hole" Arc**: A fall into negative sentiment followed by a recovery.
 
   ::: tip
   While our "toy" example here is simple, professional DH tools like **VADER** or **TextBlob** are smarter: they understand that "not happy" is negative and "VERY HAPPY" is more positive than just "happy."
@@ -1573,42 +1573,116 @@ print(years)`,
     difficulty: 'beginner',
     learningObjectives: [
       'Understand the tabular nature of humanities data (e.g., prosopography)',
-      'Read CSVs into Python lists of dictionaries',
-      'Filter data based on column values',
+      'Identify the difference between csv.reader (lists) and csv.DictReader (dictionaries)',
+      'Process CSV data stored in strings using io.StringIO',
+      'Filter tabular data based on specific column values',
     ],
-    keywords: ['csv', 'tabular', 'rows', 'columns', 'dictionaries'],
+    keywords: ['csv', 'tabular', 'rows', 'columns', 'dictionaries', 'prosopography'],
     content: `# Working with Tabular Data
 
-## Data in Rows and Columns
-Much of DH involves structured lists: a list of every student at a university in 1850, or every play performed at a specific theater.
+  ## Data in Rows and Columns
+  Much of Digital Humanities involves **structured lists**: a spreadsheet of every student at a university in 1850, or a catalog of every play performed at a specific theater. 
 
-While Excel is good for looking at data, Python is better for *querying* it.
+  In DH, we often use tables for **Prosopography**—the investigation of a common group of people (like "all women printers in 18th-century London") by looking at their shared biographical data.
 
-\`\`\`python
-import csv
+  ---
 
-# Reading a CSV as a list of Dictionaries
-with open('catalog.csv', mode='r', encoding='utf-8') as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        # Each row is a dictionary like: {"title": "Hamlet", "year": "1603"}
-        print(row["title"])
-\`\`\`
+  ## 1. What is a CSV?
+  A **CSV (Comma-Separated Values)** file is a plain-text version of an Excel spreadsheet. 
+  - Each line represents a **Row**.
+  - Each comma represents a move to a new **Column**.
 
-::: try-it
-Try using \`csv.DictWriter\` to create a CSV from a list of Python dictionaries.
-:::
-`,
+  \`\`\`text
+  name,year,city
+  Mary,1818,London
+  Percy,1810,Oxford
+  \`\`\`
+
+  ---
+
+  ## 2. Two Ways to Read CSVs in Python
+  The \`csv\` module provides two main tools for reading data:
+
+  ### A. \`csv.reader\` (The List Method)
+  Each row becomes a **List**. You access columns by their number (index).
+  - \`row[0]\` is the name, \`row[1]\` is the year.
+
+  ### B. \`csv.DictReader\` (The Dictionary Method)
+  Each row becomes a **Dictionary**. You access columns by their header name.
+  - \`row["name"]\` is the name, \`row["year"]\` is the year. This is usually easier to read!
+
+  \`\`\`python
+  import csv
+
+  # Using DictReader to access data by column names
+  with open('authors.csv', mode='r', encoding='utf-8') as f:
+      reader = csv.DictReader(f)
+      for row in reader:
+          print(row["name"]) # Accesses the "name" column directly
+  \`\`\`
+
+  ---
+
+  ## 3. The \`io.StringIO\` Trick
+  In the sandbox challenge below, we don't have a physical file on a hard drive. Instead, we have a "string" of data. To use the \`csv\` module on a string, we use \`io.StringIO\`. 
+
+  Think of \`io.StringIO\` as a "virtual file" that lets Python treat a block of text as if it were a \`.csv\` file you just opened.
+
+  ---
+
+  ## 4. Filtering Tabular Data
+  The real power of Python is filtering thousands of rows instantly. 
+
+  \`\`\`python
+  # Example: Only print people born after 1800
+  for row in reader:
+      if int(row["year"]) > 1800:
+          print(row["name"])
+  \`\`\`
+
+  ::: try-it
+  When reading a CSV, remember that everything starts as a **string**. If you want to do math on a year or a price, you must convert it using \`int()\` or \`float()\`!
+  :::
+  `,
     challenges: [
       {
         id: 'structured-data-01-c1',
         title: 'Parse CSV data',
-        language: 'python' as const,
-        difficulty: 'beginner' as const,
-        starterCode: `import csv\nimport io\n\ndata = "name,year\\nAusten,1813\\nShelley,1818"\n# 1. Use csv.reader on io.StringIO(data)\n# 2. Print each row\n`,
-        expectedOutput: "['name', 'year']\n['Austen', '1813']\n['Shelley', '1818']",
-        hints: ['The reader works just like a loop.'],
-        solution: `import csv\nimport io\ndata = "name,year\\nAusten,1813\\nShelley,1818"\nfor row in csv.reader(io.StringIO(data)):\n    print(row)`,
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `import csv
+  import io
+
+  # A researcher gives you this string of data
+  csv_data = "name,year\\nAusten,1813\\nShelley,1818\\nStoker,1897"
+
+  # Goal: Use csv.reader to print each row as a list
+  # 1. Create a "virtual file" using io.StringIO(csv_data)
+  # 2. Pass that virtual file to csv.reader()
+  # 3. Loop through the reader and print each row
+
+  # Your code here
+  `,
+        expectedOutput: "['name', 'year']\n['Austen', '1813']\n['Shelley', '1818']\n['Stoker', '1897']",
+        hints: [
+          'The syntax is: reader = csv.reader(io.StringIO(csv_data))',
+          'Use "for row in reader:" to iterate through the rows.',
+          'Each "row" will be a list of strings.',
+        ],
+        solution: `import csv
+  import io
+
+  csv_data = "name,year\\nAusten,1813\\nShelley,1818\\nStoker,1897"
+
+  # Create virtual file
+  virtual_file = io.StringIO(csv_data)
+
+  # Create the reader
+  reader = csv.reader(virtual_file)
+
+  # Loop and print
+  for row in reader:
+      print(row)`,
       },
     ],
   },
@@ -1620,47 +1694,104 @@ Try using \`csv.DictWriter\` to create a CSV from a list of Python dictionaries.
     estimatedTimeMinutes: 35,
     difficulty: 'beginner',
     learningObjectives: [
-      'Load data into a Pandas DataFrame',
-      'Select specific columns and rows',
-      'View summary statistics of a dataset',
+      'Load data into a Pandas DataFrame using dictionaries',
+      'Select specific columns and inspect data structure',
+      'Calculate the size and summary statistics of a dataset',
+      'Understand the advantage of DataFrames over manual CSV parsing',
     ],
-    keywords: ['pandas', 'dataframe', 'series', 'data science'],
-    content: `# Introducing Pandas
+    keywords: ['pandas', 'dataframe', 'series', 'data science', 'metadata'],
+    content: `# Introducing Pandas: The Powerhouse of DH Data
 
-## Why Pandas?
-For small files, the \`csv\` module is fine. But for datasets with thousands of rows, we use **Pandas**. It is the industry standard for data science.
+  ## Beyond the Spreadsheet
+  While Excel is a common tool in the humanities, it has limits. It is difficult to track exactly how you changed your data in Excel, and it can crash with very large datasets. 
 
-### The DataFrame
-A **DataFrame** is essentially a programmable spreadsheet.
+  **Pandas** is a Python library that treats data like a programmable spreadsheet called a **DataFrame**. Using Pandas makes your research **reproducible**: anyone can run your script and see exactly how you filtered or analyzed your data.
 
-\`\`\`python
-import pandas as pd
+  ---
 
-# Create a DataFrame from a dictionary
-data = {
-    'title': ['Frankenstein', 'Dracula'],
-    'year': [1818, 1897]
-}
-df = pd.DataFrame(data)
+  ## 1. The DataFrame Structure
+  A DataFrame is a two-dimensional table. You can think of it as a collection of **Series** (columns) that share the same index (row numbers).
 
-print(df.head()) # See the first few rows
-print(df['title']) # Get just the 'title' column
-\`\`\`
+  To use it, we always import it with the alias \`pd\`:
+  \`\`\`python
+  import pandas as pd
 
-## Key Methods
-- \`df.describe()\`: Gives you the mean, min, max of numeric columns.
-- \`df.shape\`: Tells you how many rows and columns you have.
-`,
+  # We can build a DataFrame from a dictionary of lists
+  data = {
+      'title': ['Frankenstein', 'Dracula', 'Jane Eyre'],
+      'author': ['Shelley', 'Stoker', 'Brontë'],
+      'year': [1818, 1897, 1847]
+  }
+
+  df = pd.DataFrame(data)
+  \`\`\`
+
+  ---
+
+  ## 2. Inspecting Your Data
+  Once your data is in a DataFrame, you can use these built-in methods to see what you have:
+
+  - **\`df.head(n)\`**: Shows the first *n* rows.
+  - **\`df.shape\`**: Shows the number of (rows, columns).
+  - **\`len(df)\`**: Shows the total number of rows.
+  - **\`df['column_name']\`**: Selects just one column.
+
+  \`\`\`python
+  print(df.shape) # Output: (3, 3)
+  print(df['author']) # Shows just the authors list
+  \`\`\`
+
+  ---
+
+  ## 3. Basic Statistics
+  If your data has numbers (like publication years or word counts), Pandas can instantly calculate the "health" of your dataset.
+
+  \`\`\`python
+  # Gives count, mean, min, max, and percentiles for all numeric columns
+  print(df.describe())
+  \`\`\`
+
+  ::: tip
+  **DH Use Case**: If you have a CSV of 10,000 library records, you can use \`df['language'].value_counts()\` to instantly see how many books are in English vs. French. This is much faster than manual counting!
+  :::
+
+  ::: challenge
+  In the challenge below, you will practice creating a DataFrame from scratch. Remember that the **Keys** of your dictionary become the **Column Headers**, and the **Lists** become the **Rows**.
+  :::
+  `,
     challenges: [
       {
         id: 'structured-data-02-c1',
-        title: 'Create a DataFrame',
-        language: 'python' as const,
-        difficulty: 'beginner' as const,
-        starterCode: `import pandas as pd\n# 1. Create a DataFrame with columns: title, author, year\n# 2. Use 3 fictional or real books\n# 3. Print len(df)\n`,
+        title: 'Create a Research DataFrame',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `import pandas as pd
+
+  # 1. Create a dictionary called 'research_data'
+  #    It should have 3 columns: 'title', 'author', 'year'
+  #    Add 3 books of your choice to each list.
+  # 2. Convert the dictionary into a DataFrame named 'df'
+  # 3. Print the length of the DataFrame using len(df)
+
+  # Your code here
+  `,
         expectedOutput: '3',
-        hints: ['The dictionary keys become columns, and values (lists) become rows.'],
-        solution: `import pandas as pd\ndf = pd.DataFrame({'title': ['A', 'B', 'C'], 'author': ['X', 'Y', 'Z'], 'year': [1800, 1850, 1900]})\nprint(len(df))`,
+        hints: [
+          'Your dictionary should look like: {"title": ["A", "B", "C"], ...}',
+          'To create the DataFrame, use: df = pd.DataFrame(research_data)',
+          'The output should be the number 3, as you added 3 books.',
+        ],
+        solution: `import pandas as pd
+
+  research_data = {
+      'title': ['The Hobbit', 'Beloved', 'Oryx and Crake'],
+      'author': ['Tolkien', 'Morrison', 'Atwood'],
+      'year': [1937, 1987, 2003]
+  }
+
+  df = pd.DataFrame(research_data)
+
+  print(len(df))`,
       },
     ],
   },
@@ -1672,48 +1803,110 @@ print(df['title']) # Get just the 'title' column
     estimatedTimeMinutes: 30,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Perform boolean indexing (filtering)',
-      'Sort data by one or more criteria',
-      'Handle missing data (NaNs)',
+      'Perform boolean indexing to filter datasets',
+      'Sort data by one or more criteria (e.g., chronological order)',
+      'Identify and handle missing data (NaNs) in historical records',
+      'Filter structured lists using list comprehensions'
     ],
-    keywords: ['filter', 'sort', 'query', 'boolean indexing'],
-    content: `# Filtering and Sorting in Pandas
+    keywords: ['filter', 'sort', 'query', 'boolean indexing', 'nan'],
+    content: `# Filtering and Sorting: Interrogating the Archive
 
-## Asking Questions of Data
-The power of Pandas lies in filtering. Instead of looking through a spreadsheet, you can write: "Show me all books published between 1850 and 1900 with 'London' in the title."
+  The true power of structured data is the ability to "interrogate" it. Instead of scrolling through 5,000 rows in a spreadsheet, you can ask specific questions: *"Show me all books published in London between 1850 and 1860 that mention 'Science'."*
 
-### Boolean Indexing
-\`\`\`python
-# "Show me rows where the year is greater than 1850"
-later_books = df[df['year'] > 1850]
-\`\`\`
+  ---
 
-### Sorting
-\`\`\`python
-# Sort by year, oldest first
-sorted_df = df.sort_values(by='year', ascending=True)
-\`\`\`
+  ## 1. Boolean Indexing (Filtering)
+  In Pandas, filtering is done using "Boolean Indexing." You create a rule, and Pandas applies it to every row, keeping only the ones that are \`True\`.
 
-### Handling Missing Values
-In historical data, we often have missing values (\`NaN\`).
-\`\`\`python
-df = df.dropna() # Remove any row with missing data
-# OR
-df = df.fillna(0) # Replace missing with 0
-\`\`\`
-`,
+  The syntax looks a bit strange at first because you see the name of the DataFrame twice:
+  \`\`\`python
+  # "Inside the DataFrame (df), find rows where df['year'] is greater than 1850"
+  later_books = df[df['year'] > 1850]
+  \`\`\`
+
+  ---
+
+  ## 2. Sorting Data
+  Sorting is essential for seeing chronological trends or finding outliers (like the longest or shortest books in a corpus).
+
+  \`\`\`python
+  # Sort by year, oldest first
+  chronological_df = df.sort_values(by='year', ascending=True)
+
+  # Sort by author alphabetically
+  alphabetical_df = df.sort_values(by='author')
+  \`\`\`
+
+  ---
+
+  ## 3. The "Gap" in the Archive (NaN)
+  Historical data is rarely perfect. You will often encounter **NaN** (Not a Number), which represents missing data—perhaps a page was torn, or the publication year wasn't recorded.
+
+  - **\`df.dropna()\`**: Removes any row that has missing data.
+  - **\`df.fillna("Unknown")\`**: Replaces missing values with a placeholder string.
+
+  ---
+
+  ## 4. Filtering Lists of Dictionaries
+  Sometimes, before you even get into Pandas, you have a simple Python list of dictionaries. To filter these, we use a **List Comprehension**. This is a condensed loop that "filters" as it goes:
+
+  \`\`\`python
+  data = [
+      {"name": "Frankenstein", "year": 1818},
+      {"name": "Dracula", "year": 1897}
+  ]
+
+  # Keep only items where year is greater than 1850
+  filtered_list = [d for d in data if d['year'] > 1850]
+  \`\`\`
+
+  ::: tip
+  Think of a List Comprehension as: *[Item for Item in List if Condition]*. It is the "Intermediate" way to write a four-line loop in just one line.
+  :::
+
+  ::: challenge
+  In the challenge below, you are given a list of dictionaries representing archival records. Use a list comprehension to filter for records where the year is greater than 1850.
+  :::
+  `,
     challenges: [
       {
         id: 'structured-data-03-c1',
-        title: 'Filter data',
-        language: 'python' as const,
-        difficulty: 'intermediate' as const,
-        starterCode: `# Given a list of dicts, filter items where year > 1850\ndata = [{'name': 'A', 'year': 1813}, {'name': 'B', 'year': 1818}, {'name': 'C', 'year': 1897}]\n\n# Your code here: Create a list 'filtered' and print its length\n`,
+        title: 'Filter Archival Records',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `# A list of archival records
+  data = [
+      {'name': 'Pride and Prejudice', 'year': 1813},
+      {'name': 'Frankenstein', 'year': 1818},
+      {'name': 'Dracula', 'year': 1897}
+  ]
+
+  # Goal: Create a new list called 'filtered' that contains 
+  # only the dictionaries where the 'year' is greater than 1850.
+
+  # Your code here:
+  # 1. Use a list comprehension to filter the data
+  # 2. Print the length of the filtered list
+
+  `,
         expectedOutput: '1',
-        hints: ['A list comprehension [d for d in data if...] is very efficient here.'],
-        solution: `data = [{'name': 'A', 'year': 1813}, {'name': 'B', 'year': 1818}, {'name': 'C', 'year': 1897}]\nfiltered = [d for d in data if d['year'] > 1850]\nprint(len(filtered))`,
-      },
-    ],
+        hints: [
+          'A list comprehension looks like: [d for d in data if d["year"] > 1850]',
+          'To get the length, use len(filtered).',
+          'Only "Dracula" (1897) matches the criteria, so your length should be 1.'
+        ],
+        solution: `data = [
+      {'name': 'Pride and Prejudice', 'year': 1813},
+      {'name': 'Frankenstein', 'year': 1818},
+      {'name': 'Dracula', 'year': 1897}
+  ]
+
+  # List comprehension filtering
+  filtered = [d for d in data if d['year'] > 1850]
+
+  print(len(filtered))`
+      }
+    ]
   },
   {
     id: 'structured-data-04',
@@ -1723,42 +1916,100 @@ df = df.fillna(0) # Replace missing with 0
     estimatedTimeMinutes: 35,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Use GroupBy to categorize data',
-      'Apply aggregate functions (sum, mean, count)',
-      'Pivot data for comparative analysis',
+      'Understand the "Split-Apply-Combine" pattern of data analysis',
+      'Use GroupBy to categorize humanities data by metadata (genre, year, author)',
+      'Apply aggregate functions like sum, mean, and count to grouped data',
+      'Perform manual grouping using Python dictionaries'
     ],
-    keywords: ['groupby', 'aggregate', 'summary', 'statistics'],
-    content: `# Grouping and Aggregation
+    keywords: ['groupby', 'aggregate', 'summary', 'statistics', 'counts'],
+    content: `# Grouping and Aggregation: Comparing Categories
 
-## Categorical Analysis
-Humanities data is often categorical. We might want to compare the average word count of "Gothic" novels vs "Romance" novels.
+  In Digital Humanities, we often want to compare groups. We don't just want the average word count of a whole library; we want to compare the average word count of **Gothic novels** vs. **Romance novels**, or **18th-century letters** vs. **19th-century letters**.
 
-### The GroupBy Pattern
-1. **Split**: Group data by a category (e.g., 'genre').
-2. **Apply**: Calculate something for each group (e.g., 'mean').
-3. **Combine**: Bring it back into a summary table.
+  ---
 
-\`\`\`python
-# Calculate average year of publication per genre
-summary = df.groupby('genre')['year'].mean()
-print(summary)
-\`\`\`
+  ## 1. The "Split-Apply-Combine" Pattern
+  To analyze categories, we follow a three-step process:
+  1.  **Split**: Divide the dataset into groups based on a label (e.g., "Genre").
+  2.  **Apply**: Calculate a statistic for each group (e.g., "Count the rows" or "Find the Mean").
+  3.  **Combine**: Merge those results back into a new summary table.
 
-## Common Aggregations
-- \`.count()\`: How many items?
-- \`.sum()\`: Total?
-- \`.unique()\`: What are the different categories?
-`,
+  ### The Pandas Way
+  Pandas makes this process incredibly efficient with the \`.groupby()\` method.
+
+  \`\`\`python
+  import pandas as pd
+
+  # Example: Finding the average publication year per genre
+  summary = df.groupby('genre')['year'].mean()
+  print(summary)
+  \`\`\`
+
+  ---
+
+  ## 2. Common Aggregation Methods
+  Once you have grouped your data, you can "Apply" different mathematical operations:
+  - **\`.count()\`**: How many items are in this category?
+  - **\`.mean()\`**: What is the average value?
+  - **\`.sum()\`**: What is the total?
+  - **\`.max() / .min()\`**: What are the extreme values in this group?
+
+  ---
+
+  ## 3. Under the Hood: Grouping with Dictionaries
+  Before using Pandas, it's helpful to understand the logic of grouping. In Python, we use a dictionary to "collect" counts for different categories. 
+
+  As we loop through our data, we check: *"Have I seen this genre before? If so, add 1 to its count. If not, start the count at 1."*
+
+  \`\`\`python
+  books = [('Gothic', 'Frankenstein'), ('Romance', 'Emma'), ('Gothic', 'Dracula')]
+  counts = {}
+
+  for genre, title in books:
+      # Use .get() to avoid errors if the genre isn't in the dictionary yet
+      counts[genre] = counts.get(genre, 0) + 1
+
+  print(counts) # Output: {'Gothic': 2, 'Romance': 1}
+  \`\`\`
+
+  ::: definition
+  **Aggregation**: The process of turning many data points (individual books) into a single significant number (total count or average) that describes a group.
+  :::
+
+  ::: challenge
+  In the challenge below, you are given a list of tuples. Each tuple contains a **genre** and a **title**. Your goal is to manually count how many books belong to the 'Gothic' genre using the dictionary method.
+  :::
+  `,
     challenges: [
       {
         id: 'structured-data-04-c1',
-        title: 'Group and count',
-        language: 'python' as const,
-        difficulty: 'intermediate' as const,
-        starterCode: `# Count how many books are in each genre\nbooks = [('Gothic', 'A'), ('Gothic', 'B'), ('Romance', 'C')]\n\n# Your code here: Create a dictionary of counts\n`,
+        title: 'Group and Count by Genre',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `# A list of book tuples: (Genre, Title)
+  books = [('Gothic', 'Frankenstein'), ('Gothic', 'Dracula'), ('Romance', 'Emma')]
+
+  # 1. Create an empty dictionary called 'counts'
+  # 2. Loop through the 'books' list
+  # 3. For each book, update the count for that genre in the dictionary
+  #    (Hint: Use counts[genre] = counts.get(genre, 0) + 1)
+  # 4. Print the count specifically for 'Gothic'
+
+  # Your code here
+  `,
         expectedOutput: '2',
-        hints: ['Use a dictionary to keep track of counts as you loop through the list.'],
-        solution: `books = [('Gothic', 'A'), ('Gothic', 'B'), ('Romance', 'C')]\ncounts = {}\nfor genre, _ in books:\n    counts[genre] = counts.get(genre, 0) + 1\nprint(counts['Gothic'])`,
+        hints: [
+          'When looping through tuples, use: for genre, title in books:',
+          'The .get(genre, 0) method ensures that if a genre is new, it starts at 0 before adding 1.',
+          'To see the final result, make sure you print counts["Gothic"]'
+        ],
+        solution: `books = [('Gothic', 'Frankenstein'), ('Gothic', 'Dracula'), ('Romance', 'Emma')]
+  counts = {}
+
+  for genre, title in books:
+      counts[genre] = counts.get(genre, 0) + 1
+
+  print(counts['Gothic'])`,
       },
     ],
   },
@@ -1770,45 +2021,118 @@ print(summary)
     estimatedTimeMinutes: 30,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Navigate nested dictionaries and lists',
-      'Understand the key-value structure of JSON',
-      'Safely access deep data points',
+      'Understand the hierarchical nature of JSON data',
+      'Navigate complex data by chaining dictionary keys and list indices',
+      'Identify why JSON is used for complex metadata (e.g., TEI or Web APIs)',
+      'Safely access deep data points using .get()'
     ],
-    keywords: ['json', 'nested', 'keys', 'parsing'],
-    content: `# Navigating Nested Data
+    keywords: ['json', 'nested', 'keys', 'parsing', 'hierarchy'],
+    content: `# Navigating Nested Data: The JSON Onion
 
-## The Onion Structure
-If a CSV is a flat table, **JSON** is an onion. It is the format most used by web archives and digital libraries. To get to the "heart" of the data, you must peel back the layers.
+  ## Why JSON?
+  If a CSV is a flat spreadsheet, **JSON (JavaScript Object Notation)** is an onion. While tables are great for simple lists, they struggle with complexity. 
 
-\`\`\`python
-archive_entry = {
-    "id": "A100",
-    "metadata": {
-        "creator": "Shelley, Mary",
-        "dates": [1818, 1823, 1831]
-    }
-}
-\`\`\`
+  Imagine a library book: it might have multiple authors, five different publication dates, and hundreds of chapters. In a CSV, this becomes a mess of redundant columns. In JSON, we can "nest" information inside other information to maintain its natural structure.
 
-To get the first date:
-\`\`\`python
-print(archive_entry["metadata"]["dates"][0])
-\`\`\`
+  ---
 
-::: tip
-If you aren't sure if a key exists, use \`.get("key")\`. It will return \`None\` instead of crashing your program.
-:::
-`,
+  ## 1. Peeling the Layers
+  To get to the "heart" of nested data, you must chain your access commands. In Python, this means using multiple sets of brackets \`[]\` or the \`.get()\` method.
+
+  Look at this record from a digital archive:
+
+  \`\`\`python
+  archive_entry = {
+      "id": "A100",
+      "metadata": {
+          "creator": "Shelley, Mary",
+          "dates": [1818, 1823, 1831]
+      }
+  }
+  \`\`\`
+
+  To reach the first date (1818), you follow the path:
+  1.  **\`archive_entry["metadata"]\`**: This gets you the inner dictionary.
+  2.  **\`["dates"]\`**: This gets you the list of years inside that dictionary.
+  3.  **\`[0]\`**: This gets you the first item in that list.
+
+  **Combined:** \`archive_entry["metadata"]["dates"][0]\`
+
+  ---
+
+  ## 2. Navigating Lists of Dictionaries
+  In DH, the most common structure you will encounter is a **List of Dictionaries**. This is how a book is often represented: the book is a dictionary, and one of its keys is "chapters," which contains a list of smaller dictionaries.
+
+  \`\`\`python
+  book = {
+      "title": "Frankenstein",
+      "chapters": [
+          {"num": 1, "title": "Letter 1"},
+          {"num": 2, "title": "Letter 2"}
+      ]
+  }
+
+  # Accessing the title of the first chapter:
+  print(book["chapters"][0]["title"]) 
+  \`\`\`
+
+  ---
+
+  ## 3. Data Safety: The \`.get()\` Method
+  Archival data is often "spotty." Some records might have a "creator" field, while others don't. If you try to access a key that isn't there using brackets, your script will crash.
+
+  \`\`\`python
+  # If "location" is missing, this returns None instead of an error:
+  loc = archive_entry.get("location") 
+  \`\`\`
+
+  ::: tip
+  **DH Use Case**: When you harvest data from the **Digital Public Library of America (DPLA)** or the **Library of Congress API**, the data will arrive as a massive, nested JSON object. Learning to "drill down" through these layers is how you extract specific information for your research.
+  :::
+
+  ::: challenge
+  In the challenge below, look closely at the "chapters" key. It contains a list. To get to the second chapter, you must first index the list, then access the dictionary key inside it.
+  :::
+  `,
     challenges: [
       {
         id: 'structured-data-05-c1',
-        title: 'Access nested data',
+        title: 'Access Nested Chapter Data',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `data = {\n    "title": "Frankenstein",\n    "chapters": [\n        {"num": 1, "title": "Letters"},\n        {"num": 2, "title": "Birth"}\n    ]\n}\n\n# Goal: Print the title of the second chapter\n# Your code here\n`,
+        starterCode: `data = {
+      "title": "Frankenstein",
+      "chapters": [
+          {"num": 1, "title": "Letters"},
+          {"num": 2, "title": "Birth"}
+      ]
+  }
+
+  # Goal: Access the "title" of the SECOND chapter in the list.
+  # 1. Access the "chapters" key.
+  # 2. Select the second item in that list (Index 1).
+  # 3. Access the "title" key of that item.
+
+  # Your code here
+  `,
         expectedOutput: 'Birth',
-        hints: ['chapters is a list, so you need an index first, then a key.'],
-        solution: `data = {"title": "Frankenstein", "chapters": [{"num": 1, "title": "Letters"}, {"num": 2, "title": "Birth"}]}\nprint(data["chapters"][1]["title"])`,
+        hints: [
+          'Remember that lists start at 0. The second item is [1].',
+          'Your code should look like: data["key"][index]["key"]',
+          'Make sure the final result is exactly what you print.'
+        ],
+        solution: `data = {
+      "title": "Frankenstein",
+      "chapters": [
+          {"num": 1, "title": "Letters"},
+          {"num": 2, "title": "Birth"}
+      ]
+  }
+
+  # Navigate: data -> chapters -> second item -> title
+  result = data["chapters"][1]["title"]
+
+  print(result)`,
       },
     ],
   },
@@ -1820,37 +2144,79 @@ If you aren't sure if a key exists, use \`.get("key")\`. It will return \`None\`
     estimatedTimeMinutes: 25,
     difficulty: 'beginner',
     learningObjectives: [
-      'Understand the rhetorical power of visualization',
-      'Select the right chart type for your data',
-      'Avoid "Chart Junk" and misleading scales',
+      'Understand the rhetorical power of visualization in "Distant Reading"',
+      'Select the appropriate chart type for specific humanities research questions',
+      'Apply the "Data-Ink Ratio" to reduce chart junk',
+      'Identify ethical issues like misleading scales and data silences',
     ],
-    keywords: ['visualization', 'charts', 'design', 'principles', 'ethics'],
-    content: `# Principles of Visualization
+    keywords: ['visualization', 'charts', 'design', 'principles', 'ethics', 'distant reading'],
+    content: `# Principles of Visualization: Argumentation through Design
 
-## Why Visualize?
-A visualization isn't just a picture; it's an **argument**. It allows you to see patterns in a corpus of 1,000 books that would be impossible to see by reading them individually.
+  ## Why Visualize?
+  In the humanities, a visualization is more than a pretty picture; it is an **argument**. Drawing on the general concept of **Distant Reading**, we use charts to see patterns across a corpus of 1,000 books that would be impossible to see through traditional close reading.
 
-## Choosing Your Chart
-- **Bar Chart**: Best for comparing categories (e.g., number of books per author).
-- **Line Chart**: Best for showing change over time (e.g., frequency of a word over 100 years).
-- **Scatter Plot**: Best for showing the relationship between two numbers (e.g., book length vs. publication year).
-- **Histogram**: Best for seeing the "distribution" of data.
+  ---
 
-## Best Practices
-1. **Label Everything**: Every axis needs a title and a unit.
-2. **Start at Zero**: Bar charts should usually start their Y-axis at 0 to avoid exaggerating differences.
-3. **Color with Purpose**: Don't use 20 colors if 2 will do. Use color to highlight the most important data.
-`,
+  ## 1. Choosing Your Chart
+  The most important step is matching your research question to the correct visual structure.
+
+  | Chart Type | Research Question | DH Example |
+  | :--- | :--- | :--- |
+  | **Bar Chart** | Comparison | Comparing the number of female vs. male authors in a collection. |
+  | **Line Chart** | Change Over Time | Tracking the frequency of the word "science" from 1700 to 1900. |
+  | **Scatter Plot** | Correlation | Plotting sentence length against vocabulary diversity in a novel. |
+  | **Histogram** | Distribution | Seeing if most poems in a corpus are short (10 lines) or long (100 lines). |
+
+  ---
+
+  ## 2. The Data-Ink Ratio
+  Coined by Edward Tufte, the **Data-Ink Ratio** argues that most of the "ink" on a page should be dedicated to the data itself.
+  - **Avoid "Chart Junk"**: Remove unnecessary 3D effects, shadows, or distracting background grids.
+  - **Simplify**: If a decorative element doesn't help the reader understand the data, delete it.
+
+  ---
+
+  ## 3. Visualization Ethics
+  Visuals carry an air of "objectivity," but they can be highly misleading. 
+  1. **The Y-Axis Trap**: Starting a bar chart at a number other than zero can make small differences look massive.
+  2. **Data Silences**: What is *not* in your chart? If you are visualizing a colonial archive, whose voices are missing? A chart of "total publications" may hide the fact that certain populations were barred from publishing.
+  3. **Labels**: Every axis must have a title. A chart without a label is a riddle, not an argument.
+
+  ::: definition
+  **Capta vs. Data**: Many humanists prefer the term "capta" (taken) over "data" (given) to remind us that our information is always selected and interpreted by researchers, not just found in the world.
+  :::
+
+  ::: try-it
+  When you start building charts in the next lesson, always ask yourself: *"If I deleted the title and labels, would a reader still know what this represents?"* If the answer is no, your design needs work.
+  :::
+  `,
     challenges: [
       {
         id: 'data-viz-01-c1',
-        title: 'Choose chart type',
-        language: 'python' as const,
-        difficulty: 'beginner' as const,
-        starterCode: `# Identify the correct chart type\n# Options: "bar", "line", "scatter", "histogram"\n\nquestions = {\n    "comparing_categories": "???",\n    "trends_over_time": "???"\n}\n\n# Print the answer for comparing categories\nprint("bar")`,
+        title: 'Match the Research Question',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# Match the research question to the best chart type.
+  # Options: "bar", "line", "scatter"
+
+  # Question 1: I want to see how the use of the word "democracy" 
+  # changes year-by-year across the 19th century.
+  answer_1 = "???"
+
+  # Question 2: I want to compare the total number of letters 
+  # written by 5 different historical figures.
+  answer_2 = "???"
+
+  # Goal: Set the variables correctly and print answer_2
+  `,
         expectedOutput: 'bar',
-        hints: ['Bars are for categories. Lines are for time.'],
-        solution: `print("bar")`,
+        hints: [
+          'Line charts are best for diachronic analysis (change over time).',
+          'Bar charts are best for comparing categorical totals (like a list of people).',
+        ],
+        solution: `answer_1 = "line"
+  answer_2 = "bar"
+  print(answer_2)`,
       },
     ],
   },
@@ -1862,50 +2228,96 @@ A visualization isn't just a picture; it's an **argument**. It allows you to see
     estimatedTimeMinutes: 35,
     difficulty: 'beginner',
     learningObjectives: [
-      'Create basic charts using Matplotlib',
-      'Label axes and add titles',
-      'Save plots as image files (PNG/PDF)',
+      'Create bar and line charts using Matplotlib',
+      'Map data lists to X and Y axes',
+      'Label axes and add titles for scholarly clarity',
+      'Save plots as high-quality image files for research papers',
     ],
-    keywords: ['matplotlib', 'bar', 'line', 'pyplot'],
+    keywords: ['matplotlib', 'bar', 'line', 'pyplot', 'axes'],
     content: `# Plotting with Matplotlib
 
-## The "Grandfather" of Python Viz
-\`matplotlib.pyplot\` is the most widely used plotting library. While it can be complex, its basic "interface" is very straightforward.
+  ## The "Grandfather" of Python Viz
+  \`matplotlib\` is the most established plotting library in Python. While there are many newer tools, \`matplotlib\` remains the "engine" that powers most of them. In DH, we use it to turn the numbers we’ve counted (like word frequencies or publication years) into visual evidence.
 
-\`\`\`python
-import matplotlib.pyplot as plt
+  ---
 
-# Data
-x = ["1810s", "1820s", "1830s"]
-y = [5, 12, 18]
+  ## 1. The Pyplot Pipeline
+  To create a visualization, we follow a specific order of operations. We usually import the library under the alias \`plt\`.
 
-# Create Plot
-plt.bar(x, y, color='skyblue')
+  \`\`\`python
+  import matplotlib.pyplot as plt
 
-# Add Labels
-plt.xlabel("Decade")
-plt.ylabel("Number of Publications")
-plt.title("Gothic Novels Over Time")
+  # 1. Prepare Data (List A must match List B in length)
+  decades = ["1810s", "1820s", "1830s"]
+  counts = [5, 12, 18]
 
-# Show or Save
-plt.show()
-plt.savefig("my_chart.png")
-\`\`\`
+  # 2. Choose the Chart Type
+  plt.bar(decades, counts, color='skyblue')
 
-::: try-it
-Try changing \`plt.bar\` to \`plt.plot\` to see how the same data looks as a line chart.
-:::
-`,
+  # 3. Add Scholarly Metadata (Labels)
+  plt.xlabel("Decade of Publication")
+  plt.ylabel("Number of Novels")
+  plt.title("Growth of the Gothic Novel")
+
+  # 4. Display or Save
+  plt.show() 
+  # plt.savefig("gothic_trends.png", dpi=300) # dpi=300 ensures it's clear for print
+  \`\`\`
+
+  ---
+
+  ## 2. Anatomy of a Plot
+  - **The Figure**: The overall window or page where everything is drawn.
+  - **The Axes**: The area where the data is actually plotted (the X and Y lines).
+  - **Markers/Bars**: The visual representation of your data points.
+
+  ---
+
+  ## 3. Common DH Visualizations
+
+  ### The Line Chart (\`plt.plot\`)
+  Best for "Diachronic Analysis" (looking at changes over time).
+  \`\`\`python
+  # Imagine tracking the word 'electricity' across 3 chapters
+  plt.plot([1, 2, 3], [10, 45, 30])
+  \`\`\`
+
+  ### The Bar Chart (\`plt.bar\`)
+  Best for comparing distinct categories, such as different authors or different archives.
+
+  ::: tip
+  **Handling Long Labels**: In DH, our labels are often long (like book titles). If your X-axis labels are overlapping and unreadable, add this line before \`plt.show()\`:
+  \`plt.xticks(rotation=45)\`
+  :::
+
+  ::: challenge
+  Every plot starts with two matching lists: the **Labels** (X) and the **Values** (Y). In the challenge below, prepare the data needed to compare the lengths of three famous DH texts.
+  :::
+  `,
     challenges: [
       {
         id: 'data-viz-02-c1',
-        title: 'Prepare data for a plot',
-        language: 'python' as const,
-        difficulty: 'beginner' as const,
-        starterCode: `# 1. Create a list 'labels' with 3 book titles\n# 2. Create a list 'counts' with 3 word counts (integers)\n# 3. Print both lists\n`,
-        expectedOutput: "['Book A', 'Book B', 'Book C']\n[50000, 75000, 30000]",
-        hints: ['Maintain the same order in both lists so they match up.'],
-        solution: `labels = ['Book A', 'Book B', 'Book C']\ncounts = [50000, 75000, 30000]\nprint(labels)\nprint(counts)`,
+        title: 'Prepare Data for a Plot',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# 1. Create a list called 'labels' with these 3 titles: 
+  #    'Frankenstein', 'Dracula', 'Jane Eyre'
+  # 2. Create a list called 'word_counts' with these 3 integers: 
+  #    75000, 160000, 180000
+  # 3. Print both lists to verify they match in order
+
+  # Your code here
+  `,
+        expectedOutput: "['Frankenstein', 'Dracula', 'Jane Eyre']\n[75000, 160000, 180000]",
+        hints: [
+          'Ensure the order of counts matches the order of the titles.',
+          'Strings need quotes; integers do not.',
+          'Use two separate print statements.',
+        ],
+        solution: `labels = ['Frankenstein', 'Dracula', 'Jane Eyre']
+  word_counts = [75000, 160000, 180000]
+  print(labels)
+  print(word_counts)`,
       },
     ],
   },
@@ -1917,105 +2329,209 @@ Try changing \`plt.bar\` to \`plt.plot\` to see how the same data looks as a lin
     estimatedTimeMinutes: 30,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Modify plot styles and color palettes',
-      'Create subplots for side-by-side comparison',
-      'Adjust figure size and DPI for publication',
+      'Modify plot styles and color palettes for readability',
+      'Create subplots for side-by-side comparative analysis',
+      'Adjust figure size and DPI to prevent label overlapping',
+      'Generate dynamic titles using summary statistics',
     ],
-    keywords: ['customization', 'subplots', 'styling', 'dpi'],
-    content: `# Making it Look Good
+    keywords: ['customization', 'subplots', 'styling', 'dpi', 'accessibility'],
+    content: `# Customizing Visualizations: From Draft to Publication
 
-## Beyond the Defaults
-Default charts are often ugly. To make them "publication-ready," we need to tweak the details.
+  ## Beyond the Defaults
+  Default charts are often sufficient for your own eyes, but for a conference presentation or a journal article, we need to tweak the details. This ensures our "visual argument" is both readable and accessible.
 
-### Using Styles
-Matplotlib comes with built-in themes.
-\`\`\`python
-plt.style.use('ggplot') # Emulates R's ggplot2
-# OR
-plt.style.use('seaborn-v0_8')
-\`\`\`
+  ---
 
-### Multiple Plots
-You can put several charts in one figure using \`subplots\`.
-\`\`\`python
-# 1 row, 2 columns
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+  ## 1. Using Styles
+  Matplotlib comes with built-in themes that instantly change the background, gridlines, and fonts. In DH, \`fivethirtyeight\` and \`ggplot\` are popular for their high readability.
 
-ax1.bar(names, vals)
-ax1.set_title("First Plot")
+  \`\`\`python
+  import matplotlib.pyplot as plt
 
-ax2.plot(years, freqs)
-ax2.set_title("Second Plot")
-\`\`\`
+  # List all available styles: print(plt.style.available)
+  plt.style.use('fivethirtyeight') 
+  \`\`\`
 
-::: tip
-Use \`figsize=(width, height)\` to prevent your labels from overlapping.
-:::
-`,
+  ---
+
+  ## 2. The Figure/Axes Hierarchy
+  To create complex layouts (like side-by-side comparisons), we move away from simple commands and use the **Subplots** method. 
+
+  Think of it this way:
+  - **Figure (\`fig\`)**: The entire canvas or poster.
+  - **Axes (\`ax\`)**: The individual frames or charts on that canvas.
+
+  \`\`\`python
+  # Create a layout with 1 row and 2 columns
+  fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+  # Plotting on the first 'frame'
+  ax1.bar(["A", "B"], [10, 20])
+  ax1.set_title("Genre Distribution")
+
+  # Plotting on the second 'frame'
+  ax2.plot([1, 2, 3], [5, 15, 10])
+  ax2.set_title("Publication Timeline")
+
+  plt.tight_layout() # Prevents labels from overlapping!
+  \`\`\`
+
+  ---
+
+  ## 3. Dynamic Titles and Summary Stats
+  A professional DH visualization often includes the total count of the corpus in the title so the reader knows the scale of the data. 
+
+  To do this, we calculate the total from our dictionary values:
+  \`\`\`python
+  data = {"Gothic": 15, "Romance": 22}
+  total_books = sum(data.values())
+
+  plt.title(f"Corpus Overview (Total: {total_books})")
+  \`\`\`
+
+  ---
+
+  ## 4. Accessibility and Ethics
+  - **Color Palettes**: Use color-blind friendly palettes (like those provided by the \`Seaborn\` library) to ensure your research is inclusive.
+  - **Resolution**: Use \`plt.savefig("plot.png", dpi=300)\`. Lower DPI will make your text blurry and difficult to read for those with visual impairments.
+
+  ::: tip
+  The \`.values()\` method on a dictionary returns only the numbers. Wrapping that in \`sum()\` gives you an instant total of your dataset.
+  :::
+
+  ::: challenge
+  In the challenge below, you will practice generating a dynamic title. This is a vital skill for automated reporting, where your script might analyze a new folder of books every day.
+  :::
+  `,
     challenges: [
       {
         id: 'data-viz-03-c1',
-        title: 'Summarize data for viz',
-        language: 'python' as const,
-        difficulty: 'intermediate' as const,
-        starterCode: `# Calculate the total count of items in a dictionary for a chart title\ndata = {"Gothic": 15, "Romance": 22, "Adventure": 8}\n\n# Your code here: print "Total: X"\n`,
+        title: 'Generate a Summary for a Title',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `# Data representing book counts per genre
+  data = {"Gothic": 15, "Romance": 22, "Adventure": 8}
+
+  # Goal: Calculate the total number of items and print it 
+  # exactly in this format: "Total: X"
+
+  # 1. Use sum() and data.values() to find the total
+  # 2. Print the result using an f-string or string concatenation
+
+  # Your code here
+  `,
         expectedOutput: 'Total: 45',
-        hints: ['sum(data.values()) is your friend.'],
-        solution: `data = {"Gothic": 15, "Romance": 22, "Adventure": 8}\ntotal = sum(data.values())\nprint(f"Total: {total}")`,
+        hints: [
+          'data.values() will give you [15, 22, 8].',
+          'sum(data.values()) will add those numbers together.',
+          'To print exactly "Total: 45", use: print(f"Total: {total_variable}")',
+        ],
+        solution: `data = {"Gothic": 15, "Romance": 22, "Adventure": 8}
+  total = sum(data.values())
+  print(f"Total: {total}")`,
       },
     ],
   },
   {
     id: 'data-viz-04',
-    title: 'Plotting Text Analysis Results',
+    title: 'Visualizing Textual Patterns',
     moduleId: 'data-visualization',
     prerequisites: ['data-viz-03'],
     estimatedTimeMinutes: 35,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Visualize the most common words in a corpus',
-      'Create "Dispersion Plots" to see where words appear',
-      'Compare word usage across different authors',
+      'Map text analysis output (Counter objects) to Matplotlib charts',
+      'Visualize the most common words in a corpus while handling stopwords',
+      'Understand Lexical Dispersion as a way to visualize narrative time',
+      'Compare word usage patterns across different texts'
     ],
-    keywords: ['frequency', 'dispersion', 'corpus-viz', 'textual-data'],
+    keywords: ['frequency', 'dispersion', 'corpus-viz', 'textual-data', 'nltk'],
     content: `# Visualizing Textual Patterns
 
-## Turning Words into Shapes
-The most common task in DH text analysis is visualizing word frequencies.
+  ## Turning Words into Shapes
+  In Digital Humanities, we often move from "Close Reading" (analyzing a single page) to "Distant Reading" (analyzing a whole library). To do this effectively, we must turn our linguistic counts into visual evidence.
 
-### Frequency Bar Charts
-\`\`\`python
-from collections import Counter
-import matplotlib.pyplot as plt
+  ---
 
-text = "the whale the sea the whale ship"
-counts = Counter(text.split())
-top_words = counts.most_common(2) # [('the', 3), ('whale', 2)]
+  ## 1. The "Tuple Problem"
+  In the Text Analysis module, we learned that \`Counter.most_common()\` gives us a list of tuples:
+  \`[('the', 10), ('whale', 5)]\`
 
-words = [item[0] for item in top_words]
-freqs = [item[1] for item in top_words]
+  However, Matplotlib needs two separate lists: one for **labels** (the words) and one for **values** (the counts). We can use a **List Comprehension** to "unzip" these tuples:
 
-plt.bar(words, freqs)
-plt.show()
-\`\`\`
+  \`\`\`python
+  from collections import Counter
+  import matplotlib.pyplot as plt
 
-## Advanced Viz: Lexical Dispersion
-A **Dispersion Plot** shows where a word occurs in the timeline of a book (e.g., does the word "death" appear mostly at the end?).
+  text = "the whale the sea the whale ship"
+  counts = Counter(text.split())
+  top_words = counts.most_common(2) 
 
-::: try-it
-If you have a very long list of words, try plotting only the top 20 to keep the chart readable.
-:::
-`,
+  # Unzipping the tuples
+  words = [item[0] for item in top_words]  # ['the', 'whale']
+  freqs = [item[1] for item in top_words]  # [3, 2]
+
+  plt.bar(words, freqs)
+  plt.title("Word Frequency in Moby Dick Snippet")
+  plt.show()
+  \`\`\`
+
+  ---
+
+  ## 2. Lexical Dispersion: Narrative Time
+  A **Lexical Dispersion Plot** is a uniquely DH way of looking at a book. Imagine the X-axis is the timeline of a novel (from the first word to the last). A dispersion plot draws a vertical line every time a specific word appears.
+
+  - **Use Case**: Does the word "Ghost" appear only at the end of the story? Does the word "Marriage" appear in the first chapter and then disappear until the last?
+  - **Visualization**: This helps scholars see the "thematic rhythm" of a text without reading the whole thing.
+
+  ---
+
+  ## 3. Comparative Visualization
+  To compare two authors, we often use side-by-side bar charts (subplots). This reveals **Stylometry**—the study of linguistic style. For example, you might find that while two authors write about "Death," one uses the word as a noun while the other uses it as an adjective.
+
+  ::: tip
+  **Filter the Noise**: If you plot your frequencies without removing "Stopwords" (the, and, of, is), your chart will always look the same regardless of the book. Always clean your text *before* plotting to see the words that actually matter to your research.
+  :::
+
+  ::: challenge
+  Before you can create a chart, you must be able to extract the frequency data correctly. In the challenge below, use the \`Counter\` object to find the most frequent words in a short string.
+  :::
+  `,
     challenges: [
       {
         id: 'data-viz-04-c1',
-        title: 'Prepare frequency data',
-        language: 'python' as const,
-        difficulty: 'intermediate' as const,
-        starterCode: `from collections import Counter\ntext = "the the the and and or"\n\n# 1. Use Counter to get the 2 most common words\n# 2. Print them\n`,
+        title: 'Prepare Frequency Data',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `from collections import Counter
+
+  text = "the the the and and or"
+
+  # Goal: 
+  # 1. Split the text into individual words
+  # 2. Use Counter to find the 2 most common words
+  # 3. Print the resulting list of tuples
+
+  # Your code here
+  `,
         expectedOutput: "[('the', 3), ('and', 2)]",
-        hints: ['The Counter.most_common() method returns a list of tuples.'],
-        solution: `from collections import Counter\ntext = "the the the and and or"\nfreq = Counter(text.split())\nprint(freq.most_common(2))`,
+        hints: [
+          'Use words = text.split() first.',
+          'Initialize your Counter with that list of words.',
+          'Call the .most_common(2) method on your counter object.',
+        ],
+        solution: `from collections import Counter
+
+  text = "the the the and and or"
+
+  # Split and Count
+  words = text.split()
+  counts = Counter(words)
+
+  # Get top 2
+  top_words = counts.most_common(2)
+
+  print(top_words)`,
       },
     ],
   },
