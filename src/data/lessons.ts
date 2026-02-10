@@ -2858,53 +2858,85 @@ print(years)`,
     estimatedTimeMinutes: 30,
     difficulty: 'beginner',
     learningObjectives: [
-      'Understand the concept of parameter mapping sonification',
-      'Map a range of data values to a range of musical pitches',
-      'Use Python to translate text metrics into MIDI-style notes',
+      'Understand the concept of parameter mapping sonification in DH',
+      'Map a range of data values to a range of musical pitches (MIDI)',
+      'Explain the linear mapping formula (Normalization and Scaling)',
+      'Export MIDI data to a playable .mid file using binary writing',
     ],
-    keywords: ['sonification', 'mapping', 'midi', 'frequency'],
+    keywords: ['sonification', 'mapping', 'midi', 'multimodal', 'binary-write'],
     content: `# The Basics of Data Mapping for Sound
 
-## Analogy
+  ## The Audio Archive
+  In Digital Humanities, we spend a lot of time *looking* at data—charts, maps, and tables. But our ears are often better at detecting subtle changes in rhythm and pattern than our eyes. **Data Sonification** is the process of turning data into sound. 
 
-Think of data sonification like a **musical translation**. Just as a translator might map a word in French to a word in English, a "sonifier" maps a data point (like the number of times a word appears in a text) to a musical property (like the height of a note). If a bar chart uses **height** to show scale, sonification uses **pitch**.
+  Think of it as a **musical translation**. Just as a translator maps a word in French to a word in English, a "sonifier" maps a data point (like the sentiment of a diary entry) to a musical property (like the height of a note).
 
-## Key Concepts
+  ---
 
-### What is Sonification?
-Sonification is the use of non-speech audio to convey information. In DH, this allows us to "hear" patterns in a corpus that might be missed by the eye, such as the rhythmic density of punctuation in a novel or the shift in sentiment over a century of diaries.
+  ## 1. What is Parameter Mapping?
+  Sonification usually relies on **Parameter Mapping**: linking a variable in your data to a physical property of sound.
 
-::: definition
-**Parameter Mapping**: The process of linking a data variable (like a year) to a physical sound property (like volume or pitch).
-:::
+  | Data Variable (DH Example) | Sound Property | Musical Effect |
+  | :--- | :--- | :--- |
+  | **Word Frequency** | Pitch | Higher frequency = Higher note. |
+  | **Sentiment Score** | Timbre | Positive = Bright/Clear; Negative = Distorted/Harsh. |
+  | **Punctuation Density** | Rhythm | More commas = Faster beats. |
+  | **Publication Year** | Stereo Pan | Older = Left speaker; Newer = Right speaker. |
 
-### Linear Mapping
-To turn data into music, we must "scale" our values. Human hearing for pitch is usually measured in MIDI notes (where 60 is Middle C) or Frequency (Hz).
+  ---
 
-\`\`\`python
-# Simple linear mapping function
-def map_value(value, min_data, max_data, min_note, max_note):
-    # Calculate how far the value is in the data range (0.0 to 1.0)
-    percent = (value - min_data) / (max_data - min_data)
-    # Apply that percentage to the musical range
-    return int(min_note + (percent * (max_note - min_note)))
+  ## 2. The MIDI Standard
+  To turn numbers into music using code, we use the **MIDI** (Musical Instrument Digital Interface) standard. 
+  - MIDI notes are represented by numbers from **0 to 127**.
+  - **60** is Middle C.
+  - Every increase of 12 represents one octave (72 is high C, 48 is low C).
 
-print(map_value(50, 0, 100, 60, 72)) # Maps 50 to the middle of 60-72
-\`\`\`
+  ---
 
-## Practice
+  ## 3. The Linear Mapping Formula
+  To map your data (which might be between 0 and 5,000 words) to a musical range (e.g., MIDI notes 48 to 84), we use a three-step process:
 
-::: try-it
-In the sandbox, try changing the \`min_note\` and \`max_note\` values. See how it affects the "resolution" of your musical translation. What happens if the \`max_note\` is lower than the \`min_note\`?
-:::
+  1.  **Normalization**: How far is the current value into the data range? (from 0.0 to 1.0).
+  2.  **Scaling**: Multiply that percentage by the size of the musical range.
+  3.  **Offset**: Add it to the lowest note in your musical range.
 
-## Transfer
+  \`\`\`python
+  # The logic inside a mapping function
+  percent = (value - min_data) / (max_data - min_data)
+  note = min_note + (percent * (max_note - min_note))
+  \`\`\`
 
-How might the "mood" of your research change if high values were mapped to very low, rumbling notes instead of high, piercing ones? This is an aesthetic choice that impacts how your audience interprets your data.
+  ---
 
-::: challenge
-You have a list of word counts from five chapters of a book. Map these counts to MIDI notes so they can be played by a virtual instrument.
-:::`,
+  ## 4. Exporting your "Digital Score"
+  To hear your results, you must save your list of numbers as a \`.mid\` file. We use the \`midiutil\` library to generate instructions for a computer's virtual instrument.
+
+  \`\`\`python
+  from midiutil import MIDIFile
+
+  # Create a MIDI object with one track
+  MyMIDI = MIDIFile(1) 
+  MyMIDI.addTempo(track=0, time=0, tempo=120)
+
+  # Add the notes we mapped (pitch) to the track
+  for i, pitch in enumerate(notes):
+      # track, channel, pitch, time, duration, volume
+      MyMIDI.addNote(0, 0, pitch, i, 1, 100)
+
+  # Save the file using 'wb' (Write Binary) mode
+  with open("data_sonification.mid", "wb") as output_file:
+      MyMIDI.writeFile(output_file)
+  \`\`\`
+
+  ::: tip
+  **Why Sonify?** 
+  Sonification is a form of **Multimodal Analysis**. It allows researchers to "listen" to a corpus while doing other tasks, and provides an accessible way for visually impaired scholars to engage with quantitative data.
+  :::
+
+  ::: challenge
+  You have word counts from five chapters of a novel. Your goal is to map these counts to MIDI notes between **48 (Low C)** and **84 (High C)**. If a chapter is very long, it should play a very high note.
+  :::
+  `,
     challenges: [
       {
         id: 'sonification-01-c1',
@@ -2912,44 +2944,48 @@ You have a list of word counts from five chapters of a book. Map these counts to
         language: 'python',
         difficulty: 'beginner',
         starterCode: `# Data: word counts for 5 chapters
-chapter_counts = [1200, 4500, 3200, 800, 5000]
+  chapter_counts = [1200, 4500, 3200, 800, 5000]
 
-# We want to map these to MIDI notes between 48 (Low C) and 84 (High C)
-min_data = min(chapter_counts)
-max_data = max(chapter_counts)
-min_note = 48
-max_note = 84
+  # Define the data range
+  min_data = min(chapter_counts)
+  max_data = max(chapter_counts)
 
-def sonify(val):
-    # Your code here: 
-    # 1. Find the percentage of the value in the data range
-    # 2. Map it to the note range
-    # 3. Return as an integer
-    pass
+  # Define the musical range (MIDI notes)
+  min_note = 48
+  max_note = 84
 
-notes = [sonify(c) for c in chapter_counts]
-print(notes)
-`,
+  def sonify(val):
+      # 1. Calculate how far 'val' is across the data range (0.0 to 1.0)
+      # 2. Multiply that by the width of the note range (max_note - min_note)
+      # 3. Add it to the min_note
+      # 4. Return as an integer (int)
+      pass
+
+  # Map the chapter counts to notes
+  notes = [sonify(c) for c in chapter_counts]
+  print(notes)
+  `,
         expectedOutput: '[51, 79, 68, 48, 84]',
         hints: [
-          'The formula for percentage is `(value - min_data) / (max_data - min_data)`.',
-          'Multiply that percentage by the size of the note range: `(max_note - min_note)`.',
-          'Add the result back to the `min_note` and use `int()` to round it.',
+          'Percentage = (val - min_data) / (max_data - min_data)',
+          'The width of your note range is (max_note - min_note).',
+          'Wrap your final calculation in int() to ensure it is a valid MIDI number.',
         ],
         solution: `chapter_counts = [1200, 4500, 3200, 800, 5000]
-min_data = min(chapter_counts)
-max_data = max(chapter_counts)
-min_note = 48
-max_note = 84
+  min_data = min(chapter_counts)
+  max_data = max(chapter_counts)
+  min_note = 48
+  max_note = 84
 
-def sonify(val):
-    percent = (val - min_data) / (max_data - min_data)
-    note = min_note + (percent * (max_note - min_note))
-    return int(note)
+  def sonify(val):
+      # Calculate percentage in data range
+      percent = (val - min_data) / (max_data - min_data)
+      # Map to musical range
+      note = min_note + (percent * (max_note - min_note))
+      return int(note)
 
-notes = [sonify(c) for c in chapter_counts]
-print(notes)
-`,
+  notes = [sonify(c) for c in chapter_counts]
+  print(notes)`,
       },
     ],
   },
@@ -2961,55 +2997,72 @@ print(notes)
     estimatedTimeMinutes: 35,
     difficulty: 'beginner',
     learningObjectives: [
-      'Map temporal data to musical duration',
-      'Create a "sequence" of notes with varying lengths',
-      'Understand the relationship between data density and tempo',
+      'Map temporal data (timestamps) to musical duration and onset time',
+      'Calculate the distance between data points to create a "rhythmic sequence"',
+      'Understand how data density translates to musical tempo',
+      'Handle "edge cases" like zero-duration notes in a dataset'
     ],
-    keywords: ['rhythm', 'duration', 'tempo', 'sequence'],
+    keywords: ['rhythm', 'duration', 'tempo', 'sequence', 'inter-onset'],
     content: `# Rhythms of the Archive
 
-## Analogy
+  ## Analogy
+  If pitch is the **space** of a sound (high or low), rhythm is its **time**. 
 
-If pitch is the **space** of a sound (high or low), rhythm is its **time**. Think of a historical timeline like a sheet of music. Events that happen close together in time feel like a rapid drumroll; events separated by decades feel like long, sustained notes held by a violin.
+  Think of a historical timeline like a sheet of music. Events that happen close together in time—like a flurry of letters sent during a crisis—feel like a rapid drumroll. Events separated by decades of silence feel like long, sustained notes held by a violin. 
 
-## Key Concepts
+  ---
 
-### Temporal Sonification
-In DH, we often deal with time-series data: when books were published, when letters were sent, or when a specific word appears in a text. We can map the **distance between events** to the **duration of a note**.
+  ## 1. Temporal Sonification
+  In the humanities, we often deal with "Time-Series" data: when books were published, when a specific word appears in a text, or the timestamps of a correspondence. 
 
-::: definition
-**Duration**: The length of time a sound lasts. In sonification, this is often mapped to the quantity of data or the time elapsed between points.
-:::
+  To turn these "points in time" into rhythm, we map the **distance between events** to the **duration of a note** (how long it lasts) or the **Inter-onset Interval** (how much silence exists between the start of two notes).
 
-### Creating a Sequence
-To "hear" a timeline, we don't just need notes; we need to know when each note starts and how long it lasts.
+  ---
 
-\`\`\`python
-# A list of years when a specific event occurred
-event_years = [1800, 1805, 1806, 1820]
+  ## 2. The Logic of "The Next Item"
+  To find the rhythm of an archive, we have to look at two items at once: the current event and the one that follows it. In Python, we do this by looping through a list but stopping one item before the end so we don't "fall off the edge" of the list.
 
-# Calculate the 'gaps' between years to create rhythm
-durations = []
-for i in range(len(event_years) - 1):
-    gap = event_years[i+1] - event_years[i]
-    durations.append(gap)
+  \`\`\`python
+  # Years of major events
+  years = [1800, 1805, 1806, 1820]
 
-print(durations) # [5, 1, 14]
-\`\`\`
+  # We use range(len(years) - 1) to avoid an "IndexError"
+  for i in range(len(years) - 1):
+      current_year = years[i]
+      next_year = years[i+1]
+      
+      gap = next_year - current_year
+      print(f"The gap between {current_year} and {next_year} is {gap} years.")
+  \`\`\`
 
-## Practice
+  ---
 
-::: try-it
-What happens if you have two events in the same year? The gap would be zero. How might you handle a "zero-duration" note in music? Try adding a small "offset" to every duration so that every event makes at least a short sound.
-:::
+  ## 3. Programming Rhythm in MIDI
+  When using the \`midiutil\` library, rhythm is controlled by two parameters: **time** (when the note starts) and **duration** (how long it stays down).
 
-## Transfer
+  - **High Density**: Small gaps between events result in a high "tempo" or "staccato" feel.
+  - **Low Density**: Large gaps create long, "legato" tones or long pauses of silence.
 
-Think about a collection of letters. If you mapped the number of days between letters to the length of a musical rest (silence), what would a "frantic" correspondence sound like compared to a "drifting" one?
+  \`\`\`python
+  # time: where the note starts
+  # duration: how long it lasts
+  MyMIDI.addNote(track, channel, pitch, time, duration, volume)
+  \`\`\`
 
-::: challenge
-Take a list of timestamps (represented as integers) and calculate the durations between them to create a rhythmic score.
-:::`,
+  ---
+
+  ## 4. The Problem of "Zero Time"
+  In historical data, two events often happen at the same time (e.g., two books published in the same year). If the gap is \`0\`, the note won't have any length and you won't hear it! 
+
+  **DH Best Practice**: Always add a "Minimum Duration" (an offset). If your gap is \`0\`, force it to be at least \`0.1\` so the data remains audible.
+
+  ::: tip
+  **Humanities Application**: By sonifying the "rhythm" of punctuation in a novel (mapping the number of words between every comma), you can *hear* the difference between a frantic, breathless author and a slow, methodical one.
+  :::
+
+  ::: challenge
+  You have a list of "mentions" (the page numbers where a keyword appears). Calculate the distances between these mentions to create a list of durations. This list will serve as the rhythmic foundation for a sonification.
+  :::`,
     challenges: [
       {
         id: 'sonification-02-c1',
@@ -3017,38 +3070,40 @@ Take a list of timestamps (represented as integers) and calculate the durations 
         language: 'python',
         difficulty: 'beginner',
         starterCode: `# Timestamps of when a keyword appears in a text (page numbers)
-mentions = [12, 15, 16, 40, 42]
+  mentions = [12, 15, 16, 40, 42]
 
-# Goal: Create a list of durations (the difference between each mention)
-# If mentions are [12, 15], the duration is 3.
+  # Goal: Create a list of durations (the difference between each mention)
+  # Example: the difference between 12 and 15 is 3.
 
-durations = []
+  durations = []
 
-# Your code here: loop through the list and calculate differences
-# Hint: Use a range based on the length of the list minus one
+  # Your code here: 
+  # 1. Loop through the list using range and len()
+  # 2. Subtract the current mention from the next mention
+  # 3. Append the result to the 'durations' list
 
-print(durations)
-`,
+  print(durations)
+  `,
         expectedOutput: '[3, 1, 24, 2]',
         hints: [
-          'Use `for i in range(len(mentions) - 1):`.',
-          'Access the current item with `mentions[i]` and the next item with `mentions[i+1]`.',
-          'Subtract the current from the next to get the duration.',
+          'Use for i in range(len(mentions) - 1): to stay within the list bounds.',
+          'The current item is mentions[i] and the next item is mentions[i+1].',
+          'Subtracting mentions[i] from mentions[i+1] gives you the distance.'
         ],
         solution: `mentions = [12, 15, 16, 40, 42]
-durations = []
+  durations = []
 
-for i in range(len(mentions) - 1):
-    diff = mentions[i+1] - mentions[i]
-    durations.append(diff)
+  for i in range(len(mentions) - 1):
+      # Calculate the distance to the next point
+      gap = mentions[i+1] - mentions[i]
+      durations.append(gap)
 
-print(durations)
-`,
+  print(durations)`,
       },
     ],
   },
   {
-    id: 'sonification-03',
+    id: 'sonification-01',
     title: 'Multimodal Mapping (Pitch and Volume)',
     moduleId: 'data-sonification',
     prerequisites: ['sonification-02'],
@@ -3056,56 +3111,65 @@ print(durations)
     difficulty: 'intermediate',
     learningObjectives: [
       'Map multiple data variables to different sound parameters simultaneously',
-      'Understand the trade-offs between complexity and clarity in audio',
-      'Create a structured data object ready for MIDI synthesis',
+      'Understand the trade-offs between cognitive load and data density in audio',
+      'Translate raw data lists into structured "Note" dictionaries',
+      'Apply MIDI Velocity to represent quantitative scale'
     ],
-    keywords: ['multimodal', 'volume', 'velocity', 'synthesis'],
-    content: `# Multimodal Mapping
+    keywords: ['multimodal', 'volume', 'velocity', 'synthesis', 'mapping'],
+    content: `# Multimodal Mapping: Hearing Complexity
 
-## Analogy
+  ## Analogy
+  Imagine watching a ballet. You aren't just watching the dancer's **feet** (the pitch); you are also watching the **force** of their movements (the volume/velocity) and the **speed** of the dance (the rhythm). By combining these, the dance tells a much richer story than any one movement could alone. Multimodal sonification does the same for your research data.
 
-Imagine watching a ballet. You aren't just watching the dancer's **feet** (the pitch); you are also watching the **force** of their movements (the volume) and the **speed** of the dance (the rhythm). By combining these, the dance tells a much richer story. Multimodal sonification does the same for data.
+  ---
 
-## Key Concepts
+  ## 1. Independent Mapping
+  In Digital Humanities, a single record usually has multiple facets. A diary entry has a **date**, a **word count**, and a **sentiment score**. In multimodal sonification, we assign each facet to a different "dimension" of sound:
 
-### Mapping Multiple Dimensions
-In DH, data is rarely just one number. A diary entry has a **date**, a **word count**, and a **sentiment score**. We can map:
-- **Date** $\\rightarrow$ Timing (when the note plays)
-- **Sentiment** $\\rightarrow$ Pitch (high for happy, low for sad)
-- **Word Count** $\\rightarrow$ Volume (louder for longer entries)
+  - **Date** $\rightarrow$ **Time** (When the note starts)
+  - **Sentiment** $\rightarrow$ **Pitch** (High notes for joy, low notes for sorrow)
+  - **Word Count** $\rightarrow$ **Velocity** (Loudness/Intensity)
 
-::: definition
-**Velocity**: In MIDI terminology, this refers to how "hard" a note is struck, which usually controls the volume.
-:::
+  ::: definition
+  **Velocity**: In MIDI terminology, this refers to how "hard" a note is struck. It ranges from **0 (silent) to 127 (maximum force)**. It is the standard way to map the "weight" or "volume" of a data point.
+  :::
 
-### Complexity vs. Clarity
-The more variables you map, the harder it is for the human ear to distinguish them. Usually, mapping more than 3 variables results in "musical noise."
+  ---
 
-\`\`\`python
-# Data record: [Year, Sentiment_Score, Word_Count]
-entry = [1850, 0.8, 500]
+  ## 2. Complexity vs. Clarity
+  The more variables you map, the harder it is for the human ear to distinguish them. 
+  - **Redundant Mapping**: Mapping one variable to two sounds (e.g., Year $\rightarrow$ Pitch AND Volume). This makes the data very easy to "hear" but uses up your available sounds.
+  - **Independent Mapping**: Mapping different variables to different sounds (e.g., Year $\rightarrow$ Pitch, Count $\rightarrow$ Volume). This shows **correlation**. Can you hear the notes getting higher and louder at the same time?
 
-# Mapping to a MIDI dictionary
-note_data = {
-    "time": entry[0],
-    "pitch": int(60 + (entry[1] * 12)), # Map 0.0-1.0 to an octave
-    "velocity": int((entry[2] / 1000) * 127) # Map count to 0-127 MIDI volume
-}
-\`\`\`
+  ---
 
-## Practice
+  ## 3. Data Structures for Sound
+  When we move from raw data to music, we often transform our lists into **Dictionaries**. This makes the code much more readable when we finally send it to the \`midiutil\` library.
 
-::: try-it
-Try creating a list of three "note dictionaries" manually. If you "play" them in your head, do they sound like the data they represent?
-:::
+  \`\`\`python
+  # Raw Record: [Year, Sentiment, WordCount]
+  raw_entry = [1850, 0.8, 500]
 
-## Transfer
+  # Mapping into a structured "Note" object
+  note_data = {
+      "pitch": int(60 + (raw_entry[1] * 12)), # Maps sentiment to one octave
+      "velocity": int((raw_entry[2] / 1000) * 127), # Maps count to volume
+      "time": raw_entry[0] - 1800 # Maps year to a relative start time
+  }
+  \`\`\`
 
-If you were sonifying a database of historical paintings, how would you map "brightness" or "color saturation"? Would brightness be pitch or volume? Why?
+  ---
 
-::: challenge
-Convert a list of "Book" objects into a list of "Note" dictionaries using pitch for year and velocity for page count.
-:::`,
+  ## 4. The Math of Multi-Mapping
+  Remember the formula from Lesson 1: \`percent * range + offset\`. When doing multimodal mapping, you simply perform this calculation for each sound parameter.
+
+  ::: tip
+  **DH Insight**: Multimodal sonification is perfect for detecting **outliers**. If you hear a note that is suddenly very high (pitch) but very quiet (velocity), you have found a record that is highly positive but very short—a "blip" in your archive that might be worth a closer look.
+  :::
+
+  ::: challenge
+  You have a small "corpus" of books. Each book is a list: \`[year, page_count]\`. Convert these into a list of Note dictionaries. Map the **Year** to a pitch (60-72) and the **Page Count** to a velocity (0-127).
+  :::`,
     challenges: [
       {
         id: 'sonification-03-c1',
@@ -3113,55 +3177,64 @@ Convert a list of "Book" objects into a list of "Note" dictionaries using pitch 
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `# Corpus: Each inner list is [publication_year, page_count]
-corpus = [
-    [1818, 280],
-    [1847, 400],
-    [1897, 320]
-]
+  corpus = [
+      [1818, 280],
+      [1847, 400],
+      [1897, 320]
+  ]
 
-# We want to map:
-# Pitch: 1818-1897 -> 60-72 (MIDI range)
-# Velocity (Volume): 0-500 pages -> 0-127 (MIDI range)
+  # Mapping Rules:
+  # Pitch: 1818-1897 -> 60-72 (Range of 12)
+  # Velocity (Volume): 0-500 pages -> 0-127 (Range of 127)
 
-def generate_note(item):
-    year, pages = item
-    
-    # Map year to pitch (60 to 72)
-    # Hint: (year - 1818) / (1897 - 1818) gives percentage
-    pitch = 60 + int(((year - 1818) / (1897 - 1818)) * 12)
-    
-    # Map pages to velocity (0 to 127)
-    # Hint: (pages / 500) * 127
-    velocity = int((pages / 500) * 127)
-    
-    return {"pitch": pitch, "velocity": velocity}
+  def generate_note(item):
+      year, pages = item
+      
+      # 1. Map year to pitch (60 to 72)
+      # Formula: 60 + (year_percent * 12)
+      pitch = 60 + int(((year - 1818) / (1897 - 1818)) * 12)
+      
+      # 2. Map pages to velocity (0 to 127)
+      # Formula: (pages / 500) * 127
+      velocity = int((pages / 500) * 127)
+      
+      return {"pitch": pitch, "velocity": velocity}
 
-notes = [generate_note(b) for b in corpus]
-for n in notes:
-    print(n)
-`,
+  # Use a list comprehension to process the corpus
+  notes = [generate_note(b) for b in corpus]
+
+  for n in notes:
+      print(n)
+  `,
         expectedOutput: "{'pitch': 60, 'velocity': 71}\n{'pitch': 64, 'velocity': 101}\n{'pitch': 72, 'velocity': 81}",
         hints: [
-          'For pitch, the range is 12 (72 - 60).',
-          'For velocity, ensure you are using the page count divided by 500.',
-          'Use `int()` to ensure MIDI values are whole numbers.',
+          'The "Year Percent" is (year - 1818) / (1897 - 1818).',
+          'Multiply the year percentage by 12 and add it to the base pitch of 60.',
+          'To get velocity, divide pages by 500 and multiply by 127.',
+          'Use int() to round your results to whole MIDI numbers.'
         ],
         solution: `corpus = [
-    [1818, 280],
-    [1847, 400],
-    [1897, 320]
-]
+      [1818, 280],
+      [1847, 400],
+      [1897, 320]
+  ]
 
-def generate_note(item):
-    year, pages = item
-    pitch = 60 + int(((year - 1818) / (1897 - 1818)) * 12)
-    velocity = int((pages / 500) * 127)
-    return {"pitch": pitch, "velocity": velocity}
+  def generate_note(item):
+      year, pages = item
+      
+      # Map Year to Pitch
+      year_range = 1897 - 1818
+      pitch_range = 12
+      pitch = 60 + int(((year - 1818) / year_range) * pitch_range)
+      
+      # Map Pages to Velocity
+      velocity = int((pages / 500) * 127)
+      
+      return {"pitch": pitch, "velocity": velocity}
 
-notes = [generate_note(b) for b in corpus]
-for n in notes:
-    print(n)
-`,
+  notes = [generate_note(b) for b in corpus]
+  for n in notes:
+      print(n)`,
       },
     ],
   },
