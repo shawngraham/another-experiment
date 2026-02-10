@@ -5302,67 +5302,73 @@ print(years)`,
     learningObjectives: [
       'Define nodes and edges in the context of humanities data',
       'Distinguish between directed and undirected graphs',
-      'Identify use cases for network analysis in history and literature',
+      'Understand "Edge Weights" as a measure of relationship strength',
+      'Identify use cases for network analysis in history and literature'
     ],
-    keywords: ['graph theory', 'nodes', 'edges', 'directed graph', 'network analysis'],
+    keywords: ['graph theory', 'nodes', 'edges', 'directed graph', 'network analysis', 'republic of letters'],
     content: `# Introduction to Network Concepts
 
-## Analogy
+  ## Analogy: The Whiteboard of Relationships
+  Imagine a pile of letters found in an archive. If you read them one by one, you learn about individual lives. However, if you draw a line on a whiteboard connecting the sender of every letter to its recipient, you create a "web" that reveals something invisible in the individual texts: **a community structure**. 
 
-Imagine a pile of letters found in an archive. If you read them one by one, you learn about individual lives. However, if you draw a line on a whiteboard connecting the sender of every letter to its recipient, you create a "web" that reveals something invisible in the individual texts: a community structure. You might find that a quiet figure is actually the central hub connecting two rival political groups. This "web" is a **network** (or graph), and the whiteboard drawing is the essence of **network analysis**.
+  You might find that a seemingly quiet figure is actually the central hub connecting two rival political groups. This "web" is a **network** (or graph), and the whiteboard drawing is the essence of **Network Analysis**.
 
-## Key Concepts
+  ---
 
-Network analysis (or Graph Theory) allows us to study relationships. It requires us to abstract our complex humanities data into two specific components:
+  ## 1. Nodes and Edges
+  Network analysis (or Graph Theory) requires us to simplify complex humanities data into two specific components:
 
-::: definition
-**Node (or Vertex)**: The "things" in the network. In the humanities, these are often people (authors, historical figures), but they can also be places, books, or words.
-:::
+  ::: definition
+  **Node (or Vertex)**: The "things" in the network. In the humanities, these are often people (authors, historical figures), but they can also be places, books, or even abstract concepts like "keywords."
+  :::
 
-::: definition
-**Edge (or Link)**: The relationship connecting two nodes. This could represent "wrote a letter to," "is related to," "appears in the same scene as," or "cited the work of."
-:::
+  ::: definition
+  **Edge (or Link)**: The relationship connecting two nodes. This represents the "action" or "connection," such as "wrote a letter to," "is related to," or "appeared in the same scene as."
+  :::
 
-### Types of Networks
+  ---
 
-When modeling your data, you must decide how edges behave:
+  ## 2. Types of Graph Logic
+  When modeling your research data, you must decide how your edges behave:
 
-1.  **Undirected Graph**: Relationships are mutual.
-    *   *Example:* Two characters appear in the same scene together. If A is with B, B is with A.
-2.  **Directed Graph**: Relationships flow one way.
-    *   *Example:* Citations. Book A cites Book B, but Book B does not necessarily cite Book A.
+  1.  **Undirected Graph**: Relationships are mutual.
+      *   *Example*: Two characters appear in the same scene. If A is with B, B is necessarily with A.
+  2.  **Directed Graph**: Relationships flow in a specific direction.
+      *   *Example*: Citations. Book A cites Book B, but Book B does not necessarily cite Book A.
+  3.  **Weighted Graph**: The connection has a "strength" or "frequency."
+      *   *Example*: If Ada sends Charles one letter, the edge weight is 1. If she sends him 50 letters, the edge weight is 50.
 
-### Representing Networks in Python
+  ---
 
-Before we use specialized tools, it helps to understand how to represent a network using basic Python structures. A common way is an **Edge List**—a list of tuples, where each tuple represents a connection.
+  ## 3. Representing Networks in Python
+  The simplest way to store a network in Python is an **Edge List**. This is a list of tuples, where each tuple represents a connection between two nodes.
 
-\`\`\`python
-# A list of co-occurrence (Undirected)
-# Romeo appears with Juliet, Juliet appears with Nurse
-interactions = [
-    ("Romeo", "Juliet"),
-    ("Juliet", "Nurse")
-]
+  \`\`\`python
+  # A list of co-occurrence (Undirected)
+  # Romeo appears with Juliet, Juliet appears with Nurse
+  interactions = [
+      ("Romeo", "Juliet"),
+      ("Juliet", "Nurse")
+  ]
 
-# We can print the participants of the first interaction
-print(f"Interaction between: {interactions[0][0]} and {interactions[0][1]}")
-\`\`\`
+  # Accessing the participants of the first interaction
+  print(f"{interactions[0][0]} connected to {interactions[0][1]}")
+  \`\`\`
 
-## Practice
+  ---
 
-::: try-it
-On a piece of paper, write down 3 of your friends. Draw lines connecting them if they know each other. Is this directed or undirected? (Usually, friendship is treated as undirected!)
-:::
+  ## 4. Why Use This in DH?
+  We use network analysis to move from "Close Reading" (analyzing one text) to **"Distant Reading"** of systems.
+  *   **History (The Republic of Letters)**: Mapping the vast exchange of letters between Enlightenment thinkers to see how ideas traveled across borders.
+  *   **Literature**: Analyzing character networks in plays to identify the protagonist based on "centrality" rather than word count.
 
-## Transfer
+  ::: tip
+  **Modeling Tip**: Before you start coding, always ask: "What is a node in my project?" and "What constitutes an edge?" If you can't define these clearly, your network will be "hairball" of data that is impossible to interpret.
+  :::
 
-In Digital Humanities, we use this to move from "close reading" (reading one text) to "distant reading" of systems.
-*   **History**: Mapping trade routes (Nodes=Cities, Edges=Roads).
-*   **Literature**: Character networks (Nodes=Characters, Edges=Dialogue).
-
-::: challenge
-Model a small correspondence network using Python lists.
-:::`,
+  ::: challenge
+  Model a small correspondence network using Python tuples. You will create a directed "Edge List" where the first name is the Sender and the second is the Recipient.
+  :::`,
     challenges: [
       {
         id: 'network-analysis-01-c1',
@@ -5370,34 +5376,35 @@ Model a small correspondence network using Python lists.
         language: 'python',
         difficulty: 'beginner',
         starterCode: `# We want to model a Directed relationship: Letter Writing.
-# Ada writes to Charles.
-# Charles writes to Mary.
-# Mary writes to Ada.
+  # 1. Ada writes to Charles.
+  # 2. Charles writes to Mary.
+  # 3. Mary writes to Ada.
 
-# Create a list of tuples named 'letter_network' representing these 3 edges.
-# Format: (Sender, Recipient)
+  # Goal: Create a list of tuples named 'letter_network' 
+  # Format: (Sender, Recipient)
 
-letter_network = []
+  letter_network = []
 
-# Your code here
-`,
-        expectedOutput: '(\'Ada\', \'Charles\')\n(\'Charles\', \'Mary\')\n(\'Mary\', \'Ada\')',
+  # Your code here: add the three tuples to the list
+
+  # Verification loop
+  for edge in letter_network:
+      print(edge)
+  `,
+        expectedOutput: "('Ada', 'Charles')\n('Charles', 'Mary')\n('Mary', 'Ada')",
         hints: [
-          'A tuple is defined with parentheses: `("Item A", "Item B")`.',
-          'The list should contain three distinct tuples.',
-          'Order matters in directed graphs (Sender first, Recipient second).',
+          'A tuple uses parentheses: ("Name1", "Name2").',
+          'Add three tuples to your list: letter_network = [(...), (...), (...)]',
+          'In directed graphs, the order inside the tuple matters (Source -> Target).'
         ],
-        solution: `# Create a list of tuples named 'letter_network' representing these 3 edges.
-letter_network = [
-    ("Ada", "Charles"),
-    ("Charles", "Mary"),
-    ("Mary", "Ada")
-]
+        solution: `letter_network = [
+      ("Ada", "Charles"),
+      ("Charles", "Mary"),
+      ("Mary", "Ada")
+  ]
 
-# Simple loop to print them out (for verification)
-for edge in letter_network:
-    print(edge)
-`,
+  for edge in letter_network:
+      print(edge)`,
       },
     ],
   },
@@ -5410,77 +5417,80 @@ for edge in letter_network:
     difficulty: 'beginner',
     learningObjectives: [
       'Import and initialize the NetworkX library',
-      'Programmatically add nodes and edges to a Graph object',
-      'Inspect graph properties (size and order)',
+      'Differentiate between Graph (undirected) and DiGraph (directed) objects',
+      'Programmatically add nodes and edges to a network',
+      'Bulk-load network data from Python lists'
     ],
-    keywords: ['networkx', 'add_node', 'add_edge', 'graph construction'],
+    keywords: ['networkx', 'add_node', 'add_edge', 'graph construction', 'digraph'],
     content: `# Creating Networks with NetworkX
 
-## Analogy
+  ## Analogy: Napkin vs. Database
+  In the previous lesson, we represented connections as simple lists of tuples. That’s like scribbling phone numbers on a napkin. To perform serious research, you need a tool that can search, sort, and calculate complex statistics across those connections. 
 
-In the previous lesson, we used simple lists to represent connections. That's like writing a list of phone numbers on a napkin. To do serious analysis, we need a contact database app that can search, sort, and analyze those connections. In Python, that "app" is the **NetworkX** library.
+  In Python, that tool is **NetworkX**. It transforms your list of names into a "Graph Object"—a mathematical structure that knows how every piece of the web is connected to every other piece.
 
-## Key Concepts
+  ---
 
-**NetworkX** is the standard Python library for studying graphs.
+  ## 1. Initializing the Graph
+  NetworkX offers different "containers" depending on the logic of your data.
 
-### Initializing a Graph
+  - **\`nx.Graph()\`**: For **Undirected** relationships (e.g., "A and B were in the same room").
+  - **\`nx.DiGraph()\`**: For **Directed** relationships (e.g., "A sent a letter to B").
 
-First, we import the library (conventionally as \`nx\`) and create a container.
+  \`\`\`python
+  import networkx as nx
 
-\`\`\`python
-import networkx as nx
+  # Create a container for a social network
+  G = nx.Graph()
+  \`\`\`
 
-# Create an empty generic graph
-G = nx.Graph()
-\`\`\`
+  ---
 
+  ## 2. Constructing the Web
+  You can build a network node-by-node, but in Digital Humanities, we usually load data in "bulk" from lists or spreadsheets.
 
+  ### Adding Nodes (The Participants)
+  \`\`\`python
+  G.add_node("Mary Shelley")
+  G.add_nodes_from(["Percy Shelley", "Lord Byron"])
+  \`\`\`
 
-### Adding Data
+  ### Adding Edges (The Connections)
+  If you add an edge between two names that don't exist yet, NetworkX is smart enough to create the nodes for you automatically.
+  \`\`\`python
+  # This creates the nodes AND the connection
+  G.add_edge("Mary Shelley", "Percy Shelley")
 
-You can build the graph piece by piece or in bulk.
+  # Adding multiple connections at once
+  connections = [("Mary Shelley", "Lord Byron"), ("Percy Shelley", "Lord Byron")]
+  G.add_edges_from(connections)
+  \`\`\`
 
-1.  **Adding Nodes**:
-    \`\`\`python
-    G.add_node("Alice")
-    G.add_nodes_from(["Bob", "Charlie"])
-    \`\`\`
+  ---
 
-2.  **Adding Edges**:
-    When you add an edge, NetworkX automatically adds the nodes if they don't exist yet.
-    \`\`\`python
-    # Alice is connected to Bob
-    G.add_edge("Alice", "Bob")
-    
-    # Bob is connected to Charlie
-    G.add_edges_from([("Bob", "Charlie")])
-    \`\`\`
+  ## 3. Inspecting the Graph
+  Once the graph is built, you can "query" it to see the scale of your network.
 
-### Inspecting the Graph
+  \`\`\`python
+  print(f"Number of people: {G.number_of_nodes()}")
+  print(f"Number of connections: {G.number_of_edges()}")
 
-Once built, you can ask the graph about itself.
+  # View all nodes as a list
+  print(list(G.nodes))
+  \`\`\`
 
-\`\`\`python
-print(G.nodes) # View all nodes
-print(G.edges) # View all connections
-print(G.number_of_nodes()) # How many nodes?
-print(G.number_of_edges()) # How many edges?
-\`\`\`
+  ---
 
-## Practice
+  ## 4. Why Use This? (The DH Use Case)
+  If you are analyzing a 19th-century novel, you wouldn't manually type every character's name. You would write a loop that reads your text and calls \`G.add_edge()\` whenever two characters appear in the same paragraph. NetworkX will then handle the complex math of determining who the "most important" character is based on their position in the web.
 
-::: try-it
-Create a graph \`G\`, add nodes "Sun" and "Moon", and add an edge connecting them. Print \`G.edges\`.
-:::
+  ::: tip
+  **Bulk Loading**: The \`add_edges_from()\` method is your best friend. It allows you to take a list of thousands of tuples (like the ones we made in the last lesson) and turn them into a network in a single line of code.
+  :::
 
-## Transfer
-
-If you were analyzing a novel, you wouldn't manually type every character. You would likely write a loop that iterates through your text analysis results and calls \`G.add_edge()\` whenever two proper nouns appear in the same paragraph.
-
-::: challenge
-Build a network of historical allies.
-:::`,
+  ::: challenge
+  In the first challenge, build a small city-state alliance network manually. In the second, practice bulk-loading an "edge list" into a graph object.
+  :::`,
     challenges: [
       {
         id: 'network-analysis-02-c1',
@@ -5489,89 +5499,86 @@ Build a network of historical allies.
         difficulty: 'beginner',
         starterCode: `import networkx as nx
 
-# 1. Create an empty Graph object named 'alliances'
-alliances = None
+  # 1. Create an empty Graph object named 'alliances'
+  alliances = 
 
-# 2. Add three nodes: "Rome", "Athens", "Sparta"
-# (Use a list to add them all at once)
+  # 2. Add three nodes: "Rome", "Athens", "Sparta" (use a list)
 
-# 3. Add an edge between "Rome" and "Athens"
-# 4. Add an edge between "Athens" and "Sparta"
+  # 3. Add an edge between "Rome" and "Athens"
+  # 4. Add an edge between "Athens" and "Sparta"
 
-# Your code here
+  # Your code here
 
-# Check the output
-if alliances:
-    print(f"Nodes: {alliances.number_of_nodes()}")
-    print(f"Edges: {alliances.number_of_edges()}")
-`,
+  # Verify the network size
+  print(f"Nodes: {alliances.number_of_nodes()}")
+  print(f"Edges: {alliances.number_of_edges()}")
+  `,
         expectedOutput: 'Nodes: 3\nEdges: 2',
         hints: [
-          'Use `nx.Graph()` to create the object.',
-          'Use `.add_nodes_from(["A", "B", ...])`.',
-          'Use `.add_edge("A", "B")`.',
+          'Use nx.Graph() to initialize.',
+          'Use .add_nodes_from(["Rome", "Athens", "Sparta"]) to add multiple nodes at once.',
+          'Adding an edge is done with .add_edge("City1", "City2").'
         ],
         solution: `import networkx as nx
 
-# 1. Create an empty Graph object named 'alliances'
-alliances = nx.Graph()
+  alliances = nx.Graph()
 
-# 2. Add three nodes
-alliances.add_nodes_from(["Rome", "Athens", "Sparta"])
+  # Add nodes
+  alliances.add_nodes_from(["Rome", "Athens", "Sparta"])
 
-# 3. Add edges
-alliances.add_edge("Rome", "Athens")
-alliances.add_edge("Athens", "Sparta")
+  # Add edges
+  alliances.add_edge("Rome", "Athens")
+  alliances.add_edge("Athens", "Sparta")
 
-# Check the output
-print(f"Nodes: {alliances.number_of_nodes()}")
-print(f"Edges: {alliances.number_of_edges()}")
-`,
+  print(f"Nodes: {alliances.number_of_nodes()}")
+  print(f"Edges: {alliances.number_of_edges()}")`,
       },
       {
         id: 'network-analysis-02-c2',
-        title: 'From List to Graph',
+        title: 'Bulk-Loading an Edge List',
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `import networkx as nx
 
-# A raw list of email exchanges (Sender, Receiver)
-email_data = [
-    ("Employee", "Manager"),
-    ("Manager", "Director"),
-    ("Employee", "HR"),
-    ("HR", "Director")
-]
+  # A raw list of archival data: (Sender, Receiver)
+  correspondence = [
+      ("Ada", "Charles"),
+      ("Charles", "Mary"),
+      ("Ada", "Mary"),
+      ("Mary", "Charles")
+  ]
 
-G = nx.Graph()
+  # Goal: Create a Directed Graph (DiGraph) and load all edges at once.
+  # 1. Initialize nx.DiGraph() as 'G'
+  # 2. Use the bulk method to add 'correspondence'
+  # 3. Print the number of edges
 
-# Use a loop or a specific NetworkX method to add all these edges to G
-# Your code here
+  # Your code here
 
-print(list(G.edges))
-`,
-        expectedOutput: '[(\'Employee\', \'Manager\'), (\'Employee\', \'HR\'), (\'Manager\', \'Director\'), (\'Director\', \'HR\')]',
+  print(f"Total Edges: {G.number_of_edges()}")
+  `,
+        expectedOutput: 'Total Edges: 4',
         hints: [
-          'You *could* loop through `email_data` and call `G.add_edge` for each item.',
-          'Or, you can use the bulk method `G.add_edges_from(the_list)`.',
-          'The order of edges in the output might vary slightly, that is okay.',
+          'Since the order of sender/receiver matters, use nx.DiGraph().',
+          'The bulk method is G.add_edges_from(correspondence).',
+          'Check G.number_of_edges() for the final count.'
         ],
         solution: `import networkx as nx
 
-email_data = [
-    ("Employee", "Manager"),
-    ("Manager", "Director"),
-    ("Employee", "HR"),
-    ("HR", "Director")
-]
+  correspondence = [
+      ("Ada", "Charles"),
+      ("Charles", "Mary"),
+      ("Ada", "Mary"),
+      ("Mary", "Charles")
+  ]
 
-G = nx.Graph()
+  # Initialize directed graph
+  G = nx.DiGraph()
 
-# Bulk add
-G.add_edges_from(email_data)
+  # Bulk load
+  G.add_edges_from(correspondence)
 
-print(list(G.edges))
-`,
+  print(f"Total Edges: {G.number_of_edges()}")`,
       },
     ],
   },
@@ -5583,63 +5590,74 @@ print(list(G.edges))
     estimatedTimeMinutes: 40,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Explain the difference between degree and betweenness centrality',
-      'Calculate centrality metrics using NetworkX',
-      'Interpret centrality scores to identify key figures in a network',
+      'Explain the difference between Degree and Betweenness centrality',
+      'Calculate centrality metrics using NetworkX functions',
+      'Sort and filter centrality dictionaries to identify top influencers',
+      'Interpret centrality scores within a historical or literary context'
     ],
     keywords: ['degree centrality', 'betweenness centrality', 'hubs', 'brokers', 'metrics'],
-    content: `# Centrality Measures
+    content: `# Centrality: Mapping Power and Influence
 
-## Analogy
+  ## Analogy: The High School Cafeteria
+  In a social network, who is the most "important" person? The answer depends on how you define importance:
 
-In a high school cafeteria, who is the most "popular" student? 
-1. The person sitting at a table with 20 people around them? (Degree Centrality)
-2. The person who wanders between the jocks, the theater kids, and the skaters, carrying gossip between groups? (Betweenness Centrality)
+  1.  **The Hub (Degree Centrality)**: This is the person sitting at a table with 20 people talking to them. They are the most "popular" or connected.
+  2.  **The Broker (Betweenness Centrality)**: This is the person who sits between the "Theater Kids" and the "Athletes." They might only have two friends, but they are the only ones who can pass information from one group to the other.
 
-Both are "important," but in different ways. Network analysis gives us math to measure this importance.
+  Both are powerful, but for different reasons.
 
-## Key Concepts
+  ---
 
-### Degree Centrality
-**Definition:** The fraction of nodes in the network that a specific node is connected to. In a social network, this is "popularity" or "connectedness."
+  ## 1. Degree Centrality (Popularity)
+  Degree centrality measures the fraction of nodes a specific node is connected to. 
+  - **High Score**: Indicates a "Hub."
+  - **DH Use Case**: Identifying the protagonist of a play by seeing who interacts with the most other characters.
 
-\`\`\`python
-# Returns a dictionary: {'NodeName': score, ...}
-degree_dict = nx.degree_centrality(G)
-\`\`\`
+  \`\`\`python
+  # Returns a dictionary: {'Name': 0.85, ...}
+  # Scores are "normalized" between 0.0 and 1.0
+  degree_dict = nx.degree_centrality(G)
+  \`\`\`
 
-### Betweenness Centrality
-**Definition:** How often a node acts as a bridge along the shortest path between two other nodes. High betweenness indicates a "broker" or "gatekeeper" who controls information flow.
+  ---
 
-\`\`\`python
-# Returns a dictionary: {'NodeName': score, ...}
-betweenness_dict = nx.betweenness_centrality(G)
-\`\`\`
+  ## 2. Betweenness Centrality (Gatekeeping)
+  This measures how often a node acts as a bridge along the shortest path between other nodes.
+  - **High Score**: Indicates a "Broker" or "Gatekeeper."
+  - **DH Use Case**: Finding a mid-level diplomat in an archive who, despite not being famous, was the only person connecting two different royal courts.
 
-### Sorting Results
-Since these functions return dictionaries, we often want to sort them to find the top node.
+  \`\`\`python
+  # Measures who controls the "flow" of information
+  betweenness_dict = nx.betweenness_centrality(G)
+  \`\`\`
 
-\`\`\`python
-# Sort by value (score) in descending order
-sorted_nodes = sorted(degree_dict.items(), key=lambda item: item[1], reverse=True)
-top_node = sorted_nodes[0]
-print(f"Top node: {top_node[0]} with score {top_node[1]}")
-\`\`\`
+  ---
 
-## Practice
+  ## 3. Interpreting the Math
+  NetworkX normalizes these scores so they stay between **0 and 1**. 
+  - A Degree Centrality of **1.0** means that node is connected to **every other node** in the network.
+  - A score of **0.0** means the node is totally isolated.
 
-::: try-it
-If you have a star-shaped network (one center node connected to 5 outer nodes), who has higher Degree Centrality? Who has higher Betweenness?
-:::
+  ---
 
-## Transfer
+  ## 4. Sorting the Results
+  Because centrality functions return a dictionary, we usually need to sort them to find our "top" figures.
 
-*   **History**: Who was the most important letter writer in the Republic of Letters? (Degree). Who connected the French scientists to the English scientists? (Betweenness).
-*   **Literature**: Which character connects the main plot to the subplot?
+  \`\`\`python
+  # Sort dictionary by value (item[1]) in descending order
+  ranked = sorted(degree_dict.items(), key=lambda x: x[1], reverse=True)
 
-::: challenge
-Analyze a small social graph to find the influencer and the broker.
-:::`,
+  # Print the top person
+  print(f"The Hub is {ranked[0][0]} with a score of {ranked[0][1]}")
+  \`\`\`
+
+  ::: tip
+  **Humanities Insight**: A character might have a very low word count in a novel but a very high **Betweenness Centrality**. This suggests they are a "messenger" or a "witness" who links disparate parts of the plot together.
+  :::
+
+  ::: challenge
+  In Challenge 1, identify the hub in a "Star Graph." In Challenge 2, calculate the "broker" score for a node that serves as the only bridge to a sub-group.
+  :::`,
     challenges: [
       {
         id: 'network-analysis-03-c1',
@@ -5648,53 +5666,32 @@ Analyze a small social graph to find the influencer and the broker.
         difficulty: 'intermediate',
         starterCode: `import networkx as nx
 
-# Create a network
-G = nx.Graph()
-edges = [
-    ("A", "B"), ("A", "C"), ("A", "D"), ("A", "E"), # A connects to everyone
-    ("B", "C"), # B connects to C
-    ("F", "G")  # F and G are isolated
-]
-G.add_edges_from(edges)
+  # Creating a "Star Graph"
+  # 'A' is the center, connected to B, C, D, and E
+  G = nx.Graph()
+  G.add_edges_from([("A", "B"), ("A", "C"), ("A", "D"), ("A", "E")])
 
-# 1. Calculate degree centrality for G
-# degree_scores = ...
+  # 1. Calculate the degree centrality for the graph
+  # 2. Extract and print the score for node "A"
 
-# 2. Extract the score for node "A"
-# score_a = ...
-
-# Your code here
-`,
+  # Your code here
+  `,
         expectedOutput: '1.0',
         hints: [
-          'Use `nx.degree_centrality(G)`.',
-          'This returns a dictionary where keys are node names.',
-          'Access the value using `dictionary[\'A\']`. Note: Since \'A\' is connected to B, C, D, E (and the total nodes are 7, but relevant neighbors are 4), NetworkX normalizes this score. Wait, actually check `G.degree()` vs `degree_centrality`. The challenge expects the *value* from the dictionary.',
+          'Use scores = nx.degree_centrality(G).',
+          'In a network of 5 nodes, if A has 4 connections, its normalized score is 4/(5-1) = 1.0.',
+          'Access the dictionary value with scores["A"].'
         ],
         solution: `import networkx as nx
 
-G = nx.Graph()
-edges = [
-    ("A", "B"), ("A", "C"), ("A", "D"), ("A", "E"),
-    ("F", "G")
-]
-# Note: In this specific graph setup, A is connected to B, C, D, E.
-# There are 7 nodes total (A,B,C,D,E,F,G).
-# Degree Centrality = (degree) / (n - 1).
-# A has degree 4. n-1 is 6. 4/6 = 0.66...
-# WAIT: In the prompt expected output I put 1.0, but that's only true if A connects to EVERYONE.
-# Let's adjust the code to ensure A connects to everything to match the output, 
-# OR adjust the expected output. Let's create a simpler Star Graph for the solution.
+  G = nx.Graph()
+  G.add_edges_from([("A", "B"), ("A", "C"), ("A", "D"), ("A", "E")])
 
-G = nx.Graph()
-# Star graph: Center 'A' connected to B, C, D, E
-G.add_edges_from([("A", "B"), ("A", "C"), ("A", "D"), ("A", "E")])
+  # Calculate
+  degree_scores = nx.degree_centrality(G)
 
-degree_scores = nx.degree_centrality(G)
-score_a = degree_scores['A']
-
-print(score_a)
-`,
+  # Print score for center node
+  print(degree_scores['A'])`,
       },
       {
         id: 'network-analysis-03-c2',
@@ -5703,38 +5700,39 @@ print(score_a)
         difficulty: 'intermediate',
         starterCode: `import networkx as nx
 
-# Kite Graph structure
-# A-B-C is a triangle
-# D connects to B, but also to E
-# E connects only to D
-G = nx.Graph()
-edges = [("A","B"), ("B","C"), ("A","C"), ("B","D"), ("D","E")]
-G.add_edges_from(edges)
+  # A "Kite" graph
+  # A, B, and C form a triangle (a clique)
+  # D connects to B
+  # E connects only to D
+  G = nx.Graph()
+  edges = [("A", "B"), ("B", "C"), ("A", "C"), ("B", "D"), ("D", "E")]
+  G.add_edges_from(edges)
 
-# 1. Calculate betweenness centrality
-# 2. Print the score for node 'D'
+  # Goal: Find the Betweenness Centrality of node 'D'
+  # D is the 'broker' because any info going to E must pass through D.
 
-# Your code here
-`,
+  # 1. Calculate betweenness_centrality
+  # 2. Print the score for node 'D'
+
+  # Your code here
+  `,
         expectedOutput: '0.5',
         hints: [
-          'Use `nx.betweenness_centrality(G)`.',
-          'Node \'D\' is the only path to get to \'E\'.',
-          'Print the float value associated with key \'D\'.',
+          'Use nx.betweenness_centrality(G).',
+          'Node D acts as a bridge for all paths leading to E.',
+          'The output should be a float (0.5).'
         ],
         solution: `import networkx as nx
 
-G = nx.Graph()
-edges = [("A","B"), ("B","C"), ("A","C"), ("B","D"), ("D","E")]
-G.add_edges_from(edges)
+  G = nx.Graph()
+  edges = [("A", "B"), ("B", "C"), ("A", "C"), ("B", "D"), ("D", "E")]
+  G.add_edges_from(edges)
 
-bet_scores = nx.betweenness_centrality(G)
-print(bet_scores['D']) 
-# Note: In unnormalized, it's different, but nx default is normalized.
-# Pairs: (A,E), (B,E), (C,E) all must pass through D.
-# Pairs (A,D), (C,D) etc do not pass through D to get to destination.
-# For a small graph like this, D has high betweenness.
-`,
+  # Calculate betweenness
+  b_scores = nx.betweenness_centrality(G)
+
+  # D connects the A-B-C cluster to E
+  print(b_scores['D'])`,
       },
     ],
   },
@@ -5746,65 +5744,80 @@ print(bet_scores['D'])
     estimatedTimeMinutes: 30,
     difficulty: 'beginner',
     learningObjectives: [
-      'Create basic visual plots of graphs using NetworkX',
-      'Understand the role of layout algorithms in visualization',
-      'Customize node and edge appearance',
+      'Create visual plots of graphs using the NetworkX and Matplotlib',
+      'Understand the role of force-directed layout algorithms (Spring Layout)',
+      'Map node attributes (like centrality) to visual properties (like size)',
+      'Identify strategies to avoid the "Hairball" problem in large visualizations'
     ],
-    keywords: ['visualization', 'nx.draw', 'spring_layout', 'matplotlib'],
-    content: `# Visualizing Networks
+    keywords: ['visualization', 'nx.draw', 'spring_layout', 'matplotlib', 'aesthetics'],
+    content: `# Visualizing Networks: Mapping the Web
 
-## Analogy
+  ## Analogy: The Mapmaker's Choice
+  A list of numbers (centrality scores) is useful, but a visual map is often more intuitive. Just as a mapmaker must decide whether to put North at the top or how to flatten the globe onto a 2D page, a network scientist must decide how to arrange nodes on the screen. 
 
-A list of numbers (centrality scores) is useful, but a map is often more intuitive. Just as a mapmaker must decide whether to put North at the top or how to flatten the globe onto paper, a network scientist must decide how to arrange nodes on the screen. This arrangement is called the **Layout**.
+  This arrangement is called the **Layout**. Because a graph has no inherent "shape" in the real world, the shape we give it is a choice we make to highlight specific patterns.
 
-## Key Concepts
+  ---
 
-NetworkX relies on a separate library called **Matplotlib** to draw.
+  ## 1. Basic Drawing
+  NetworkX uses **Matplotlib** as its drawing engine. The simplest way to see your network is using \`nx.draw()\`.
 
-### Basic Drawing
+  \`\`\`python
+  import networkx as nx
+  import matplotlib.pyplot as plt
 
-\`\`\`python
-import networkx as nx
-import matplotlib.pyplot as plt
+  # Create a simple triangle
+  G = nx.complete_graph(3)
 
-# Assume G exists
-nx.draw(G, with_labels=True)
-\`\`\`
+  # Draw it with labels
+  nx.draw(G, with_labels=True)
+  plt.show()
+  \`\`\`
 
-### Layouts
+  ---
 
-A graph has no inherent "shape." We apply algorithms to determine node positions.
-*   **Spring Layout**: Models edges as springs. Connected nodes pull together; disconnected nodes push apart. Good for revealing clusters.
-*   **Circular Layout**: Arranges nodes in a circle. Good for visualizing density.
+  ## 2. Layout Algorithms
+  Algorithms determine the X and Y coordinates of your nodes.
 
-\`\`\`python
-# Calculate positions explicitly
-pos = nx.spring_layout(G)
+  - **Spring Layout**: The "gold standard" for DH. It treats edges like springs and nodes like magnets. Connected nodes pull together; disconnected nodes push apart. This naturally reveals **communities** and clusters.
+  - **Circular Layout**: Arranges everyone in a perfect circle. This is great for showing the sheer density of connections without favoring any specific node's position.
 
-# Pass positions to the draw function
-nx.draw(G, pos=pos, with_labels=True, node_color='lightblue')
-\`\`\`
+  \`\`\`python
+  # Calculate positions as a dictionary of coordinates
+  pos = nx.spring_layout(G)
 
-### Customization
-You can change aesthetics to represent data (e.g., node size based on centrality).
+  # Pass those positions to the drawing function
+  nx.draw(G, pos=pos, node_color='skyblue', edge_color='gray')
+  \`\`\`
 
-\`\`\`python
-nx.draw(G, node_color='red', node_size=500, font_weight='bold')
-\`\`\`
+  ---
 
-## Practice
+  ## 3. Mapping Data to Aesthetics
+  The real power of visualization comes from **data-driven design**. You can make a node's size represent its **Centrality** or its color represent its **Category** (e.g., blue for poets, red for novelists).
 
-::: try-it
-Experimenting with layouts is visual. In a real environment, you would run this and see a popup window.
-:::
+  \`\`\`python
+  # Example: Making nodes larger based on a list of sizes
+  node_sizes = [100, 500, 1000] 
+  nx.draw(G, node_size=node_sizes)
+  \`\`\`
 
-## Transfer
+  ---
 
-Visualizations are powerful for "exploratory data analysis" (EDA). You might spot a cluster of characters in a novel you didn't realize were so tightly knit until you saw them grouped together by the spring layout.
+  ## 4. The "Hairball" Problem
+  In Digital Humanities, we often deal with large archives. If you try to visualize 5,000 nodes at once, you will get a "Hairball"—a messy black blob where no patterns are visible. 
 
-::: challenge
-Generate the layout positions for a graph.
-:::`,
+  **Strategies to fix the Hairball:**
+  1.  **Filter**: Only show the top 10% most connected nodes.
+  2.  **Color**: Use color to separate different groups.
+  3.  **Alpha**: Make edges transparent so they don't overlap into a solid mass.
+
+  ::: tip
+  **EDA (Exploratory Data Analysis)**: Use visualization as a starting point, not just a final result. A spring layout might group characters together that you didn't realize were connected, prompting you to go back and "close-read" those specific chapters.
+  :::
+
+  ::: challenge
+  In this challenge, you will generate the layout coordinates for a small graph. While we aren't "drawing" to the screen in the sandbox, you will verify that the algorithm successfully calculated the (x, y) positions for the nodes.
+  :::`,
     challenges: [
       {
         id: 'network-analysis-04-c1',
@@ -5813,38 +5826,71 @@ Generate the layout positions for a graph.
         difficulty: 'beginner',
         starterCode: `import networkx as nx
 
-G = nx.Graph()
-G.add_edges_from([("1", "2"), ("2", "3"), ("3", "1"), ("3", "4")])
+  G = nx.Graph()
+  G.add_edges_from([("1", "2"), ("2", "3"), ("3", "1"), ("3", "4")])
 
-# 1. Use the spring_layout algorithm to generate positions for G.
-# Store the result in a variable named 'positions'
-# Note: We are not drawing it to the screen (which is hard to grade), 
-# we are just calculating the coordinates.
+  # Goal: Use the spring_layout algorithm to generate positions for G.
+  # 1. Call nx.spring_layout(G)
+  # 2. Store the resulting dictionary in a variable named 'positions'
 
-# Your code here
+  # Your code here
 
-# Check result
-print(type(positions))
-print("1" in positions)
-`,
-        expectedOutput: '<class \'dict\'>\nTrue',
+  # Verification
+  print(type(positions))
+  print("1" in positions)
+  `,
+        expectedOutput: "<class 'dict'>\nTrue",
         hints: [
-          'The function is `nx.spring_layout(G)`.',
-          'It returns a dictionary where keys are nodes and values are (x,y) coordinates.',
-          'You do not need `plt.show()` for this challenge.',
+          'The function is positions = nx.spring_layout(G).',
+          'This returns a dictionary where each node name is a key and the value is a list of [x, y] coordinates.',
+          'You do not need matplotlib for this specific calculation step.'
         ],
         solution: `import networkx as nx
 
-G = nx.Graph()
-G.add_edges_from([("1", "2"), ("2", "3"), ("3", "1"), ("3", "4")])
+  G = nx.Graph()
+  G.add_edges_from([("1", "2"), ("2", "3"), ("3", "1"), ("3", "4")])
 
-# Generate positions
-positions = nx.spring_layout(G)
+  # Calculate coordinates
+  positions = nx.spring_layout(G)
 
-# Verify
-print(type(positions))
-print("1" in positions)
-`,
+  print(type(positions))
+  print("1" in positions)`,
+      },
+      {
+        id: 'network-analysis-04-c2',
+        title: 'Prepare Node Sizes',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import networkx as nx
+
+  G = nx.Graph()
+  G.add_edges_from([("A", "B"), ("A", "C"), ("B", "C"), ("C", "D")])
+
+  # We want node size to be based on Degree.
+  # 1. Get the degrees of the nodes: G.degree()
+  # 2. Create a list called 'sizes' that multiplies each degree by 100
+  # Example: If degree is 2, size should be 200.
+
+  # Your code here (use a loop or list comprehension)
+
+  print(sizes)
+  `,
+        expectedOutput: '[200, 200, 300, 100]',
+        hints: [
+          'G.degree() returns a list of (node, degree) tuples.',
+          'Use a list comprehension: [d * 100 for n, d in G.degree()]',
+          'The order of nodes in G.degree() is A, B, C, D.'
+        ],
+        solution: `import networkx as nx
+
+  G = nx.Graph()
+  G.add_edges_from([("A", "B"), ("A", "C"), ("B", "C"), ("C", "D")])
+
+  # Calculate sizes based on degree
+  # Degree of A=2, B=2, C=3, D=1
+  sizes = [deg * 100 for node, deg in G.degree()]
+
+  print(sizes)`,
       },
     ],
   },
@@ -5856,53 +5902,57 @@ print("1" in positions)
     estimatedTimeMinutes: 45,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Process raw interaction data into a graph',
-      'Analyze the graph to identify the "main character"',
-      'Synthesize network construction and analysis skills',
+      'Process raw interaction lists into a NetworkX Graph object',
+      'Use Degree Centrality to mathematically identify a protagonist',
+      'Use Betweenness Centrality to identify "bridge" characters or gatekeepers',
+      'Apply the max() function with a key argument to extract top results from dictionaries',
     ],
-    keywords: ['case study', 'data cleaning', 'applied analysis', 'character networks'],
+    keywords: ['case study', 'data cleaning', 'applied analysis', 'character networks', 'protagonist'],
     content: `# Case Study: Character Networks
 
-## Analogy
+  ## The Digital Detective
+  We are now ready to play the role of digital detectives. Imagine you have found the playbill for a lost play in an archive. Whoever had this playbill took the time to mark every time two characters spoke to each other, and the nature of the scene. 
 
-We are now ready to be digital detectives. We have a dataset of interactions from a fictional play. Instead of reading the play, we will look at the metadata—who spoke to whom—to mathematically determine the protagonist and the bridge character.
+  By modeling this as a network, we can determine the "social structure" of the play. Who is the true protagonist? Who is the "broker" who connects the palace scenes to the street scenes? Network analysis allows us to answer these questions using math rather than intuition.
 
-## Key Concepts
+  ---
 
-A typical DH workflow involves:
-1.  **Ingestion**: Loading data (often from CSV or lists).
-2.  **Modeling**: Transforming data into Nodes and Edges.
-3.  **Analysis**: Calculating metrics.
-4.  **Interpretation**: Making humanistic claims based on numbers.
+  ## 1. The DH Workflow
+  A typical Network Analysis project follows these four steps:
+  1.  **Ingestion**: Loading raw data (like a list of dialogue interactions).
+  2.  **Modeling**: Deciding if the graph is Directed (who spoke first?) or Undirected (they both spoke).
+  3.  **Analysis**: Running metrics like Centrality.
+  4.  **Interpretation**: Turning those numbers back into a humanistic argument.
 
-For this lesson, we will simulate a dataset of dialogue interactions.
+  ---
 
-\`\`\`python
-# Raw Data: List of dicts
-interactions = [
-    {"source": "Hamlet", "target": "Horatio"},
-    {"source": "Hamlet", "target": "Ghost"},
-    # ...
-]
-\`\`\`
+  ## 2. Extracting the "Winner"
+  Centrality functions in NetworkX return a dictionary: \`{"Hamlet": 0.8, "Ophelia": 0.4}\`. To find the "most important" character, we need to find the **Key** with the **Maximum Value**.
 
-We loop through this list and add edges to a graph \`G\`. Then we run our centrality measures.
+  Python has a very efficient way to do this using the \`max()\` function:
 
-## Practice
+  \`\`\`python
+  centrality = {"Hero": 10, "Villain": 8, "Sidekick": 5}
 
-::: try-it
-Think about a book you know well. If you removed the main character from the network, would the network fall apart into disconnected pieces? If so, that character has high "Betweenness."
-:::
+  # Find the key (name) that has the highest value (score)
+  winner = max(centrality, key=centrality.get)
+  print(winner) # Output: Hero
+  \`\`\`
 
-## Transfer
+  ---
 
-This same workflow applies to:
-*   **Citation Networks**: Who is the most cited scholar?
-*   **Archival Metadata**: Which topics appear together most frequently?
+  ## 3. Handling Redundant Data
+  In raw humanities data, you often see the same interaction recorded twice (e.g., "Hamlet speaks to Horatio" and later "Horatio speaks to Hamlet"). 
 
-::: challenge
-Process a dialogue dataset to find the most central character.
-:::`,
+  If you use an **Undirected Graph** (\`nx.Graph()\`), NetworkX automatically handles this. It treats an edge between A and B as the same thing as an edge between B and A. It won't create two separate lines, which keeps your centrality scores accurate.
+
+  ::: tip
+  **Beyond Literature**: This same workflow applies to **Citation Networks** (which scholar is the hub of a field?) and **Metadata Analysis** (which subjects are most frequently grouped together in a library catalog?).
+  :::
+
+  ::: challenge
+  In Challenge 1, you will find the "Protagonist" (the Hub) of a small play. In Challenge 2, you will identify the "Broker"—the character who connects two otherwise isolated communities.
+  :::`,
     challenges: [
       {
         id: 'network-analysis-05-c1',
@@ -5911,73 +5961,49 @@ Process a dialogue dataset to find the most central character.
         difficulty: 'advanced',
         starterCode: `import networkx as nx
 
-# 1. The Dataset
-# A list of scenes where two characters spoke
-dialogue_data = [
-    ("Hero", "Sidekick"),
-    ("Hero", "Villain"),
-    ("Sidekick", "Villain"),
-    ("Villain", "Henchman1"),
-    ("Villain", "Henchman2"),
-    ("Hero", "Mentor"),
-    ("Mentor", "Hero"), # Duplicate reverse edge (undirected handles this)
-]
+  # A list of character interactions in a play
+  dialogue_data = [
+      ("Hero", "Sidekick"), ("Hero", "Villain"), ("Hero", "Mentor"),
+      ("Hero", "Townsperson1"), ("Hero", "Townsperson2"),
+      ("Villain", "Henchman1"), ("Villain", "Henchman2"),
+      ("Sidekick", "Villain")
+  ]
 
-# 2. Build the Graph
-G = nx.Graph()
-# Use a method to add all edges from dialogue_data to G
-# Your code here...
+  # 1. Initialize an undirected Graph 'G'
+  # 2. Add the edges from 'dialogue_data'
+  # 3. Calculate degree_centrality
+  # 4. Use max() to find the character with the highest score
+  # 5. Store the name in 'protagonist' and print it
 
-# 3. Analyze
-# Calculate Degree Centrality
-centrality = nx.degree_centrality(G)
+  # Your code here
 
-# 4. Find the character with the maximum score
-# Use Python's max() function with a key argument, or sort the dict
-# Store the name of the character in variable 'protagonist'
-
-protagonist = "" 
-
-print(protagonist)
-`,
+  print(protagonist)
+  `,
         expectedOutput: 'Hero',
         hints: [
-          'Use `G.add_edges_from(dialogue_data)`.',
-          '`centrality` is a dictionary: `{\'Hero\': 0.8, \'Villain\': 0.8, ...}`.',
-          'To find the key with the highest value: `max(centrality, key=centrality.get)`.',
-          'Note: In this data, Hero has 3 unique connections (Sidekick, Villain, Mentor). Villain has 4 (Hero, Sidekick, Henchman1, Henchman2).',
-          '**Wait**, look closely at the data. Villain connects to: Hero, Sidekick, Henchman1, Henchman2. Hero connects to: Sidekick, Villain, Mentor.',
-          '`Villain` has degree 4. `Hero` has degree 3.',
-          'The expected output is `Hero`? Let me re-read the starter code. Ah, usually the Hero is the protagonist, but in this network structure, the Villain is actually more central (degree-wise).',
-          '**Correction**: For the code to output "Hero", the data must support it. Let\'s add more connections to Hero in the *Solution* or accept that the Villain is the answer.',
-          '*Actually*, let\'s update the starter code data in the solution to ensure Hero wins, or change the expected output to Villain. Let\'s change the Expected Output to `Villain` because based on the provided data, the Villain is the hub!',
+          'Initialize with G = nx.Graph().',
+          'Load edges with G.add_edges_from(dialogue_data).',
+          'Use max(centrality_dict, key=centrality_dict.get) to find the name of the top node.'
         ],
         solution: `import networkx as nx
 
-dialogue_data = [
-    ("Hero", "Sidekick"),
-    ("Hero", "Villain"),
-    ("Sidekick", "Villain"),
-    ("Villain", "Henchman1"),
-    ("Villain", "Henchman2"),
-    ("Hero", "Mentor"),
-    ("Mentor", "Hero"), 
-]
+  dialogue_data = [
+      ("Hero", "Sidekick"), ("Hero", "Villain"), ("Hero", "Mentor"),
+      ("Hero", "Townsperson1"), ("Hero", "Townsperson2"),
+      ("Villain", "Henchman1"), ("Villain", "Henchman2"),
+      ("Sidekick", "Villain")
+  ]
 
-G = nx.Graph()
-G.add_edges_from(dialogue_data)
+  G = nx.Graph()
+  G.add_edges_from(dialogue_data)
 
-centrality = nx.degree_centrality(G)
+  # Calculate Degree Centrality (Hubs)
+  scores = nx.degree_centrality(G)
 
-# Find the key with the highest value
-protagonist = max(centrality, key=centrality.get)
+  # Find the name of the character with the highest score
+  protagonist = max(scores, key=scores.get)
 
-# Based on the data provided:
-# Hero neighbors: Sidekick, Villain, Mentor (3)
-# Villain neighbors: Hero, Sidekick, Henchman1, Henchman2 (4)
-# So the answer is Villain.
-print(protagonist)
-`,
+  print(protagonist)`,
       },
       {
         id: 'network-analysis-05-c2',
@@ -5986,52 +6012,48 @@ print(protagonist)
         difficulty: 'advanced',
         starterCode: `import networkx as nx
 
-# Two communities connected by one person
-data = [
-    # Community A
-    ("A1", "A2"), ("A2", "A3"), ("A1", "A3"),
-    # Community B
-    ("B1", "B2"), ("B2", "B3"), ("B1", "B3"),
-    # The Bridge
-    ("A3", "Broker"),
-    ("Broker", "B1")
-]
+  # Two communities (A and B) connected only by the "Broker"
+  network_data = [
+      ("A1", "A2"), ("A2", "A3"), ("A1", "A3"), # Clique A
+      ("B1", "B2"), ("B2", "B3"), ("B1", "B3"), # Clique B
+      ("A1", "Broker"), # Connection to Bridge
+      ("Broker", "B1")  # Connection to Bridge
+  ]
 
-G = nx.Graph()
-G.add_edges_from(data)
+  G = nx.Graph()
+  G.add_edges_from(network_data)
 
-# Calculate Betweenness Centrality
-# Find the node with the highest betweenness score
-# Print that node name
+  # 1. Calculate Betweenness Centrality
+  # 2. Find the character with the highest score
+  # 3. Print the name of that character
 
-# Your code here
-`,
+  # Your code here
+  `,
         expectedOutput: 'Broker',
         hints: [
-          'Use `nx.betweenness_centrality(G)`.',
-          'Use `max(results, key=results.get)` to find the top node.',
-          'The Broker connects the two triangles (Community A and B).',
+          'Betweenness identifies the node that acts as the only path between groups.',
+          'Use nx.betweenness_centrality(G).',
+          'The "Broker" node should have the highest score because it links the A and B clusters.'
         ],
         solution: `import networkx as nx
 
-data = [
-    ("A1", "A2"), ("A2", "A3"), ("A1", "A3"),
-    ("B1", "B2"), ("B2", "B3"), ("B1", "B3"),
-    ("A3", "Broker"),
-    ("Broker", "B1")
-]
+  network_data = [
+      ("A1", "A2"), ("A2", "A3"), ("A1", "A3"),
+      ("B1", "B2"), ("B2", "B3"), ("B1", "B3"),
+      ("A1", "Broker"),
+      ("Broker", "B1")
+  ]
 
-G = nx.Graph()
-G.add_edges_from(data)
+  G = nx.Graph()
+  G.add_edges_from(network_data)
 
-# Calculate Betweenness
-bc = nx.betweenness_centrality(G)
+  # Calculate Betweenness
+  bc = nx.betweenness_centrality(G)
 
-# Find max
-top_broker = max(bc, key=bc.get)
+  # Find the highest score
+  top_broker = max(bc, key=bc.get)
 
-print(top_broker)
-`,
+  print(top_broker)`,
       },
     ],
   },
@@ -6043,73 +6065,68 @@ print(top_broker)
     estimatedTimeMinutes: 25,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Understand why CSV is the standard interchange format for network data',
-      'Use Pandas to load tabular data into a DataFrame',
+      'Understand the Edge List format as the standard for network data exchange',
+      'Use Pandas to load and clean tabular data for network construction',
       'Convert a DataFrame into a Graph using nx.from_pandas_edgelist',
+      'Attach metadata to connections using edge attributes'
     ],
-    keywords: ['csv', 'pandas', 'dataframe', 'import', 'reproducibility'],
-    content: `# From Spreadsheets to Networks
+    keywords: ['csv', 'pandas', 'dataframe', 'import', 'reproducibility', 'edge list'],
+    content: `# From Spreadsheets to Networks: The Data Pipeline
 
-## Analogy
+  ## Analogy: The Seating Chart
+  Imagine trying to organize a wedding seating chart. You wouldn't write the name of every guest on a separate sticky note and then manually draw 500 lines between them. You would likely start with a spreadsheet: Column A is "Guest," Column B is "Knows."
 
-Imagine trying to organize a wedding seating chart. You wouldn't write the name of every guest on a separate sticky note and then manually draw lines between them on a wall one by one. You would likely start with a spreadsheet: Column A is "Guest", Column B is "Must Sit Next To".
+  In previous lessons, we manually typed \`G.add_edge("Romeo", "Juliet")\`. This is fine for five connections, but impossible for 5,000. In Digital Humanities, your research data almost always lives in a spreadsheet (CSV) first. We need a bridge between the **"Row & Column"** world of spreadsheets and the **"Node & Edge"** world of networks.
 
-In the previous lessons, we manually typed \`G.add_edge("Romeo", "Juliet")\`. This is fine for 5 connections, but impossible for 5,000. In Digital Humanities, your data almost always lives in a spreadsheet (CSV) first. We need a bridge between the "Row & Column" world and the "Node & Edge" world.
+  ---
 
-## Key Concepts
+  ## 1. The Edge List Format
+  To build a network from a spreadsheet, your data must be formatted as an **Edge List**. This means every row represents exactly **one connection**.
 
-### The Data Structure
-To build a network from a spreadsheet, your data usually needs to be formatted as an **Edge List**. This means every row represents *one connection*.
+  | Source (From) | Target (To) | Weight (Strength/Years) |
+  | :--- | :--- | :--- |
+  | Virginia Woolf | T.S. Eliot | 15 |
+  | T.S. Eliot | Ezra Pound | 22 |
 
-| Source (Who) | Target (Whom) | Weight (Strength) |
-| :--- | :--- | :--- |
-| Romeo | Juliet | 10 |
-| Tybalt | Mercutio | 5 |
+  ---
 
-### The Bridge: Pandas
-We use the **Pandas** library (which you may have seen in the *Structured Data* module) to read the CSV, and then a specific NetworkX helper function to convert it.
+  ## 2. The Bridge: \`from_pandas_edgelist\`
+  We use the **Pandas** library to read the CSV, and then use a NetworkX helper function to convert that table into a "living" graph.
 
-\`\`\`python
-import pandas as pd
-import networkx as nx
+  \`\`\`python
+  import pandas as pd
+  import networkx as nx
 
-# 1. Load the data
-# df = pd.read_csv("my_network_data.csv")
+  # 1. Load the data (Simulating a CSV load)
+  data = {
+      'Sender': ['Alice', 'Bob'],
+      'Receiver': ['Bob', 'Charlie'],
+      'Letters': [5, 12]
+  }
+  df = pd.DataFrame(data)
 
-# For this example, we'll create the DataFrame manually
-data = {
-    'Source': ['Romeo', 'Tybalt'],
-    'Target': ['Juliet', 'Mercutio'],
-    'Weight': [10, 5]
-}
-df = pd.DataFrame(data)
+  # 2. Convert to Graph
+  # We must specify which columns represent the 'source' and the 'target'
+  G = nx.from_pandas_edgelist(df, source='Sender', target='Receiver', edge_attr='Letters')
 
-# 2. Convert to NetworkX Graph
-# We must tell it which column is the 'source' and which is the 'target'
-G = nx.from_pandas_edgelist(df, source='Source', target='Target')
+  # Now 'Letters' is stored as an attribute on the edge
+  print(G['Alice']['Bob']['Letters']) # Output: 5
+  \`\`\`
 
-print(G.edges)
-\`\`\`
+  ---
 
-### Why do this?
-1.  **Scale**: You can load millions of edges instantly.
-2.  **Reproducibility**: You don't edit code to add data; you just update the CSV file.
-3.  **Attributes**: You can easily bring in extra data (like "Weight" or "Date") as edge attributes.
+  ## 3. Why This Matters for DH
+  1.  **Scale**: You can load an archive of 50,000 historical letters in milliseconds.
+  2.  **Reproducibility**: If you find a new box of letters, you don't edit your code; you just add rows to your CSV and re-run the script.
+  3.  **Rich Metadata**: By using the \`edge_attr\` parameter, you can attach dates, locations, or sentiment scores to every connection in your web.
 
-## Practice
+  ::: tip
+  **DH Pro-Tip**: When creating your CSV, ensure your "Source" and "Target" columns use consistent names. If you have "V. Woolf" in one row and "Virginia Woolf" in another, the computer will create two different nodes for the same person!
+  :::
 
-::: try-it
-Visualize your email inbox. If you exported your "Sent" folder to a CSV with columns "From" and "To", could you load it into NetworkX? Who would be the central node? (Probably you!)
-:::
-
-## Transfer
-
-*   **Historians**: Load a CSV of "Member Name" and "Organization Name" to see which organizations bridged different political groups.
-*   **Linguists**: Load a CSV of "Word A" and "Word B" where the rows represent words appearing in the same sentence.
-
-::: challenge
-Convert a raw dataset into a graph object.
-:::`,
+  ::: challenge
+  In Challenge 1, you will build a correspondence network from a raw dataset. In Challenge 2, you will learn to attach "Distance" as an attribute to your edges.
+  :::`,
     challenges: [
       {
         id: 'network-analysis-06-c1',
@@ -6117,107 +6134,102 @@ Convert a raw dataset into a graph object.
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `import pandas as pd
-import networkx as nx
+  import networkx as nx
 
-# Imagine this data came from 'letters.csv'
-raw_data = {
-    'Sender': ['Virginia Woolf', 'Vita Sackville-West', 'T.S. Eliot'],
-    'Recipient': ['Vita Sackville-West', 'Virginia Woolf', 'Ezra Pound'],
-    'Date': ['1925', '1926', '1922']
-}
+  # Imagine this data was loaded from 'bloomsbury_group.csv'
+  raw_data = {
+      'Sender': ['Virginia Woolf', 'Vita Sackville-West', 'T.S. Eliot'],
+      'Recipient': ['Vita Sackville-West', 'Virginia Woolf', 'Ezra Pound']
+  }
 
-# 1. Create a Pandas DataFrame from the raw_data dictionary
-# Name it 'df'
+  # Goal: Create a Graph 'G' from this data
+  # 1. Convert 'raw_data' into a Pandas DataFrame named 'df'
+  # 2. Use nx.from_pandas_edgelist() to create the graph
+  # 3. Specify 'Sender' as the source and 'Recipient' as the target
 
-# 2. Create a Graph 'G' from this DataFrame
-# Use the function nx.from_pandas_edgelist
-# Map 'Sender' to source and 'Recipient' to target
+  # Your code here
 
-# Your code here
-
-# Check result
-print(list(G.edges))
-`,
-        expectedOutput: '[(\'Virginia Woolf\', \'Vita Sackville-West\'), (\'Vita Sackville-West\', \'Virginia Woolf\'), (\'T.S. Eliot\', \'Ezra Pound\')]',
+  # Verify the edges
+  print(list(G.edges))
+  `,
+        expectedOutput: "[('Virginia Woolf', 'Vita Sackville-West'), ('Vita Sackville-West', 'Virginia Woolf'), ('T.S. Eliot', 'Ezra Pound')]",
         hints: [
-          '`df = pd.DataFrame(raw_data)`',
-          '`nx.from_pandas_edgelist(df, source=\'...\', target=\'...\')`',
-          'Make sure column names match exactly (\'Sender\', \'Recipient\').',
+          'Use df = pd.DataFrame(raw_data) to start.',
+          'The function is G = nx.from_pandas_edgelist(df, source="...", target="...")',
+          'Ensure your strings match the dictionary keys exactly.'
         ],
         solution: `import pandas as pd
-import networkx as nx
+  import networkx as nx
 
-raw_data = {
-    'Sender': ['Virginia Woolf', 'Vita Sackville-West', 'T.S. Eliot'],
-    'Recipient': ['Vita Sackville-West', 'Virginia Woolf', 'Ezra Pound'],
-    'Date': ['1925', '1926', '1922']
-}
+  raw_data = {
+      'Sender': ['Virginia Woolf', 'Vita Sackville-West', 'T.S. Eliot'],
+      'Recipient': ['Vita Sackville-West', 'Virginia Woolf', 'Ezra Pound']
+  }
 
-# 1. Create DataFrame
-df = pd.DataFrame(raw_data)
+  # 1. Create DataFrame
+  df = pd.DataFrame(raw_data)
 
-# 2. Convert to Graph
-G = nx.from_pandas_edgelist(df, source='Sender', target='Recipient')
+  # 2. Create Graph
+  G = nx.from_pandas_edgelist(df, source='Sender', target='Recipient')
 
-print(list(G.edges))
-`,
+  print(list(G.edges))`,
       },
       {
         id: 'network-analysis-06-c2',
-        title: 'Weighted Edges',
+        title: 'Attaching Edge Attributes',
         language: 'python',
         difficulty: 'advanced',
         starterCode: `import pandas as pd
-import networkx as nx
+  import networkx as nx
 
-# Data: Cities and the distance between them (in km)
-travel_data = {
-    'City_A': ['Paris', 'Berlin', 'Paris'],
-    'City_B': ['Berlin', 'Warsaw', 'London'],
-    'Distance': [878, 517, 344]
-}
+  # Data: Historical travel routes and their distances
+  travel_data = {
+      'City_A': ['Paris', 'Berlin', 'London'],
+      'City_B': ['Berlin', 'Warsaw', 'Paris'],
+      'Distance': [878, 517, 344]
+  }
 
-df = pd.DataFrame(travel_data)
+  df = pd.DataFrame(travel_data)
 
-# 1. Create a graph G from the DataFrame
-# Ensure you include 'Distance' as an edge attribute.
-# Look at the documentation (or hints) for the 'edge_attr' parameter.
+  # Goal: Create a graph G that includes 'Distance' as an edge attribute
+  # 1. Use nx.from_pandas_edgelist
+  # 2. Set edge_attr='Distance'
+  # 3. Print the Distance value for the edge between 'Paris' and 'Berlin'
 
-# Your code here
+  # Your code here
 
-# 2. Access the distance between Paris and Berlin
-# (This part is done for you to check your work)
-if G.has_edge('Paris', 'Berlin'):
-    print(G['Paris']['Berlin']['Distance'])
-`,
+  # Verification check
+  if G.has_edge('Paris', 'Berlin'):
+      print(G['Paris']['Berlin']['Distance'])
+  `,
         expectedOutput: '878',
         hints: [
-          '`nx.from_pandas_edgelist(df, source=\'City_A\', target=\'City_B\', edge_attr=\'Distance\')`',
-          '`edge_attr` takes the string name of the column you want to save as metadata.',
-          'If you don\'t include `edge_attr`, the graph won\'t know the distances!',
+          'The edge_attr parameter allows you to pass a column name or a list of names.',
+          'To access edge data, use G[node1][node2][attribute_name].',
+          'Make sure you created the graph with the Distance column attached!'
         ],
         solution: `import pandas as pd
-import networkx as nx
+  import networkx as nx
 
-travel_data = {
-    'City_A': ['Paris', 'Berlin', 'Paris'],
-    'City_B': ['Berlin', 'Warsaw', 'London'],
-    'Distance': [878, 517, 344]
-}
+  travel_data = {
+      'City_A': ['Paris', 'Berlin', 'London'],
+      'City_B': ['Berlin', 'Warsaw', 'Paris'],
+      'Distance': [878, 517, 344]
+  }
 
-df = pd.DataFrame(travel_data)
+  df = pd.DataFrame(travel_data)
 
-# Create graph with attributes
-G = nx.from_pandas_edgelist(
-    df, 
-    source='City_A', 
-    target='City_B', 
-    edge_attr='Distance'
-)
+  # Create the graph with 'Distance' as metadata on the edges
+  G = nx.from_pandas_edgelist(
+      df, 
+      source='City_A', 
+      target='City_B', 
+      edge_attr='Distance'
+  )
 
-if G.has_edge('Paris', 'Berlin'):
-    print(G['Paris']['Berlin']['Distance'])
-`,
+  # Print attribute
+  if G.has_edge('Paris', 'Berlin'):
+      print(G['Paris']['Berlin']['Distance'])`,
       },
     ],
   },
