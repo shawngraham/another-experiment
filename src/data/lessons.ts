@@ -873,115 +873,228 @@ with open('test.txt', 'r', encoding='utf-8') as f:
     },
   ],
 },
-  {
-    id: 'text-analysis-01',
-    title: 'Introduction to String Operations',
-    moduleId: 'text-analysis-fundamentals',
-    prerequisites: ['python-basics-05'],
-    estimatedTimeMinutes: 30,
-    difficulty: 'beginner',
-    learningObjectives: [
-      'Perform case normalization',
-      'Tokenize text using basic string splitting',
-      'Find and replace substrings',
-    ],
-    keywords: ['string', 'text', 'normalization', 'splitting'],
-    content: `# String Operations for Text Analysis
+ {
+  id: 'text-analysis-01',
+  title: 'Introduction to String Operations',
+  moduleId: 'text-analysis-fundamentals',
+  prerequisites: ['python-basics-05'],
+  estimatedTimeMinutes: 30,
+  difficulty: 'beginner',
+  learningObjectives: [
+    'Perform case normalization to ensure data consistency',
+    'Clean text using strip() and replace()',
+    'Tokenize text using basic string splitting',
+    'Understand method chaining in Python'
+  ],
+  keywords: ['string', 'text', 'normalization', 'splitting', 'tokenization'],
+  content: `# String Operations for Text Analysis
 
-## Text as Data
-Before we can perform "Artificial Intelligence" or "Topic Modeling," we must first treat text as a simple series of characters.
+In Digital Humanities, we often engage in **Distant Reading**—using algorithms to look at thousands of texts at once. But before a computer can "read," we must treat text as a simple series of characters and "normalize" it.
 
-### Case Normalization
-To a computer, "The" and "the" are completely different things. Most analysis starts by lowercasing everything.
+---
+
+## 1. Case Normalization
+To a computer, "The", "THE", and "the" are three completely different words. If you are counting word frequencies, your results will be inaccurate unless you normalize the case.
+
 \`\`\`python
-text = "The Raven"
-print(text.lower()) # "the raven"
+original_text = "The Raven"
+normalized_text = original_text.lower()
+print(normalized_text) # Output: "the raven"
 \`\`\`
 
-### Basic Tokenization
-Splitting a string into individual words is called **tokenization**.
+---
+
+## 2. Cleaning with Strip and Replace
+Raw text—especially text from OCR (Optical Character Recognition) or web scraping—is often "dirty."
+
+### Removing Whitespace (\`.strip()\`)
+The \`.strip()\` method removes extra spaces or "newline" characters (\`\\n\`) from the very beginning and very end of a string.
+\`\`\`python
+messy_input = "  chapter one  \\n"
+clean_input = messy_input.strip()
+print(clean_input) # Output: "chapter one"
+\`\`\`
+
+### Finding and Replacing (\`.replace()\`)
+Use this to remove punctuation or unwanted characters that might interfere with your analysis.
+\`\`\`python
+raw_text = "Title: Frankenstein; or, The Modern Prometheus"
+# Remove the semicolon
+cleaned_text = raw_text.replace(";", "")
+\`\`\`
+
+---
+
+## 3. Basic Tokenization (\`.split()\`)
+**Tokenization** is the process of breaking a long string into individual pieces (usually words). By default, \`.split()\` cuts a string wherever it finds a space.
+
 \`\`\`python
 sentence = "Deep into that darkness peering"
-tokens = sentence.split() # Splits on spaces by default
-# ['Deep', 'into', 'that', 'darkness', 'peering']
+tokens = sentence.split() 
+# Result: ['Deep', 'into', 'that', 'darkness', 'peering']
 \`\`\`
 
-### Cleaning with Replace
-You can remove unwanted characters like underscores or HTML tags using \`.replace()\`.
+---
+
+## 4. Method Chaining
+In Python, you can perform multiple operations in a single line. They are processed from **left to right**. This is a very common pattern in DH scripts:
+
 \`\`\`python
-clean = dirty_text.replace("<p>", "")
+text = "  The Raven!  "
+# 1. Strip spaces, 2. Lowercase, 3. Replace punctuation, 4. Split into words
+words = text.strip().lower().replace("!", "").split()
+print(words) # Output: ['the', 'raven']
 \`\`\`
 
-::: try-it
-Try chaining methods: \`text.strip().lower().split()\`
+::: tip
+Think of method chaining like a factory assembly line. Each method takes the output of the previous one and modifies it further.
+:::
+
+::: challenge
+Text analysis usually begins with a "word count." In the challenge below, use what you've learned about splitting strings to create a basic word counter.
 :::
 `,
-    challenges: [
-      {
-        id: 'text-analysis-01-c1',
-        title: 'Count words in a text',
-        language: 'python',
-        difficulty: 'beginner',
-        starterCode: `def count_words(text):\n    # 1. Split text into words\n    # 2. Return length of list\n    pass\n\nsample = "The quick brown fox"\nprint(count_words(sample))`,
-        expectedOutput: '4',
-        hints: ['The split() method is your best friend here.', 'Use len() on the resulting list.'],
-        solution: `def count_words(text):\n    words = text.split()\n    return len(words)\n\nsample = "The quick brown fox"\nprint(count_words(sample))`,
-      },
-    ],
-  },
-  {
-    id: 'text-analysis-02',
-    title: 'Regular Expressions for Text Matching',
-    moduleId: 'text-analysis-fundamentals',
-    prerequisites: ['text-analysis-01'],
-    estimatedTimeMinutes: 40,
-    difficulty: 'intermediate',
-    learningObjectives: [
-      'Build complex search patterns with Regex',
-      'Use character classes (\\d, \\w, \\s)',
-      'Extract patterns like dates or emails',
-    ],
-    keywords: ['regex', 'pattern matching', 're', 'wildcards'],
-    content: `# Regular Expressions (Regex)
+  challenges: [
+    {
+      id: 'text-analysis-01-c1',
+      title: 'Count words in a text',
+      language: 'python',
+      difficulty: 'beginner',
+      starterCode: `# Goal: Write a function that returns the number of words in a string.
+
+def count_words(text):
+    # 1. Use .split() to turn the string into a list of words
+    # 2. Use len() to count how many items are in that list
+    # 3. Return that count
+    pass
+
+sample = "The quick brown fox"
+print(count_words(sample))
+`,
+      expectedOutput: '4',
+      hints: [
+        'The .split() method returns a list.',
+        'Apply len() to the list you created inside the function.',
+        'Don\'t forget to "return" the result!',
+      ],
+      solution: `def count_words(text):
+    words = text.split()
+    word_count = len(words)
+    return word_count
+
+sample = "The quick brown fox"
+print(count_words(sample))`,
+    },
+  ],
+},
+ {
+  id: 'text-analysis-02',
+  title: 'Regular Expressions for Text Matching',
+  moduleId: 'text-analysis-fundamentals',
+  prerequisites: ['text-analysis-01'],
+  estimatedTimeMinutes: 40,
+  difficulty: 'intermediate',
+  learningObjectives: [
+    'Build complex search patterns with Regex',
+    'Use character classes to identify types of data (digits, words, whitespace)',
+    'Use quantifiers to specify the length of a pattern',
+    'Extract patterns like dates or metadata from archival text',
+  ],
+  keywords: ['regex', 'pattern matching', 're', 'wildcards'],
+  content: `# Regular Expressions (Regex)
 
 ## Find on Steroids
-Imagine you need to find every year mentioned in a 500-page book. Searching for "1800", then "1801", then "1802" would take days. **Regex** allows you to search for the *pattern* "any four numbers in a row."
+Imagine you are looking at a 500-page OCR transcript of a 19th-century ledger. You need to find every year mentioned. Searching for "1800", then "1801", then "1802" would take days. 
 
-## The \`re\` Module
-Python uses the \`re\` library for regex.
+**Regular Expressions (Regex)** allow you to search for the *structure* of the data rather than the literal characters. Instead of searching for "1818", you search for "any four digits in a row."
 
-### Common Symbols
-- \`\\d\`: Any digit (0-9)
-- \`\\w\`: Any word character (a-z, A-Z)
-- \`+\`: One or more of the preceding
-- \`*\`: Zero or more
-- \`{4}\`: Exactly four of the preceding
+---
+
+## 1. The \`re\` Module
+Python uses the \`re\` library for regex. To use it, you must \`import re\` at the top of your script. The most common function for text analysis is \`re.findall()\`, which returns a list of every match found in your text.
+
+## 2. The Regex Cheat Sheet
+
+| Symbol | Meaning | Example |
+| :--- | :--- | :--- |
+| **\`\\d\`** | Any Digit (0-9) | \`\\d\\d\` matches "18" |
+| **\`\\w\`** | Any "Word" character (letters, numbers) | \`\\w\\w\\w\` matches "cat" |
+| **\`\\s\`** | Any Whitespace (spaces, tabs, newlines) | \`\\d\\s\\d\` matches "1 2" |
+| **\`.\`** | The Wildcard (matches almost anything) | \`t.t\` matches "tat", "tet", "t!t" |
+
+## 3. Quantifiers (How many?)
+Instead of typing \`\\d\\d\\d\\d\` to find a year, we use curly brackets to say "how many" of the preceding symbol we want.
+
+- **\`{n}\`**: Exactly *n* times. (e.g., \`\\d{4}\` finds exactly 4 digits).
+- **\`+\`**: One or more times. (e.g., \`\\d+\` finds "1", "12", or "12345").
+- **\`*\`**: Zero or more times.
 
 \`\`\`python
 import re
-text = "Contact me at research@university.edu or 555-1234."
-# Look for something like digits-digits
-phone = re.findall(r'\\d+-\\d+', text) 
-print(phone) # ['555-1234']
+text = "The price is $50 and the date is 1818."
+
+# Find all groups of 1 or more digits
+numbers = re.findall(r'\\d+', text) 
+print(numbers) # Output: ['50', '1818']
+
+# Find exactly 4 digits
+years = re.findall(r'\\d{4}', text)
+print(years) # Output: ['1818']
 \`\`\`
 
-::: definition
-**The "r" prefix**: We use \`r'pattern'\` (raw string) so Python doesn't get confused by the backslashes.
+---
+
+## 4. The "r" Prefix (Raw Strings)
+When writing regex in Python, always put an \`r\` before your quotes: \`r'\\d+'\`. This tells Python: "Treat the backslashes literally; don't try to interpret them as special Python commands."
+
+## DH Use Case: Cleaning OCR
+Historical documents often have "scannos" (OCR errors). Regex can find them!
+- **Pattern**: \`r'l8\\d{2}'\`
+- **Matches**: "l818" or "l831" (where the scanner mistook the "1" for an "l").
+- **Action**: You can then use \`re.sub()\` to replace all those "l"s with "1"s across thousands of files.
+
+::: try-it
+Regex is a language of its own. In the challenge below, combine the digit symbol (\`\\d\`) with the quantifier for "exactly four" (\`{4}\`) to extract dates from a string.
 :::
 `,
-    challenges: [
-      {
-        id: 'text-analysis-02-c1',
-        title: 'Extract years from text',
-        language: 'python',
-        difficulty: 'intermediate',
-        starterCode: `import re\n\ntext = "Published in 1818, revised in 1831, reprinted in 1869."\n\n# Goal: Use re.findall to find all 4-digit years\n# Your code here\n`,
-        expectedOutput: "['1818', '1831', '1869']",
-        hints: ['The pattern for a digit is \\d.', 'To find exactly 4, use {4}.'],
-        solution: `import re\n\ntext = "Published in 1818, revised in 1831, reprinted in 1869."\nyears = re.findall(r'\\d{4}', text)\nprint(years)`,
-      },
-    ],
-  },
+  challenges: [
+    {
+      id: 'text-analysis-02-c1',
+      title: 'Extract Years from Text',
+      language: 'python',
+      difficulty: 'intermediate',
+      starterCode: `import re
+
+text = "Published in 1818, revised in 1831, reprinted in 1869."
+
+# Goal: Use re.findall to find all 4-digit years.
+# 1. Create a pattern using \\d and the {4} quantifier.
+# 2. Use re.findall(pattern, text)
+# 3. Assign the result to a variable 'years' and print it.
+
+# Your code here
+`,
+      expectedOutput: "['1818', '1831', '1869']",
+      hints: [
+        'The pattern should be a raw string: r\'...\'',
+        'The digit symbol is \\\\d and the quantifier is {4}.',
+        'Syntax: years = re.findall(r\'\\\\d{4}\', text)',
+      ],
+      solution: `import re
+
+text = "Published in 1818, revised in 1831, reprinted in 1869."
+
+# Pattern for exactly four digits
+pattern = r'\\d{4}'
+
+# Find all matches
+years = re.findall(pattern, text)
+
+# Print result
+print(years)`,
+    },
+  ],
+},
   {
     id: 'text-analysis-03',
     title: 'Word Frequency Analysis',
@@ -990,45 +1103,102 @@ print(phone) # ['555-1234']
     estimatedTimeMinutes: 35,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Count frequencies efficiently with Counter',
-      'Visualize Zipf\'s Law in text',
-      'Filter for the most common terms',
+      'Count frequencies efficiently using the collections.Counter object',
+      'Understand Zipf\'s Law and its impact on text analysis',
+      'Identify and filter for the most common terms in a corpus',
+      'Apply pre-processing steps to ensure accurate counting',
     ],
-    keywords: ['frequency', 'counting', 'counter', 'zipf'],
+    keywords: ['frequency', 'counting', 'counter', 'zipf', 'tokenization'],
     content: `# Word Frequency Analysis
 
-## What's in a Word?
-Frequency analysis helps us understand the dominant themes of a text. While "the" and "and" are always common, the top *nouns* and *verbs* reveal the "aboutness" of a document.
+  ## What's in a Word?
+  Frequency analysis is often the first step in "Distant Reading." By counting words, we can see the dominant themes of a text. While common words like "the" and "and" are usually at the top, the top-ranking *nouns* and *verbs* often reveal the "aboutness" of a historical document.
 
-## The \`Counter\` Object
-Counting manually with a dictionary is slow. Python's \`collections.Counter\` is built for this.
+  ---
 
-\`\`\`python
-from collections import Counter
+  ## 1. Zipf's Law
+  If you count every word in a novel, you will notice a strange pattern: the most frequent word (usually "the") appears twice as often as the second most frequent word, and three times as often as the third. This is called **Zipf's Law**.
 
-words = ["apple", "banana", "apple", "cherry", "banana", "apple"]
-counts = Counter(words)
+  In DH, this means:
+  - The top 10-20 words are usually "noise" (stopwords like *the, a, of, is*).
+  - The most "interesting" words for analysis usually live in the middle of the frequency list.
 
-print(counts["apple"]) # 3
-print(counts.most_common(2)) # [('apple', 3), ('banana', 2)]
-\`\`\`
+  ---
 
-## Pre-processing for Count
-Before counting, always:
-1. Lowercase your text.
-2. Remove punctuation.
-3. (Optional) Remove "Stopwords" (common words like 'a', 'the', 'of').
-`,
+  ## 2. The \`Counter\` Object
+  While you could use a standard dictionary to count words, Python provides a specialized tool called \`Counter\` that is much faster and more reliable.
+
+  \`\`\`python
+  from collections import Counter
+
+  # Imagine these are words from a poem
+  words = ["heart", "rose", "heart", "thorns", "rose", "heart"]
+  counts = Counter(words)
+
+  # How many times does 'heart' appear?
+  print(counts["heart"]) # Output: 3
+
+  # What are the 2 most common words?
+  print(counts.most_common(2)) 
+  # Output: [('heart', 3), ('rose', 2)]
+  \`\`\`
+
+  ---
+
+  ## 3. The Pre-processing Pipeline
+  To get a meaningful word count, you must clean your data first. If you don't lowercase your text, Python will count "The" and "the" as two different words.
+
+  **Standard DH Pipeline:**
+  1. **Lowercase**: \`text.lower()\`
+  2. **Strip Punctuation**: \`.replace(",", "").replace(".", "")\`
+  3. **Tokenize**: \`.split()\`
+  4. **Count**: \`Counter(tokens)\`
+
+  ::: tip
+  The \`.most_common()\` method returns a **List of Tuples**. Each tuple contains the word and its count: \`('word', 5)\`.
+  :::
+
+  ::: challenge
+  In the challenge below, you will analyze a famous line of Shakespeare. You need to turn the string into a list of words, then use \`Counter\` to rank them.
+  :::
+  `,
     challenges: [
       {
         id: 'text-analysis-03-c1',
-        title: 'Find most common words',
+        title: 'Find Most Common Words',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `from collections import Counter\n\ntext = "to be or not to be that is the question"\n\n# 1. Split the text into words\n# 2. Use Counter to find the 3 most common words\n# 3. Print the result\n`,
+        starterCode: `from collections import Counter
+
+  text = "to be or not to be that is the question"
+
+  # 1. Split the text into a list of words
+  # 2. Initialize a Counter object with that list
+  # 3. Use the .most_common(3) method to find the top 3 words
+  # 4. Assign the result to 'top_words' and print it
+
+  # Your code here
+  `,
         expectedOutput: "[('to', 2), ('be', 2), ('or', 1)]",
-        hints: ['Remember to split() first!', 'Use the .most_common(3) method on your Counter object.'],
-        solution: `from collections import Counter\n\ntext = "to be or not to be that is the question"\nwords = text.split()\nfreq = Counter(words)\nprint(freq.most_common(3))`,
+        hints: [
+          'Use words = text.split() first.',
+          'Create the counter with: counts = Counter(words)',
+          'Remember that most_common(3) will return a list of tuples.',
+        ],
+        solution: `from collections import Counter
+
+  text = "to be or not to be that is the question"
+
+  # Split into tokens
+  words = text.split()
+
+  # Count frequencies
+  counts = Counter(words)
+
+  # Get the 3 most common
+  top_words = counts.most_common(3)
+
+  print(top_words)`,
       },
     ],
   },
@@ -1040,47 +1210,106 @@ Before counting, always:
     estimatedTimeMinutes: 35,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Remove punctuation using Regex or string.punctuation',
-      'Handle multiple whitespaces and newlines',
-      'Calculate unique vocabulary size (Type/Token Ratio)',
+      'Remove punctuation using robust Regex patterns',
+      'Understand the difference between Tokens (total words) and Types (unique words)',
+      'Calculate the Type/Token Ratio (lexical diversity)',
+      'Handle "messy" whitespace and newlines for cleaner data',
     ],
-    keywords: ['cleaning', 'normalization', 'preprocessing', 'punctuation'],
+    keywords: ['cleaning', 'normalization', 'preprocessing', 'punctuation', 'set'],
     content: `# Text Cleaning: The Unsung Work of DH
 
-## Garbage In, Garbage Out
-If your text contains "End?", "end,", and "end!", a computer sees three different words. To get accurate counts, you must strip away the "noise."
+  ## Garbage In, Garbage Out
+  Computational analysis is only as good as the data you feed it. If your text contains "End?", "end,", and "end!", a computer treats them as three different words. To perform accurate "Distant Reading," we must strip away the noise.
 
-### A Typical Cleaning Pipeline:
-1. **Lowercase**: \`text.lower()\`
-2. **Strip Whitespace**: \`text.strip()\`
-3. **Remove Punctuation**: Using Regex (\`re.sub\`) is the most robust way.
-4. **Remove Numbers**: (If irrelevant to your study).
+  ---
 
-\`\`\`python
-import re
-raw_text = "  Hello!!! My name is Victor...  "
-# Remove anything that isn't a word character or whitespace
-clean = re.sub(r'[^\\w\\s]', '', raw_text)
-print(clean.strip().lower()) # "hello my name is victor"
-\`\`\`
+  ## 1. The Normalization Pipeline
+  In Digital Humanities, "Normalization" is the process of converting text into a standard, consistent format. A typical pipeline includes:
 
-::: try-it
-Try calculating the "Vocabulary Diversity" of a sentence by putting its cleaned words into a \`set()\`.
-:::
-`,
+  1.  **Lowercasing**: \`text.lower()\` ensures "The" and "the" match.
+  2.  **Stripping**: \`text.strip()\` removes leading/trailing whitespace.
+  3.  **Punctuation Removal**: Using \`re.sub()\` to find and delete symbols.
+
+  ### Mastering the Regex "Clean-up"
+  The most robust way to remove punctuation while keeping words intact is using a "negated character class" in Regex:
+
+  \`\`\`python
+  import re
+  raw_text = "  History: it's complicated!!!  "
+
+  # r'[^\w\s]' means: "Find anything that is NOT a word or a space"
+  clean_text = re.sub(r'[^\w\s]', '', raw_text)
+
+  print(clean_text.strip().lower()) 
+  # Output: "history its complicated"
+  \`\`\`
+
+  ---
+
+  ## 2. Types vs. Tokens (Lexical Diversity)
+  How "rich" is an author's vocabulary? DH researchers measure this using the **Type/Token Ratio (TTR)**.
+
+  *   **Tokens**: The total number of words in a text.
+  *   **Types**: The number of *unique* words in a text.
+
+  ### Finding Uniqueness with \`set()\`
+  In Python, a \`set\` is a collection that **disallows duplicates**. If you turn a list of words into a set, Python automatically deletes every repeated word, leaving you with the "Types."
+
+  \`\`\`python
+  words = ["to", "be", "or", "not", "to", "be"]
+  unique_words = set(words)
+
+  print(len(words))        # Tokens: 6
+  print(len(unique_words)) # Types: 4
+  \`\`\`
+
+  ::: definition
+  **Type/Token Ratio (TTR)**: Calculated as \`(Types / Tokens)\`. A high TTR indicates a diverse vocabulary (like Shakespeare), while a low TTR indicates a more repetitive text (like a children's book).
+  :::
+
+  ::: challenge
+  In the challenge below, you will process a famous quote. You must normalize the text (lower case and no punctuation) before using \`set()\` to find the unique word count.
+  :::
+  `,
     challenges: [
       {
         id: 'text-analysis-04-c1',
         title: 'Clean a text passage',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `import re\n\ntext = "  It was the BEST of times, it was the WORST of times...  "\n\n# 1. Clean: lowercase, strip whitespace, remove punctuation\n# 2. Split into a list of words\n# 3. Use set() to find the number of unique words\n# 4. Print that number\n`,
-        expectedOutput: '8',
+        starterCode: `import re
+
+  text = "  It was the BEST of times, it was the WORST of times...  "
+
+  # 1. Normalize the text: 
+  #    - Use .strip() and .lower()
+  #    - Use re.sub(r'[^\\w\\s]', '', text) to remove punctuation
+  # 2. Split the cleaned text into a list of words
+  # 3. Use set() to get the unique words
+  # 4. Print the count (length) of the unique words
+
+  # Your code here
+  `,
+        expectedOutput: '7',
         hints: [
-          're.sub(r"[^\\w\\s]", "", text) removes punctuation.',
-          'set(list) removes all duplicates.',
+          'First, apply .strip().lower() to the string.',
+          'Then use re.sub() to remove the comma and the dots.',
+          'Finally, convert the list of words into a set() and find its len().',
         ],
-        solution: `import re\n\ntext = "  It was the BEST of times, it was the WORST of times...  "\ncleaned = re.sub(r'[^\\w\\s]', '', text.strip().lower())\nunique_words = set(cleaned.split())\nprint(len(unique_words))`,
+        solution: `import re
+
+  text = "  It was the BEST of times, it was the WORST of times...  "
+
+  # Clean and normalize
+  text_cleaned = re.sub(r'[^\\w\\s]', '', text.strip().lower())
+
+  # Tokenize
+  words = text_cleaned.split()
+
+  # Find unique count
+  unique_count = len(set(words))
+
+  print(unique_count)`,
       },
     ],
   },
@@ -1092,63 +1321,149 @@ Try calculating the "Vocabulary Diversity" of a sentence by putting its cleaned 
     estimatedTimeMinutes: 40,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Understand the difference between simple strings and linguistic tokens',
+      'Understand the difference between simple string splitting and linguistic tokenization',
       'Use NLTK to perform Part-of-Speech (POS) tagging',
-      'Filter texts for specific grammatical categories (e.g., all adjectives)',
+      'Filter texts for specific grammatical categories (e.g., all proper nouns)',
+      'Handle the (word, tag) tuple structure in Python',
     ],
     keywords: ['nltk', 'tokenization', 'pos-tagging', 'nlp', 'linguistics'],
     content: `# Natural Language Processing (NLP)
 
-## Moving Beyond Strings
-While \`.split()\` and \`.lower()\` are useful, they don't "understand" language. **NLP** treats text as a linguistic structure.
+  ## Moving Beyond Strings
+  Up to this point, we have treated text as a simple sequence of characters. **Natural Language Processing (NLP)** allows us to treat text as a linguistic structure. 
 
-### Tokenization
-The NLTK (\`Natural Language Toolkit\`) tokenizer is smarter than \`.split()\`. It knows that "don't" is actually two words ("do" and "n't") and that a period at the end of a sentence shouldn't be attached to the last word.
+  While \`.split()\` and \`.lower()\` are useful, they don't "understand" the rules of language. To a computer using \`.split()\`, the string "don't" is one word. To an NLP tool, it is two linguistic units: "do" and "n't" (the negation).
 
-\`\`\`python
-import nltk
-from nltk.tokenize import word_tokenize
+  ---
 
-text = "Mary Shelley wrote Frankenstein."
-tokens = word_tokenize(text)
-# Result: ['Mary', 'Shelley', 'wrote', 'Frankenstein', '.']
-\`\`\`
+  ## 1. Smarter Tokenization
+  The NLTK (\`Natural Language Toolkit\`) tokenizer is designed for research. It knows that a period at the end of a sentence is a separate piece of punctuation and should not be attached to the last word.
 
-### Part-of-Speech (POS) Tagging
-POS tagging identifies if a word is a Noun, Verb, Adjective, etc. This is incredibly useful for analyzing *how* an author writes (e.g., "Does this poet use more adjectives than that poet?").
+  \`\`\`python
+  import nltk
+  from nltk.tokenize import word_tokenize
 
-\`\`\`python
-tagged = nltk.pos_tag(tokens)
-# Result: [('Mary', 'NNP'), ('wrote', 'VBD')]
-# NNP = Proper Noun, VBD = Verb Past Tense
-\`\`\`
-`,
+  # We must download the 'instructions' for tokenization first
+  nltk.download('punkt_tab', quiet=True)
+
+  text = "Mary Shelley wrote Frankenstein."
+  tokens = word_tokenize(text)
+  print(tokens) 
+  # Result: ['Mary', 'Shelley', 'wrote', 'Frankenstein', '.']
+  \`\`\`
+
+  ---
+
+  ## 2. Part-of-Speech (POS) Tagging
+  POS tagging identifies the grammatical role of every word. In DH, this is often used to extract all the people/places (Proper Nouns) or to analyze the "tone" of a text (e.g., counting adjectives vs. adverbs).
+
+  | Tag | Meaning | DH Use Case |
+  | :--- | :--- | :--- |
+  | **NNP** | Proper Noun, Singular | Extracting names of characters or cities. |
+  | **JJ** | Adjective | Analyzing descriptive language in a novel. |
+  | **VBD** | Verb, Past Tense | Identifying actions in a historical narrative. |
+
+  ---
+
+  ## 3. Handling the Output: Tuples
+  When you run \`nltk.pos_tag()\`, it returns a **List of Tuples**. A tuple is like a list, but it uses parentheses \`()\`.
+
+  \`\`\`python
+  tagged = [('Mary', 'NNP'), ('wrote', 'VBD')]
+  \`\`\`
+
+  To filter this data, you can "unpack" the tuple in a loop:
+
+  \`\`\`python
+  for word, tag in tagged:
+      if tag == "NNP":
+          print(f"Found a proper noun: {word}")
+  \`\`\`
+
+  ::: tip
+  **Why use POS tagging?** 
+  If you want to map a novel, you can't just search for every word that starts with a capital letter (that would include the start of every sentence). By filtering for **NNP**, you get a much cleaner list of actual names and places.
+  :::
+
+  ::: challenge
+  In the first challenge, you will practice smarter tokenization. In the second, you will use a loop to extract only the proper nouns from a sentence about Jane Austen.
+  :::
+  `,
     challenges: [
       {
         id: 'text-analysis-05-c1',
-        title: 'Tokenize a sentence',
+        title: 'Tokenize a Sentence',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `import nltk\nnltk.download('punkt_tab', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Mary Shelley wrote Frankenstein in 1818."\n\n# Goal: Use word_tokenize and print the list of tokens\n`,
+        starterCode: `import nltk
+  nltk.download('punkt_tab', quiet=True)
+  from nltk.tokenize import word_tokenize
+
+  text = "Mary Shelley wrote Frankenstein in 1818."
+
+  # Goal: Use word_tokenize(text) and print the list of tokens
+
+  # Your code here
+  `,
         expectedOutput: "['Mary', 'Shelley', 'wrote', 'Frankenstein', 'in', '1818', '.']",
         hints: [
-          'Import word_tokenize from nltk.tokenize.',
-          'Call word_tokenize(text) and print the result.',
+          'Assign the result of word_tokenize(text) to a variable.',
+          'Print that variable to see how NLTK handles the period at the end.',
         ],
-        solution: `import nltk\nnltk.download('punkt_tab', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Mary Shelley wrote Frankenstein in 1818."\nprint(word_tokenize(text))\n`,
+        solution: `import nltk
+  nltk.download('punkt_tab', quiet=True)
+  from nltk.tokenize import word_tokenize
+
+  text = "Mary Shelley wrote Frankenstein in 1818."
+  tokens = word_tokenize(text)
+  print(tokens)`,
       },
       {
         id: 'text-analysis-05-c2',
-        title: 'Extract proper nouns',
+        title: 'Extract Proper Nouns',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `import nltk\nnltk.download('punkt_tab', quiet=True)\nnltk.download('averaged_perceptron_tagger_eng', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Jane Austen published Pride and Prejudice in 1813."\ntokens = word_tokenize(text)\n\n# 1. Use nltk.pos_tag(tokens) to get tags\n# 2. Filter for tags that are 'NNP'\n# 3. Print the list of words\n`,
+        starterCode: `import nltk
+  # Downloading the necessary tools
+  nltk.download('punkt_tab', quiet=True)
+  nltk.download('averaged_perceptron_tagger_eng', quiet=True)
+  from nltk.tokenize import word_tokenize
+
+  text = "Jane Austen published Pride and Prejudice in 1813."
+  tokens = word_tokenize(text)
+
+  # 1. Use nltk.pos_tag(tokens) to get a list of (word, tag) tuples
+  # 2. Create an empty list called 'proper_nouns'
+  # 3. Loop through the tagged items and check if the tag is 'NNP'
+  # 4. If it is, append the word to your 'proper_nouns' list
+  # 5. Print the list
+
+  # Your code here
+  `,
         expectedOutput: "['Jane', 'Austen', 'Pride', 'Prejudice']",
         hints: [
-          'pos_tag returns a list of tuples: (word, tag).',
-          'Use a list comprehension: [word for word, tag in tagged if tag == "NNP"].',
+          'Use: tagged_text = nltk.pos_tag(tokens)',
+          'Your loop should look like: for word, tag in tagged_text:',
+          'Remember that NNP must be in quotes: if tag == "NNP":',
         ],
-        solution: `import nltk\nnltk.download('punkt_tab', quiet=True)\nnltk.download('averaged_perceptron_tagger_eng', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Jane Austen published Pride and Prejudice in 1813."\ntokens = word_tokenize(text)\ntagged = nltk.pos_tag(tokens)\nproper_nouns = [word for word, tag in tagged if tag == 'NNP']\nprint(proper_nouns)\n`,
+        solution: `import nltk
+  nltk.download('punkt_tab', quiet=True)
+  nltk.download('averaged_perceptron_tagger_eng', quiet=True)
+  from nltk.tokenize import word_tokenize
+
+  text = "Jane Austen published Pride and Prejudice in 1813."
+  tokens = word_tokenize(text)
+
+  # Get the tags
+  tagged = nltk.pos_tag(tokens)
+
+  # Filter for NNP (Proper Nouns)
+  proper_nouns = []
+  for word, tag in tagged:
+      if tag == 'NNP':
+          proper_nouns.append(word)
+
+  print(proper_nouns)`,
       },
     ],
   },
@@ -1160,51 +1475,92 @@ tagged = nltk.pos_tag(tokens)
     estimatedTimeMinutes: 35,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Understand rule-based sentiment scoring',
-      'Use a lexicon to calculate "polarity"',
-      'Analyze emotional shifts across a text sequence',
+      'Understand rule-based sentiment scoring using lexicons',
+      'Calculate "polarity" scores for text passages',
+      'Use the dictionary .get() method to handle missing data safely',
+      'Conceptualize emotional "arcs" in narrative structures',
     ],
-    keywords: ['sentiment', 'polarity', 'lexicon', 'emotion'],
-    content: `# Sentiment Analysis
+    keywords: ['sentiment', 'polarity', 'lexicon', 'emotion', 'vader'],
+    content: `# Sentiment Analysis: Listening for Tone
 
-## Listening for Tone
-Sentiment analysis is the computational study of opinions, sentiments, and emotions in text. In DH, we use it to track the emotional "arc" of a novel or the public mood in historical newspapers.
+  Sentiment analysis is the computational study of opinions, sentiments, and emotions in text. In Digital Humanities, we use it to track the emotional "arc" of a novel, analyze the public mood in historical newspapers, or compare the "positivity" of different political speeches.
 
-### Lexicon-Based Approach
-The simplest way to do this is using a **lexicon** (a dictionary of words labeled with scores).
-- "Excellent": +1.0
-- "Terrible": -1.0
-- "Okay": 0.0
+  ---
 
-### Sentiment Polarity
-Polarity refers to how positive or negative a text is.
+  ## 1. The Lexicon-Based Approach
+  The most common way to measure sentiment is using a **lexicon**—a dictionary where words are pre-labeled with emotional scores.
 
-\`\`\`python
-# A toy example of rule-based sentiment
-lexicon = {"love": 1, "joy": 1, "hate": -1, "sad": -1}
-text = "i love the joy but hate the sad"
+  - **"Excellent"**: +1.0 (Positive)
+  - **"Terrible"**: -1.0 (Negative)
+  - **"Table"**: 0.0 (Neutral)
 
-score = 0
-for word in text.split():
-    score += lexicon.get(word, 0)
+  By adding up the scores of every word in a sentence, we calculate its **Polarity** (how positive or negative it is overall).
 
-print(f"Total Sentiment: {score}") # Output: 0
-\`\`\`
+  ---
 
-::: tip
-Real-world tools like **VADER** or **TextBlob** handle complexities like "not happy" (negation) or "VERY HAPPY" (intensity).
-:::
-`,
+  ## 2. Coding Safely with \`.get()\`
+  When we loop through a text to calculate sentiment, we will encounter many words (like "the" or "and") that aren't in our sentiment lexicon. 
+
+  Normally, looking up a missing key in a dictionary causes an error. To avoid this, we use the \`.get()\` method, which allows us to provide a **default value** (0) if the word is not found.
+
+  \`\`\`python
+  lexicon = {"happy": 2, "sad": -2}
+
+  # If "today" isn't in the lexicon, it returns 0 instead of crashing
+  score = lexicon.get("today", 0) 
+  \`\`\`
+
+  ---
+
+  ## 3. The "Shape" of a Story
+  A famous DH application of this technique is mapping the "emotional arc" of a text. By calculating the sentiment of every paragraph in a novel and plotting it on a graph, researchers can visualize the narrative structure.
+
+  - **The "Rags to Riches" Arc**: A steady rise in sentiment.
+  - **The "Man in a Hole" Arc**: A fall into negative sentiment followed by a recovery.
+
+  ::: tip
+  While our "toy" example here is simple, professional DH tools like **VADER** or **TextBlob** are smarter: they understand that "not happy" is negative and "VERY HAPPY" is more positive than just "happy."
+  :::
+
+  ::: challenge
+  In the challenge below, you will build a basic sentiment engine. You'll need to split a sentence into words, check each word against a provided lexicon, and keep a running total of the score.
+  :::
+  `,
     challenges: [
       {
         id: 'text-analysis-06-c1',
-        title: 'Calculate sentiment score',
+        title: 'Calculate Sentiment Score',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `lexicon = {"dark": -1, "stormy": -1, "bright": 1, "hope": 1}\ntext = "it was a dark and stormy night but i had hope"\n\n# 1. Split the text into words\n# 2. Sum the scores based on the lexicon\n# 3. Print the final score\n`,
+        starterCode: `lexicon = {"dark": -1, "stormy": -1, "bright": 1, "hope": 1}
+  text = "it was a dark and stormy night but i had hope"
+
+  # 1. Initialize a variable called 'total_score' at 0
+  # 2. Split the text into a list of words
+  # 3. Loop through each word
+  # 4. Use lexicon.get(word, 0) to get the score and add it to total_score
+  # 5. Print the total_score
+
+  # Your code here
+  `,
         expectedOutput: '-1',
-        hints: ['Use a loop or a list comprehension.', 'The .get() method on a dictionary is useful for avoiding errors with words not in the lexicon.'],
-        solution: `lexicon = {"dark": -1, "stormy": -1, "bright": 1, "hope": 1}\ntext = "it was a dark and stormy night but i had hope"\nscore = sum(lexicon.get(word, 0) for word in text.split())\nprint(score)`,
+        hints: [
+          'Initialize your score with: total_score = 0',
+          'Use the += operator to add the word score to your total: total_score += lexicon.get(word, 0)',
+          'The words "dark" (-1), "stormy" (-1), and "hope" (+1) are the only ones that should change the score.',
+        ],
+        solution: `lexicon = {"dark": -1, "stormy": -1, "bright": 1, "hope": 1}
+  text = "it was a dark and stormy night but i had hope"
+
+  total_score = 0
+  words = text.split()
+
+  for word in words:
+      # Look up word score, defaulting to 0 if not found
+      score = lexicon.get(word, 0)
+      total_score += score
+
+  print(total_score)`,
       },
     ],
   },
