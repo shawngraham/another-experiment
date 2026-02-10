@@ -6909,12 +6909,12 @@ Real-world metadata is often "dirty." You will frequently need to:
 
 ::: try-it
 **The Archivist's Choice**
-Look at the `record` above. If you were building a website for this collection, which fields would you use for a "Search Bar" and which would you use for a "Filter" (facet)? Why?
+Look at the record above. If you were building a website for this collection, which fields would you use for a "Search Bar" and which would you use for a "Filter" (facet)? Why?
 :::
 
 ## Transfer: DH Use Cases
 
-*   **Museum Studies**: Analyzing the "Provenance" (history of ownership) of artifacts using the `source` and `description` fields.
+*   **Museum Studies**: Analyzing the "Provenance" (history of ownership) of artifacts using the source and description fields.
 *   **Digital Archives**: Using tools like **Omeka** or **Tropy**, which are built entirely around the Dublin Core standard.
 *   **Zotero**: When you save a paper to Zotero, you are actually just capturing its metadata for later citation.
 
@@ -7090,8 +7090,8 @@ For analysis (like counting items per year), we want to turn those nested "cloud
 
 ::: try-it
 **Exploring Hierarchy**
-Look at the `record` example above. How would you access the string "France"? 
-*Answer: `record["subjects"][1]`.*
+Look at the \`record\` example above. How would you access the string "France"? 
+*Answer: \`record["subjects"][1]\`.*
 Now imagine a collection of 10,000 records. If only 5,000 of them have a "subjects" list, how would your code need to change to avoid breaking?
 :::
 
