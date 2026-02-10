@@ -1,38 +1,42 @@
 @import "tailwindcss";
 
-/* Base styling for all ::: sections */
+/* Common styles for all ::: blocks */
 .try-it, .challenge, .definition {
-  @apply my-8 p-6 rounded-r-lg border-l-4 shadow-sm;
+  @apply my-6 p-5 rounded-r-xl border-l-4 shadow-sm clear-both overflow-hidden;
 }
 
-/* Try-it Section: Light blue/Indigo - for interaction */
+/* 1. Try It Block - Blue/Indigo Theme */
 .try-it {
-  @apply bg-blue-50 border-blue-500 text-blue-900;
+  @apply bg-blue-50/50 border-blue-500 text-blue-900;
 }
 .try-it::before {
   content: "💡 Try It";
-  @apply block font-bold uppercase tracking-wider text-sm mb-2 text-blue-700;
+  @apply block font-bold uppercase tracking-widest text-xs mb-2 text-blue-600;
 }
 
-/* Challenge Section: Purple/Deep Indigo - for tasks */
+/* 2. Challenge Block - Purple Theme */
 .challenge {
-  @apply bg-purple-50 border-purple-600 text-purple-900;
+  @apply bg-purple-50/50 border-purple-600 text-purple-900;
 }
 .challenge::before {
   content: "🚀 Challenge";
-  @apply block font-bold uppercase tracking-wider text-sm mb-2 text-purple-700;
+  @apply block font-bold uppercase tracking-widest text-xs mb-2 text-purple-600;
 }
 
-/* Definition Section: Emerald/Teal - for reference */
+/* 3. Definition Block - Emerald Theme */
 .definition {
-  @apply bg-emerald-50 border-emerald-600 text-emerald-900;
+  @apply bg-emerald-50/50 border-emerald-600 text-emerald-900;
 }
 .definition::before {
   content: "📖 Definition";
-  @apply block font-bold uppercase tracking-wider text-sm mb-2 text-emerald-700;
+  @apply block font-bold uppercase tracking-widest text-xs mb-2 text-emerald-600;
 }
 
-/* Optional: Style code blocks inside these sections specifically */
+/* Styling content inside the blocks */
+.try-it p, .challenge p, .definition p {
+  @apply m-0 text-sm leading-relaxed opacity-90;
+}
+
 .try-it code, .challenge code, .definition code {
-  @apply bg-white/50 px-1 rounded border border-black/5;
+  @apply bg-white/80 border-none shadow-none;
 }

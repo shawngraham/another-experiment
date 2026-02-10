@@ -1,16 +1,41 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkDirective from 'remark-directive';
+import { visit } from 'unist-util-visit'; // Utility to walk the markdown tree
+
 
 interface LessonContentProps {
   content: string;
+}
+
+// This helper function finds ::: directives and converts them to HTML nodes
+function remarkDirectiveTransformer() {
+  return (tree: any) => {
+    visit(tree, (node) => {
+      if (
+        node.type === 'containerDirective' ||
+        node.type === 'leafDirective' ||
+        node.type === 'textDirective'
+      ) {
+        const data = node.data || (node.data = {});
+        // node.name is the word after the ::: (e.g., 'try-it')
+        data.hName = 'div';
+        data.hProperties = { 
+          className: [node.name] // This applies the class for your index.css
+        };
+      }
+    });
+  };
 }
 
 export function LessonContent({ content }: LessonContentProps) {
   return (
     <div className="prose prose-sm max-w-none">
       <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
+        // Add the directive plugin and our custom transformer here
+        remarkPlugins={[remarkGfm, remarkDirective, remarkDirectiveTransformer]}
         components={{
+          // Your existing components...
           h1: ({ children }) => (
             <h1 className="text-xl font-bold text-gray-900 mt-6 mb-3">{children}</h1>
           ),
@@ -23,6 +48,10 @@ export function LessonContent({ content }: LessonContentProps) {
           p: ({ children }) => (
             <p className="text-sm text-gray-600 mb-3 leading-relaxed">{children}</p>
           ),
+          // Ensure DIVs are rendered correctly (remark-directive will output divs)
+          div: ({ node, className, children, ...props }) => {
+            return <div className={className} {...props}>{children}</div>;
+          },
           code: ({ className, children }) => {
             const isBlock = className?.includes('language-');
             if (isBlock) {
