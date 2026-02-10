@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
+/* add tip */
 /* Common styles for all ::: blocks */
-.try-it, .challenge, .definition {
+.try-it, .challenge, .definition, .tip, .warning {
   @apply my-6 p-5 rounded-r-xl border-l-4 shadow-sm clear-both overflow-hidden;
 }
 
@@ -32,11 +33,28 @@
   @apply block font-bold uppercase tracking-widest text-xs mb-2 text-emerald-600;
 }
 
-/* Styling content inside the blocks */
-.try-it p, .challenge p, .definition p {
+.tip {
+  @apply bg-cyan-50/50 border-cyan-500 text-cyan-900;
+}
+.tip::before {
+  content: "✨ Tip";
+  @apply block font-bold uppercase tracking-widest text-xs mb-2 text-cyan-600;
+}
+
+/* 3. New: Warning Block - Amber/Orange Theme */
+.warning {
+  @apply bg-amber-50/50 border-amber-500 text-amber-900;
+}
+.warning::before {
+  content: "⚠️ Warning";
+  @apply block font-bold uppercase tracking-widest text-xs mb-2 text-amber-600;
+}
+
+/* 4. Ensure typography and code blocks work inside the new types */
+.try-it p, .challenge p, .definition p, .tip p, .warning p {
   @apply m-0 text-sm leading-relaxed opacity-90;
 }
 
-.try-it code, .challenge code, .definition code {
-  @apply bg-white/80 border-none shadow-none;
+.try-it code, .challenge code, .definition code, .tip code, .warning code {
+  @apply bg-white/80 border-none shadow-none text-indigo-800 px-1 rounded;
 }

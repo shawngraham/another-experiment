@@ -38,7 +38,7 @@ A file is a discrete container for data. In Digital Humanities, we often disting
 ### 3. The Directory Tree and Paths
 Directories are nested. A directory inside another is a "child," and the containing directory is the "parent." 
 
-::: definition
+:::definition
 **File Path**: The specific address of a file. 
 - **Absolute Path**: The full address from the "root" (e.g., \`C:\\Users\\Humanist\\Project\\data.txt\` or \`/\`).
 - **Relative Path**: The address relative to where you are currently "standing."
@@ -72,7 +72,7 @@ with open("my_research_notes.txt", "w") as file:
     file.write("This is my first DH data file.")
 \`\`\`
 
-::: challenge
+:::challenge
 Use the sandbox to create a structured project folder, then write a file to that folder. This mimics setting up a workspace for a new research project.
 :::
 `,
@@ -184,8 +184,8 @@ The backbone of scholarly digital editions. Using the **TEI (Text Encoding Initi
 | **JSON** | Nested | Web Data / Metadata | Storing API results |
 | **XML** | Hierarchical | Complex Encoding | Scholarly Digital Editions |
 
-::: try-it
-In the challenge below, we use the \`csv\` module. Because we are working with a "string" of text rather than an actual file on your hard drive, we use \`io.StringIO\` to trick Python into treating that text like an open file.
+:::try-it
+In the challenge at right, we use the \`csv\` module. Because we are working with a "string" of text rather than an actual file on your hard drive, we use \`io.StringIO\` to trick Python into treating that text like an open file.
 :::
 `,
   challenges: [
@@ -254,7 +254,7 @@ for row in reader:
 ## Why Do Characters Break?
 Have you ever seen text like \`cafÃ©\` instead of \`café\` or \`ï»¿\` at the start of a document? This is called **Mojibake** (Japanese for "character transformation"). It happens because the computer is using the wrong "map" to translate binary numbers (0s and 1s) into human characters.
 
-::: definition
+:::definition
 **Character Encoding**: A lookup table (a "map") that assigns a unique number to every character.
 :::
 
@@ -301,7 +301,7 @@ with open("manuscript.txt", "r", encoding="utf-8") as f:
     text = f.read()
 \`\`\`
 
-::: try-it
+:::try-it
 If you ever see \`Ã©\`, your computer is reading **UTF-8** data as if it were **Latin-1**. To fix it, you need to ensure the "map" you use to read matches the "map" used to save.
 :::
 `,
@@ -406,15 +406,15 @@ Sometimes you need to treat a number like a string (for example, to print it as 
 - \`int("50")\` -> converts to \`50\`
 - \`float(5)\`   -> converts to \`5.0\`
 
-::: definition
+:::definition
 **Naming Rules**: Variable names should be descriptive and use **snake_case** (lowercase letters with underscores). 
 - ✅ \`word_count = 500\`
 - ❌ \`WordCount = 500\` (Not standard Python style)
 - ❌ \`2_word_count = 500\` (Cannot start with a number)
 :::
 
-::: try-it
-In the challenge below, remember that when you use \`print(type(variable_name))\`, Python will output the "class" of that variable (e.g., \`<class 'str'>\`).
+:::try-it
+In the challenge at right, remember that when you use \`print(type(variable_name))\`, Python will output the "class" of that variable (e.g., \`<class 'str'>\`).
 :::
 `,
   challenges: [
@@ -481,7 +481,7 @@ print(authors[0]) # Output: Austen
 print(authors[1]) # Output: Shelley
 \`\`\`
 
-::: tip
+:::tip
 To find out how many items are in a list, use the \`len()\` function (short for length):
 \`\`\`python
 print(len(authors)) # Output: 3
@@ -514,11 +514,11 @@ print(book_data["author"]) # Output: Shelley
 - Use a **List** if you have a simple sequence of items where the order matters (like chapters in a book).
 - Use a **Dictionary** if you need to label your data (like a library catalog record).
 
-::: definition
+:::definition
 **Mutable**: Both lists and dictionaries are "mutable," meaning you can change them after they are created. You can add a new author to your list or update the publication year in your dictionary.
 :::
 
-::: try-it
+:::try-it
 Try creating a list of four years. Use \`print(years[0])\` to see the first year and \`print(years[3])\` to see the last one. What happens if you try to print \`years[4]\`?
 :::
 `,
@@ -633,7 +633,7 @@ for y in years:
         print(y) # This only runs if the 'if' condition is True
 \`\`\`
 
-::: try-it
+:::try-it
 Look at the challenge below. You will need to "nest" an \`if\` statement inside a \`for\` loop. Make sure your \`if\` is indented once, and your \`print\` is indented twice!
 :::
 `,
@@ -706,7 +706,7 @@ Think of a function like a specialized machine in a library:
 - **Parameters (Inputs)**: The raw materials you put into the machine.
 - **Return (Output)**: The finished product the machine hands back to you.
 
-::: warning
+:::warning
 **Print vs. Return**: 
 - \`print()\` just shows a value on your screen. It’s like looking at a book.
 - \`return\` hands the value back to the program so you can use it later. **If a function doesn't have a \`return\`, it won't give you any data back to store in a variable!**
@@ -715,7 +715,7 @@ Think of a function like a specialized machine in a library:
 ---
 
 ## 3. A Handy DH Tool: \`.split()\`
-In the challenge below, you need to count words. In Python, you can turn a long string of text into a **List of words** using the \`.split()\` method.
+In the challenge at right, you need to count words. In Python, you can turn a long string of text into a **List of words** using the \`.split()\` method.
 
 \`\`\`python
 sentence = "Digital Humanities is great"
@@ -734,7 +734,7 @@ print(len(words)) # Output: 4
 2. **Maintenance**: If you decide to change how you count words, you only have to fix it in one place (the function definition).
 3. **Collaboration**: You can write a complex function for "Parsing 18th Century Dates" and share it with other historians.
 
-::: try-it
+:::try-it
 Functions must be defined *before* they are called. In your code, always put your \`def\` blocks at the top of the file.
 :::
 `,
@@ -833,12 +833,12 @@ with open('output.txt', 'w', encoding='utf-8') as f:
 ## 4. Why Encoding Matters (Again!)
 As a DH researcher, you will often work with historical texts or data from international archives. Always include \`encoding='utf-8'\`. If you leave it out, your script might work on your computer but break on a colleague's machine, or it might turn accented characters into "mojibake."
 
-::: warning
+:::warning
 **The 'w' Mode Danger**: Be careful! Opening a file with \`'w'\` wipes it clean immediately. Never use \`'w'\` on your only copy of a primary source!
 :::
 
-::: try-it
-In the challenge below, you will perform two steps. First, you will "Save" some data to a file. Then, in a second block, you will "Open" it back up to prove it was saved correctly.
+:::try-it
+In the challenge at right, you will perform two steps. First, you will "Save" some data to a file. Then, in a second block, you will "Open" it back up to prove it was saved correctly.
 :::
 `,
   challenges: [
@@ -946,12 +946,12 @@ words = text.strip().lower().replace("!", "").split()
 print(words) # Output: ['the', 'raven']
 \`\`\`
 
-::: tip
+:::tip
 Think of method chaining like a factory assembly line. Each method takes the output of the previous one and modifies it further.
 :::
 
-::: challenge
-Text analysis usually begins with a "word count." In the challenge below, use what you've learned about splitting strings to create a basic word counter.
+:::challenge
+Text analysis usually begins with a "word count." In the challenge at right, use what you've learned about splitting strings to create a basic word counter.
 :::
 `,
   challenges: [
@@ -1053,8 +1053,8 @@ Historical documents often have "scannos" (OCR errors). Regex can find them!
 - **Matches**: "l818" or "l831" (where the scanner mistook the "1" for an "l").
 - **Action**: You can then use \`re.sub()\` to replace all those "l"s with "1"s across thousands of files.
 
-::: try-it
-Regex is a language of its own. In the challenge below, combine the digit symbol (\`\\d\`) with the quantifier for "exactly four" (\`{4}\`) to extract dates from a string.
+:::try-it
+Regex is a language of its own. In the challenge at right, combine the digit symbol (\`\\d\`) with the quantifier for "exactly four" (\`{4}\`) to extract dates from a string.
 :::
 `,
   challenges: [
@@ -1154,12 +1154,12 @@ print(years)`,
   3. **Tokenize**: \`.split()\`
   4. **Count**: \`Counter(tokens)\`
 
-  ::: tip
+  :::tip
   The \`.most_common()\` method returns a **List of Tuples**. Each tuple contains the word and its count: \`('word', 5)\`.
   :::
 
-  ::: challenge
-  In the challenge below, you will analyze a famous line of Shakespeare. You need to turn the string into a list of words, then use \`Counter\` to rank them.
+  :::challenge
+  In the challenge at right, you will analyze a famous line of Shakespeare. You need to turn the string into a list of words, then use \`Counter\` to rank them.
   :::
   `,
     challenges: [
@@ -1263,12 +1263,12 @@ print(years)`,
   print(len(unique_words)) # Types: 4
   \`\`\`
 
-  ::: definition
+  :::definition
   **Type/Token Ratio (TTR)**: Calculated as \`(Types / Tokens)\`. A high TTR indicates a diverse vocabulary (like Shakespeare), while a low TTR indicates a more repetitive text (like a children's book).
   :::
 
-  ::: challenge
-  In the challenge below, you will process a famous quote. You must normalize the text (lower case and no punctuation) before using \`set()\` to find the unique word count.
+  :::challenge
+  In the challenge at right, you will process a famous quote. You must normalize the text (lower case and no punctuation) before using \`set()\` to find the unique word count.
   :::
   `,
     challenges: [
@@ -1380,12 +1380,12 @@ print(years)`,
           print(f"Found a proper noun: {word}")
   \`\`\`
 
-  ::: tip
+  :::tip
   **Why use POS tagging?** 
   If you want to map a novel, you can't just search for every word that starts with a capital letter (that would include the start of every sentence). By filtering for **NNP**, you get a much cleaner list of actual names and places.
   :::
 
-  ::: challenge
+  :::challenge
   In the first challenge, you will practice smarter tokenization. In the second, you will use a loop to extract only the proper nouns from a sentence about Jane Austen.
   :::
   `,
@@ -1518,12 +1518,12 @@ print(years)`,
   - **The "Rags to Riches" Arc**: A steady rise in sentiment.
   - **The "Person in a Hole" Arc**: A fall into negative sentiment followed by a recovery.
 
-  ::: tip
+  :::tip
   While our "toy" example here is simple, professional DH tools like **VADER** or **TextBlob** are smarter: they understand that "not happy" is negative and "VERY HAPPY" is more positive than just "happy."
   :::
 
-  ::: challenge
-  In the challenge below, you will build a basic sentiment engine. You'll need to split a sentence into words, check each word against a provided lexicon, and keep a running total of the score.
+  :::challenge
+  In the challenge at right, you will build a basic sentiment engine. You'll need to split a sentence into words, check each word against a provided lexicon, and keep a running total of the score.
   :::
   `,
     challenges: [
@@ -1640,7 +1640,7 @@ print(years)`,
           print(row["name"])
   \`\`\`
 
-  ::: try-it
+  :::try-it
   When reading a CSV, remember that everything starts as a **string**. If you want to do math on a year or a price, you must convert it using \`int()\` or \`float()\`!
   :::
   `,
@@ -1751,12 +1751,12 @@ print(years)`,
   print(df.describe())
   \`\`\`
 
-  ::: tip
+  :::tip
   **DH Use Case**: If you have a CSV of 10,000 library records, you can use \`df['language'].value_counts()\` to instantly see how many books are in English vs. French. This is much faster than manual counting!
   :::
 
-  ::: challenge
-  In the challenge below, you will practice creating a DataFrame from scratch. Remember that the **Keys** of your dictionary become the **Column Headers**, and the **Lists** become the **Rows**.
+  :::challenge
+  In the challenge at right, you will practice creating a DataFrame from scratch. Remember that the **Keys** of your dictionary become the **Column Headers**, and the **Lists** become the **Rows**.
   :::
   `,
     challenges: [
@@ -1860,12 +1860,12 @@ print(years)`,
   filtered_list = [d for d in data if d['year'] > 1850]
   \`\`\`
 
-  ::: tip
+  :::tip
   Think of a List Comprehension as: *[Item for Item in List if Condition]*. It is the "Intermediate" way to write a four-line loop in just one line.
   :::
 
-  ::: challenge
-  In the challenge below, you are given a list of dictionaries representing archival records. Use a list comprehension to filter for records where the year is greater than 1850.
+  :::challenge
+  In the challenge at right, you are given a list of dictionaries representing archival records. Use a list comprehension to filter for records where the year is greater than 1850.
   :::
   `,
     challenges: [
@@ -1972,12 +1972,12 @@ print(years)`,
   print(counts) # Output: {'Gothic': 2, 'Romance': 1}
   \`\`\`
 
-  ::: definition
+  :::definition
   **Aggregation**: The process of turning many data points (individual books) into a single significant number (total count or average) that describes a group.
   :::
 
-  ::: challenge
-  In the challenge below, you are given a list of tuples. Each tuple contains a **genre** and a **title**. Your goal is to manually count how many books belong to the 'Gothic' genre using the dictionary method.
+  :::challenge
+  In the challenge at right, you are given a list of tuples. Each tuple contains a **genre** and a **title**. Your goal is to manually count how many books belong to the 'Gothic' genre using the dictionary method.
   :::
   `,
     challenges: [
@@ -2086,12 +2086,12 @@ print(years)`,
   loc = archive_entry.get("location") 
   \`\`\`
 
-  ::: tip
+  :::tip
   **DH Use Case**: When you harvest data from the **Digital Public Library of America (DPLA)** or the **Library of Congress API**, the data will arrive as a massive, nested JSON object. Learning to "drill down" through these layers is how you extract specific information for your research.
   :::
 
-  ::: challenge
-  In the challenge below, look closely at the "chapters" key. It contains a list. To get to the second chapter, you must first index the list, then access the dictionary key inside it.
+  :::challenge
+  In the challenge at right, look closely at the "chapters" key. It contains a list. To get to the second chapter, you must first index the list, then access the dictionary key inside it.
   :::
   `,
     challenges: [
@@ -2182,11 +2182,11 @@ print(years)`,
   2. **Data Silences**: What is *not* in your chart? If you are visualizing a colonial archive, whose voices are missing? A chart of "total publications" may hide the fact that certain populations were barred from publishing.
   3. **Labels**: Every axis must have a title. A chart without a label is a riddle, not an argument.
 
-  ::: definition
+  :::definition
   **Capta vs. Data**: Many humanists prefer the term "capta" (taken) over "data" (given) to remind us that our information is always selected and interpreted by researchers, not just found in the world.
   :::
 
-  ::: try-it
+  :::try-it
   When you start building charts in the next lesson, always ask yourself: *"If I deleted the title and labels, would a reader still know what this represents?"* If the answer is no, your design needs work.
   :::
   `,
@@ -2285,13 +2285,13 @@ print(years)`,
   ### The Bar Chart (\`plt.bar\`)
   Best for comparing distinct categories, such as different authors or different archives.
 
-  ::: tip
+  :::tip
   **Handling Long Labels**: In DH, our labels are often long (like book titles). If your X-axis labels are overlapping and unreadable, add this line before \`plt.show()\`:
   \`plt.xticks(rotation=45)\`
   :::
 
-  ::: challenge
-  Every plot starts with two matching lists: the **Labels** (X) and the **Values** (Y). In the challenge below, prepare the data needed to compare the lengths of three famous DH texts.
+  :::challenge
+  Every plot starts with two matching lists: the **Labels** (X) and the **Values** (Y). In the challenge at right, prepare the data needed to compare the lengths of three famous DH texts.
   :::
   `,
     challenges: [
@@ -2395,12 +2395,12 @@ print(years)`,
   - **Color Palettes**: Use color-blind friendly palettes (like those provided by the \`Seaborn\` library) to ensure your research is inclusive.
   - **Resolution**: Use \`plt.savefig("plot.png", dpi=300)\`. Lower DPI will make your text blurry and difficult to read for those with visual impairments.
 
-  ::: tip
+  :::tip
   The \`.values()\` method on a dictionary returns only the numbers. Wrapping that in \`sum()\` gives you an instant total of your dataset.
   :::
 
-  ::: challenge
-  In the challenge below, you will practice generating a dynamic title. This is a vital skill for automated reporting, where your script might analyze a new folder of books every day.
+  :::challenge
+  In the challenge at right, you will practice generating a dynamic title. This is a vital skill for automated reporting, where your script might analyze a new folder of books every day.
   :::
   `,
     challenges: [
@@ -2489,12 +2489,12 @@ print(years)`,
   ## 3. Comparative Visualization
   To compare two authors, we often use side-by-side bar charts (subplots). This reveals **Stylometry**—the study of linguistic style. For example, you might find that while two authors write about "Death," one uses the word as a noun while the other uses it as an adjective.
 
-  ::: tip
+  :::tip
   **Filter the Noise**: If you plot your frequencies without removing "Stopwords" (the, and, of, is), your chart will always look the same regardless of the book. Always clean your text *before* plotting to see the words that actually matter to your research.
   :::
 
-  ::: challenge
-  Before you can create a chart, you must be able to extract the frequency data correctly. In the challenge below, use the \`Counter\` object to find the most frequent words in a short string.
+  :::challenge
+  Before you can create a chart, you must be able to extract the frequency data correctly. In the challenge at right, use the \`Counter\` object to find the most frequent words in a short string.
   :::
   `,
     challenges: [
@@ -2600,13 +2600,13 @@ print(years)`,
 
   This opens a side window that shows you exactly where that item lives in the HTML tree. Finding the "class" or "id" of an element using the Inspector is the very first step of every web scraping project.
 
-  ::: tip
+  :::tip
   **Why does this matter?** 
   If you want to download 1,000 poems from a website, you don't want to copy-paste each one. You want to tell Python: "Find the \`<div>\` with the class \`poem-body\` and give me the text inside it."
   :::
 
-  ::: challenge
-  While we usually use libraries to "strip" HTML, it is important to remember that HTML is ultimately just a string of text. In the challenge below, use your string manipulation skills to extract the human-readable text from a raw HTML tag.
+  :::challenge
+  While we usually use libraries to "strip" HTML, it is important to remember that HTML is ultimately just a string of text. In the challenge at right, use your string manipulation skills to extract the human-readable text from a raw HTML tag.
   :::
   `,
     challenges: [
@@ -2697,12 +2697,12 @@ print(years)`,
   - **Fair Use**: In many regions, scraping for non-commercial scholarly research is "Fair Use," but re-publishing that data (e.g., putting the full text of a copyrighted novel on your own site) is a violation.
   - **Indigenous Data**: Be extra cautious with archives of indigenous materials. These may have "Traditional Knowledge" labels that restrict how the data should be handled, even if it is technically accessible.
 
-  ::: tip
+  :::tip
   **The Golden Rule of Scraping**: Always look for a "Download Data" button or an API (Application Programming Interface) first. Scraping should be your last resort!
   :::
 
-  ::: challenge
-  In the challenge below, you are given a string that represents a \`robots.txt\` file. Your goal is to find the line that starts with "Disallow" and extract the path.
+  :::challenge
+  In the challenge at right, you are given a string that represents a \`robots.txt\` file. Your goal is to find the line that starts with "Disallow" and extract the path.
   :::
   `,
     challenges: [
@@ -2805,12 +2805,12 @@ print(years)`,
   - **Europeana**: The gateway to European cultural heritage.
   - **Open Library**: Access to millions of book records and full texts.
 
-  ::: tip
+  :::tip
   **From String to Data**: When an API sends data, it arrives as a long string. In Python, we use \`json.loads()\` to turn that string into a list or dictionary we can actually work with. In the \`requests\` library, \`response.json()\` does this step for you automatically!
   :::
 
-  ::: challenge
-  In the challenge below, you will simulate receiving data from an API. You will need to parse the JSON string and use a loop to extract specific book titles.
+  :::challenge
+  In the challenge at right, you will simulate receiving data from an API. You will need to parse the JSON string and use a loop to extract specific book titles.
   :::
   `,
     challenges: [
@@ -2928,12 +2928,12 @@ print(years)`,
       MyMIDI.writeFile(output_file)
   \`\`\`
 
-  ::: tip
+  :::tip
   **Why Sonify?** 
   Sonification is a form of **Multimodal Analysis**. It allows researchers to "listen" to a corpus while doing other tasks, and provides an accessible way for visually impaired scholars to engage with quantitative data.
   :::
 
-  ::: challenge
+  :::challenge
   You have word counts from five chapters of a novel. Your goal is to map these counts to MIDI notes between **48 (Low C)** and **84 (High C)**. If a chapter is very long, it should play a very high note.
   :::
   `,
@@ -3056,11 +3056,11 @@ print(years)`,
 
   **DH Best Practice**: Always add a "Minimum Duration" (an offset). If your gap is \`0\`, force it to be at least \`0.1\` so the data remains audible.
 
-  ::: tip
+  :::tip
   **Humanities Application**: By sonifying the "rhythm" of punctuation in a novel (mapping the number of words between every comma), you can *hear* the difference between a frantic, breathless author and a slow, methodical one.
   :::
 
-  ::: challenge
+  :::challenge
   You have a list of "mentions" (the page numbers where a keyword appears). Calculate the distances between these mentions to create a list of durations. This list will serve as the rhythmic foundation for a sonification.
   :::`,
     challenges: [
@@ -3130,7 +3130,7 @@ print(years)`,
   - **Sentiment** $\rightarrow$ **Pitch** (High notes for joy, low notes for sorrow)
   - **Word Count** $\rightarrow$ **Velocity** (Loudness/Intensity)
 
-  ::: definition
+  :::definition
   **Velocity**: In MIDI terminology, this refers to how "hard" a note is struck. It ranges from **0 (silent) to 127 (maximum force)**. It is the standard way to map the "weight" or "volume" of a data point.
   :::
 
@@ -3163,11 +3163,11 @@ print(years)`,
   ## 4. The Math of Multi-Mapping
   Remember the formula from Lesson 1: \`percent * range + offset\`. When doing multimodal mapping, you simply perform this calculation for each sound parameter.
 
-  ::: tip
+  :::tip
   **DH Insight**: Multimodal sonification is perfect for detecting **outliers**. If you hear a note that is suddenly very high (pitch) but very quiet (velocity), you have found a record that is highly positive but very short—a "blip" in your archive that might be worth a closer look.
   :::
 
-  ::: challenge
+  :::challenge
   You have a small "corpus" of books. Each book is a list: \`[year, page_count]\`. Convert these into a list of Note dictionaries. Map the **Year** to a pitch (60-72) and the **Page Count** to a velocity (0-127).
   :::`,
     challenges: [
@@ -3266,7 +3266,7 @@ print(years)`,
   1.  **Documents are mixtures of topics**: A single letter from a soldier might be 60% "military life" and 40% "family affection."
   2.  **Topics are mixtures of words**: The "Military" topic has a high probability of containing words like "march," "camp," and "officer."
 
-  ::: definition
+  :::definition
   **Latent**: This means "hidden." We call it *Latent* Dirichlet Allocation because the topics aren't explicitly labeled in the text; the computer has to discover the hidden patterns.
   :::
 
@@ -3286,7 +3286,7 @@ print(years)`,
   ---
 
   ## 3. The Problem of "The": Stopwords
-  In the challenge below, you will find shared words between two sentences. You will notice that common words like "the" appear in both. In real topic modeling, these are called **Stopwords**. Because they appear in *every* document, they don't help the computer distinguish between topics. Most researchers remove them before running a model.
+  In the challenge at right, you will find shared words between two sentences. You will notice that common words like "the" appear in both. In real topic modeling, these are called **Stopwords**. Because they appear in *every* document, they don't help the computer distinguish between topics. Most researchers remove them before running a model.
 
   ---
 
@@ -3296,11 +3296,11 @@ print(years)`,
   -   Discover themes they didn't know existed.
   -   Track how a "Topic" (like *democracy* or *nature*) changes in its word usage over 200 years.
 
-  ::: tip
+  :::tip
   **Topics vs. Categories**: A category is a label *you* give a book (like "Fiction"). A topic is a cluster of words the *computer* finds (like "ship, sea, whale, captain"). It is up to the researcher to interpret what those clusters mean.
   :::
 
-  ::: challenge
+  :::challenge
   To build topics, the computer looks for "overlap." Identify the shared words between these two documents. These shared words represent the "latent" connection the computer uses to group texts together.
   :::`,
     challenges: [
@@ -3376,7 +3376,7 @@ print(years)`,
   ## 2. Lemmatization: Grouping Concepts
   LDA works best when "running," "ran," and "runs" are all treated as the single concept: **run**. 
 
-  ::: definition
+  :::definition
   **Lemmatization**: Reducing a word to its "lemma" or dictionary root. Unlike "Stemming" (which just chops off the ends of words), lemmatization uses a dictionary to ensure the result is a real word.
   -   "Better" $\rightarrow$ "Good"
   -   "Civilians" $\rightarrow$ "Civilian"
@@ -3406,12 +3406,12 @@ print(years)`,
   clean = ["king", "run", "kingdom"]
   \`\`\`
 
-  ::: tip
+  :::tip
   **Humanities Insight**: Be careful! Removing "he" and "she" is standard for topic models, but if your research question is about **gender and power**, those "stopwords" are actually your most important data points. Always match your cleaning to your research question.
   :::
 
-  ::: challenge
-  In the challenge below, you will act as the "strainer." You must take a list of tokens and filter them by two criteria: they must not be in the stopword list, and they must be longer than 3 characters.
+  :::challenge
+  In the challenge at right, you will act as the "strainer." You must take a list of tokens and filter them by two criteria: they must not be in the stopword list, and they must be longer than 3 characters.
   :::`,
     challenges: [
       {
@@ -3495,7 +3495,7 @@ print(years)`,
   - **If K is too small**: Your topics will be "mushy" and over-generalized (e.g., a single topic that contains both "Religion" and "Politics").
   - **If K is too large**: Your topics will be too "splintered," creating dozens of tiny, overlapping categories that are hard to interpret.
 
-  ::: definition
+  :::definition
   **Hyperparameter**: A setting you choose *before* the training starts (like K) that determines how the model learns. In DH, we often run several models with different K values (e.g., 10, 20, 50) to see which one yields the most useful results.
   :::
 
@@ -3512,11 +3512,11 @@ print(years)`,
   ## 4. The Stochastic Nature of LDA
   LDA is "stochastic," meaning it uses a degree of randomness. If you run the exact same model twice, you might get slightly different results. In scholarly research, we look for **stable topics**—clusters of words that consistently appear together across multiple runs.
 
-  ::: tip
+  :::tip
   **doc2bow** stands for "Document to Bag of Words." It is the function that translates your human-readable word lists into the numerical tuples the computer needs for its math.
   :::
 
-  ::: challenge
+  :::challenge
   To build a model, you must first build the "map" (Dictionary) and the "numbers" (Corpus). Complete the code below to convert a small set of documents into a format Gensim can use.
   :::`,
     challenges: [
@@ -3630,12 +3630,12 @@ print(years)`,
   ## 4. Distant Reading vs. Close Reading
   Topic modeling is a "Distant Reading" tool, but it works best when paired with "Close Reading." If a specific diary entry has a 90% score in a "Grief" topic, you should use that as a signpost to go back and read that specific page. Use the machine to find the needle, then use your human brain to analyze the needle.
 
-  ::: tip
+  :::tip
   **Human-in-the-loop**: This is the DH philosophy that the machine's output is only the *start* of the research. Your labels and interpretations are what turn "data" into "scholarship."
   :::
 
-  ::: challenge
-  Gensim outputs topics as a single string of math. In the challenge below, you will use Python's string tools to "snip out" the most important word (the first one) from a topic string.
+  :::challenge
+  Gensim outputs topics as a single string of math. In the challenge at right, you will use Python's string tools to "snip out" the most important word (the first one) from a topic string.
   :::`,
     challenges: [
       {
@@ -3742,11 +3742,11 @@ print(years)`,
   ## 4. Questioning Periodization
   In DH, timelines allow us to test "periodization"—the way historians group years into blocks like "The Romantic Era" or "The Victorian Age." By calculating the density of events, we can see if our data actually fits those traditional labels or if the "rhythm" of history suggests a different story.
 
-  ::: tip
+  :::tip
   **The Running Maximum**: To find the "longest gap," you initialize a variable at 0. As you loop through the gaps, you check: *"Is this current gap bigger than my record?"* If yes, you update your record. This is a fundamental pattern in data analysis.
   :::
 
-  ::: challenge
+  :::challenge
   In the first challenge, you will sort a list of literary milestones. In the second, you will identify the "Great Silence"—the longest gap between any two publications in the list.
   :::`,
     challenges: [
@@ -3891,7 +3891,7 @@ print(years)`,
   print(locations[0]["lon"]) # Output: -0.1278
   \`\`\`
 
-  ::: definition
+  :::definition
   **Geocoding**: The process of converting place names (like "Bath, England") into coordinates (51.38, -2.36). Most historical datasets require this cleaning step before you can map them.
   :::
 
@@ -3929,11 +3929,11 @@ print(years)`,
   ## 4. Grouping by Region
   Just as we group temporal data by decade, we group spatial data by country or city to see where "power centers" of culture lie. 
 
-  ::: tip
+  :::tip
   **Spatial Ethics**: Remember that coordinates suggest a precision that historical records often lack. If a 17th-century letter is labeled "South of the River," placing a pin at a specific coordinate is a scholarly *interpretation*, not a neutral fact.
   :::
 
-  ::: challenge
+  :::challenge
   In the first challenge, use nested loops to calculate the distances between four literary cities and find which two are closest. In the second, summarize the geography of a publishing dataset.
   :::`,
     challenges: [
@@ -4114,7 +4114,7 @@ print(years)`,
   print(paris) # Output: POINT (2.35 48.85)
   \`\`\`
 
-  ::: warning
+  :::warning
   **The Lon/Lat Trap**: Most people say "Latitude and Longitude." But mathematically, Longitude is the horizontal axis (**X**) and Latitude is the vertical axis (**Y**). If you put Latitude first in a \`Point()\`, your map of Paris will end up in Somalia!
   :::
 
@@ -4123,13 +4123,13 @@ print(years)`,
   ## 3. WKT: Well-Known Text
   When you print a Shapely object, you see a format like \`POINT (31.13 29.97)\`. This is called **WKT**. It is a standardized way to describe shapes as text, making it easy to move data between Python, QGIS, and web maps.
 
-  ::: tip
+  :::tip
   **DH Use Case**: 
   - **Archaeology**: Recording the exact meter-grid location of an artifact within a trench requires a projected system.
   - **History**: Mapping the spread of a manuscript across Europe requires understanding that medieval "projections" were based on travel time, not modern GPS coordinates.
   :::
 
-  ::: challenge
+  :::challenge
   In the first challenge, create a Point representing the Great Pyramid. In the second, use Shapely's built-in math to calculate the "straight-line" distance between two points on a flat plane.
   :::`,
     challenges: [
@@ -4271,11 +4271,11 @@ print(years)`,
   )
   \`\`\`
 
-  ::: tip
+  :::tip
   **DH Use Case**: Load a dataset of 19th-century cholera outbreaks. Filter the data to show only the first week of the outbreak. By calculating the "Centroid" (the geometric center) of those points, you can identify the epicenter of the epidemic.
   :::
 
-  ::: challenge
+  :::challenge
   In the first challenge, you will load a built-in dataset of the world. In the second, you will use your Pandas skills to "extract" a single country from that map.
   :::`,
     challenges: [
@@ -4449,11 +4449,11 @@ print(years)`,
   gdf_meters['area_sqm'] = gdf_meters.area
   \`\`\`
 
-  ::: tip
+  :::tip
   **DH Use Case**: By layering a map of "Cholera Deaths" over a map of "Water Pumps," John Snow famously discovered the source of an 1854 outbreak. Layering is how we find **spatial correlation**.
   :::
 
-  ::: challenge
+  :::challenge
   In the first challenge, generate a plot object. In the second, perform a CRS transformation to calculate the area of a region in meters.
   :::`,
     challenges: [
@@ -4610,11 +4610,11 @@ print(years)`,
   ## 4. Public History and Storytelling
   Interactive maps are the backbone of "Deep Mapping" projects. By allowing a user to zoom in from a national view to a street-level view, you enable them to move between **Distant Reading** (patterns) and **Close Reading** (specific stories in popups).
 
-  ::: tip
+  :::tip
   **DH Use Case**: If you are sonifying a travel diary, you could create a loop that goes through every city visited and adds a Marker. In the popup, you could include the date of the visit and a link to the digitized page of the diary.
   :::
 
-  ::: challenge
+  :::challenge
   In the first challenge, initialize a map centered on New York. In the second, use a loop to programmatically add multiple markers to a single map object.
   :::`,
     challenges: [
@@ -4757,11 +4757,11 @@ print(years)`,
   image[0, 0] = [255, 0, 0]
   \`\`\`
 
-  ::: tip
+  :::tip
   **Distant Viewing**: This is a DH method where we analyze "visual style" computationally. By looking at the average pixel values of every frame in a film, we can visualize the "color palette" of a director across their entire career.
   :::
 
-  ::: challenge
+  :::challenge
   In the first challenge, create a 1x1 red pixel. In the second, practice "drilling down" into a 3x3 grid to find specific colors.
   :::`,
     challenges: [
@@ -4918,11 +4918,11 @@ print(years)`,
   img_pil = Image.open("page.jpg").convert("L") # 'L' for Luminance
   \`\`\`
 
-  ::: tip
+  :::tip
   **DH Use Case**: If you are studying a collection of 5,000 digitized 19th-century postcards, you can use these tools to automatically crop out the "stamp" area from every card to analyze the postal marks separately.
   :::
 
-  ::: challenge
+  :::challenge
   Because we are in a sandbox, we will create "synthetic images" using NumPy and then transform them. In Challenge 1, use OpenCV to resize a blue square. In Challenge 2, use Pillow to crop a red square.
   :::`,
     challenges: [
@@ -5079,11 +5079,11 @@ print(years)`,
   avg_color = np.mean(img_array, axis=(0, 1))
   \`\`\`
 
-  ::: tip
+  :::tip
   **DH Use Case**: Scholars use these tools to identify "visual trends" in historical archives. For example, did the invention of synthetic dyes in the 19th century lead to a measurable spike in "saturated" color frequencies in fashion photography?
   :::
 
-  ::: challenge
+  :::challenge
   In Challenge 1, calculate a histogram for a grayscale gradient. In Challenge 2, calculate the average color of a four-color "quilt" image.
   :::`,
     challenges: [
@@ -5242,11 +5242,11 @@ print(years)`,
   ## 4. DH Application: Duplicate Detection
   Large digital archives often contain near-duplicates (e.g., a scanned letter and a slightly cropped version of the same letter). By calculating the distance between their histograms, we can automatically flag these "visual twins" for the archivist.
 
-  ::: tip
+  :::tip
   **DH Insight**: "Visual Similarity" is a subjective scholarly concept. By choosing different metrics (Euclidean vs. Cosine), you are making a research decision about what kind of "similarity" matters most to your project.
   :::
 
-  ::: challenge
+  :::challenge
   In this challenge, you will calculate the **Euclidean Distance** between the average colors of two different images. If the distance is small, the images are visually similar in color.
   :::`,
     challenges: [
@@ -5318,11 +5318,11 @@ print(years)`,
   ## 1. Nodes and Edges
   Network analysis (or Graph Theory) requires us to simplify complex humanities data into two specific components:
 
-  ::: definition
+  :::definition
   **Node (or Vertex)**: The "things" in the network. In the humanities, these are often people (authors, historical figures), but they can also be places, books, or even abstract concepts like "keywords."
   :::
 
-  ::: definition
+  :::definition
   **Edge (or Link)**: The relationship connecting two nodes. This represents the "action" or "connection," such as "wrote a letter to," "is related to," or "appeared in the same scene as."
   :::
 
@@ -5362,11 +5362,11 @@ print(years)`,
   *   **History (The Republic of Letters)**: Mapping the vast exchange of letters between Enlightenment thinkers to see how ideas traveled across borders.
   *   **Literature**: Analyzing character networks in plays to identify the protagonist based on "centrality" rather than word count.
 
-  ::: tip
+  :::tip
   **Modeling Tip**: Before you start coding, always ask: "What is a node in my project?" and "What constitutes an edge?" If you can't define these clearly, your network will be "hairball" of data that is impossible to interpret.
   :::
 
-  ::: challenge
+  :::challenge
   Model a small correspondence network using Python tuples. You will create a directed "Edge List" where the first name is the Sender and the second is the Recipient.
   :::`,
     challenges: [
@@ -5484,11 +5484,11 @@ print(years)`,
   ## 4. Why Use This? (The DH Use Case)
   If you are analyzing a 19th-century novel, you wouldn't manually type every character's name. You would write a loop that reads your text and calls \`G.add_edge()\` whenever two characters appear in the same paragraph. NetworkX will then handle the complex math of determining who the "most important" character is based on their position in the web.
 
-  ::: tip
+  :::tip
   **Bulk Loading**: The \`add_edges_from()\` method is your best friend. It allows you to take a list of thousands of tuples (like the ones we made in the last lesson) and turn them into a network in a single line of code.
   :::
 
-  ::: challenge
+  :::challenge
   In the first challenge, build a small city-state alliance network manually. In the second, practice bulk-loading an "edge list" into a graph object.
   :::`,
     challenges: [
@@ -5651,11 +5651,11 @@ print(years)`,
   print(f"The Hub is {ranked[0][0]} with a score of {ranked[0][1]}")
   \`\`\`
 
-  ::: tip
+  :::tip
   **Humanities Insight**: A character might have a very low word count in a novel but a very high **Betweenness Centrality**. This suggests they are a "messenger" or a "witness" who links disparate parts of the plot together.
   :::
 
-  ::: challenge
+  :::challenge
   In Challenge 1, identify the hub in a "Star Graph." In Challenge 2, calculate the "broker" score for a node that serves as the only bridge to a sub-group.
   :::`,
     challenges: [
@@ -5811,11 +5811,11 @@ print(years)`,
   2.  **Color**: Use color to separate different groups.
   3.  **Alpha**: Make edges transparent so they don't overlap into a solid mass.
 
-  ::: tip
+  :::tip
   **EDA (Exploratory Data Analysis)**: Use visualization as a starting point, not just a final result. A spring layout might group characters together that you didn't realize were connected, prompting you to go back and "close-read" those specific chapters.
   :::
 
-  ::: challenge
+  :::challenge
   In this challenge, you will generate the layout coordinates for a small graph. While we aren't "drawing" to the screen in the sandbox, you will verify that the algorithm successfully calculated the (x, y) positions for the nodes.
   :::`,
     challenges: [
@@ -5946,11 +5946,11 @@ print(years)`,
 
   If you use an **Undirected Graph** (\`nx.Graph()\`), NetworkX automatically handles this. It treats an edge between A and B as the same thing as an edge between B and A. It won't create two separate lines, which keeps your centrality scores accurate.
 
-  ::: tip
+  :::tip
   **Beyond Literature**: This same workflow applies to **Citation Networks** (which scholar is the hub of a field?) and **Metadata Analysis** (which subjects are most frequently grouped together in a library catalog?).
   :::
 
-  ::: challenge
+  :::challenge
   In Challenge 1, you will find the "Protagonist" (the Hub) of a small play. In Challenge 2, you will identify the "Broker"—the character who connects two otherwise isolated communities.
   :::`,
     challenges: [
@@ -6120,11 +6120,11 @@ print(years)`,
   2.  **Reproducibility**: If you find a new box of letters, you don't edit your code; you just add rows to your CSV and re-run the script.
   3.  **Rich Metadata**: By using the \`edge_attr\` parameter, you can attach dates, locations, or sentiment scores to every connection in your web.
 
-  ::: tip
+  :::tip
   **DH Pro-Tip**: When creating your CSV, ensure your "Source" and "Target" columns use consistent names. If you have "V. Woolf" in one row and "Virginia Woolf" in another, the computer will create two different nodes for the same person!
   :::
 
-  ::: challenge
+  :::challenge
   In Challenge 1, you will build a correspondence network from a raw dataset. In Challenge 2, you will learn to attach "Distance" as an attribute to your edges.
   :::`,
     challenges: [
@@ -6307,7 +6307,7 @@ ML doesn't use a fixed list. It uses a **Training Set** (a "Gold Standard" of th
 
 ## Practice
 
-::: try-it
+:::try-it
 **The Semantic Shift Challenge**
 In the 1800s, the word "awful" often meant "full of awe" (positive/profound), whereas today it is purely negative. 
 1. Think of a word that has changed meaning (e.g., "nice," "gay," or "terrific"). 
@@ -6320,7 +6320,7 @@ In the 1800s, the word "awful" often meant "full of awe" (positive/profound), wh
 *   **Historical Newspapers:** Analyzing how public sentiment toward "Automobiles" changed between 1900 and 1920.
 *   **Sociology:** Comparing the sentiment of tweets from different geographic regions during an election.
 
-::: challenge
+:::challenge
 Build a manual sentiment scorer that handles basic intensity.
 :::`,
     challenges: [
@@ -6447,7 +6447,7 @@ VADER returns a dictionary of four scores:
 
 ## Practice
 
-::: try-it
+:::try-it
 **Testing the Rules**
 Compare the scores of these two sentences using the logic above:
 1. "The lecture was good."
@@ -6461,7 +6461,7 @@ Notice how the compound score jumps significantly just by adding caps and exclam
 *   **Digital Ethnography:** Measuring the "toxicity" of different online gaming communities or forums over time.
 *   **Crisis Response:** Using real-time Twitter data to track the "mood" of a city during a natural disaster or protest.
 
-::: challenge
+:::challenge
 Analyze a list of "tweets" to find the most positive one.
 :::`,
     challenges: [
@@ -6621,7 +6621,7 @@ There is an idea that most stories follow specific shapes:
 
 ## Practice
 
-::: try-it
+:::try-it
 **Conceptualizing Windows**
 If you have a window size of 1 (no smoothing), your graph is a zigzag. If your window size is 10,000 (the whole book), your graph is a flat line. Success in DH often involves finding the "Goldilocks" window size that shows the arc without losing too much detail.
 :::
@@ -6632,7 +6632,7 @@ If you have a window size of 1 (no smoothing), your graph is a zigzag. If your w
 *   **Film Studies**: Analyzing screenplays to see if "Action" movies have more frequent sentiment fluctuations than "Dramas."
 *   **History**: Mapping the "rhetorical heat" of a long-running parliamentary debate to find the moment of peak tension.
 
-::: challenge
+:::challenge
 Smooth a jagged list of sentiment scores and identify the turning points.
 :::`,
     challenges: [
@@ -6760,7 +6760,7 @@ Sentiment analyzers are trained on specific datasets (often Wikipedia or news).
 
 ## Practice
 
-::: try-it
+:::try-it
 **Contextual Flip**
 Think of the word "Unpredictable." 
 1. Write a sentence where "unpredictable" is a **compliment** (e.g., a thriller movie).
@@ -6773,7 +6773,7 @@ How would a single dictionary score both fairly?
 *   **Social Justice:** Investigating if automated content moderation (which uses sentiment analysis) unfairly silences marginalized voices.
 *   **History of Emotions:** Using sentiment analysis to track the changing meaning of "Melancholy" from a medical condition to a poetic state.
 
-::: challenge
+:::challenge
 Improve a manual scorer by implementing a "Look-Back" negation rule.
 :::`,
     challenges: [
@@ -6868,7 +6868,7 @@ Humanities researchers typically deal with three types:
 ### 2. Standards and Interoperability
 If every archive used their own names for fields (one uses "Author," another "Writer," another "Creator"), we couldn't combine them. We use **Standards** to ensure **Interoperability**.
 
-::: definition
+:::definition
 **Dublin Core (DC)**: A set of 15 "core" elements used globally by libraries and museums. Common fields include *Title, Creator, Subject, Description, Publisher, Contributor, Date, Type, Format, Identifier, Source, Language, Relation, Coverage, and Rights*.
 :::
 
@@ -6907,7 +6907,7 @@ Real-world metadata is often "dirty." You will frequently need to:
 
 ## Practice
 
-::: try-it
+:::try-it
 **The Archivist's Choice**
 Look at the record above. If you were building a website for this collection, which fields would you use for a "Search Bar" and which would you use for a "Filter" (facet)? Why?
 :::
@@ -6918,7 +6918,7 @@ Look at the record above. If you were building a website for this collection, wh
 *   **Digital Archives**: Using tools like **Omeka** or **Tropy**, which are built entirely around the Dublin Core standard.
 *   **Zotero**: When you save a paper to Zotero, you are actually just capturing its metadata for later citation.
 
-::: challenge
+:::challenge
 Produce a summary report from a mock archive.
 :::`,
     challenges: [
@@ -7088,7 +7088,7 @@ For analysis (like counting items per year), we want to turn those nested "cloud
 
 ## Practice
 
-::: try-it
+:::try-it
 **Exploring Hierarchy**
 Look at the \`record\` example above. How would you access the string "France"? 
 *Answer: \`record["subjects"][1]\`.*
@@ -7103,7 +7103,7 @@ Now imagine a collection of 10,000 records. If only 5,000 of them have a "subjec
 
 Understanding how to "dig" through JSON layers is a superpower for DH researchers. It allows you to build your own datasets instead of relying on what a website's "Search" button chooses to show you.
 
-::: challenge
+:::challenge
 Build a clean catalogue from a messy API response.
 :::`,
     challenges: [

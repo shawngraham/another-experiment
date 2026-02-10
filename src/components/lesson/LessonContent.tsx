@@ -18,10 +18,14 @@ function remarkDirectiveTransformer() {
         node.type === 'textDirective'
       ) {
         const data = node.data || (node.data = {});
-        // node.name is the word after the ::: (e.g., 'try-it')
-        data.hName = 'div';
-        data.hProperties = { 
-          className: [node.name] // This applies the class for your index.css
+        const tagName = node.type === 'textDirective' ? 'span' : 'div';
+
+        data.hName = tagName;
+        data.hProperties = {
+          // We force the class name here
+          className: node.name,
+          // We also add a data-attribute for easy debugging in the Inspector
+          'data-directive': node.name 
         };
       }
     });
