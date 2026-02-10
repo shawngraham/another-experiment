@@ -13,6 +13,7 @@ import { LibraryPage } from './pages/LibraryPage.tsx';
 import { NotesPage } from './pages/NotesPage.tsx';
 import { ProgressPage } from './pages/ProgressPage.tsx';
 import { ExportPage } from './pages/ExportPage.tsx';
+import { AboutPage } from './pages/AboutPage.tsx';
 
 function AppRoutes() {
   const { profile } = useUserStore();
@@ -36,6 +37,7 @@ function AppRoutes() {
         <Route path="/notes" element={onboarded ? <NotesPage /> : <Navigate to="/onboarding" />} />
         <Route path="/progress" element={onboarded ? <ProgressPage /> : <Navigate to="/onboarding" />} />
         <Route path="/export" element={onboarded ? <ExportPage /> : <Navigate to="/onboarding" />} />
+        <Route path="/about" element={onboarded ? <AboutPage /> : <Navigate to="/onboarding" />} />
 
         {/* Default redirect */}
         <Route path="*" element={<Navigate to={onboarded ? '/dashboard' : '/onboarding'} />} />
