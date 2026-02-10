@@ -1,20 +1,20 @@
 import type { LessonDefinition } from '../types/index.ts';
 
 export const lessons: LessonDefinition[] = [
-  {
-    id: 'digital-literacy-01',
-    title: 'Understanding Files and Directories',
-    moduleId: 'digital-literacy-foundations',
-    prerequisites: [],
-    estimatedTimeMinutes: 30,
-    difficulty: 'beginner',
-    learningObjectives: [
-      'Understand file system structure and hierarchy',
-      'Navigate directories using absolute and relative paths',
-      'Identify common file extensions in DH research',
-    ],
-    keywords: ['files', 'directories', 'file types', 'paths'],
-    content: `# Understanding Files and Directories
+{
+  id: 'digital-literacy-01',
+  title: 'Understanding Files and Directories',
+  moduleId: 'digital-literacy-foundations',
+  prerequisites: [],
+  estimatedTimeMinutes: 30,
+  difficulty: 'beginner',
+  learningObjectives: [
+    'Understand file system structure and hierarchy',
+    'Navigate directories using absolute and relative paths',
+    'Identify common file extensions in DH research',
+  ],
+  keywords: ['files', 'directories', 'file types', 'paths'],
+  content: `# Understanding Files and Directories
 
 ## The Digital Archive
 Think of your computer's file system like a physical archive or library. Just as a library has wings, stacks, and individual boxes, your computer organizes information into a hierarchical structure of **drives**, **directories** (folders), and **files**.
@@ -23,176 +23,321 @@ Think of your computer's file system like a physical archive or library. Just as
 
 ### 1. What is a File?
 A file is a discrete container for data. In Digital Humanities, we often distinguish between:
-- **Plain Text** (.txt, .csv): Files containing only characters, readable by any computer.
+- **Plain Text** (.txt, .csv): Files containing only characters, readable by any computer. These are the "gold standard" for long-term preservation.
+- **Structured Data** (.json, .xml): Files that use tags or keys to organize data (common in TEI encoding).
 - **Binary Files** (.docx, .pdf, .jpg): Files that require specific software to interpret their internal structure.
 
-### 2. The Directory Tree
-Directories are nested. A directory inside another is a "child," and the containing directory is the "parent." This creates a **tree structure**.
+### 2. Common DH File Extensions
+| Extension | Type | DH Use Case |
+| :--- | :--- | :--- |
+| **.txt** | Plain Text | Cleaned corpora for text analysis. |
+| **.csv** | Comma Separated Values | Datasets for mapping or network analysis. |
+| **.xml / .tei** | Extensible Markup Language | Scholarly digital editions. |
+| **.json** | JavaScript Object Notation | Data harvested from web APIs or social media. |
+
+### 3. The Directory Tree and Paths
+Directories are nested. A directory inside another is a "child," and the containing directory is the "parent." 
 
 ::: definition
 **File Path**: The specific address of a file. 
-- **Absolute Path**: Starts from the "root" (e.g., \`C:\\\` or \`/\`).
-- **Relative Path**: Starts from where you are currently "standing" (your Working Directory).
+- **Absolute Path**: The full address from the "root" (e.g., \`C:\\Users\\Humanist\\Project\\data.txt\` or \`/\`).
+- **Relative Path**: The address relative to where you are currently "standing."
+  - \`.\` (dot) represents the **current folder**.
+  - \`..\` (double dot) represents the **parent folder** (moving up one level).
 :::
 
 ## Navigating via Code
-While we often use a mouse to move files, DH researchers use code to automate the processing of thousands of files at once.
+While we often use a mouse to move files, DH researchers use code to automate the processing of thousands of files at once. If you have 5,000 letters to analyze, you cannot click each one individually; you must tell the computer where the "stack" is located.
 
 \`\`\`python
 import os
 # 'os' stands for Operating System. 
 # It lets Python talk to your folders.
 
-current_location = os.getcwd() # Get Current Working Directory
+# Get the Current Working Directory (CWD)
+current_location = os.getcwd() 
 print(f"You are currently at: {current_location}")
 
-files_here = os.listdir('.') # '.' represents the current folder
+# List everything inside the current folder
+files_here = os.listdir('.') 
 print(f"Contents: {files_here}")
 \`\`\`
 
+## Working with Files
+In Python, we use the \`with\` statement to handle files. This ensures that the file is "closed" properly after we are done, preventing data loss.
+
+\`\`\`python
+# Creating a file and writing text to it
+with open("my_research_notes.txt", "w") as file:
+    file.write("This is my first DH data file.")
+\`\`\`
+
 ::: challenge
-Use the sandbox to create a structured project folder for a research project titled "London_Mapping".
+Use the sandbox to create a structured project folder, then write a file to that folder. This mimics setting up a workspace for a new research project.
 :::
 `,
-    challenges: [
-      {
-        id: 'digital-literacy-01-c1',
-        title: 'Create a directory and file',
-        language: 'python',
-        difficulty: 'beginner',
-        starterCode: `import os\n\n# 1. Create a directory called 'my_project'\n# 2. Create a file inside it called 'notes.txt'\n# 3. Write "Hello DH!" to the file\n\n# Your code here\n`,
-        expectedOutput: 'Hello DH!',
-        hints: [
-          'Use os.makedirs(name, exist_ok=True) to create a directory safely.',
-          'The path to the file will be "my_project/notes.txt".',
-          'Use open(path, "w") to write.',
-        ],
-        solution: `import os\nos.makedirs('my_project', exist_ok=True)\nwith open('my_project/notes.txt', 'w') as f:\n    f.write('Hello DH!')\nwith open('my_project/notes.txt', 'r') as f:\n    print(f.read())`,
-      },
-    ],
-  },
-  {
-    id: 'digital-literacy-02',
-    title: 'Data Formats: TXT, CSV, JSON, XML',
-    moduleId: 'digital-literacy-foundations',
-    prerequisites: ['digital-literacy-01'],
-    estimatedTimeMinutes: 30,
-    difficulty: 'beginner',
-    learningObjectives: [
-      'Distinguish between structured and unstructured data',
-      'Understand the strengths of CSV for tabular data',
-      'Recognize nested hierarchies in JSON and XML',
-    ],
-    keywords: ['txt', 'csv', 'json', 'xml', 'data formats'],
-    content: `# Data Formats for the Humanities
+  challenges: [
+    {
+      id: 'digital-literacy-01-c1',
+      title: 'Create a directory and file',
+      language: 'python',
+      difficulty: 'beginner',
+      starterCode: `import os
+
+# 1. Create a directory called 'dh_project'
+# 2. Create a file inside it called 'manifesto.txt'
+# 3. Write "Digital Humanities is collaborative!" to the file
+# 4. Print the contents to verify
+
+# Your code here
+`,
+      expectedOutput: 'Digital Humanities is collaborative!',
+      hints: [
+        'Use os.makedirs("folder_name", exist_ok=True) to create a folder.',
+        'To write inside a folder, use the path "folder_name/filename.txt".',
+        'Use the "w" mode in open() to write, and "r" mode to read.',
+      ],
+      solution: `import os
+# Create the directory
+os.makedirs('dh_project', exist_ok=True)
+
+# Write to the file
+path = 'dh_project/manifesto.txt'
+with open(path, 'w') as f:
+    f.write('Digital Humanities is collaborative!')
+
+# Read and print to verify
+with open(path, 'r') as f:
+    print(f.read())`,
+    },
+  ],
+},
+{
+  id: 'digital-literacy-02',
+  title: 'Data Formats: TXT, CSV, JSON, XML',
+  moduleId: 'digital-literacy-foundations',
+  prerequisites: ['digital-literacy-01'],
+  estimatedTimeMinutes: 30,
+  difficulty: 'beginner',
+  learningObjectives: [
+    'Distinguish between structured and unstructured data',
+    'Understand the strengths of CSV for tabular data',
+    'Recognize nested hierarchies in JSON and XML',
+    'Choose the appropriate format for different DH research tasks',
+  ],
+  keywords: ['txt', 'csv', 'json', 'xml', 'data formats'],
+  content: `# Data Formats for the Humanities
 
 ## Choosing the Right Vessel
-Data isn't just "information"; it's information formatted for a specific purpose. Choosing the wrong format can make analysis impossible.
+In the digital humanities, data isn't just "information"; it's information formatted for a specific purpose. Choosing the wrong format can make analysis impossible. We generally categorize data into two types:
 
-## Common Formats in DH
+1. **Unstructured Data**: Plain text with no pre-defined model (e.g., a raw TXT file of a novel). Great for reading, hard for machines to "parse" into categories.
+2. **Structured Data**: Data organized into a searchable, predictable format (e.g., a CSV or JSON file). Great for machines to count, sort, and map.
+
+---
+
+## The DH "Big Four"
 
 ### 1. Plain Text (.txt)
 The "gold standard" for long-term preservation. It contains no formatting (no bold, no italics), making it perfect for **Natural Language Processing (NLP)**.
+- **Use Case**: Running a word frequency count on the complete works of Shakespeare.
 
 ### 2. CSV (Comma-Separated Values)
-Used for **tabular data** (spreadsheets). Each line is a row, and each comma represents a new column.
+Used for **tabular data** (spreadsheets). Each line is a row, and each comma represents a new column. 
+- **Use Case**: A list of archival objects with columns for "Date," "Creator," and "Location."
 \`\`\`text
 title,author,year
 Frankenstein,Shelley,1818
 \`\`\`
 
 ### 3. JSON (JavaScript Object Notation)
-The language of the web. It uses **key-value pairs** and can nest data inside other data.
+The language of the web. It uses **key-value pairs** and can "nest" data inside other data, allowing for complex relationships.
+- **Use Case**: Downloading metadata from the Digital Public Library of America (DPLA) via an API.
 \`\`\`json
 {
   "book": "Dracula",
-  "metadata": {"author": "Stoker", "year": 1897}
+  "metadata": {
+    "author": "Stoker", 
+    "year": 1897,
+    "themes": ["Gothic", "Epistolary"]
+  }
 }
 \`\`\`
 
 ### 4. XML (eXtensible Markup Language)
-Used extensively in libraries and digital editions (like the TEI - Text Encoding Initiative). It uses "tags" to describe the meaning of text.
+The backbone of scholarly digital editions. Using the **TEI (Text Encoding Initiative)** standard, XML uses "tags" to describe the *meaning* of text, not just its appearance.
+- **Use Case**: Marking up a manuscript to show which words were crossed out by the author.
 \`\`\`xml
 <poem>
-  <line>The woods are lovely, dark and deep</line>
+  <line>The woods are <del>dark</del> <add>lovely</add>, dark and deep</line>
 </poem>
 \`\`\`
 
+---
+
+## Format Comparison Guide
+
+| Format | Structure | Best For... | DH Example |
+| :--- | :--- | :--- | :--- |
+| **TXT** | None | Text Analysis | Distant Reading |
+| **CSV** | Tabular | Statistics / Mapping | Prosopography (Social Networks) |
+| **JSON** | Nested | Web Data / Metadata | Storing API results |
+| **XML** | Hierarchical | Complex Encoding | Scholarly Digital Editions |
+
 ::: try-it
-Look at the CSV data in the challenge below. Notice how it mimics a table but is stored as simple text.
+In the challenge below, we use the \`csv\` module. Because we are working with a "string" of text rather than an actual file on your hard drive, we use \`io.StringIO\` to trick Python into treating that text like an open file.
 :::
 `,
-    challenges: [
-      {
-        id: 'digital-literacy-02-c1',
-        title: 'Parse a CSV string',
-        language: 'python',
-        difficulty: 'beginner',
-        starterCode: `import csv\nimport io\n\n# A researcher gives you this string of archival data:\ncsv_data = """name,year,genre\nFrankenstein,1818,Gothic\nPride and Prejudice,1813,Romance\nDracula,1897,Gothic"""\n\n# Goal: Print each row as a list\n# Your code here\n`,
-        expectedOutput: "['name', 'year', 'genre']\n['Frankenstein', '1818', 'Gothic']\n['Pride and Prejudice', '1813', 'Romance']\n['Dracula', '1897', 'Gothic']",
-        hints: [
-          'The csv.reader() function needs a "file-like" object, so we use io.StringIO(csv_data).',
-          'Loop through the reader using "for row in reader:".',
-        ],
-        solution: `import csv\nimport io\n\ncsv_data = """name,year,genre\nFrankenstein,1818,Gothic\nPride and Prejudice,1813,Romance\nDracula,1897,Gothic"""\n\nreader = csv.reader(io.StringIO(csv_data))\nfor row in reader:\n    print(row)`,
-      },
-    ],
-  },
-  {
-    id: 'digital-literacy-03',
-    title: 'Character Encoding and Plain Text',
-    moduleId: 'digital-literacy-foundations',
-    prerequisites: ['digital-literacy-02'],
-    estimatedTimeMinutes: 25,
-    difficulty: 'beginner',
-    learningObjectives: [
-      'Explain how computers represent characters as numbers',
-      'Identify UTF-8 as the universal standard for DH',
-      'Troubleshoot "Mojibake" (broken characters)',
-    ],
-    keywords: ['encoding', 'utf-8', 'ascii', 'unicode', 'mojibake'],
-    content: `# Character Encoding
+  challenges: [
+    {
+      id: 'digital-literacy-02-c1',
+      title: 'Parse a CSV string',
+      language: 'python',
+      difficulty: 'beginner',
+      starterCode: `import csv
+import io
+
+# A researcher gives you this string of archival data:
+csv_data = """name,year,genre
+Frankenstein,1818,Gothic
+Pride and Prejudice,1813,Romance
+Dracula,1897,Gothic"""
+
+# Goal: Use csv.reader to print each row as a list
+# 1. Wrap csv_data in io.StringIO()
+# 2. Pass that to csv.reader()
+# 3. Loop through and print each row
+
+# Your code here
+`,
+      expectedOutput: "['name', 'year', 'genre']\n['Frankenstein', '1818', 'Gothic']\n['Pride and Prejudice', '1813', 'Romance']\n['Dracula', '1897', 'Gothic']",
+      hints: [
+        'The syntax is: reader = csv.reader(io.StringIO(csv_data))',
+        'Use "for row in reader:" to see the individual lists.',
+      ],
+      solution: `import csv
+import io
+
+csv_data = """name,year,genre
+Frankenstein,1818,Gothic
+Pride and Prejudice,1813,Romance
+Dracula,1897,Gothic"""
+
+# Convert the string to a file-like object
+virtual_file = io.StringIO(csv_data)
+
+# Create the reader object
+reader = csv.reader(virtual_file)
+
+# Print each row
+for row in reader:
+    print(row)`,
+    },
+  ],
+},
+{
+  id: 'digital-literacy-03',
+  title: 'Character Encoding and Plain Text',
+  moduleId: 'digital-literacy-foundations',
+  prerequisites: ['digital-literacy-02'],
+  estimatedTimeMinutes: 25,
+  difficulty: 'beginner',
+  learningObjectives: [
+    'Explain how computers represent characters as numbers',
+    'Identify UTF-8 as the universal standard for DH',
+    'Troubleshoot "Mojibake" (broken characters) in historical datasets',
+    'Correctly specify encoding when opening files in Python',
+  ],
+  keywords: ['encoding', 'utf-8', 'ascii', 'unicode', 'mojibake'],
+  content: `# Character Encoding
 
 ## Why Do Characters Break?
-Have you ever seen text like \`cafÃ©\` instead of \`café\`? This is called **Mojibake**. It happens because the computer is using the wrong "map" to translate binary numbers into human characters.
+Have you ever seen text like \`cafÃ©\` instead of \`café\` or \`ï»¿\` at the start of a document? This is called **Mojibake** (Japanese for "character transformation"). It happens because the computer is using the wrong "map" to translate binary numbers (0s and 1s) into human characters.
 
 ::: definition
-**Character Encoding**: A lookup table that assigns a unique number to every character.
+**Character Encoding**: A lookup table (a "map") that assigns a unique number to every character.
 :::
 
-## A Brief History
-1. **ASCII**: The original map. Only had 128 characters. Fine for English, but useless for accented letters, emojis, or non-Latin scripts.
-2. **Unicode (UTF-8)**: The "One Map to Rule Them All." It contains over 140,000 characters and covers almost every language on Earth. **Always use UTF-8 when saving your research data.**
+## The Map Gallery
 
-## Dealing with Bytes
-In Python, strings are for humans (\`"hello"\`), but **bytes** are what the computer actually saves (\`b'hello'\`). 
+### 1. ASCII (The Old Map)
+The original American standard. It only had 128 characters—enough for English letters and basic punctuation, but useless for accented letters, emojis, or non-Latin scripts (like Cyrillic, Arabic, or Kanji).
+
+### 2. Unicode / UTF-8 (The Global Map)
+Unicode is a standard that aims to give every character in every language a unique number. **UTF-8** is the most common way to implement Unicode.
+- It covers over 140,000 characters.
+- It is the "One Map to Rule Them All."
+- **DH Rule of Thumb**: Always save and open your research data as **UTF-8**.
+
+---
+
+## Strings vs. Bytes
+In Python, we deal with two ways of looking at text:
+1. **Strings** (\`str\`): Human-readable text (e.g., \`"History"\`).
+2. **Bytes** (\`bytes\`): The machine's version, prefixed with a \`b\` (e.g., \`b'History'\`).
 
 \`\`\`python
 word = "café"
-encoded = word.encode("utf-8") # Turns string into bytes
-print(encoded) # Result: b'caf\\xc3\\xa9'
+# Encoding: String -> Bytes
+encoded_word = word.encode("utf-8") 
+print(encoded_word) # Output: b'caf\\xc3\\xa9'
+
+# Decoding: Bytes -> String
+decoded_word = encoded_word.decode("utf-8")
+print(decoded_word) # Output: café
+\`\`\`
+
+---
+
+## The DH Workflow: Opening Files
+The most common place you will encounter encoding is when opening a file. If your archive was digitized in the 1990s, it might be in an old format like \`latin-1\`. If you don't tell Python to use \`utf-8\`, it might guess wrong.
+
+**The Golden Rule for DH Scripting:**
+Always include \`encoding="utf-8"\` when opening files:
+
+\`\`\`python
+# Correct way to open a file in DH
+with open("manuscript.txt", "r", encoding="utf-8") as f:
+    text = f.read()
 \`\`\`
 
 ::: try-it
-Try encoding a string with a non-English character (like a Greek letter or an Emoji) in the sandbox to see the byte representation.
+If you ever see \`Ã©\`, your computer is reading **UTF-8** data as if it were **Latin-1**. To fix it, you need to ensure the "map" you use to read matches the "map" used to save.
 :::
 `,
-    challenges: [
-      {
-        id: 'digital-literacy-03-c1',
-        title: 'Explore text encoding',
-        language: 'python',
-        difficulty: 'beginner',
-        starterCode: `# Let's fix some text encoding\ntext = "café"\n\n# 1. Encode 'text' into UTF-8 bytes and print it\n# 2. Decode those bytes back into a string and print it\n`,
-        expectedOutput: "b'caf\\xc3\\xa9'\ncafé",
-        hints: [
-          'Use .encode("utf-8") on the string.',
-          'Use .decode("utf-8") on the resulting bytes.',
-        ],
-        solution: `text = "café"\nencoded = text.encode("utf-8")\nprint(encoded)\ndecoded = encoded.decode("utf-8")\nprint(decoded)`,
-      },
-    ],
-  },
+  challenges: [
+    {
+      id: 'digital-literacy-03-c1',
+      title: 'Explore Text Encoding',
+      language: 'python',
+      difficulty: 'beginner',
+      starterCode: `# A piece of text with an accent and an emoji
+text = "Renée 📜"
+
+# 1. Encode 'text' into UTF-8 bytes and print it
+# 2. Decode those bytes back into a string and print it
+# 3. Observe how the emoji and accent are handled in the bytes version
+
+# Your code here
+`,
+      expectedOutput: "b'Ren\\xc3\\xa9e \\xf0\\x9f\\x93\\x9c'\nRenée 📜",
+      hints: [
+        'Use the .encode("utf-8") method on your string first.',
+        'Store that in a variable, then use the .decode("utf-8") method on it.',
+        'Notice how the emoji takes up more bytes than a standard letter!',
+      ],
+      solution: `text = "Renée 📜"
+
+# Encode to bytes
+encoded = text.encode("utf-8")
+print(encoded)
+
+# Decode back to string
+decoded = encoded.decode("utf-8")
+print(decoded)`,
+    },
+  ],
+},
   {
     id: 'python-basics-01',
     title: 'Variables and Data Types',
