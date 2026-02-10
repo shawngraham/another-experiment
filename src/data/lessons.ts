@@ -2543,45 +2543,98 @@ print(years)`,
     estimatedTimeMinutes: 30,
     difficulty: 'beginner',
     learningObjectives: [
-      'Identify HTML tags, attributes, and content',
-      'Understand the "Nested" nature of the DOM',
-      'Use browser Inspector tools to find data',
+      'Identify HTML tags, attributes, and text content',
+      'Understand the hierarchical "Parent-Child" nature of the DOM',
+      'Use browser Inspector tools to locate research data',
+      'Distinguish between structural tags and metadata attributes'
     ],
-    keywords: ['html', 'dom', 'elements', 'scraping', 'tags'],
+    keywords: ['html', 'dom', 'elements', 'scraping', 'tags', 'attributes'],
     content: `# The Anatomy of a Webpage
 
-## HTML as a Tree
-Webpages aren't just text; they are structured documents. To "scrape" data, you must understand how to find the specific "branch" where your information is hiding.
+  ## HTML as a Hierarchical Map
+  Most Digital Humanities data is "trapped" inside webpages—think of online archives, newspaper sites, or digital libraries. To "scrape" this data, we have to stop seeing the webpage as a visual design and start seeing it as a **structured document** called the **DOM (Document Object Model)**.
 
-### Elements and Tags
-- \`<h1>\`: A top-level heading.
-- \`<p>\`: A paragraph.
-- \`<a>\`: A link (uses the \`href\` attribute).
-- \`<div class="article">\`: A generic container with a label.
+  ---
 
-### The DOM (Document Object Model)
-Think of HTML as an onion. A \`<body>\` tag contains a \`<div>\`, which contains a \`<ul>\` (list), which contains an \`<li>\` (item). 
+  ## 1. Elements, Tags, and Attributes
+  An HTML **element** usually consists of a start tag, some content, and an end tag.
 
-\`\`\`html
-<div id="content">
-  <p>The actual data we want.</p>
-</div>
-\`\`\`
+  - **Tags**: The "labels" that tell the browser what the data is (e.g., \`<h1>\`, \`<p>\`, \`<a>\`).
+  - **Attributes**: Extra information tucked inside the start tag. These are vital for DH because they often contain the data we want (like links) or help us identify specific sections.
 
-::: tip
-In your browser, right-click any element and select **"Inspect"** to see its HTML code. This is the first step of any scraping project!
-:::
-`,
+  \`\`\`html
+  <a href="https://archive.org" class="source-link">Visit the Archive</a>
+  <!-- ^Tag   ^Attribute          ^Class Name      ^Content          ^End Tag -->
+  \`\`\`
+
+  ---
+
+  ## 2. The Tree Structure (Nesting)
+  HTML is built like a set of nesting dolls. One tag "wraps" around others, creating a **Parent-Child** relationship.
+
+  - **Parent**: An element that contains other elements (e.g., a \`<div>\` containing several paragraphs).
+  - **Child**: An element contained within another.
+
+  \`\`\`html
+  <div id="project-description">
+      <h1>The Mary Shelley Project</h1>
+      <p>This is a <em>digital</em> edition.</p>
+  </div>
+  \`\`\`
+  In the example above, \`<div>\` is the parent. \`<h1>\` and \`<p>\` are siblings. The word "digital" is a child of the \`<em>\` (emphasis) tag.
+
+  ---
+
+  ## 3. Common Tags in DH Projects
+  | Tag | Name | DH Use Case |
+  | :--- | :--- | :--- |
+  | **\`<a>\`** | Anchor | Finding links to PDF documents or other archive pages. |
+  | **\`<table>\`** | Table | Storing structured census data or casualty lists. |
+  | **\`<ul> / <li>\`** | List / Item | Navigating menus or catalogs of works. |
+  | **\`<span> / <div>\`** | Container | Generic boxes often labeled with "class" names for styling. |
+
+  ---
+
+  ## 4. The Researcher's Secret Tool: The Inspector
+  You don't need to read the entire source code of a website. In your browser (Chrome, Firefox, or Safari), you can **right-click** on any piece of text or any image and select **"Inspect"**. 
+
+  This opens a side window that shows you exactly where that item lives in the HTML tree. Finding the "class" or "id" of an element using the Inspector is the very first step of every web scraping project.
+
+  ::: tip
+  **Why does this matter?** 
+  If you want to download 1,000 poems from a website, you don't want to copy-paste each one. You want to tell Python: "Find the \`<div>\` with the class \`poem-body\` and give me the text inside it."
+  :::
+
+  ::: challenge
+  While we usually use libraries to "strip" HTML, it is important to remember that HTML is ultimately just a string of text. In the challenge below, use your string manipulation skills to extract the human-readable text from a raw HTML tag.
+  :::
+  `,
     challenges: [
       {
         id: 'web-data-01-c1',
-        title: 'Parse HTML string',
-        language: 'python' as const,
-        difficulty: 'beginner' as const,
-        starterCode: `# Manually extract text from this "tag"\nhtml = "<h1>Digital Humanities</h1>"\n\n# Your code here: print the text without tags\n`,
+        title: 'Manual HTML Tag Removal',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# A researcher has scraped a heading, but it still has HTML tags attached.
+  html_string = "<h1>Digital Humanities</h1>"
+
+  # Goal: Extract only the text "Digital Humanities" 
+  # by removing the opening <h1> and closing </h1> tags.
+
+  # Your code here:
+  # 1. Use .replace() to remove the opening tag
+  # 2. Use .replace() to remove the closing tag (nb outside of this environment, you'd use an appropriate _parser_ to do this step.)
+  # 3. Assign to a variable 'clean_text' and print it
+  `,
         expectedOutput: 'Digital Humanities',
-        hints: ['You can use .replace("<h1>", "").replace("</h1>", "") for now.'],
-        solution: `html = "<h1>Digital Humanities</h1>"\ntext = html.replace('<h1>', '').replace('</h1>', '')\nprint(text)`,
+        hints: [
+          'You can chain the .replace() methods together.',
+          'Remember that the closing tag has a forward slash: </h1>',
+          'Make sure your strings in .replace() exactly match the tags in the variable.'
+        ],
+        solution: `html_string = "<h1>Digital Humanities</h1>"
+  clean_text = html_string.replace("<h1>", "").replace("</h1>", "")
+  print(clean_text)`,
       },
     ],
   },
@@ -2593,42 +2646,99 @@ In your browser, right-click any element and select **"Inspect"** to see its HTM
     estimatedTimeMinutes: 25,
     difficulty: 'beginner',
     learningObjectives: [
-      'Locate and read a robots.txt file',
-      'Understand "Rate Limiting" and why it matters',
-      'Differentiate between public data and private/copyrighted data',
+      'Locate and interpret a robots.txt file',
+      'Understand "Rate Limiting" and the impact of scraping on small archives',
+      'Differentiate between public data and copyrighted or sensitive data',
+      'Implement "polite" scraping practices using Python'
     ],
-    keywords: ['ethics', 'robots.txt', 'copyright', 'politeness'],
-    content: `# The Ethical Scraper
+    keywords: ['ethics', 'robots.txt', 'copyright', 'politeness', 'rate limiting'],
+    content: `# The Ethical Scraper: Citizenship in the Digital Archive
 
-## Just because you can, doesn't mean you should.
-Web scraping is a powerful tool, but it can easily be abused. If you send 10,000 requests per second to a small library's website, you might crash their server.
+  ## Just because you can, doesn't mean you should.
+  Web scraping is a powerful tool, but in Digital Humanities, we often work with the websites of libraries, small museums, and university archives. Unlike Google or Amazon, these sites may run on limited budgets and small servers. If you send 10,000 requests per second, you could accidentally perform a "Denial of Service" (DoS) attack, crashing the very archive you are trying to study.
 
-### 1. Check \`robots.txt\`
-Almost every site has a file at \`website.com/robots.txt\` that tells bots where they are allowed to go.
+  ---
 
-### 2. Be Polite (Rate Limiting)
-Always add a "sleep" timer between requests so you don't overwhelm the host.
-\`\`\`python
-import time
-time.sleep(2) # Wait 2 seconds before the next page
-\`\`\`
+  ## 1. The \`robots.txt\` Protocol
+  Before scraping, always check \`website.com/robots.txt\`. This is a plain text file where site owners define their rules for automated bots.
 
-### 3. Identify Yourself
-It is best practice to include your email in the "User-Agent" header so the site admin can contact you if your bot is causing trouble.
+  **Common Terms:**
+  - **User-agent**: Who the rule applies to (\`*\` means everyone).
+  - **Disallow**: Paths that bots are **not** allowed to visit.
+  - **Allow**: Specific paths bots **are** allowed to visit within a disallowed folder.
 
-### 4. Copyright
-Scraping data for analysis is often "Fair Use" in research, but *re-publishing* that data might violate copyright.
-`,
+  ---
+
+  ## 2. Being a "Polite" Guest
+  A polite scraper "acts like a human." Humans take a few seconds to read a page before clicking the next one. You can mimic this using the \`time\` library.
+
+  \`\`\`python
+  import time
+
+  pages = ["/page1", "/page2", "/page3"]
+
+  for page in pages:
+      # [Your scraping code here]
+      print(f"Scraped {page}")
+      
+      # Wait for 2 seconds before the next request
+      time.sleep(2) 
+  \`\`\`
+
+  ---
+
+  ## 3. Identify Yourself (The User-Agent)
+  When your script visits a site, it sends a "User-Agent" string. By default, this says "Python-requests." It is best practice to change this to include your email address. This way, if your script causes trouble, the web admin can email you instead of simply blocking your IP address.
+
+  ---
+
+  ## 4. Copyright and "Data Sovereignty"
+  - **Public vs. Private**: Just because data is visible doesn't mean it's "Public Domain." 
+  - **Fair Use**: In many regions, scraping for non-commercial scholarly research is "Fair Use," but re-publishing that data (e.g., putting the full text of a copyrighted novel on your own site) is a violation.
+  - **Indigenous Data**: Be extra cautious with archives of indigenous materials. These may have "Traditional Knowledge" labels that restrict how the data should be handled, even if it is technically accessible.
+
+  ::: tip
+  **The Golden Rule of Scraping**: Always look for a "Download Data" button or an API (Application Programming Interface) first. Scraping should be your last resort!
+  :::
+
+  ::: challenge
+  In the challenge below, you are given a string that represents a \`robots.txt\` file. Your goal is to find the line that starts with "Disallow" and extract the path.
+  :::
+  `,
     challenges: [
       {
         id: 'web-data-02-c1',
-        title: 'Check robots.txt rules',
-        language: 'python' as const,
-        difficulty: 'beginner' as const,
-        starterCode: `# Extract the "Disallow" path from this robots string\nrobots = "User-agent: *\\nDisallow: /private/\\nAllow: /public/"\n\n# Your code here\n`,
+        title: 'Parse a robots.txt Rule',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# A snippet from a robots.txt file
+  robots_txt = "User-agent: *\\nDisallow: /private/\\nAllow: /public/"
+
+  # Goal: Extract and print ONLY the path that is disallowed.
+  # 1. Split the string into a list of lines using .split("\\n")
+  # 2. Loop through the lines
+  # 3. If a line starts with "Disallow", extract the part after the ": "
+  # 4. Print that path
+
+  # Your code here
+  `,
         expectedOutput: '/private/',
-        hints: ['Split the string by newlines, then check if the line starts with "Disallow".'],
-        solution: `robots = "User-agent: *\\nDisallow: /private/\\nAllow: /public/"\nlines = robots.split("\\n")\nfor line in lines:\n    if line.startswith("Disallow"):\n        print(line.split(": ")[1])`,
+        hints: [
+          'Use lines = robots_txt.split("\\n") to get each rule.',
+          'Inside your loop, use line.startswith("Disallow") to find the right row.',
+          'To get the path, you can split the line by ": " and take the second item [1].'
+        ],
+        solution: `robots_txt = "User-agent: *\\nDisallow: /private/\\nAllow: /public/"
+
+  # Split the rules
+  lines = robots_txt.split("\\n")
+
+  for line in lines:
+      if line.startswith("Disallow"):
+          # Split "Disallow: /private/" into ["Disallow", "/private/"]
+          parts = line.split(": ")
+          path = parts[1]
+          print(path)`,
       },
     ],
   },
@@ -2641,42 +2751,102 @@ Scraping data for analysis is often "Fair Use" in research, but *re-publishing* 
     difficulty: 'intermediate',
     learningObjectives: [
       'Explain the difference between Scraping and using an API',
-      'Use the \`requests\` library to get data',
-      'Navigate nested JSON response objects',
+      'Use the requests library to retrieve data from a web endpoint',
+      'Understand HTTP status codes (e.g., 200 vs 404)',
+      'Navigate nested JSON response objects to extract research data',
     ],
-    keywords: ['api', 'json', 'requests', 'rest'],
+    keywords: ['api', 'json', 'requests', 'rest', 'endpoint'],
     content: `# APIs: The "Front Door" of Data
 
-## What is an API?
-An **Application Programming Interface (API)** is a way for two computers to talk to each other. Instead of scraping a messy webpage, many organizations (like the Library of Congress or Twitter) provide an API that sends back clean, structured data (usually in JSON format).
+  ## What is an API?
+  An **API (Application Programming Interface)** is a way for two computers to talk to each other. If a website's HTML is like the front of a building (meant for humans to look at), an API is like a "service entrance" designed specifically for computers to exchange clean, structured data.
 
-### Using the \`requests\` library
-\`\`\`python
-import requests
+  ### The Restaurant Analogy
+  - **You (The Researcher)**: The customer at the table.
+  - **The API (The Waiter)**: Takes your specific request to the kitchen and brings back your "order" (data).
+  - **The Server (The Kitchen)**: The database where all the books, records, or tweets are stored.
 
-url = "https://api.example.com/books"
-response = requests.get(url)
+  ---
 
-if response.status_code == 200:
-    data = response.json() # Automatically turns JSON into a Python Dictionary
-    print(data["title"])
-\`\`\`
+  ## 1. Why APIs are Better for DH
+  Researchers prefer APIs over web scraping for three main reasons:
+  1.  **Reliability**: Websites change their design constantly (breaking your scraper). APIs are "contracts" that rarely change.
+  2.  **Speed**: You get exactly the data you need (JSON) without the "bloat" of images, CSS, and HTML.
+  3.  **Legality**: Using an API is an explicit invitation from an institution to use their data.
 
-## Advantages of APIs
-1. **Reliability**: Webpages change their design; APIs rarely do.
-2. **Speed**: You get exactly the data you need without the "bloat" of HTML.
-3. **Legality**: Using an API is an explicit invitation to access data.
-`,
+  ---
+
+  ## 2. Using the \`requests\` Library
+  Python uses the \`requests\` library to communicate with APIs. The most important part of a request is the **Status Code**.
+
+  - **200**: Success!
+  - **404**: Not Found (The URL is wrong).
+  - **403**: Forbidden (You don't have permission).
+
+  \`\`\`python
+  import requests
+
+  # The 'Endpoint' (the URL for the data)
+  url = "https://chroniclingamerica.loc.gov/search/pages/results/?format=json&proxtext=humanities"
+
+  response = requests.get(url)
+
+  if response.status_code == 200:
+      # .json() converts the raw text into a Python Dictionary/List
+      data = response.json() 
+      print("Data retrieved successfully!")
+  \`\`\`
+
+  ---
+
+  ## 3. Notable APIs for Humanities Research
+  - **Library of Congress**: Access millions of digitized newspaper pages and photos.
+  - **DPLA (Digital Public Library of America)**: Metadata for millions of items across US heritage institutions.
+  - **Europeana**: The gateway to European cultural heritage.
+  - **Open Library**: Access to millions of book records and full texts.
+
+  ::: tip
+  **From String to Data**: When an API sends data, it arrives as a long string. In Python, we use \`json.loads()\` to turn that string into a list or dictionary we can actually work with. In the \`requests\` library, \`response.json()\` does this step for you automatically!
+  :::
+
+  ::: challenge
+  In the challenge below, you will simulate receiving data from an API. You will need to parse the JSON string and use a loop to extract specific book titles.
+  :::
+  `,
     challenges: [
       {
         id: 'web-data-03-c1',
-        title: 'Parse JSON data',
-        language: 'python' as const,
-        difficulty: 'intermediate' as const,
-        starterCode: `import json\n\n# Simulated API response\napi_response = '[{"title": "Book A", "year": 1818}, {"title": "Book B", "year": 1847}]'\n\n# 1. Use json.loads() to parse the string\n# 2. Loop through and print only the titles\n`,
-        expectedOutput: 'Book A\nBook B',
-        hints: ['json.loads() turns a string into a list or dictionary.'],
-        solution: `import json\n\napi_response = '[{"title": "Book A", "year": 1818}, {"title": "Book B", "year": 1847}]'\nbooks = json.loads(api_response)\nfor book in books:\n    print(book["title"])`,
+        title: 'Parse API Response Data',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import json
+
+  # A simulated string received from a library API
+  api_response = '[{"title": "Frankenstein", "year": 1818}, {"title": "Jane Eyre", "year": 1847}]'
+
+  # Goal: 
+  # 1. Use json.loads() to convert 'api_response' into a Python list
+  # 2. Loop through the list
+  # 3. Print only the "title" of each book
+
+  # Your code here
+  `,
+        expectedOutput: 'Frankenstein\nJane Eyre',
+        hints: [
+          'books = json.loads(api_response) will create a list of dictionaries.',
+          'In your loop, each item is a dictionary. Access the title using item["title"].',
+          'Make sure to import the json module (already in starter code).',
+        ],
+        solution: `import json
+
+  api_response = '[{"title": "Frankenstein", "year": 1818}, {"title": "Jane Eyre", "year": 1847}]'
+
+  # Parse the string into a list of dictionaries
+  books = json.loads(api_response)
+
+  # Loop and extract
+  for book in books:
+      print(book["title"])`,
       },
     ],
   },
