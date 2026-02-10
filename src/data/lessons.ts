@@ -3247,56 +3247,62 @@ print(years)`,
     difficulty: 'beginner',
     learningObjectives: [
       'Explain the logic of Latent Dirichlet Allocation (LDA)',
-      'Understand the "Bag of Words" assumption',
-      'Differentiate between a "Topic" and a "Category"',
+      'Understand the "Bag of Words" assumption and its trade-offs',
+      'Differentiate between a "Topic" (word clusters) and a "Category" (fixed labels)',
+      'Identify the importance of Stopword removal in modeling'
     ],
-    keywords: ['LDA', 'distant reading', 'latent', 'probability'],
+    keywords: ['LDA', 'distant reading', 'latent', 'probability', 'bag-of-words'],
     content: `# Topic Modeling: Conceptual Foundations
 
-## Analogy
+  ## Analogy
+  Imagine you have a giant pile of 1,000 unsorted newspaper clippings from the 1920s. You don't have time to read them, but you notice that some clippings use the words "stadium," "goal," and "referee" frequently, while others use "election," "vote," and "parliament." 
 
-Imagine you have a giant pile of 1,000 unsorted newspaper clippings. You don't have time to read them, but you notice that some clippings use the words "stadium," "goal," and "referee" frequently, while others use "election," "vote," and "parliament." 
+  Even without reading the articles, you can guess that the first group represents a discourse on **Sports** and the second on **Politics**. Topic modeling is a digital assistant that sorts these clippings by looking at which words tend to "hang out" together in the same documents.
 
-Even without reading the articles, you can guess that the first group is about **Sports** and the second is about **Politics**. Topic modeling is an assistant that sorts these clippings by looking at which words tend to hang out together in the same "buckets."
+  ---
 
-## Key Concepts
+  ## 1. Latent Dirichlet Allocation (LDA)
+  LDA is the most common algorithm for topic modeling in the humanities. It works on a "probabilistic" basis, assuming two things:
+  1.  **Documents are mixtures of topics**: A single letter from a soldier might be 60% "military life" and 40% "family affection."
+  2.  **Topics are mixtures of words**: The "Military" topic has a high probability of containing words like "march," "camp," and "officer."
 
-### Latent Dirichlet Allocation (LDA)
-LDA is the most common algorithm for topic modeling. It assumes two things:
-1. **Every document is a mixture of topics**: A single letter might be 60% "family gossip" and 40% "political news."
-2. **Every topic is a mixture of words**: The "Family" topic has a high probability of containing "mother," "home," and "dear."
+  ::: definition
+  **Latent**: This means "hidden." We call it *Latent* Dirichlet Allocation because the topics aren't explicitly labeled in the text; the computer has to discover the hidden patterns.
+  :::
 
-::: definition
-**Latent**: Hidden. We call it "Latent" because the topics aren't explicitly labeled in the text; the computer has to discover the hidden patterns.
-:::
+  ---
 
-### The Bag of Words
-To a topic model, the order of words doesn't matter. "The cat sat on the mat" and "The mat sat on the cat" are identical. It only cares about the **frequency** of words within a document.
+  ## 2. The Bag of Words (BoW)
+  To a topic model, **grammar and word order do not matter**. "The cat sat on the mat" and "The mat sat on the cat" are identical to the model. It treats a document like a "bag" of individual words, only caring about how many of each word are present.
 
-\`\`\`python
-# A "Bag of Words" representation in Python
-doc = "history is a set of lies agreed upon"
-bag = doc.split()
-counts = {word: bag.count(word) for word in set(bag)}
-print(counts)
-\`\`\`
+  \`\`\`python
+  # A "Bag of Words" representation
+  doc = "history is a set of lies"
+  bag = doc.split()
+  counts = {word: bag.count(word) for word in set(bag)}
+  # Result: {'set': 1, 'is': 1, 'lies': 1, 'a': 1, 'history': 1, 'of': 1}
+  \`\`\`
 
-## Practice
+  ---
 
-::: try-it
-If you have two documents: 
-1. "The king led the army."
-2. "The queen led the navy."
-What words would the computer likely group together into a "Monarchy/Military" topic? Try identifying the overlap in the sandbox.
-:::
+  ## 3. The Problem of "The": Stopwords
+  In the challenge below, you will find shared words between two sentences. You will notice that common words like "the" appear in both. In real topic modeling, these are called **Stopwords**. Because they appear in *every* document, they don't help the computer distinguish between topics. Most researchers remove them before running a model.
 
-## Transfer
+  ---
 
-In your own research, think of a "topic" not as a fixed label, but as a **discourse**. If you are studying 19th-century novels, a topic might represent "Industrialization" or "Domesticity."
+  ## 4. Why Use This in DH?
+  Topic modeling is a form of **Distant Reading**. It allows a scholar to:
+  -   Survey thousands of documents at once.
+  -   Discover themes they didn't know existed.
+  -   Track how a "Topic" (like *democracy* or *nature*) changes in its word usage over 200 years.
 
-::: challenge
-Identify shared words between two small "documents" to see how a model begins to cluster topics.
-:::`,
+  ::: tip
+  **Topics vs. Categories**: A category is a label *you* give a book (like "Fiction"). A topic is a cluster of words the *computer* finds (like "ship, sea, whale, captain"). It is up to the researcher to interpret what those clusters mean.
+  :::
+
+  ::: challenge
+  To build topics, the computer looks for "overlap." Identify the shared words between these two documents. These shared words represent the "latent" connection the computer uses to group texts together.
+  :::`,
     challenges: [
       {
         id: 'topic-modeling-01-c1',
@@ -3304,35 +3310,38 @@ Identify shared words between two small "documents" to see how a model begins to
         language: 'python',
         difficulty: 'beginner',
         starterCode: `# Two sentences representing two different documents
-doc_a = "the storm clouds moved over the dark mountain"
-doc_b = "the rain fell on the mountain and the dark forest"
+  doc_a = "the storm clouds moved over the dark mountain"
+  doc_b = "the rain fell on the mountain and the dark forest"
 
-# Goal: Create a set of words that appear in BOTH documents.
-# These shared words are the "glue" LDA uses to build topics.
+  # Goal: Create a set of words that appear in BOTH documents.
+  # These shared words are the "glue" LDA uses to build topics.
 
-words_a = set(doc_a.split())
-words_b = set(doc_b.split())
+  # 1. Turn each document into a set of words
+  words_a = set(doc_a.split())
+  words_b = set(doc_b.split())
 
-# Your code here: use a set intersection
-shared_words = set() 
+  # 2. Use the set intersection operator (&) to find words in both
+  shared_words = set() # Replace this with your intersection code
 
-print(sorted(list(shared_words)))
-`,
+  # 3. Print the sorted list of shared words
+  print(sorted(list(shared_words)))
+  `,
         expectedOutput: "['dark', 'mountain', 'the']",
         hints: [
-          'You can find the intersection of two sets using `set_a & set_b`.',
-          'Ensure you are using the sets `words_a` and `words_b`.',
+          'The intersection operator is the ampersand: words_a & words_b.',
+          'Notice that "the" is included; in a real project, we would remove this as a "stopword".',
+          'Make sure to assign the result of the intersection to the variable shared_words.'
         ],
         solution: `doc_a = "the storm clouds moved over the dark mountain"
-doc_b = "the rain fell on the mountain and the dark forest"
+  doc_b = "the rain fell on the mountain and the dark forest"
 
-words_a = set(doc_a.split())
-words_b = set(doc_b.split())
+  words_a = set(doc_a.split())
+  words_b = set(doc_b.split())
 
-shared_words = words_a & words_b
+  # Use & to find common items in both sets
+  shared_words = words_a & words_b
 
-print(sorted(list(shared_words)))
-`,
+  print(sorted(list(shared_words)))`,
       },
     ],
   },
@@ -3344,86 +3353,107 @@ print(sorted(list(shared_words)))
     estimatedTimeMinutes: 40,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Remove "noise" words that drown out topics',
-      'Apply lemmatization to group word variations',
-      'Filter by frequency to focus on meaningful terms',
+      'Identify and remove "noise" words using custom stopword lists',
+      'Understand Lemmatization as a tool for grouping semantic variations',
+      'Apply frequency filtering to focus on statistically meaningful terms',
+      'Implement a multi-step cleaning pipeline in Python'
     ],
-    keywords: ['stopwords', 'lemmatization', 'filtering', 'tokens'],
-    content: `# Preprocessing for Topic Models
+    keywords: ['stopwords', 'lemmatization', 'filtering', 'tokens', 'noise'],
+    content: `# Preprocessing for Topic Models: Straining the Soup
 
-## Analogy
+  ## The Signal vs. Noise Problem
+  If you are trying to taste the subtle spices in a stew, you need to strain out the large bones and the excess water. In topic modeling, words like "the," "is," and "of" are the "water." They appear everywhere, and because they are in every document, they don't help the computer distinguish one topic from another. To find the "signal" (the topics), we must first remove the "noise."
 
-If you are trying to taste the subtle spices in a stew, you need to strain out the large bones and the excess water. In topic modeling, words like "the," "is," and "of" are the "water." They are everywhere, and they don't help you distinguish one topic from another. We need to "strain" our text to leave only the meaningful ingredients.
+  ---
 
-## Key Concepts
+  ## 1. Custom Stopwords
+  Most programming libraries provide a default list of English stopwords. However, as a DH researcher, you often need **domain-specific stopwords**. 
 
-### 1. Removing Stopwords
-In standard text analysis, we remove common words. In topic modeling, we often have to add **domain-specific stopwords**. If you are analyzing a collection of legal documents, the word "court" might be a stopword because it appears in every single document and provides no distinctive information.
+  -   **Example**: If you are analyzing a collection of 18th-century legal documents, the word "court" or "witness" might appear in every single file. Because they are universal to your corpus, they provide no distinctive information. You should treat them as stopwords.
 
-### 2. Lemmatization
-LDA works best when "running," "ran," and "runs" are all treated as the single concept "run." 
+  ---
 
-::: definition
-**Lemmatization**: Reducing a word to its dictionary root (the lemma). 
-Example: "better" $\\rightarrow$ "good".
-:::
+  ## 2. Lemmatization: Grouping Concepts
+  LDA works best when "running," "ran," and "runs" are all treated as the single concept: **run**. 
 
-### 3. Extreme Frequency Filtering
-- **Too Frequent**: Words that appear in 90% of documents (No help in distinguishing).
-- **Too Rare**: Words that appear in only 1 document (Not enough evidence to form a pattern).
+  ::: definition
+  **Lemmatization**: Reducing a word to its "lemma" or dictionary root. Unlike "Stemming" (which just chops off the ends of words), lemmatization uses a dictionary to ensure the result is a real word.
+  -   "Better" $\rightarrow$ "Good"
+  -   "Civilians" $\rightarrow$ "Civilian"
+  :::
 
-\`\`\`python
-# Filtering a list of tokens
-raw_tokens = ["the", "kings", "were", "running", "the", "kingdom"]
-# Imagine we lemmatized and removed 'the' and 'were'
-clean_tokens = ["king", "run", "kingdom"]
-print(clean_tokens)
-\`\`\`
+  ---
 
-## Practice
+  ## 3. Extreme Frequency Filtering
+  Beyond stopwords, we often filter words based on how many documents they appear in:
+  -   **Too Frequent**: If a word appears in 95% of your documents, it won't help define a specific topic.
+  -   **Too Rare (Hapax Legomena)**: If a word appears only once in 10,000 pages, the computer doesn't have enough evidence to "group" it with anything else. These are usually removed to speed up the model.
 
-::: try-it
-In the sandbox, try taking a sentence and removing all words shorter than 3 characters. Does the meaning of the "topic" stay intact?
-:::
+  ---
 
-## Transfer
+  ## 4. The Cleaning Pipeline
+  In a real DH project, your "cleaning recipe" looks like this:
+  1.  **Lowercase** everything.
+  2.  **Remove Punctuation** and numbers.
+  3.  **Lemmatize** the words.
+  4.  **Remove Stopwords** (Standard + Custom).
+  5.  **Remove Short Words** (Words with 1 or 2 letters are rarely useful for topics).
 
-Think about your specific corpus. If you are analyzing 18th-century letters, you might need to treat "compliments" and "obedient" as stopwords, as they are part of a standard closing rather than a unique topic.
+  \`\`\`python
+  # A cleaned "Bag of Words" result:
+  raw = "The kings were running through the kingdom"
+  # After lowercase, lemmatization, and stopword removal:
+  clean = ["king", "run", "kingdom"]
+  \`\`\`
 
-::: challenge
-Create a function that filters a list of tokens by removing a provided list of stopwords.
-:::`,
+  ::: tip
+  **Humanities Insight**: Be careful! Removing "he" and "she" is standard for topic models, but if your research question is about **gender and power**, those "stopwords" are actually your most important data points. Always match your cleaning to your research question.
+  :::
+
+  ::: challenge
+  In the challenge below, you will act as the "strainer." You must take a list of tokens and filter them by two criteria: they must not be in the stopword list, and they must be longer than 3 characters.
+  :::`,
     challenges: [
       {
         id: 'topic-modeling-02-c1',
         title: 'Cleaning the Recipe',
         language: 'python',
-        difficulty: 'beginner',
+        difficulty: 'intermediate',
         starterCode: `# A list of words from a document
-tokens = ["it", "was", "a", "scary", "and", "dark", "night", "in", "the", "forest"]
-stopwords = ["it", "was", "a", "and", "in", "the"]
+  tokens = ["it", "was", "a", "scary", "and", "dark", "night", "in", "the", "forest"]
 
-# Goal: Create a new list 'cleaned' containing only words not in stopwords
-# and only words longer than 3 characters.
+  # Our stopword list
+  stopwords = ["it", "was", "a", "and", "in", "the"]
 
-cleaned = []
+  # Goal: Create a new list called 'cleaned' containing only words that:
+  # 1. Are NOT in the stopwords list
+  # 2. Are longer than 3 characters (len > 3)
 
-# Your code here
+  cleaned = []
 
-print(cleaned)
-`,
+  # Your code here: 
+  # Loop through 'tokens', check both conditions, and append to 'cleaned'
+
+  print(cleaned)
+  `,
         expectedOutput: "['scary', 'dark', 'night', 'forest']",
         hints: [
-          'Use a `for` loop to look at each word in `tokens`.',
-          'Use `if word not in stopwords` and `if len(word) > 3`.',
+          'Use: for word in tokens:',
+          'You can check membership using: if word not in stopwords:',
+          'Combine conditions with "and": if (condition1) and (condition2):',
+          'Use cleaned.append(word) to save the good words.'
         ],
         solution: `tokens = ["it", "was", "a", "scary", "and", "dark", "night", "in", "the", "forest"]
-stopwords = ["it", "was", "a", "and", "in", "the"]
+  stopwords = ["it", "was", "a", "and", "in", "the"]
 
-cleaned = [w for w in tokens if w not in stopwords and len(w) > 3]
+  cleaned = []
 
-print(cleaned)
-`,
+  for word in tokens:
+      # Filter by stopword list AND length
+      if word not in stopwords and len(word) > 3:
+          cleaned.append(word)
+
+  print(cleaned)`,
       },
     ],
   },
@@ -3435,62 +3465,60 @@ print(cleaned)
     estimatedTimeMinutes: 45,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Convert text into a numerical Document-Term Matrix',
-      'Understand the importance of the \'K\' parameter',
+      'Convert preprocessed text into a numerical Document-Term Matrix',
+      'Understand the importance of the "K" (number of topics) parameter',
       'Train a basic model using the Gensim library',
+      'Interpret the mapping between Word IDs and actual tokens',
     ],
-    keywords: ['gensim', 'dictionary', 'corpus', 'hyperparameters'],
-    content: `# Training an LDA Model
+    keywords: ['gensim', 'dictionary', 'corpus', 'hyperparameters', 'doc2bow'],
+    content: `# Training an LDA Model: The Numerical Archive
 
-## Analogy
+  ## Analogy
+  Training a model is like giving a student a stack of 1,000 books and saying, "I want you to find 10 different themes in here." 
 
-Training a model is like giving a student a stack of books and saying, "I want you to find 10 different themes in here." The student doesn't know what the themes are yet; they just start looking for groups of words that appear together. You, the teacher, have to decide the number of themes (the **K**) before the student starts.
+  The student doesn't know what the themes are yet; they just start looking for groups of words that appear together frequently. You, the researcher, have to decide the number of themes (the **K**) *before* the student starts. You are the architect; the computer is the builder.
 
-## Key Concepts
+  ---
 
-### 1. The Dictionary and the Corpus
-Computers can't read words; they read numbers. 
-- **The Dictionary**: A map that assigns an ID to every unique word. ("whale" = 1, "ship" = 2).
-- **The Corpus**: A numerical version of your text. Instead of "the whale," it stores "(1, 2)"—meaning Word ID 1 appears 2 times.
+  ## 1. Dictionary vs. Corpus
+  Computers can't read words; they read numbers. To bridge this gap, the **Gensim** library (the standard for topic modeling in Python) uses two specialized objects:
 
-### 2. Choosing K (Number of Topics)
-This is the most important decision in topic modeling.
-- If **K is too small**: The topics will be too broad (e.g., "Life" and "Stuff").
-- If **K is too large**: The topics will be too specific and overlap too much.
+  - **The Dictionary**: A master map that assigns a unique ID number to every unique word in your entire collection. 
+    - *Example: {"whale": 0, "ship": 1, "sea": 2}*
+  - **The Corpus (Bag of Words)**: A numerical version of your documents. Instead of storing the text "the whale, the whale," it stores a list of tuples: \`[(0, 2)]\`. This means: "Word ID 0 (whale) appears 2 times."
 
-::: definition
-**Hyperparameter**: A setting you choose *before* training starts (like the number of topics K) that changes how the model learns.
-:::
+  ---
 
-### Training with Gensim
-Gensim is the standard Python library for this. The process is always:
-1. Create Dictionary.
-2. Create Corpus (Bag of Words).
-3. Run \`LdaModel\`.
+  ## 2. Choosing the "Goldilocks K"
+  The most important decision you make is choosing the number of topics (**K**). 
 
-\`\`\`python
-# Basic Gensim structure (conceptual)
-from gensim import corpora, models
+  - **If K is too small**: Your topics will be "mushy" and over-generalized (e.g., a single topic that contains both "Religion" and "Politics").
+  - **If K is too large**: Your topics will be too "splintered," creating dozens of tiny, overlapping categories that are hard to interpret.
 
-# data = [['word', 'list'], ['another', 'list']]
-# dictionary = corpora.Dictionary(data)
-# corpus = [dictionary.doc2bow(text) for text in data]
-# lda = models.LdaModel(corpus, num_topics=5, id2word=dictionary)
-\`\`\`
+  ::: definition
+  **Hyperparameter**: A setting you choose *before* the training starts (like K) that determines how the model learns. In DH, we often run several models with different K values (e.g., 10, 20, 50) to see which one yields the most useful results.
+  :::
 
-## Practice
+  ---
 
-::: try-it
-In the sandbox, look at how \`dictionary.doc2bow\` transforms a list of words. Notice how it produces a list of tuples like \`(0, 1)\`. What does the first number represent? What about the second?
-:::
+  ## 3. The Gensim Workflow
+  To train a model, you follow three standard steps:
+  1. **Build the Dictionary**: \`dictionary = corpora.Dictionary(texts)\`
+  2. **Create the Bag of Words**: \`corpus = [dictionary.doc2bow(text) for text in texts]\`
+  3. **Train the Model**: \`lda = models.LdaModel(corpus, num_topics=K, id2word=dictionary)\`
 
-## Transfer
+  ---
 
-LDA is "stochastic," meaning it uses some randomness. If you run the same model twice, you might get slightly different results. In DH research, it is common to run the model many times to see which topics are "stable."
+  ## 4. The Stochastic Nature of LDA
+  LDA is "stochastic," meaning it uses a degree of randomness. If you run the exact same model twice, you might get slightly different results. In scholarly research, we look for **stable topics**—clusters of words that consistently appear together across multiple runs.
 
-::: challenge
-Complete the process of creating a Gensim dictionary and converting a document into a Bag-of-Words (BoW) format.
-:::`,
+  ::: tip
+  **doc2bow** stands for "Document to Bag of Words." It is the function that translates your human-readable word lists into the numerical tuples the computer needs for its math.
+  :::
+
+  ::: challenge
+  To build a model, you must first build the "map" (Dictionary) and the "numbers" (Corpus). Complete the code below to convert a small set of documents into a format Gensim can use.
+  :::`,
     challenges: [
       {
         id: 'topic-modeling-03-c1',
@@ -3499,44 +3527,51 @@ Complete the process of creating a Gensim dictionary and converting a document i
         difficulty: 'intermediate',
         starterCode: `from gensim import corpora
 
-# A tiny corpus of 3 documents
-documents = [
-    ["king", "throne", "crown"],
-    ["sword", "shield", "king"],
-    ["throne", "sword", "crown"]
-]
+  # A tiny corpus of 3 preprocessed documents
+  documents = [
+      ["king", "throne", "crown"],
+      ["sword", "shield", "king"],
+      ["throne", "sword", "crown"]
+  ]
 
-# 1. Create a dictionary from the documents
-dictionary = None 
+  # 1. Create a dictionary from the documents
+  # This assigns an ID to every unique word
+  dictionary = 
 
-# 2. Convert the first document (documents[0]) into BoW format
-bow_doc = None
+  # 2. Convert the first document (documents[0]) into BoW format
+  # Use the doc2bow() method on your dictionary
+  bow_doc = 
 
-# Print the BoW for the first doc
-print(bow_doc)
-# Print the word associated with ID 0
-print(dictionary[0])
-`,
-        expectedOutput: '[(0, 1), (1, 1), (2, 1)]\ncrown',
+  # Verify the numerical translation
+  print(bow_doc)
+
+  # Verify the ID-to-Word mapping
+  # Print the word associated with ID 0
+  print(dictionary[0])
+  `,
+        expectedOutput: "[(0, 1), (1, 1), (2, 1)]\ncrown",
         hints: [
-          'Use `corpora.Dictionary(documents)` to create the dictionary.',
-          'Use `dictionary.doc2bow(documents[0])` for the second part.',
-          'Note: Your order of IDs might vary, but the structure `(ID, Count)` will be the same.',
+          'Use corpora.Dictionary(documents) to create the map.',
+          'The method is dictionary.doc2bow(documents[0]).',
+          'In Gensim, dictionary[0] will look up the string associated with the first ID created.',
+          'The expected output assumes "crown" was the first word processed by the dictionary.'
         ],
         solution: `from gensim import corpora
 
-documents = [
-    ["king", "throne", "crown"],
-    ["sword", "shield", "king"],
-    ["throne", "sword", "crown"]
-]
+  documents = [
+      ["king", "throne", "crown"],
+      ["sword", "shield", "king"],
+      ["throne", "sword", "crown"]
+  ]
 
-dictionary = corpora.Dictionary(documents)
-bow_doc = dictionary.doc2bow(documents[0])
+  # Create the Dictionary
+  dictionary = corpora.Dictionary(documents)
 
-print(bow_doc)
-print(dictionary[0])
-`,
+  # Convert the first document to Bag of Words
+  bow_doc = dictionary.doc2bow(documents[0])
+
+  print(bow_doc)
+  print(dictionary[0])`,
       },
     ],
   },
@@ -3548,52 +3583,60 @@ print(dictionary[0])
     estimatedTimeMinutes: 40,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Read and interpret word-topic distributions',
-      'Understand document-topic proportions',
-      'Identify "junk" topics vs. meaningful discourses',
+      'Read and interpret word-topic distributions (Weights)',
+      'Analyze document-topic proportions to track themes across a corpus',
+      'Identify and troubleshoot "Junk Topics" resulting from poor preprocessing',
+      'Apply the "Human-in-the-loop" philosophy to labeling machine output',
     ],
-    keywords: ['interpretation', 'weights', 'visualization', 'coherence'],
+    keywords: ['interpretation', 'weights', 'visualization', 'coherence', 'junk topics'],
     content: `# Interpreting and Navigating Topics
 
-## Analogy
+  ## The Scholar as Interpreter
+  A topic model output is like a **map of a new territory**. The computer provides the coordinates and the landmarks, but it doesn't tell you what they "mean." 
 
-A topic model output is like a **map**. It doesn't tell you what the landmarks "mean"; it just shows you where they are. You, the human historian or literary scholar, have to look at the cluster of words "ship, whale, harpoon, sea" and decide to label that landmark "Whaling Industry." The computer provides the coordinates; you provide the name.
+  You, the human historian or literary scholar, have to look at a cluster of words like *"ship, whale, harpoon, sea"* and decide to label that landmark "Whaling Industry." Topic modeling is not an answer; it is a way of organizing an archive so you can ask better questions.
 
-## Key Concepts
+  ---
 
-### 1. Word Weights
-Each word in a topic has a "weight" (a probability). 
-- Topic 1: \`0.05*"whale" + 0.04*"sea" + 0.02*"ship"\`
-This means "whale" is the most important word for identifying Topic 1.
+  ## 1. Word Weights (Probabilities)
+  Each word in a topic is assigned a "weight." This number tells you how important that word is to that specific topic. 
 
-### 2. The Document-Topic Distribution
-This is the most powerful part of LDA for DH. It tells you exactly how much of each topic is in each document.
-- *Moby Dick* might be: 80% "Whaling", 15% "Religion", 5% "Biology".
-- *Paradise Lost* might be: 10% "Whaling", 90% "Religion".
+  - **Topic 1**: \`0.045*"whale" + 0.030*"sea" + 0.025*"ship"\`
+  - **Translation**: If you see "whale" in a document, there is a 4.5% chance the computer thinks that specific word belongs to Topic 1. 
 
-### 3. Junk Topics
-Sometimes a topic will consist of words like "said," "went," "came," and "back." This is a **Junk Topic**. It usually means you didn't remove enough common verbs during preprocessing.
+  The words with the highest weights are your **Top Terms**. These are the words you use to decide what a topic is "about."
 
-\`\`\`python
-# Showing the words in a topic using Gensim
-# topics = lda.show_topics(num_words=5)
-# for topic in topics:
-#     print(topic)
-\`\`\`
+  ---
 
-## Practice
+  ## 2. Document-Topic Proportions
+  This is the "Gold Mine" for Digital Humanities. Once a model is trained, we can see exactly how much of each topic exists in every document. 
 
-::: try-it
-Look at the following cluster: "city, street, building, crowd, noise." What would you name this topic? Now look at this one: "city, mayor, council, vote, tax." How does the shift in words change the name you give the topic?
-:::
+  Imagine analyzing *Moby Dick* vs. *Paradise Lost*:
+  - **Moby Dick**: 85% "Whaling", 10% "Religion", 5% "Biology".
+  - **Paradise Lost**: 2% "Whaling", 95% "Religion", 3% "Biology".
 
-## Transfer
+  By looking at these percentages, you can find "hidden" religious documents in a maritime archive, or track how the "Religion" topic fluctuates from the beginning of a novel to the end.
 
-Topic modeling is a form of **Distant Reading**. It shouldn't replace your reading of the text; it should tell you where to look. If a specific diary entry has a 90% score in a "Grief" topic, you should go back and close-read that entry to see how the model arrived at that conclusion.
+  ---
 
-::: challenge
-Extract the top words from a trained model's output and identify the most important term.
-:::`,
+  ## 3. Identifying "Junk Topics"
+  Sometimes a model will produce a topic that looks like this: *"said, went, came, back, told."* 
+  This is a **Junk Topic**. 
+
+  Junk topics occur when common verbs or "noise" words haven't been filtered out properly. They don't represent a meaningful discourse; they represent the structural skeleton of the language. If you see too many junk topics, you need to go back to the **Preprocessing** stage and add those words to your **Stopword List**.
+
+  ---
+
+  ## 4. Distant Reading vs. Close Reading
+  Topic modeling is a "Distant Reading" tool, but it works best when paired with "Close Reading." If a specific diary entry has a 90% score in a "Grief" topic, you should use that as a signpost to go back and read that specific page. Use the machine to find the needle, then use your human brain to analyze the needle.
+
+  ::: tip
+  **Human-in-the-loop**: This is the DH philosophy that the machine's output is only the *start* of the research. Your labels and interpretations are what turn "data" into "scholarship."
+  :::
+
+  ::: challenge
+  Gensim outputs topics as a single string of math. In the challenge below, you will use Python's string tools to "snip out" the most important word (the first one) from a topic string.
+  :::`,
     challenges: [
       {
         id: 'topic-modeling-04-c1',
@@ -3601,36 +3644,38 @@ Extract the top words from a trained model's output and identify the most import
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `# A simulated output from lda.show_topics()
-# It's a list containing a tuple: (Topic_ID, Word_Weights_String)
-model_output = [(0, '0.045*"whale" + 0.030*"sea" + 0.025*"ship" + 0.020*"captain"')]
+  # It is a list containing a tuple: (Topic_ID, Word_Weights_String)
+  model_output = [(0, '0.045*"whale" + 0.030*"sea" + 0.025*"ship"')]
 
-# Goal: Use string methods to extract just the first word in the list 
-# (the one with the highest weight).
+  # The weights string is at index 1 of the first tuple
+  topic_string = model_output[0][1]
 
-topic_string = model_output[0][1]
+  # Goal: Extract the word "whale" from the string.
+  # 1. Use .split() to break the string at the double-quote characters (")
+  # 2. Select the correct index from the resulting list
+  # 3. Assign it to 'top_word' and print it
 
-# Your code here: split the string to find the word "whale"
-top_word = ""
-
-print(top_word)
-`,
+  # Your code here
+  `,
         expectedOutput: 'whale',
         hints: [
-          'You can split by the `"` character.',
-          '`topic_string.split(\'"\')` will give you a list. The word will be at index 1.',
+          'If you split "Hello "World"!" by the quote, you get ["Hello ", "World", "!"]',
+          'Use: parts = topic_string.split(\'"\')',
+          'The word "whale" will be the second item in that list (index 1).'
         ],
-        solution: `model_output = [(0, '0.045*"whale" + 0.030*"sea" + 0.025*"ship" + 0.020*"captain"')]
-topic_string = model_output[0][1]
+        solution: `model_output = [(0, '0.045*"whale" + 0.030*"sea" + 0.025*"ship"')]
+  topic_string = model_output[0][1]
 
-# Splitting by quotes is a quick way to get the text between them
-top_word = topic_string.split('"')[1]
+  # Split the string by the double-quote marks
+  parts = topic_string.split('"')
 
-print(top_word)
-`,
+  # The word sits between the first and second quote marks
+  top_word = parts[1]
+
+  print(top_word)`,
       },
     ],
   },
-  // --- Compiled from lessons-in-development (2026-02-09) ---
   {
     id: 'data-viz-05',
     title: 'Creating Timelines from Historical Data',
@@ -3639,178 +3684,174 @@ print(top_word)
     estimatedTimeMinutes: 40,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Represent historical events as structured data with dates and labels',
-      'Sort and filter temporal data to produce chronological sequences',
-      'Compute time spans between events and identify patterns in temporal distributions',
+      'Represent historical events as structured dictionary objects',
+      'Use lambda functions to sort complex datasets chronologically',
+      'Compute time spans (intervals) between events to analyze density',
+      'Identify and extract the longest periods of silence or activity in an archive',
     ],
-    keywords: ['timeline', 'chronology', 'temporal data', 'dates', 'history'],
+    keywords: ['timeline', 'chronology', 'temporal data', 'dates', 'history', 'lambda'],
     content: `# Creating Timelines from Historical Data
 
-## Analogy
+  ## The Clothesline of History
+  A timeline is a **clothesline for history**. Imagine stringing a line across a room and pegging cards to it—each card has a date and an event. 
 
-A timeline is a **clothesline for history**. Imagine stringing a line across a room and pegging cards to it — each card has a date and an event. The line gives you spatial intuition about temporal relationships: which events cluster together, where the long gaps are, and what happened in parallel. Computational timelines do the same thing, but with hundreds or thousands of events that no wall could hold.
+  The line gives you spatial intuition about temporal relationships: which events cluster together (density), where the long gaps are (silence), and what happened in parallel. In the Digital Humanities, we use code to build "clotheslines" for thousands of events, helping us visualize patterns across centuries of archival data.
 
-## Key Concepts
+  ---
 
-### Structuring Events as Data
+  ## 1. Structuring Events as Data
+  Before you can build a timeline, each event needs a minimum of two attributes: **When** it happened and **What** it was. We use a list of dictionaries to keep this metadata organized.
 
-Before you can build a timeline, each event needs at least two pieces of information: **when** it happened and **what** it was. In Python, we represent this as a list of dictionaries:
+  \`\`\`python
+  events = [
+      {"year": 1818, "event": "Frankenstein published"},
+      {"year": 1847, "event": "Jane Eyre published"},
+      {"year": 1813, "event": "Pride and Prejudice published"}
+  ]
+  \`\`\`
 
-\`\`\`python
-events = [
-    {"year": 1818, "event": "Frankenstein published"},
-    {"year": 1847, "event": "Jane Eyre published"},
-    {"year": 1813, "event": "Pride and Prejudice published"},
-    {"year": 1851, "event": "Moby-Dick published"},
-]
-\`\`\`
+  ---
 
-::: definition
-**Temporal data**: Any dataset where time is a key variable — dates of publication, years of birth, timestamps of letters sent. Timelines are a natural way to visualise temporal data.
-:::
+  ## 2. Sorting with Lambda Functions
+  Archives rarely arrive in chronological order. To sort a list of dictionaries, we have to tell Python which "key" to look at. We use a **lambda function**—a tiny, one-line function that acts as a pointer.
 
-### Sorting Chronologically
+  \`\`\`python
+  # "Sort the events. For every element (e), use e['year'] as the basis for sorting."
+  chronological = sorted(events, key=lambda e: e["year"])
 
-Events rarely arrive in order. Python's \`sorted()\` function with a \`key\` parameter handles this:
+  for e in chronological:
+      print(f"{e['year']}: {e['event']}")
+  \`\`\`
 
-\`\`\`python
-chronological = sorted(events, key=lambda e: e["year"])
-for e in chronological:
-    print(f"  {e['year']}  {e['event']}")
-\`\`\`
+  ---
 
-### Computing Time Spans
+  ## 3. Computing Time Spans (Density)
+  The gaps between events are often as informative as the events themselves. A "burst" of publications might signal a literary movement; a long "silence" might suggest a period of war, economic depression, or censorship.
 
-The gaps between events can be as informative as the events themselves. A burst of publications might signal a literary movement; a long silence might suggest censorship or war:
+  To calculate these gaps, we loop through our sorted years and subtract the **previous** year from the **current** year:
 
-\`\`\`python
-sorted_years = [e["year"] for e in chronological]
-for i in range(1, len(sorted_years)):
-    gap = sorted_years[i] - sorted_years[i - 1]
-    print(f"  {sorted_years[i-1]} -> {sorted_years[i]}: {gap} years")
-\`\`\`
+  \`\`\`python
+  # Calculate the gap between consecutive items
+  for i in range(1, len(years)):
+      gap = years[i] - years[i-1]
+      print(f"Gap: {gap} years")
+  \`\`\`
 
-### Filtering by Period
+  ---
 
-Often you want to focus on a specific era. List comprehensions make this concise:
+  ## 4. Questioning Periodization
+  In DH, timelines allow us to test "periodization"—the way historians group years into blocks like "The Romantic Era" or "The Victorian Age." By calculating the density of events, we can see if our data actually fits those traditional labels or if the "rhythm" of history suggests a different story.
 
-\`\`\`python
-romantic_era = [e for e in events if 1790 <= e["year"] <= 1850]
-print(f"Events in the Romantic era: {len(romantic_era)}")
-\`\`\`
+  ::: tip
+  **The Running Maximum**: To find the "longest gap," you initialize a variable at 0. As you loop through the gaps, you check: *"Is this current gap bigger than my record?"* If yes, you update your record. This is a fundamental pattern in data analysis.
+  :::
 
-## Practice
-
-::: try-it
-Add more events to the list — births, deaths, historical milestones — and try filtering to a single decade. What clusters do you notice?
-:::
-
-## Transfer
-
-Timelines are not just for display. By computing spans and densities, you can quantify concepts like "literary periods" or test hypotheses about the pace of change. A timeline of publications by women writers in the 19th century, for example, might reveal patterns that complicate traditional periodisation.
-
-::: challenge
-Build a chronological timeline of literary events and compute the gaps between them.
-:::`,
+  ::: challenge
+  In the first challenge, you will sort a list of literary milestones. In the second, you will identify the "Great Silence"—the longest gap between any two publications in the list.
+  :::`,
     challenges: [
       {
         id: 'data-viz-05-c1',
-        title: 'Build a sorted timeline',
+        title: 'Build a Sorted Timeline',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `# Sort these literary events chronologically and print a timeline
-# Format each line as: "<year> - <event>"
+        starterCode: `# Sort these literary events chronologically
+  events = [
+      {"year": 1847, "event": "Jane Eyre published"},
+      {"year": 1818, "event": "Frankenstein published"},
+      {"year": 1891, "event": "Tess of the d'Urbervilles published"},
+      {"year": 1813, "event": "Pride and Prejudice published"},
+      {"year": 1859, "event": "A Tale of Two Cities published"},
+      {"year": 1851, "event": "Moby-Dick published"},
+  ]
 
-events = [
-    {"year": 1847, "event": "Jane Eyre published"},
-    {"year": 1818, "event": "Frankenstein published"},
-    {"year": 1891, "event": "Tess of the d'Urbervilles published"},
-    {"year": 1813, "event": "Pride and Prejudice published"},
-    {"year": 1859, "event": "A Tale of Two Cities published"},
-    {"year": 1851, "event": "Moby-Dick published"},
-]
+  # 1. Sort the events by the "year" key
+  # 2. Loop through the sorted list
+  # 3. Print each event in the format: "year - event"
 
-# 1. Sort the events by year
-# 2. Print each event in the format: "<year> - <event>"
-
-# Your code here
-`,
-        expectedOutput: '1813 - Pride and Prejudice published\n1818 - Frankenstein published\n1847 - Jane Eyre published\n1851 - Moby-Dick published\n1859 - A Tale of Two Cities published\n1891 - Tess of the d\'Urbervilles published',
+  # Your code here
+  `,
+        expectedOutput: "1813 - Pride and Prejudice published\n1818 - Frankenstein published\n1847 - Jane Eyre published\n1851 - Moby-Dick published\n1859 - A Tale of Two Cities published\n1891 - Tess of the d'Urbervilles published",
         hints: [
-          'Use `sorted(events, key=lambda e: e["year"])` to sort the list of dictionaries by the `year` key.',
-          'Loop through the sorted list and print each entry using an f-string.',
-          'The format is `f"{e[\'year\']} - {e[\'event\']}"`.',
+          'Use sorted_list = sorted(events, key=lambda e: e["year"])',
+          'Use an f-string for the print: f"{e[\'year\']} - {e[\'event\']}"',
         ],
         solution: `events = [
-    {"year": 1847, "event": "Jane Eyre published"},
-    {"year": 1818, "event": "Frankenstein published"},
-    {"year": 1891, "event": "Tess of the d'Urbervilles published"},
-    {"year": 1813, "event": "Pride and Prejudice published"},
-    {"year": 1859, "event": "A Tale of Two Cities published"},
-    {"year": 1851, "event": "Moby-Dick published"},
-]
+      {"year": 1847, "event": "Jane Eyre published"},
+      {"year": 1818, "event": "Frankenstein published"},
+      {"year": 1891, "event": "Tess of the d'Urbervilles published"},
+      {"year": 1813, "event": "Pride and Prejudice published"},
+      {"year": 1859, "event": "A Tale of Two Cities published"},
+      {"year": 1851, "event": "Moby-Dick published"},
+  ]
 
-chronological = sorted(events, key=lambda e: e["year"])
-for e in chronological:
-    print(f"{e['year']} - {e['event']}")
-`,
+  # Sort chronologically
+  chronological = sorted(events, key=lambda e: e["year"])
+
+  # Print formatted timeline
+  for e in chronological:
+      print(f"{e['year']} - {e['event']}")`,
       },
       {
         id: 'data-viz-05-c2',
-        title: 'Compute gaps and find the longest',
+        title: 'Compute the Longest Gap',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `# Using the same events, compute the time gap between each consecutive pair
-# Then identify the longest gap
+        starterCode: `# Identify the longest temporal gap between publications
+  events = [
+      {"year": 1847, "event": "Jane Eyre published"},
+      {"year": 1818, "event": "Frankenstein published"},
+      {"year": 1891, "event": "Tess of the d'Urbervilles published"},
+      {"year": 1813, "event": "Pride and Prejudice published"},
+      {"year": 1859, "event": "A Tale of Two Cities published"},
+      {"year": 1851, "event": "Moby-Dick published"},
+  ]
 
-events = [
-    {"year": 1847, "event": "Jane Eyre published"},
-    {"year": 1818, "event": "Frankenstein published"},
-    {"year": 1891, "event": "Tess of the d'Urbervilles published"},
-    {"year": 1813, "event": "Pride and Prejudice published"},
-    {"year": 1859, "event": "A Tale of Two Cities published"},
-    {"year": 1851, "event": "Moby-Dick published"},
-]
+  # 1. Sort the events by year
+  # 2. Extract just the years into a new list
+  # 3. Loop through the years and find the gap (Year[i] - Year[i-1])
+  # 4. Keep track of which gap is the largest
+  # 5. Print the gaps and the final longest gap
 
-# 1. Sort events by year
-# 2. For each consecutive pair, compute the gap
-# 3. Print each gap as: "<year1> -> <year2>: <gap> years"
-# 4. Print: "Longest gap: <gap> years (<year1> to <year2>)"
-
-# Your code here
-`,
-        expectedOutput: '1813 -> 1818: 5 years\n1818 -> 1847: 29 years\n1847 -> 1851: 4 years\n1851 -> 1859: 8 years\n1859 -> 1891: 32 years\nLongest gap: 32 years (1859 to 1891)',
+  # Your code here
+  `,
+        expectedOutput: "1813 -> 1818: 5 years\n1818 -> 1847: 29 years\n1847 -> 1851: 4 years\n1851 -> 1859: 8 years\n1859 -> 1891: 32 years\nLongest gap: 32 years (1859 to 1891)",
         hints: [
-          'First sort the events, then extract the years into a list with `[e["year"] for e in sorted_events]`.',
-          'Use `range(1, len(years))` to loop through consecutive pairs: `years[i-1]` and `years[i]`.',
-          'Track the longest gap by comparing each gap to a running maximum — store the max gap and the corresponding years.',
+          'Start your loop at range(1, len(years)) to avoid comparing the first year to nothing.',
+          'Use variables like max_gap, gap_start, and gap_end to store the record-breaking gap.',
+          'If gap > max_gap: update your variables.',
         ],
         solution: `events = [
-    {"year": 1847, "event": "Jane Eyre published"},
-    {"year": 1818, "event": "Frankenstein published"},
-    {"year": 1891, "event": "Tess of the d'Urbervilles published"},
-    {"year": 1813, "event": "Pride and Prejudice published"},
-    {"year": 1859, "event": "A Tale of Two Cities published"},
-    {"year": 1851, "event": "Moby-Dick published"},
-]
+      {"year": 1847, "event": "Jane Eyre published"},
+      {"year": 1818, "event": "Frankenstein published"},
+      {"year": 1891, "event": "Tess of the d'Urbervilles published"},
+      {"year": 1813, "event": "Pride and Prejudice published"},
+      {"year": 1859, "event": "A Tale of Two Cities published"},
+      {"year": 1851, "event": "Moby-Dick published"},
+  ]
 
-sorted_events = sorted(events, key=lambda e: e["year"])
-years = [e["year"] for e in sorted_events]
+  # Step 1: Sort
+  sorted_events = sorted(events, key=lambda e: e["year"])
+  years = [e["year"] for e in sorted_events]
 
-max_gap = 0
-max_start = 0
-max_end = 0
+  # Step 2: Trackers
+  max_gap = 0
+  start_year = 0
+  end_year = 0
 
-for i in range(1, len(years)):
-    gap = years[i] - years[i - 1]
-    print(f"{years[i-1]} -> {years[i]}: {gap} years")
-    if gap > max_gap:
-        max_gap = gap
-        max_start = years[i - 1]
-        max_end = years[i]
+  # Step 3: Loop through gaps
+  for i in range(1, len(years)):
+      gap = years[i] - years[i-1]
+      print(f"{years[i-1]} -> {years[i]}: {gap} years")
+      
+      # Step 4: Update record if this gap is the largest
+      if gap > max_gap:
+          max_gap = gap
+          start_year = years[i-1]
+          end_year = years[i]
 
-print(f"Longest gap: {max_gap} years ({max_start} to {max_end})")
-`,
+  # Step 5: Final report
+  print(f"Longest gap: {max_gap} years ({start_year} to {end_year})")`,
       },
     ],
   },
@@ -3822,215 +3863,202 @@ print(f"Longest gap: {max_gap} years ({max_start} to {max_end})")
     estimatedTimeMinutes: 40,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Represent geographic locations as coordinate data in Python',
-      'Calculate distances between historical locations',
-      'Group and summarise spatial data to reveal geographic patterns',
+      'Represent geographic locations as coordinate data (latitude/longitude) in Python',
+      'Understand the Haversine formula for calculating distance on a sphere',
+      'Execute nested loops to compare spatial relationships between multiple points',
+      'Summarize geographic distributions using Counter objects'
     ],
-    keywords: ['mapping', 'geographic', 'coordinates', 'spatial', 'geolocation'],
+    keywords: ['mapping', 'geographic', 'coordinates', 'spatial', 'geolocation', 'haversine'],
     content: `# Mapping Historical Data
 
-## Analogy
+  ## The Detective's Pin Board
+  Think of a **pin board** in a detective's office. Each pin marks a location—a crime scene, a witness's home, or a suspect's workplace. Strings connect the pins to show relationships and movement. 
 
-Think of a **pin board** in a detective's office. Each pin marks a location — a crime scene, a witness's home, a suspect's workplace. Strings connect the pins to show relationships. Now imagine doing this with thousands of historical events: the birthplaces of every author in a literary movement, the locations of every printing press in 18th-century Europe, or the routes of the Underground Railroad. **Geographic data analysis** lets you find spatial patterns that are invisible in a table of names and dates.
+  In the Digital Humanities, we do this with thousands of historical events: the birthplaces of authors in a movement, the locations of every printing press in 18th-century Europe, or the stops along a trade route. **Geographic analysis** lets you find spatial patterns—like clusters of activity or vast "silences"—that are invisible in a simple table of names.
 
-## Key Concepts
+  ---
 
-### Coordinates as Data
+  ## 1. Coordinates as Data
+  Every location on Earth is described by two numbers: **Latitude** (North-South) and **Longitude** (East-West). In DH, we store these as "Decimal Degrees."
 
-Every location on Earth can be described with two numbers: **latitude** (north-south position) and **longitude** (east-west position). In Python, we store these alongside the place name:
+  \`\`\`python
+  locations = [
+      {"place": "London", "lat": 51.5074, "lon": -0.1278},
+      {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
+  ]
 
-\`\`\`python
-locations = [
-    {"place": "London", "lat": 51.5074, "lon": -0.1278},
-    {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
-    {"place": "Dublin", "lat": 53.3498, "lon": -6.2603},
-]
+  # Accessing longitude:
+  print(locations[0]["lon"]) # Output: -0.1278
+  \`\`\`
 
-for loc in locations:
-    print(f"{loc['place']}: {loc['lat']:.2f}N, {abs(loc['lon']):.2f}W")
-\`\`\`
+  ::: definition
+  **Geocoding**: The process of converting place names (like "Bath, England") into coordinates (51.38, -2.36). Most historical datasets require this cleaning step before you can map them.
+  :::
 
-::: definition
-**Geocoding**: The process of converting place names (like "Bath, England") into geographic coordinates (51.38, -2.36). Many historical datasets require geocoding before spatial analysis.
-:::
+  ---
 
-### Measuring Distance
+  ## 2. Measuring Distance (The Haversine Formula)
+  Because the Earth is a sphere, we can't use a simple ruler to measure the distance between two points. We use the **Haversine formula**, which accounts for the curvature of the planet.
 
-To find how far apart two locations are on the Earth's surface, we use the **Haversine formula**. This accounts for the Earth's curvature:
+  In Python, we use the \`math\` library to convert our degrees into **radians** before doing the calculation.
 
-\`\`\`python
-import math
+  \`\`\`python
+  import math
 
-def haversine(lat1, lon1, lat2, lon2):
-    R = 6371  # Earth's radius in kilometres
-    dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lon2 - lon1)
-    a = (math.sin(dlat / 2) ** 2 +
-         math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
-         math.sin(dlon / 2) ** 2)
-    return R * 2 * math.asin(math.sqrt(a))
+  def haversine(lat1, lon1, lat2, lon2):
+      R = 6371  # Earth's radius in kilometers
+      # ... (Math happens here) ...
+      return distance_in_km
+  \`\`\`
 
-dist = haversine(51.5074, -0.1278, 55.9533, -3.1883)
-print(f"London to Edinburgh: {dist:.0f} km")
-\`\`\`
+  ---
 
-### Grouping by Region
+  ## 3. Comparing Every Pair (Nested Loops)
+  To find the "Closest Pair" in a list of cities, we have to compare every city to every other city. We use a **Nested Loop**:
+  - The **Outer Loop** picks the first city.
+  - The **Inner Loop** iterates through all the *remaining* cities.
 
-Just as we group temporal data by decade, we can group spatial data by region, country, or custom bounding boxes to reveal geographic concentrations:
+  \`\`\`python
+  for i in range(len(locations)):
+      for j in range(i + 1, len(locations)):
+          # Compare locations[i] and locations[j]
+  \`\`\`
 
-\`\`\`python
-locations_with_country = [
-    {"place": "London", "country": "England"},
-    {"place": "Bath", "country": "England"},
-    {"place": "Edinburgh", "country": "Scotland"},
-    {"place": "Dublin", "country": "Ireland"},
-    {"place": "York", "country": "England"},
-]
+  ---
 
-from collections import Counter
-countries = Counter(loc["country"] for loc in locations_with_country)
-for country, count in sorted(countries.items()):
-    print(f"  {country}: {count}")
-\`\`\`
+  ## 4. Grouping by Region
+  Just as we group temporal data by decade, we group spatial data by country or city to see where "power centers" of culture lie. 
 
-## Practice
+  ::: tip
+  **Spatial Ethics**: Remember that coordinates suggest a precision that historical records often lack. If a 17th-century letter is labeled "South of the River," placing a pin at a specific coordinate is a scholarly *interpretation*, not a neutral fact.
+  :::
 
-::: try-it
-Look up the coordinates of places important to your research. Add them to the locations list and compute distances between them. Do the distances surprise you?
-:::
-
-## Transfer
-
-Spatial analysis in the humanities can reveal patterns like the geographic spread of a publishing network, migration routes of displaced communities, or the clustering of archaeological sites along ancient trade routes. Even without a full GIS tool, coordinate data and distance calculations let you ask and answer spatial questions computationally.
-
-::: challenge
-Given a set of locations relevant to Romantic-era authors, compute the distances between them and find the closest pair.
-:::`,
+  ::: challenge
+  In the first challenge, use nested loops to calculate the distances between four literary cities and find which two are closest. In the second, summarize the geography of a publishing dataset.
+  :::`,
     challenges: [
       {
         id: 'data-viz-06-c1',
-        title: 'Compute distances between literary locations',
+        title: 'Compute Distances Between Literary Locations',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `# Compute the distance between each pair of locations
-# and identify the closest pair
-import math
+        starterCode: `import math
 
-def haversine(lat1, lon1, lat2, lon2):
-    R = 6371
-    dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lon2 - lon1)
-    a = (math.sin(dlat / 2) ** 2 +
-         math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
-         math.sin(dlon / 2) ** 2)
-    return round(R * 2 * math.asin(math.sqrt(a)))
+  def haversine(lat1, lon1, lat2, lon2):
+      R = 6371
+      dlat = math.radians(lat2 - lat1)
+      dlon = math.radians(lon2 - lon1)
+      a = (math.sin(dlat / 2) ** 2 +
+           math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
+           math.sin(dlon / 2) ** 2)
+      return round(R * 2 * math.asin(math.sqrt(a)))
 
-locations = [
-    {"place": "London", "lat": 51.5074, "lon": -0.1278},
-    {"place": "Bath", "lat": 51.3758, "lon": -2.3599},
-    {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
-    {"place": "Geneva", "lat": 46.2044, "lon": 6.1432},
-]
+  locations = [
+      {"place": "London", "lat": 51.5074, "lon": -0.1278},
+      {"place": "Bath", "lat": 51.3758, "lon": -2.3599},
+      {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
+      {"place": "Geneva", "lat": 46.2044, "lon": 6.1432},
+  ]
 
-# 1. For each unique pair of locations, compute the distance
-# 2. Print: "<Place A> to <Place B>: <distance> km"
-#    (pairs in the order they appear when comparing each location
-#     to every location after it in the list)
-# 3. Print: "Closest: <Place A> and <Place B> (<distance> km)"
+  # Goal: Compare every location to every location AFTER it in the list.
+  # 1. Print: "<Place A> to <Place B>: <dist> km"
+  # 2. Track the minimum distance found
+  # 3. Print: "Closest: <A> and <B> (<dist> km)"
 
-# Your code here
-`,
+  # Your code here
+  `,
         expectedOutput: 'London to Bath: 150 km\nLondon to Edinburgh: 534 km\nLondon to Geneva: 747 km\nBath to Edinburgh: 562 km\nBath to Geneva: 814 km\nEdinburgh to Geneva: 1082 km\nClosest: London and Bath (150 km)',
         hints: [
-          'Use two nested loops: `for i in range(len(locations))` and `for j in range(i + 1, len(locations))` to get each unique pair without repeats.',
-          'Call `haversine(loc1["lat"], loc1["lon"], loc2["lat"], loc2["lon"])` for each pair.',
-          'Track the minimum distance and corresponding place names as you go through the pairs.',
+          'Use nested loops: for i in range(len(locations)) and for j in range(i + 1, len(locations)).',
+          'Set min_dist = float("inf") at the start so any first distance will be smaller than it.',
+          'Access the data using locations[i]["lat"], etc.'
         ],
         solution: `import math
 
-def haversine(lat1, lon1, lat2, lon2):
-    R = 6371
-    dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lon2 - lon1)
-    a = (math.sin(dlat / 2) ** 2 +
-         math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
-         math.sin(dlon / 2) ** 2)
-    return round(R * 2 * math.asin(math.sqrt(a)))
+  def haversine(lat1, lon1, lat2, lon2):
+      R = 6371
+      dlat = math.radians(lat2 - lat1)
+      dlon = math.radians(lon2 - lon1)
+      a = (math.sin(dlat / 2) ** 2 +
+           math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
+           math.sin(dlon / 2) ** 2)
+      return round(R * 2 * math.asin(math.sqrt(a)))
 
-locations = [
-    {"place": "London", "lat": 51.5074, "lon": -0.1278},
-    {"place": "Bath", "lat": 51.3758, "lon": -2.3599},
-    {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
-    {"place": "Geneva", "lat": 46.2044, "lon": 6.1432},
-]
+  locations = [
+      {"place": "London", "lat": 51.5074, "lon": -0.1278},
+      {"place": "Bath", "lat": 51.3758, "lon": -2.3599},
+      {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
+      {"place": "Geneva", "lat": 46.2044, "lon": 6.1432},
+  ]
 
-min_dist = float("inf")
-min_pair = ("", "")
+  min_dist = float("inf")
+  closest_pair = ""
 
-for i in range(len(locations)):
-    for j in range(i + 1, len(locations)):
-        a = locations[i]
-        b = locations[j]
-        d = haversine(a["lat"], a["lon"], b["lat"], b["lon"])
-        print(f"{a['place']} to {b['place']}: {d} km")
-        if d < min_dist:
-            min_dist = d
-            min_pair = (a["place"], b["place"])
+  for i in range(len(locations)):
+      for j in range(i + 1, len(locations)):
+          loc1 = locations[i]
+          loc2 = locations[j]
+          d = haversine(loc1["lat"], loc1["lon"], loc2["lat"], loc2["lon"])
+          print(f"{loc1['place']} to {loc2['place']}: {d} km")
+          
+          if d < min_dist:
+              min_dist = d
+              closest_pair = f"{loc1['place']} and {loc2['place']}"
 
-print(f"Closest: {min_pair[0]} and {min_pair[1]} ({min_dist} km)")
-`,
+  print(f"Closest: {closest_pair} ({min_dist} km)")`,
       },
       {
         id: 'data-viz-06-c2',
-        title: 'Count locations by region',
+        title: 'Count Locations by Region',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `# Group these historical publishing locations by country
-# and print a summary
-from collections import Counter
+        starterCode: `from collections import Counter
 
-publishers = [
-    {"city": "London", "country": "England", "year": 1818},
-    {"city": "Edinburgh", "country": "Scotland", "year": 1820},
-    {"city": "London", "country": "England", "year": 1826},
-    {"city": "Paris", "country": "France", "year": 1831},
-    {"city": "London", "country": "England", "year": 1835},
-    {"city": "Dublin", "country": "Ireland", "year": 1840},
-    {"city": "Paris", "country": "France", "year": 1842},
-    {"city": "Edinburgh", "country": "Scotland", "year": 1845},
-]
+  publishers = [
+      {"city": "London", "country": "England"},
+      {"city": "Edinburgh", "country": "Scotland"},
+      {"city": "London", "country": "England"},
+      {"city": "Paris", "country": "France"},
+      {"city": "London", "country": "England"},
+      {"city": "Dublin", "country": "Ireland"},
+      {"city": "Paris", "country": "France"},
+      {"city": "Edinburgh", "country": "Scotland"},
+  ]
 
-# 1. Count publications per country
-# 2. Print each country and count sorted alphabetically
-# Format: "<country>: <count>"
-# 3. Print: "Most publications: <country>"
+  # 1. Use a Counter to count publications per country
+  # 2. Print alphabetical results: "<country>: <count>"
+  # 3. Print the most common country
 
-# Your code here
-`,
+  # Your code here
+  `,
         expectedOutput: 'England: 3\nFrance: 2\nIreland: 1\nScotland: 2\nMost publications: England',
         hints: [
-          'Use `Counter(p["country"] for p in publishers)` to count publications per country.',
-          'Use `sorted(counts.items())` to iterate alphabetically and print each entry.',
-          'Use `counts.most_common(1)[0][0]` to get the country with the most publications.',
+          'To get the country names for the Counter, use (p["country"] for p in publishers).',
+          'Use sorted(counts.items()) to handle the alphabetical requirement.',
+          'The most common country is counts.most_common(1)[0][0].'
         ],
         solution: `from collections import Counter
 
-publishers = [
-    {"city": "London", "country": "England", "year": 1818},
-    {"city": "Edinburgh", "country": "Scotland", "year": 1820},
-    {"city": "London", "country": "England", "year": 1826},
-    {"city": "Paris", "country": "France", "year": 1831},
-    {"city": "London", "country": "England", "year": 1835},
-    {"city": "Dublin", "country": "Ireland", "year": 1840},
-    {"city": "Paris", "country": "France", "year": 1842},
-    {"city": "Edinburgh", "country": "Scotland", "year": 1845},
-]
+  publishers = [
+      {"city": "London", "country": "England"},
+      {"city": "Edinburgh", "country": "Scotland"},
+      {"city": "London", "country": "England"},
+      {"city": "Paris", "country": "France"},
+      {"city": "London", "country": "England"},
+      {"city": "Dublin", "country": "Ireland"},
+      {"city": "Paris", "country": "France"},
+      {"city": "Edinburgh", "country": "Scotland"},
+  ]
 
-counts = Counter(p["country"] for p in publishers)
-for country, count in sorted(counts.items()):
-    print(f"{country}: {count}")
-print(f"Most publications: {counts.most_common(1)[0][0]}")
-`,
+  # Count
+  counts = Counter(p["country"] for p in publishers)
+
+  # Sort and print
+  for country, count in sorted(counts.items()):
+      print(f"{country}: {count}")
+
+  # Print winner
+  print(f"Most publications: {counts.most_common(1)[0][0]}")`,
       },
     ],
   },
@@ -4042,59 +4070,68 @@ print(f"Most publications: {counts.most_common(1)[0][0]}")
     estimatedTimeMinutes: 20,
     difficulty: 'beginner',
     learningObjectives: [
-      'Understand the difference between geographic (lat/lon) and projected coordinate systems',
-      'Create geometric objects using the Shapely library',
-      'Explain why the same coordinates might appear in different places depending on the CRS',
+      'Explain the difference between geographic (Lat/Lon) and projected coordinate systems',
+      'Create geometric objects (Points) using the Shapely library',
+      'Understand why the order of coordinates (x, y) matters in GIS software',
+      'Identify common EPSG codes used in Digital Humanities'
     ],
     keywords: ['gis', 'coordinates', 'shapely', 'crs', 'projection'],
-    content: `# Coordinates and Projections
+    content: `# Coordinates and Projections: Flattening the World
 
-## Analogy
+  ## The Orange Peel Problem
+  Imagine trying to peel an orange and flatten the peel perfectly onto a rectangular table. It is impossible to do so without tearing or stretching the skin. 
 
-Imagine trying to peel an orange and flatten the peel perfectly onto a rectangular table. It's impossible without tearing or stretching it. This is the fundamental problem of map-making: the Earth is round (3D), but our screens are flat (2D).
+  This is the fundamental problem of map-making: the Earth is a three-dimensional sphere, but our screens and printed pages are two-dimensional flats. To solve this, we use **Projections**.
 
-To solve this, we use **Projections**.
-1.  **Geographic Coordinates (Lat/Lon)**: Like angles from the center of the earth. Measured in degrees.
-2.  **Projected Coordinates**: The orange peel flattened out. Measured in meters (or feet).
+  ---
 
-## Key Concepts
+  ## 1. Geographic vs. Projected Systems
 
-### Geometry as Data
-In Python, we don't just treat locations as two separate numbers (columns for "lat" and "lon"). We treat them as a single geometric object. The library **Shapely** is the standard tool for this.
+  ### Geographic Coordinates (Lat/Lon)
+  These treat the earth like a sphere. Points are measured in **degrees** based on their angle from the center of the earth.
+  *   **Unit**: Degrees
+  *   **Standard**: EPSG:4326 (The "GPS" standard)
 
-\`\`\`python
-from shapely.geometry import Point
+  ### Projected Coordinates
+  The "orange peel" has been flattened mathematically. Points are measured in linear units like **meters**. This is necessary if you want to calculate the area of a historical site or the length of a trade route accurately.
+  *   **Unit**: Meters
+  *   **Standard**: EPSG:3857 (The "Web Map" standard used by Google Maps)
 
-# Longitude first (x), Latitude second (y)
-# This represents Paris (approx 2.35 E, 48.85 N)
-paris = Point(2.35, 48.85)
+  ---
 
-print(paris)
-\`\`\`
+  ## 2. Geometry as Data (Shapely)
+  In Digital Humanities, we don't just treat locations as two separate columns in a spreadsheet. We treat them as **Geometric Objects**. The library **Shapely** is a common tool (nb, not the only tool!) for creating these objects in Python.
 
-### Coordinate Reference Systems (CRS)
-A coordinate is meaningless without context. If I say "Location 100, 100", that could be 100 degrees or 100 meters.
-*   **EPSG:4326**: The standard for GPS (Latitude/Longitude). Unit: Degrees.
-*   **EPSG:3857**: The standard for Web Maps (Google Maps, OpenStreetMap). Unit: Meters.
+  \`\`\`python
+  from shapely.geometry import Point
 
-::: definition
-**EPSG Code**: A unique ID number (like 4326) that tells software exactly which mathematical formula to use to flatten the earth.
-:::
+  # IMPORTANT: GIS software almost always expects (x, y)
+  # x = Longitude (East/West)
+  # y = Latitude (North/South)
+  # This represents Paris:
+  paris = Point(2.35, 48.85)
 
-## Practice
+  print(paris) # Output: POINT (2.35 48.85)
+  \`\`\`
 
-::: try-it
-Go to Google Maps, right-click anywhere, and copy the numbers. Those are EPSG:4326 coordinates.
-:::
+  ::: warning
+  **The Lon/Lat Trap**: Most people say "Latitude and Longitude." But mathematically, Longitude is the horizontal axis (**X**) and Latitude is the vertical axis (**Y**). If you put Latitude first in a \`Point()\`, your map of Paris will end up in Somalia!
+  :::
 
-## Transfer
+  ---
 
-*   **History**: Mapping the spread of the plague requires knowing that medieval maps didn't use modern GPS coordinates.
-*   **Archaeology**: recording the exact meter-grid location of a find within a trench requires a projected system, not just lat/lon.
+  ## 3. WKT: Well-Known Text
+  When you print a Shapely object, you see a format like \`POINT (31.13 29.97)\`. This is called **WKT**. It is a standardized way to describe shapes as text, making it easy to move data between Python, QGIS, and web maps.
 
-::: challenge
-Create a geometric Point representing a specific location.
-:::`,
+  ::: tip
+  **DH Use Case**: 
+  - **Archaeology**: Recording the exact meter-grid location of an artifact within a trench requires a projected system.
+  - **History**: Mapping the spread of a manuscript across Europe requires understanding that medieval "projections" were based on travel time, not modern GPS coordinates.
+  :::
+
+  ::: challenge
+  In the first challenge, create a Point representing the Great Pyramid. In the second, use Shapely's built-in math to calculate the "straight-line" distance between two points on a flat plane.
+  :::`,
     challenges: [
       {
         id: 'geospatial-01-c1',
@@ -4103,31 +4140,28 @@ Create a geometric Point representing a specific location.
         difficulty: 'beginner',
         starterCode: `from shapely.geometry import Point
 
-# 1. Create a Point object for the Pyramids of Giza.
-# Longitude: 31.13
-# Latitude: 29.97
-# Remember: Point(x, y) usually means Point(Longitude, Latitude)
+  # 1. Create a Point object for the Pyramids of Giza.
+  # Longitude (x): 31.13
+  # Latitude (y): 29.97
 
-giza = None
+  giza = 
 
-# Your code here
+  # Your code here
 
-# Check the type
-print(giza.wkt)
-`,
+  # This prints the Well-Known Text representation
+  print(giza.wkt)
+  `,
         expectedOutput: 'POINT (31.13 29.97)',
         hints: [
-          'Import is already done.',
-          '`giza = Point(longitude_value, latitude_value)`',
-          'Ensure the order is (31.13, 29.97).',
+          'Use the syntax: giza = Point(31.13, 29.97)',
+          'Remember: (Longitude, Latitude) is the (X, Y) order GIS expects.'
         ],
         solution: `from shapely.geometry import Point
 
-# Create the point
-giza = Point(31.13, 29.97)
+  # Create the point using X (Lon) and Y (Lat)
+  giza = Point(31.13, 29.97)
 
-print(giza.wkt)
-`,
+  print(giza.wkt)`,
       },
       {
         id: 'geospatial-01-c2',
@@ -4136,32 +4170,31 @@ print(giza.wkt)
         difficulty: 'intermediate',
         starterCode: `from shapely.geometry import Point
 
-p1 = Point(0, 0)
-p2 = Point(3, 4)
+  # Point 1 is at the origin
+  p1 = Point(0, 0)
 
-# 1. Calculate the Euclidean distance between p1 and p2 using the .distance() method
-# This is simple geometry (Pythagorean theorem), not "true" earth distance yet.
+  # Point 2 is 3 units East and 4 units North
+  p2 = Point(3, 4)
 
-dist = 0.0
+  # 1. Calculate the distance between p1 and p2 using the .distance() method
+  # 2. Store it in a variable called 'dist' and print it
 
-# Your code here
-
-print(dist)
-`,
+  # Your code here
+  `,
         expectedOutput: '5.0',
         hints: [
-          '`variable = object.distance(other_object)`',
-          'It\'s a 3-4-5 triangle.',
+          'Use the syntax: dist = p1.distance(p2)',
+          'This is a "Euclidean" distance (Pythagorean theorem), not "Haversine" distance.'
         ],
         solution: `from shapely.geometry import Point
 
-p1 = Point(0, 0)
-p2 = Point(3, 4)
+  p1 = Point(0, 0)
+  p2 = Point(3, 4)
 
-dist = p1.distance(p2)
+  # Calculate the straight-line distance
+  dist = p1.distance(p2)
 
-print(dist)
-`,
+  print(dist)`,
       },
     ],
   },
@@ -4173,106 +4206,133 @@ print(dist)
     estimatedTimeMinutes: 30,
     difficulty: 'beginner',
     learningObjectives: [
-      'Load spatial data (Shapefiles or GeoJSON) into a GeoDataFrame',
-      'Inspect the special \'geometry\' column',
-      'Filter spatial data based on attributes',
+      'Understand the structure of a GeoDataFrame',
+      'Identify the special "geometry" column that enables mapping',
+      'Filter spatial data based on attributes (e.g., selecting a specific country)',
+      'Convert a standard list of coordinates into a spatial dataset'
     ],
-    keywords: ['geopandas', 'geodataframe', 'shapefile', 'geojson', 'reading data'],
-    content: `# Intro to GeoPandas
+    keywords: ['geopandas', 'geodataframe', 'spatial data', 'metadata', 'filtering'],
+    content: `# Intro to GeoPandas: Spreadsheets with a Sense of Place
 
-## Analogy
+  ## Analogy
+  You already know **Pandas**, which gives you a super-powered spreadsheet (a DataFrame). **GeoPandas** is that exact same tool, but it adds a "magic column" at the end: **the geometry column**.
 
-You already know **Pandas**, which gives you a super-powered spreadsheet (DataFrame).
-**GeoPandas** is the exact same tool, but it adds a magic column at the end: \`geometry\`.
-While normal columns hold text or numbers, the \`geometry\` column holds shapes (Polygons for countries, Lines for rivers, Points for cities).
+  While normal columns hold text (Authors) or numbers (Year), the \`geometry\` column holds shapes—**Points** for cities, **Lines** for trade routes, or **Polygons** for empires.
 
-## Key Concepts
+  ---
 
-### The GeoDataFrame
-It looks like a DataFrame, acts like a DataFrame, but creates maps.
+  ## 1. The GeoDataFrame
+  A GeoDataFrame looks like a standard spreadsheet, but it is "geographically aware." It knows its own **CRS** (Coordinate Reference System) and can calculate spatial properties like area or distance automatically.
 
-\`\`\`python
-import geopandas as gpd
+  \`\`\`python
+  import geopandas as gpd
 
-# Reading a file (GeoJSON, Shapefile, Geopackage)
-gdf = gpd.read_file("countries.geojson")
+  # In a standard environment, we read files like this:
+  # gdf = gpd.read_file("monasteries.geojson")
 
-# It has a head() just like pandas
-print(gdf.head())
-\`\`\`
+  # In our sandbox, we can check the metadata just like Pandas:
+  print(gdf.columns) 
+  print(gdf.head())
+  \`\`\`
 
-### The Geometry Column
-This column is special. It contains the Shapely objects we learned about in the last lesson.
+  ---
 
-\`\`\`python
-# Access just the geometry
-print(gdf.geometry.head())
-\`\`\`
+  ## 2. The Geometry Column
+  This column is the heart of GeoPandas. It stores the **Shapely** objects (Points, Polygons) we learned about in the last lesson. Even if you have 100 columns of historical metadata, GeoPandas only needs this one \`geometry\` column to draw a map.
 
-### Active CRS
-A GeoDataFrame knows its coordinate system. You can check it with \`.crs\`. If your map looks distorted, you might need to convert it using \`.to_crs()\`.
+  \`\`\`python
+  # You can isolate the shapes themselves
+  all_shapes = gdf.geometry
+  \`\`\`
 
-\`\`\`python
-print(gdf.crs) 
-# Output: "EPSG:4326"
-\`\`\`
+  ---
 
-## Practice
+  ## 3. Filtering: The DH Power Move
+  Because GeoPandas is built on top of Pandas, you can filter your map using the same logic you use for a spreadsheet. 
 
-::: try-it
-If you have a CSV with "Lat" and "Lon" columns, GeoPandas won't automatically know it's spatial. You have to tell it to zip those two columns into a Point!
-:::
+  If you have a map of the whole world, but you only want to study the **Ottoman Empire**, you simply filter the rows:
 
-## Transfer
+  \`\`\`python
+  # Select only rows where the 'empire' column is 'Ottoman'
+  ottoman_map = gdf[gdf['empire'] == 'Ottoman']
+  \`\`\`
 
-*   **Urban Studies**: Load a Shapefile of city zoning districts to calculate the area of residential vs commercial zones.
+  ---
 
-::: challenge
-Load and inspect a built-in dataset.
-:::`,
+  ## 4. Converting CSV to Map
+  Most DH researchers don't start with a "Shapefile"; they start with an Excel sheet containing "Latitude" and "Longitude" columns. To make this a map, you must "zip" those coordinates into the geometry column.
+
+  \`\`\`python
+  # Logic for converting a DataFrame (df) to a GeoDataFrame (gdf)
+  gdf = gpd.GeoDataFrame(
+      df, 
+      geometry=gpd.points_from_xy(df.Longitude, df.Latitude),
+      crs="EPSG:4326"
+  )
+  \`\`\`
+
+  ::: tip
+  **DH Use Case**: Load a dataset of 19th-century cholera outbreaks. Filter the data to show only the first week of the outbreak. By calculating the "Centroid" (the geometric center) of those points, you can identify the epicenter of the epidemic.
+  :::
+
+  ::: challenge
+  In the first challenge, you will load a built-in dataset of the world. In the second, you will use your Pandas skills to "extract" a single country from that map.
+  :::`,
     challenges: [
       {
         id: 'geospatial-02-c1',
-        title: 'Loading the World',
+        title: 'Loading a GeoDataFrame',
         language: 'python',
         difficulty: 'beginner',
         starterCode: `import geopandas as gpd
+  import pandas as pd
+  from shapely.geometry import Point
 
-# GeoPandas comes with a tiny dataset called 'naturalearth_lowres'
-# We have prepackaged it directly, so we can first make it available
-# to the sandbox like this:
-from pyodide.http import pyfetch
+  # Since we are in a sandbox, we will build a tiny 'world' from a dictionary
+  data = {
+      'name': ['Egypt', 'France', 'China'],
+      'pop': [100, 67, 1400],
+      'lat': [26.8, 46.2, 35.8],
+      'lon': [30.8, 2.2, 104.1]
+  }
+  df = pd.DataFrame(data)
 
-response = await pyfetch("/naturalearth_lowres.zip")
-if response.status == 200:
-    with open("naturalearth_lowres.zip", "wb") as f:
-        f.write(await response.bytes())
-        print("dataset now available")
+  # Goal: Convert this DataFrame into a GeoDataFrame named 'world'
+  # 1. Use gpd.GeoDataFrame()
+  # 2. Use gpd.points_from_xy(df.lon, df.lat) for the geometry
+  # 3. Set the crs to "EPSG:4326"
 
-# now you could read this: gpd.read_file("zip://naturalearth_lowres.zip")
+  world = 
 
-# 1. Read this file into a variable named 'world'
-# Your code here
-
-world =
-
-# 2. Print the type of the object to verify it's a GeoDataFrame
-print(type(world).__name__)
-`,
-        expectedOutput: 'GeoDataFrame',
+  # Verify
+  print(type(world).__name__)
+  print(world.geometry.iloc[0])
+  `,
+        expectedOutput: 'GeoDataFrame\nPOINT (30.8 26.8)',
         hints: [
-          'Use `gpd.read_file(dataset_path)`.',
-          'Ensure you assign it to the variable `world`.',
+          'The syntax is: gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")',
+          'Make sure Lon (x) comes before Lat (y) in the points_from_xy function.'
         ],
         solution: `import geopandas as gpd
+  import pandas as pd
 
-dataset_path = gpd.datasets.get_path('naturalearth_lowres')
+  data = {
+      'name': ['Egypt', 'France', 'China'],
+      'pop': [100, 67, 1400],
+      'lat': [26.8, 46.2, 35.8],
+      'lon': [30.8, 2.2, 104.1]
+  }
+  df = pd.DataFrame(data)
 
-# Read file
-world = gpd.read_file(dataset_path)
+  # Convert to GeoDataFrame
+  world = gpd.GeoDataFrame(
+      df, 
+      geometry=gpd.points_from_xy(df.lon, df.lat), 
+      crs="EPSG:4326"
+  )
 
-print(type(world).__name__)
-`,
+  print(type(world).__name__)
+  print(world.geometry.iloc[0])`,
       },
       {
         id: 'geospatial-02-c2',
@@ -4280,34 +4340,37 @@ print(type(world).__name__)
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `import geopandas as gpd
+  import pandas as pd
 
-# We load the world dataset again
-path = gpd.datasets.get_path('naturalearth_lowres')
-world = gpd.read_file(path)
+  # Creating our world GeoDataFrame
+  data = {'name': ['Egypt', 'France', 'China'], 'lat': [26.8, 46.2, 35.8], 'lon': [30.8, 2.2, 104.1]}
+  df = pd.DataFrame(data)
+  world = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
 
-# 1. Filter the 'world' GeoDataFrame to select only the row where 'name' is "Egypt"
-# Store this in a new variable called 'egypt'
+  # Goal: Filter the 'world' GeoDataFrame to select only the row where 'name' is "Egypt"
+  # Store this in a new variable called 'egypt'
 
-# Your code here
+  # Your code here
 
-# Verify
-print(egypt['name'].values[0])
-`,
+  # Verify
+  print(egypt['name'].values[0])
+  `,
         expectedOutput: 'Egypt',
         hints: [
-          'This is standard Pandas filtering: `df[df[\'column\'] == \'Value\']`.',
-          'The column name is `\'name\'`.',
+          'Use the square bracket notation: world[world["column"] == "Value"]',
+          'This is the exact same syntax you used in the Pandas module!'
         ],
         solution: `import geopandas as gpd
+  import pandas as pd
 
-path = gpd.datasets.get_path('naturalearth_lowres')
-world = gpd.read_file(path)
+  data = {'name': ['Egypt', 'France', 'China'], 'lat': [26.8, 46.2, 35.8], 'lon': [30.8, 2.2, 104.1]}
+  df = pd.DataFrame(data)
+  world = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
 
-# Filter
-egypt = world[world['name'] == 'Egypt']
+  # Filter for Egypt
+  egypt = world[world['name'] == 'Egypt']
 
-print(egypt['name'].values[0])
-`,
+  print(egypt['name'].values[0])`,
       },
     ],
   },
@@ -4319,66 +4382,80 @@ print(egypt['name'].values[0])
     estimatedTimeMinutes: 40,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Create static maps using the .plot() method',
-      'Color-code maps based on data (Choropleth maps)',
-      'Layer multiple spatial datasets on one plot',
+      'Create static maps using the GeoDataFrame .plot() method',
+      'Generate Choropleth maps to visualize variables across regions',
+      'Layer multiple spatial datasets using Matplotlib Axes',
+      'Perform CRS transformations to calculate accurate geometric area',
     ],
-    keywords: ['matplotlib', 'plot', 'choropleth', 'mapping', 'visualization'],
-    content: `# Plotting Maps
+    keywords: ['matplotlib', 'plot', 'choropleth', 'mapping', 'visualization', 'to_crs'],
+    content: `# Plotting Maps: Visualizing Spatial Arguments
 
-## Analogy
+  ## Analogy
+  If \`print(gdf)\` gives you the raw numbers, \`gdf.plot()\` gives you the evidence. 
 
-If \`print(df)\` gives you the raw numbers, \`gdf.plot()\` gives you the picture. It's like turning your spreadsheet of coordinates into a transparency sheet. If you have two transparency sheets (one for rivers, one for cities), you can stack them on top of each other to see the relationships.
+  Think of mapping as using **transparency sheets**. If you have one sheet for "Country Boundaries" and another for "Locations of 18th Century Printing Presses," you can stack them on top of each other. This allows you to see the relationship between political borders and technological spread.
 
-## Key Concepts
+  ---
 
-### Basic Plotting
-GeoPandas integrates with Matplotlib.
+  ## 1. Basic Plotting
+  GeoPandas uses **Matplotlib** as its engine. The simplest way to see your data is the \`.plot()\` method.
 
-\`\`\`python
-# Plots the geometry
-gdf.plot()
-\`\`\`
+  \`\`\`python
+  # This draws the shapes in the geometry column
+  gdf.plot()
+  \`\`\`
 
-### Choropleth Maps
-A choropleth map colors regions based on a value (like population).
+  ---
 
-\`\`\`python
-# Color countries by 'pop_est' (population estimate)
-world.plot(column='pop_est', legend=True)
-\`\`\`
+  ## 2. Choropleth Maps: Color-Coding History
+  A **Choropleth** map colors regions based on a value in your data (like population, literacy rates, or the number of manuscripts found in a region).
 
-### Layering
-To plot two things together (e.g., capitals on top of countries), we use Matplotlib's "axis" object.
+  \`\`\`python
+  # Color countries by 'population' and add a legend (color bar)
+  world.plot(column='pop_est', legend=True, cmap='OrRd')
+  \`\`\`
 
-\`\`\`python
-import matplotlib.pyplot as plt
+  ---
 
-fig, ax = plt.subplots()
+  ## 3. Layering Data
+  To show points (cities) on top of polygons (countries), you have to tell both plot commands to use the same "drawing board" or **axis (ax)**.
 
-# 1. Plot the base layer (countries) on axis 'ax'
-countries.plot(ax=ax, color='lightgrey')
+  \`\`\`python
+  import matplotlib.pyplot as plt
 
-# 2. Plot the top layer (cities) on the SAME axis
-cities.plot(ax=ax, color='red', markersize=5)
+  fig, ax = plt.subplots(figsize=(10, 6))
 
-plt.show()
-\`\`\`
+  # 1. Plot the base layer (the map) on ax
+  countries.plot(ax=ax, color='lightgrey')
 
-## Practice
+  # 2. Plot the second layer (the points) on the SAME ax
+  cities.plot(ax=ax, color='red', markersize=10)
 
-::: try-it
-Imagine a map of ancient Rome. You could plot the city outline in grey, and the location of temples as red dots on top.
-:::
+  plt.show()
+  \`\`\`
 
-## Transfer
+  ---
 
-*   **Political History**: Color a map of voting districts based on election results (a choropleth).
-*   **Environmental Humanities**: Plot the path of a river over a map of industrial sites to visualize potential pollution sources.
+  ## 4. The "Projection" Trap: Calculating Area
+  In Digital Humanities, we often want to measure things: *"How big was this empire?"* or *"What is the density of monasteries in this valley?"*
 
-::: challenge
-Create a simple plot command.
-:::`,
+  If your data is in **EPSG:4326** (Latitude/Longitude), calculations will be wrong because degrees are not a consistent unit of distance (a degree is wider at the equator than the poles). To calculate area, you must **project** your data into a system that uses **meters**.
+
+  \`\`\`python
+  # Convert to a Mercator projection (meters)
+  gdf_meters = gdf.to_crs("EPSG:3395")
+
+  # Now calculate area (in square meters)
+  gdf_meters['area_sqm'] = gdf_meters.area
+  \`\`\`
+
+  ::: tip
+  **DH Use Case**: By layering a map of "Cholera Deaths" over a map of "Water Pumps," John Snow famously discovered the source of an 1854 outbreak. Layering is how we find **spatial correlation**.
+  :::
+
+  ::: challenge
+  In the first challenge, generate a plot object. In the second, perform a CRS transformation to calculate the area of a region in meters.
+  :::`,
     challenges: [
       {
         id: 'geospatial-03-c1',
@@ -4386,87 +4463,83 @@ Create a simple plot command.
         language: 'python',
         difficulty: 'beginner',
         starterCode: `import geopandas as gpd
-# (In a real script, we would import matplotlib.pyplot as plt too)
+  import pandas as pd
 
-path = gpd.datasets.get_path('naturalearth_lowres')
-world = gpd.read_file(path)
+  # Creating a tiny dataset
+  data = {'name': ['A', 'B'], 'pop': [10, 20], 'lat': [10, 20], 'lon': [10, 20]}
+  df = pd.DataFrame(data)
+  world = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
 
-# 1. The 'world' dataframe has a column named 'pop_est'.
-# We want to verify that we can access the plotting interface.
-# We cannot actually render the image in this checker, 
-# so we will check the object returned by the plot method.
+  # Goal: Generate a plot object
+  # 1. Call .plot() on the 'world' GeoDataFrame
+  # 2. Use the 'pop' column to color the points
+  # 3. Assign the result to a variable named 'ax'
 
-# Call .plot() on 'world' with the argument column='pop_est'
-# Assign the result to a variable named 'ax'
+  # Your code here
 
-# Your code here
-
-# Check if it returned an Axes object
-print(type(ax).__name__)
-`,
-        expectedOutput: 'AxesSubplot',
+  # Verify that an Axes object was created
+  print(type(ax).__module__)
+  `,
+        expectedOutput: 'matplotlib.axes._axes',
         hints: [
-          '`ax = world.plot(...)`',
-          'Pass `column=\'pop_est\'` inside the parentheses.',
+          'Use ax = world.plot(column="pop")',
+          'The variable ax will capture the Matplotlib Axes object created by GeoPandas.'
         ],
         solution: `import geopandas as gpd
-path = gpd.datasets.get_path('naturalearth_lowres')
-world = gpd.read_file(path)
+  import pandas as pd
 
-# Generate the plot object
-ax = world.plot(column='pop_est')
+  data = {'name': ['A', 'B'], 'pop': [10, 20], 'lat': [10, 20], 'lon': [10, 20]}
+  df = pd.DataFrame(data)
+  world = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
 
-print(type(ax).__name__)
-`,
+  # Create the plot
+  ax = world.plot(column='pop')
+
+  print(type(ax).__module__)`,
       },
       {
         id: 'geospatial-03-c2',
-        title: 'Calculating Area',
+        title: 'Calculating Area in Meters',
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `import geopandas as gpd
+  import pandas as pd
+  from shapely.geometry import Polygon
 
-# Load world data
-path = gpd.datasets.get_path('naturalearth_lowres')
-world = gpd.read_file(path)
+  # A square polygon in degrees (EPSG:4326)
+  # Covering approx 1 degree of lat/lon
+  poly = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
+  gdf = gpd.GeoDataFrame({'id': [1]}, geometry=[poly], crs="EPSG:4326")
 
-# 1. GeoPandas geometric objects have an 'area' property.
-# However, 'world' is in degrees (EPSG:4326), so area calculations are meaningless (degrees squared).
-# We must convert to a projected CRS first.
-# Let's use World Mercator (EPSG:3395) for a rough estimate in meters.
+  # Goal: Calculate the area in square meters
+  # 1. Convert gdf to EPSG:3395 (World Mercator) using .to_crs()
+  # 2. Assign this to a new variable 'gdf_projected'
+  # 3. Calculate the area of the first row and store in 'area_val'
 
-# Convert 'world' to crs="EPSG:3395" and save as 'world_mercator'
-# world_mercator = ...
+  # Your code here
 
-# Calculate the area of the first country in this new dataframe
-# first_area = world_mercator.area.iloc[0]
-
-# Your code here
-
-# Print the area (scientific notation is fine)
-print(f"{first_area:.2e}")
-`,
-        expectedOutput: '6.99e+09',
+  # Scientific notation output
+  print(f"{area_val:.2e}")
+  `,
+        expectedOutput: '1.24e+10',
         hints: [
-          'Use `world.to_crs("EPSG:3395")`.',
-          'Access the area using `.area`.',
-          'Use `.iloc[0]` to get the first one.',
+          'Use gdf_projected = gdf.to_crs("EPSG:3395")',
+          'Access area with gdf_projected.area.iloc[0]',
+          'Note: EPSG:4326 uses degrees, so .area is not useful until you project it!'
         ],
         solution: `import geopandas as gpd
+  from shapely.geometry import Polygon
 
-path = gpd.datasets.get_path('naturalearth_lowres')
-world = gpd.read_file(path)
+  poly = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
+  gdf = gpd.GeoDataFrame({'id': [1]}, geometry=[poly], crs="EPSG:4326")
 
-# Convert CRS
-world_mercator = world.to_crs("EPSG:3395")
+  # Convert to a system that uses meters
+  gdf_projected = gdf.to_crs("EPSG:3395")
 
-# Calculate area
-first_area = world_mercator.area.iloc[0]
+  # Calculate area
+  area_val = gdf_projected.area.iloc[0]
 
-# Note: The exact number depends on the dataset version, 
-# but based on the provided hint output, we print the variable.
-print(f"{first_area:.2e}")
-`,
+  print(f"{area_val:.2e}")`,
       },
     ],
   },
@@ -4478,58 +4551,72 @@ print(f"{first_area:.2e}")
     estimatedTimeMinutes: 30,
     difficulty: 'beginner',
     learningObjectives: [
-      'Create an interactive web map using Folium',
-      'Add markers and popups to a map',
-      'Understand the difference between static (Matplotlib) and slippy (Folium) maps',
+      'Create an interactive "slippy" web map using Folium',
+      'Add markers, popups, and tooltips to represent archival data',
+      'Understand the difference between static (Matplotlib) and interactive (Leaflet/Folium) maps',
+      'Navigate the "Latitude/Longitude" vs "X/Y" coordinate order discrepancy'
     ],
-    keywords: ['folium', 'interactive', 'leaflet', 'markers', 'web mapping'],
-    content: `# Interactive Maps with Folium
+    keywords: ['folium', 'interactive', 'leaflet', 'markers', 'web mapping', 'public history'],
+    content: `# Interactive Maps with Folium: The Digital Exhibit
 
-## Analogy
+  ## Analogy
+  A Matplotlib map is a **photograph**: it is static and captured at a specific scale. To see more detail, you would need to take a new "photo."
 
-A Matplotlib plot is a **photograph**: it's static, you can't zoom in to see more detail.
-A Folium map is a **window**: it's like embedding Google Maps into your Python code. You can drag, zoom, and click. This is often the final product you want to show on a DH project website.
+  A Folium map is a **window**: it is an interactive portal into your data. Users can drag, zoom, and click on "pins" to reveal deeper layers of information. This is often the final product you want to embed on a Digital Humanities project website or an online archive.
 
-## Key Concepts
+  ---
 
-### Creating a Map
-Folium uses JavaScript (Leaflet.js) behind the scenes, but you write Python.
+  ## 1. Creating a "Slippy" Map
+  Folium is a Python wrapper for a JavaScript library called **Leaflet.js**. It creates "slippy maps"—maps made of tiny square tiles that load as you move around.
 
-\`\`\`python
-import folium
+  \`\`\`python
+  import folium
 
-# Center the map on a specific lat/lon (e.g., London)
-m = folium.Map(location=[51.5074, -0.1278], zoom_start=12)
+  # Center the map on London
+  # Note the order: [Latitude, Longitude]
+  m = folium.Map(location=[51.5074, -0.1278], zoom_start=12, tiles="OpenStreetMap")
 
-# Save it as an HTML file you can open in a browser
-# m.save("london.html")
-\`\`\`
+  # In a local environment, you would save this as an HTML file:
+  # m.save("index.html")
+  \`\`\`
 
-### Adding Markers
-You can add pins to the map.
+  ---
 
-\`\`\`python
-folium.Marker(
-    location=[51.5074, -0.1278],
-    popup="London",
-    tooltip="Click me!"
-).add_to(m)
-\`\`\`
+  ## 2. Adding Interaction: Markers and Popups
+  In DH, we use **Markers** to represent specific points of interest—the location of a historical event, the birthplace of an author, or the site of a demolished building.
 
-## Practice
+  - **Popup**: Text that appears when you **click** a marker.
+  - **Tooltip**: Text that appears when you **hover** over a marker.
 
-::: try-it
-If you are mapping a travel diary, you could create a loop that goes through every city visited and adds a Marker with the date of the visit in the popup.
-:::
+  \`\`\`python
+  folium.Marker(
+      location=[51.5074, -0.1278],
+      popup="<b>London</b><br>Historical center of the British Empire.",
+      tooltip="Click for more info"
+  ).add_to(m)
+  \`\`\`
 
-## Transfer
+  ---
 
-*   **Public History**: Create a walking tour map where users can click on buildings to read historical descriptions.
-*   **Digital Editions**: A map embedded next to a text, showing the location of the places mentioned in the current chapter.
+  ## 3. The Great Coordinate Flip ⚠️
+  This is the most common error in Geospatial Python:
+  - **Shapely/GeoPandas** (Mathematical): Uses **(Longitude, Latitude)** or (X, Y).
+  - **Folium/Leaflet** (Navigational): Uses **[Latitude, Longitude]**.
 
-::: challenge
-Initialize a map object centered on a specific location.
-:::`,
+  If your points are appearing in the wrong hemisphere, you likely have your coordinates in the wrong order for the library you are using.
+
+  ---
+
+  ## 4. Public History and Storytelling
+  Interactive maps are the backbone of "Deep Mapping" projects. By allowing a user to zoom in from a national view to a street-level view, you enable them to move between **Distant Reading** (patterns) and **Close Reading** (specific stories in popups).
+
+  ::: tip
+  **DH Use Case**: If you are sonifying a travel diary, you could create a loop that goes through every city visited and adds a Marker. In the popup, you could include the date of the visit and a link to the digitized page of the diary.
+  :::
+
+  ::: challenge
+  In the first challenge, initialize a map centered on New York. In the second, use a loop to programmatically add multiple markers to a single map object.
+  :::`,
     challenges: [
       {
         id: 'geospatial-04-c1',
@@ -4538,81 +4625,79 @@ Initialize a map object centered on a specific location.
         difficulty: 'beginner',
         starterCode: `import folium
 
-# 1. Create a folium Map centered on Coordinates [40.71, -74.00] (New York City)
-# Set zoom_start to 10
-# Assign it to variable 'nyc_map'
+  # 1. Create a folium Map centered on [40.71, -74.00] (New York City)
+  # 2. Set the 'zoom_start' to 10
+  # 3. Assign the result to a variable named 'nyc_map'
 
-# Your code here
+  # Your code here
 
-# Check attributes
-print(nyc_map.location)
-print(nyc_map.options['zoom'])
-`,
+  # These lines verify the map state
+  print(nyc_map.location)
+  print(nyc_map.options['zoom'])
+  `,
         expectedOutput: '[40.71, -74.0]\n10',
         hints: [
-          '`folium.Map(location=[lat, lon], zoom_start=num)`',
-          'Ensure the coordinates are a list `[...]`.',
+          'The syntax is: nyc_map = folium.Map(location=[lat, lon], zoom_start=10)',
+          'Coordinates must be passed as a list: [40.71, -74.00].'
         ],
         solution: `import folium
 
-# Create map
-nyc_map = folium.Map(location=[40.71, -74.00], zoom_start=10)
+  # Create map object
+  nyc_map = folium.Map(location=[40.71, -74.00], zoom_start=10)
 
-print(nyc_map.location)
-print(nyc_map.options['zoom'])
-`,
+  print(nyc_map.location)
+  print(nyc_map.options['zoom'])`,
       },
       {
         id: 'geospatial-04-c2',
-        title: 'Adding a Marker',
+        title: 'Adding Multiple Markers',
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `import folium
 
-m = folium.Map(location=[0, 0], zoom_start=2)
+  m = folium.Map(location=[45.0, 10.0], zoom_start=4)
 
-# 1. Define a list of locations
-# Each item is [lat, lon, name]
-locations = [
-    [48.85, 2.35, "Paris"],
-    [41.90, 12.49, "Rome"]
-]
+  # A list of locations: [Latitude, Longitude, City Name]
+  locations = [
+      [48.85, 2.35, "Paris"],
+      [41.90, 12.49, "Rome"]
+  ]
 
-# 2. Loop through 'locations'
-# For each city, create a folium.Marker
-# Use the lat/lon for 'location'
-# Use the name for 'popup'
-# Add it to map 'm'
+  # Goal: Loop through the 'locations' list and add a Marker for each city.
+  # 1. Access the latitude and longitude from the list
+  # 2. Use the city name for the 'popup'
+  # 3. Use .add_to(m) to attach it to the map
 
-# Your code here
+  # Your code here
 
-# Check if markers were added (internal structure check)
-print(len(m._children))
-`,
+  # Verification: The map starts with 1 layer (tiles). 
+  # After adding 2 markers, it should have 3 children.
+  print(len(m._children))
+  `,
         expectedOutput: '3',
         hints: [
-          '`for loc in locations:`',
-          '`folium.Marker(location=[loc[0], loc[1]], popup=loc[2]).add_to(m)`',
-          'The expected output is 3 because the Map itself has a "tile_layer" as one child, plus 2 markers = 3 children.',
+          'Use: for loc in locations:',
+          'Inside the loop, access index [0] for lat, [1] for lon, and [2] for name.',
+          'Syntax: folium.Marker(location=[lat, lon], popup=name).add_to(m)'
         ],
         solution: `import folium
 
-m = folium.Map(location=[0, 0], zoom_start=2)
+  m = folium.Map(location=[45.0, 10.0], zoom_start=4)
 
-locations = [
-    [48.85, 2.35, "Paris"],
-    [41.90, 12.49, "Rome"]
-]
+  locations = [
+      [48.85, 2.35, "Paris"],
+      [41.90, 12.49, "Rome"]
+  ]
 
-for city in locations:
-    folium.Marker(
-        location=[city[0], city[1]], 
-        popup=city[2]
-    ).add_to(m)
+  # Loop and add markers
+  for loc in locations:
+      folium.Marker(
+          location=[loc[0], loc[1]], 
+          popup=loc[2]
+      ).add_to(m)
 
-# The map 'm' contains the base tiles + 2 markers
-print(len(m._children))
-`,
+  # 1 Base Layer + 2 Markers = 3
+  print(len(m._children))`,
       },
     ],
   },
@@ -4624,102 +4709,92 @@ print(len(m._children))
     estimatedTimeMinutes: 25,
     difficulty: 'beginner',
     learningObjectives: [
-      'Understand that images are grids of pixels',
-      'Explain RGB color representation',
-      'Access pixel data using NumPy arrays',
+      'Understand that digital images are structured grids of pixels',
+      'Explain the RGB color model and the 0-255 intensity range',
+      'Access and modify pixel data using NumPy array indexing',
+      'Identify the "shape" of image data (Height, Width, Channels)'
     ],
-    keywords: ['pixels', 'rgb', 'numpy', 'image data'],
+    keywords: ['pixels', 'rgb', 'numpy', 'image data', 'distant viewing'],
     content: `# Pixels as Data
 
-## Analogy
+  ## The Digital Mosaic
+  Think of a digital image like a giant, extremely detailed mosaic. Each tiny tile in the mosaic is a **pixel** (short for "picture element"). In Digital Humanities, we use **Computer Vision** to analyze thousands of these "mosaics" at once—detecting patterns in historical photography, analyzing color trends in cinema, or identifying features in digitized manuscripts.
 
-Think of a digital image like a giant, extremely detailed mosaic. Each tiny tile in the mosaic is a **pixel**. Just like a mosaic artist chooses tiles of different colors to create a picture, a computer uses pixels of different colors to represent an image.
+  ---
 
-## Key Concepts
+  ## 1. The Pixel Grid
+  Every image is a matrix (a grid) with a specific height and width.
+  *   **Resolution**: An image that is 800 pixels wide and 600 pixels high contains 480,000 individual tiles.
+  *   **Coordinate System**: In Python, we count from the top-left corner. The pixel at \`[0, 0]\` is the very first pixel in the top-left.
 
-### The Pixel Grid
-Digital images are fundamentally a grid (or matrix) of pixels.
-*   **Width**: The number of pixels horizontally.
-*   **Height**: The number of pixels vertically.
+  ---
 
-An image with a width of 800 pixels and a height of 600 pixels contains 480,000 individual pixels!
+  ## 2. Color Representation (RGB)
+  Most digital images use the **RGB** color model. Every single pixel is actually composed of three values representing the intensity of **Red, Green, and Blue** light.
 
-### Color Representation (RGB)
-Most digital images use the **RGB** color model.
-*   **R**ed
-*   **G**reen
-*   **B**lue
+  Values typically range from **0 (black/no intensity)** to **255 (full intensity)**. This is because 256 levels fit perfectly into one "byte" of computer memory (\`uint8\`).
 
-Each pixel has three values, one for each color, typically ranging from 0 (no intensity) to 255 (full intensity).
+  | Color | RGB Value |
+  | :--- | :--- |
+  | **Pure Red** | \`(255, 0, 0)\` |
+  | **Pure White** | \`(255, 255, 255)\` |
+  | **Pure Black** | \`(0, 0, 0)\` |
+  | **Yellow** | \`(255, 255, 0)\` (Red + Green) |
 
-*   **(255, 0, 0)** is pure red.
-*   **(0, 255, 0)** is pure green.
-*   **(0, 0, 255)** is pure blue.
-*   **(0, 0, 0)** is black.
-*   **(255, 255, 255)** is white.
-*   **(128, 128, 128)** is a shade of gray.
+  ---
 
-### NumPy Arrays
-The **NumPy** library is essential for handling numerical data in Python, and images are just numerical data. We often represent an image as a 3-dimensional NumPy array:
-*   The first dimension is the **height** (rows of pixels).
-*   The second dimension is the **width** (columns of pixels).
-*   The third dimension is the **color channel** (R, G, or B).
+  ## 3. NumPy: The Image Engine
+  In Python, we use the **NumPy** library to handle images. An image is stored as a 3D array with the shape: **(Height, Width, Channels)**.
 
-\`\`\`python
-import numpy as np
+  \`\`\`python
+  import numpy as np
 
-# Create a small 2x2 pixel image (all black)
-# Shape: (height, width, color_channels)
-black_image = np.zeros((2, 2, 3), dtype=np.uint8) 
+  # Create a tiny 2x2 black image
+  # dtype=np.uint8 ensures values stay between 0-255
+  image = np.zeros((2, 2, 3), dtype=np.uint8)
 
-print(black_image)
-\`\`\`
+  # Change the top-left pixel to Red
+  image[0, 0] = [255, 0, 0]
+  \`\`\`
 
-## Practice
+  ::: tip
+  **Distant Viewing**: This is a DH method where we analyze "visual style" computationally. By looking at the average pixel values of every frame in a film, we can visualize the "color palette" of a director across their entire career.
+  :::
 
-::: try-it
-What RGB value would you use to create a bright yellow pixel? (Hint: Yellow is a mix of red and green light).
-:::
-
-## Transfer
-
-When analyzing historical photographs, understanding pixel data helps us quantify things like the overall brightness, the prevalence of certain colors, or even the texture of a surface by examining the variations in pixel values.
-
-::: challenge
-Create a simple NumPy array representing a colored image.
-:::`,
+  ::: challenge
+  In the first challenge, create a 1x1 red pixel. In the second, practice "drilling down" into a 3x3 grid to find specific colors.
+  :::`,
     challenges: [
       {
         id: 'image-analysis-01-c1',
-        title: 'Red Pixel Array',
+        title: 'Create a Red Pixel Array',
         language: 'python',
         difficulty: 'beginner',
         starterCode: `import numpy as np
 
-# 1. Create a 1x1 pixel image (width=1, height=1)
-# 2. Make it pure red. Remember the RGB format: (255, 0, 0)
-# 3. The data type should be uint8 (unsigned integer 8-bit)
+  # Goal: Create a 1x1 pixel image that is pure Red.
+  # 1. Use np.array()
+  # 2. The structure must be a 3D list: [[[R, G, B]]]
+  # 3. Set dtype=np.uint8
 
-red_pixel_image = None
+  red_pixel_image = 
 
-# Your code here
+  # Your code here
 
-# Print the array to verify
-print(red_pixel_image)
-`,
+  print(red_pixel_image)
+  `,
         expectedOutput: '[[[255   0   0]]]',
         hints: [
-          'Use `np.zeros()` or `np.array()`.',
-          'The shape should be `(1, 1, 3)`.',
-          'The data type is `dtype=np.uint8`.',
+          'Pure red is [255, 0, 0].',
+          'NumPy expects nested lists for dimensions: [[[ ... ]]].',
+          'The shape should be (1, 1, 3).'
         ],
         solution: `import numpy as np
 
-# Create a 1x1 pixel image and set it to red
-red_pixel_image = np.array([[]], dtype=np.uint8)
+  # A 1x1 image with 3 color channels
+  red_pixel_image = np.array([[[255, 0, 0]]], dtype=np.uint8)
 
-print(red_pixel_image)
-`,
+  print(red_pixel_image)`,
       },
       {
         id: 'image-analysis-01-c2',
@@ -4728,52 +4803,45 @@ print(red_pixel_image)
         difficulty: 'intermediate',
         starterCode: `import numpy as np
 
-# A 3x3 pixel image
-# Row 0: Red, Green, Blue
-# Row 1: Black, White, Gray
-# Row 2: Yellow, Cyan, Magenta
-image_array = np.array([
-    [,,],  # Row 0
-    [,,], # Row 1
-    [,,]  # Row 2
-], dtype=np.uint8)
+  # A 3x3 pixel "mini-archive"
+  image_array = np.array([
+      [[255, 0, 0], [0, 255, 0], [0, 0, 255]],      # Row 0: R, G, B
+      [[0, 0, 0], [255, 255, 255], [128, 128, 128]], # Row 1: Black, White, Gray
+      [[255, 255, 0], [0, 255, 255], [255, 0, 255]]  # Row 2: Yellow, Cyan, Magenta
+  ], dtype=np.uint8)
 
-# 1. Get the RGB value of the pixel at Row 1, Column 1 (which is White)
-# Remember: array[row, column]
-white_pixel = None
+  # Goal: Extract the RGB values for White and Yellow
+  # 1. White is in Row 1, Column 1
+  # 2. Yellow is in Row 2, Column 0
 
-# 2. Get the RGB value of the pixel at Row 2, Column 0 (which is Yellow)
-yellow_pixel = None
+  white_pixel = 
+  yellow_pixel = 
 
-# Your code here
+  # Your code here
 
-print(f"White pixel: {white_pixel}")
-print(f"Yellow pixel: {yellow_pixel}")
-`,
-        expectedOutput: 'White pixel: [255 255 255]\nYellow pixel: [255 255   0]',
+  print(f"White: {white_pixel}")
+  print(f"Yellow: {yellow_pixel}")
+  `,
+        expectedOutput: 'White: [255 255 255]\nYellow: [255 255   0]',
         hints: [
-          'Access elements using `array_name[row_index, column_index]`.',
-          'Indices start from 0.',
-          '`white_pixel` should be `image_array[1, 1]`.',
-          '`yellow_pixel` should be `image_array[2, 0]`.',
+          'Access the array using image_array[row, col].',
+          'Remember that indexing starts at 0.',
+          'White is at index [1, 1].'
         ],
         solution: `import numpy as np
 
-image_array = np.array([
-    [,,],
-    [,,],
-    [,,]
-], dtype=np.uint8)
+  image_array = np.array([
+      [[255, 0, 0], [0, 255, 0], [0, 0, 255]],
+      [[0, 0, 0], [255, 255, 255], [128, 128, 128]],
+      [[255, 255, 0], [0, 255, 255], [255, 0, 255]]
+  ], dtype=np.uint8)
 
-# Get the pixel at Row 1, Column 1
-white_pixel = image_array
+  # Select pixels by [row, column]
+  white_pixel = image_array[1, 1]
+  yellow_pixel = image_array[2, 0]
 
-# Get the pixel at Row 2, Column 0
-yellow_pixel = image_array
-
-print(f"White pixel: {white_pixel}")
-print(f"Yellow pixel: {yellow_pixel}")
-`,
+  print(f"White: {white_pixel}")
+  print(f"Yellow: {yellow_pixel}")`,
       },
     ],
   },
@@ -4785,113 +4853,78 @@ print(f"Yellow pixel: {yellow_pixel}")
     estimatedTimeMinutes: 35,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Load images into Python using Pillow and OpenCV',
-      'Resize and crop images programmatically',
-      'Convert images to grayscale',
+      'Navigate the BGR vs RGB color channel discrepancy',
+      'Resize and crop images programmatically to standardize a corpus',
+      'Convert images to grayscale to prepare for OCR or layout analysis',
+      'Understand the difference between (Width, Height) and (Rows, Columns) in code'
     ],
     keywords: ['pillow', 'opencv', 'PIL', 'cv2', 'load image', 'grayscale'],
-    content: `# Processing Images with Pillow/OpenCV
+    content: `# Processing Images with Pillow and OpenCV
 
-## Analogy
+  ## The Librarian's Choice: Pillow or OpenCV?
+  If NumPy arrays are the raw ingredients (pixels), then **Pillow** and **OpenCV** are the kitchen tools that let us prepare them. 
 
-If NumPy arrays are the raw ingredients (pixels), **Pillow** and **OpenCV** are the kitchen tools that let us chop, dice, and prepare those ingredients.
-*   **Pillow (PIL Fork)**: Great for general image manipulation, web-friendly formats, and basic operations.
-*   **OpenCV (cv2)**: A powerhouse for computer vision tasks, offering advanced image processing and analysis functions.
+  *   **Pillow (PIL)**: The "human-friendly" library. It is great for basic tasks like resizing, cropping, and saving images in different formats. It is very common in web development and basic DH scripts.
+  *   **OpenCV (cv2)**: The "computer-vision" powerhouse. It is designed for high-performance analysis, like detecting faces in historical photos or identifying specific symbols in a manuscript.
 
-## Key Concepts
+  ---
 
-### Loading Images
+  ## 1. The BGR "Trap"
+  This is the most important thing to remember: **OpenCV reads colors in the order Blue-Green-Red (BGR)**, while almost every other library (including Pillow and Matplotlib) uses **Red-Green-Blue (RGB)**.
 
-#### Pillow
-\`\`\`python
-from PIL import Image
+  If you load an image in OpenCV and display it in another tool without converting it, everyone will look like they are under blue moonlight!
 
-# Load an image file
-img_pil = Image.open("my_photo.jpg") 
-print(img_pil.format, img_pil.size, img_pil.mode) # e.g., JPEG (100, 150) RGB\`\`\`
+  \`\`\`python
+  import cv2
 
-#### OpenCV
-\`\`\`python
-import cv2
+  # Load image
+  img = cv2.imread("manuscript.jpg")
 
-# Load an image file
-# Note: OpenCV loads images in BGR format by default!
-img_cv = cv2.imread("my_photo.jpg") 
+  # Convert from BGR to RGB so it looks correct in other tools
+  img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+  \`\`\`
 
-# OpenCV uses NumPy arrays directly
-print(img_cv.shape) # e.g., (150, 100, 3) - Height, Width, Channels
-\`\`\`
+  ---
 
-### Basic Transformations
+  ## 2. Transforming the Frame
+  In Digital Humanities, we often process thousands of images. We use code to **standardize** them so they all have the same dimensions.
 
-#### Resizing
-\`\`\`python
-# Pillow
-new_size = (200, 200) # (width, height)
-resized_img_pil = img_pil.resize(new_size)
+  ### Resizing
+  Note that OpenCV asks for **(Width, Height)**.
+  \`\`\`python
+  # Resize to 200 pixels wide and 100 pixels high
+  resized = cv2.resize(img, (200, 100))
+  \`\`\`
 
-# OpenCV
-resized_img_cv = cv2.resize(img_cv, (200, 200)) # (width, height)
-\`\`\`
+  ### Cropping
+  Since OpenCV treats images as NumPy arrays, we crop using **Slicing**. Here, we use **[Rows, Columns]**, which is the same as **[Y, X]**.
+  \`\`\`python
+  # Crop from Row 50 to 150, and Column 20 to 100
+  # crop = img[y1:y2, x1:x2]
+  cropped = img[50:150, 20:100]
+  \`\`\`
 
-#### Cropping
-\`\`\`python
-# Pillow (left, upper, right, lower)
-box = (100, 100, 400, 400) 
-cropped_img_pil = img_pil.crop(box)
+  ---
 
-# OpenCV (rows first, then columns)
-# crop = img[y1:y2, x1:x2]
-cropped_img_cv = img_cv[100:400, 100:400] \`\`\`
+  ## 3. Grayscale: Simplifying the Signal
+  Converting an image to grayscale removes color "noise." This is a standard step before performing **OCR (Optical Character Recognition)** because it allows the computer to focus on the contrast between the dark ink and the light page.
 
-### Grayscale Conversion
-This simplifies images by reducing color information to luminance.
+  \`\`\`python
+  # OpenCV Grayscale
+  gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-\`\`\`python
-# Pillow
-grayscale_img_pil = img_pil.convert('L') # 'L' stands for Luminance
+  # Pillow Grayscale
+  from PIL import Image
+  img_pil = Image.open("page.jpg").convert("L") # 'L' for Luminance
+  \`\`\`
 
-# OpenCV
-grayscale_img_cv = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
-\`\`\`
+  ::: tip
+  **DH Use Case**: If you are studying a collection of 5,000 digitized 19th-century postcards, you can use these tools to automatically crop out the "stamp" area from every card to analyze the postal marks separately.
+  :::
 
-## Practice
-
-::: try-it
-Try loading an image with Pillow and printing its size. Then, try loading it with OpenCV and printing its shape. Notice the order of height and width!
-:::
-
-**Because we are working in a self-contained sandbox, you'll need to run this code to make the my_photo.jpg that we packaged for you available, like so:**
-
-\`\`\`python
-from PIL import Image
-from pyodide.http import pyfetch
-
-# This will load the prepackaged photo into our sandbox. 
-# You wouldn't need to do this _like this_ on your own computer.
-response = await pyfetch("/my_photo.jpg")
-if response.status == 200:
-    with open("my_photo.jpg", "wb") as f:
-        f.write(await response.bytes())
-        print("Image downloaded!")
-
-# then continue as per normal:
-
-img_pil = Image.open("my_photo.jpg") 
-
-\`\`\`
-
-
-
-
-## Transfer
-
-*   **Art History**: Standardize a collection of scanned artwork to the same dimensions for comparison.
-*   **Manuscript Studies**: Convert a collection of digitized pages to grayscale to reduce file size and focus on text layout.
-
-::: challenge
-Resize and convert an image to grayscale.
-:::`,
+  ::: challenge
+  Because we are in a sandbox, we will create "synthetic images" using NumPy and then transform them. In Challenge 1, use OpenCV to resize a blue square. In Challenge 2, use Pillow to crop a red square.
+  :::`,
     challenges: [
       {
         id: 'image-analysis-02-c1',
@@ -4899,51 +4932,45 @@ Resize and convert an image to grayscale.
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `import cv2
-import numpy as np
+  import numpy as np
 
-# Create a dummy image: 100x100 pixels, all blue
-# Shape: (height, width, channels)
-# OpenCV expects BGR, so Blue is (255, 0, 0)
-dummy_image = np.zeros((100, 100, 3), dtype=np.uint8)
-dummy_image[:, :] = 
+  # Create a dummy image: 100x100 pixels, all Blue
+  # OpenCV expects BGR, so Blue is [255, 0, 0]
+  dummy_image = np.zeros((100, 100, 3), dtype=np.uint8)
+  dummy_image[:, :] = [255, 0, 0]
 
-# We'll pretend this came from cv2.imread()
+  # 1. Resize the image to be 50 pixels wide by 50 pixels high
+  # Store in variable 'resized_img'
+  resized_img = 
 
-# 1. Resize the image to be 50x50 pixels
-# Remember OpenCV resize expects (width, height)
-resized_img = None
+  # 2. Convert the ORIGINAL 'dummy_image' to grayscale
+  # Store in variable 'gray_img'
+  gray_img = 
 
-# 2. Convert the *original* image (dummy_image) to grayscale
-gray_img = None
+  # Your code here
 
-# Your code here
-
-# Check dimensions:
-# Resized should be (50, 50, 3)
-# Grayscale should be (100, 100)
-print(f"Resized shape: {resized_img.shape}")
-print(f"Grayscale shape: {gray_img.shape}")
-`,
+  print(f"Resized shape: {resized_img.shape}")
+  print(f"Grayscale shape: {gray_img.shape}")
+  `,
         expectedOutput: 'Resized shape: (50, 50, 3)\nGrayscale shape: (100, 100)',
         hints: [
-          'For resizing: `cv2.resize(image, (new_width, new_height))`',
-          'For grayscale: `cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)`',
+          'Use cv2.resize(dummy_image, (50, 50))',
+          'Use cv2.cvtColor(dummy_image, cv2.COLOR_BGR2GRAY) for grayscale.'
         ],
         solution: `import cv2
-import numpy as np
+  import numpy as np
 
-dummy_image = np.zeros((100, 100, 3), dtype=np.uint8)
-dummy_image[:, :] = 
+  dummy_image = np.zeros((100, 100, 3), dtype=np.uint8)
+  dummy_image[:, :] = [255, 0, 0]
 
-# 1. Resize the image
-resized_img = cv2.resize(dummy_image, (50, 50))
+  # 1. Resize
+  resized_img = cv2.resize(dummy_image, (50, 50))
 
-# 2. Convert the original image to grayscale
-gray_img = cv2.cvtColor(dummy_image, cv2.COLOR_BGR2GRAY)
+  # 2. Grayscale
+  gray_img = cv2.cvtColor(dummy_image, cv2.COLOR_BGR2GRAY)
 
-print(f"Resized shape: {resized_img.shape}")
-print(f"Grayscale shape: {gray_img.shape}")
-`,
+  print(f"Resized shape: {resized_img.shape}")
+  print(f"Grayscale shape: {gray_img.shape}")`,
       },
       {
         id: 'image-analysis-02-c2',
@@ -4951,51 +4978,41 @@ print(f"Grayscale shape: {gray_img.shape}")
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `from PIL import Image
-import numpy as np
+  import numpy as np
 
-# Create a dummy 100x100 RGBA image (Red)
-# RGBA means Red, Green, Blue, Alpha (transparency)
-# Red is (255, 0, 0, 255)
-img_array = np.zeros((100, 100, 4), dtype=np.uint8)
-img_array[:, :] =
-img_pil = Image.fromarray(img_array)
+  # Create a dummy 100x100 Red image
+  img_array = np.zeros((100, 100, 3), dtype=np.uint8)
+  img_array[:, :] = [255, 0, 0]
+  img_pil = Image.fromarray(img_array)
 
-# 1. Crop the image to the top-left 20x20 pixel quadrant.
-# Pillow's crop() takes a box: (left, upper, right, lower)
+  # Goal: Crop the image to the top-left 20x20 quadrant.
+  # 1. Define a box: (left, upper, right, lower)
+  # 2. Use the .crop() method on img_pil
+  # 3. Store in 'cropped_img' and print its size
 
-# Define the box coordinates
-# left = 0, upper = 0
-# right = 20, lower = 20
-crop_box = (0, 0, 20, 20)
+  # Your code here
 
-# Perform the crop
-cropped_img = img_pil.crop(crop_box)
-
-# Your code here
-
-# Check the size of the cropped image
-print(cropped_img.size)
-`,
+  print(cropped_img.size)
+  `,
         expectedOutput: '(20, 20)',
         hints: [
-          'The `crop_box` is already defined correctly for a 20x20 crop from the top-left.',
-          'Call `img_pil.crop(crop_box)`.',
-          'Pillow\'s `size` attribute returns `(width, height)`.',
+          'The crop box for the top-left 20x20 is (0, 0, 20, 20).',
+          'Syntax: cropped_img = img_pil.crop( (0, 0, 20, 20) )'
         ],
         solution: `from PIL import Image
-import numpy as np
+  import numpy as np
 
-img_array = np.zeros((100, 100, 4), dtype=np.uint8)
-img_array[:, :] =
-img_pil = Image.fromarray(img_array)
+  img_array = np.zeros((100, 100, 3), dtype=np.uint8)
+  img_array[:, :] = [255, 0, 0]
+  img_pil = Image.fromarray(img_array)
 
-crop_box = (0, 0, 20, 20)
+  # Define box (left, upper, right, lower)
+  box = (0, 0, 20, 20)
 
-# Perform the crop
-cropped_img = img_pil.crop(crop_box)
+  # Crop
+  cropped_img = img_pil.crop(box)
 
-print(cropped_img.size)
-`,
+  print(cropped_img.size)`,
       },
     ],
   },
@@ -5007,65 +5024,68 @@ print(cropped_img.size)
     estimatedTimeMinutes: 45,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Calculate color histograms for images',
-      'Understand what a histogram represents',
-      'Extract dominant colors from an image',
+      'Calculate color histograms to analyze the distribution of light and color',
+      'Interpret histograms as a fingerprint of an image\'s visual style',
+      'Extract average and dominant colors to compare artistic palettes',
+      'Use NumPy and OpenCV to quantify visual information'
     ],
-    keywords: ['histogram', 'color analysis', 'dominant color', 'matplotlib'],
+    keywords: ['histogram', 'color analysis', 'dominant color', 'matplotlib', 'distant viewing'],
     content: `# Color Histograms and Extraction
 
-## Analogy
+  ## The Visual Fingerprint
+  In the humanities, we often talk about an artist's "palette" or the "mood" of a film. A **color histogram** is a way to turn those qualitative descriptions into quantitative data. 
 
-Imagine you have a box of crayons. A **color histogram** is like counting how many crayons of each color you have. Do you have more blue crayons or red crayons? This tells you about the overall palette of your set. For an image, it tells us about the distribution of colors.
+  Think of a histogram as a **bar chart of intensity**. Instead of counting words in a book, we are counting how many pixels in an image belong to a specific shade of red, green, or blue.
 
-## Key Concepts
+  ---
 
-### What is a Histogram?
-A histogram for an image shows the frequency of each color intensity. For an RGB image, we typically create three histograms: one for Red, one for Green, and one for Blue.
+  ## 1. What is a Histogram?
+  A histogram for an image shows the frequency of each color intensity. 
+  - **X-axis**: Represents the color intensity from **0** (darkest) to **255** (brightest).
+  - **Y-axis**: Represents the **count** of pixels that have that specific intensity.
 
-*   The x-axis represents the color intensity (0-255).
-*   The y-axis represents the number of pixels with that intensity.
+  By looking at the "shape" of the histogram, you can instantly tell if an image is overexposed (peaks on the right), underexposed (peaks on the left), or high-contrast (peaks at both ends).
 
-### Calculating Histograms
-While you can manually count pixels, libraries like OpenCV and Matplotlib make this easy.
+  ---
 
-#### OpenCV
-\`\`\`python
-import cv2
-import matplotlib.pyplot as plt
+  ## 2. Calculating Histograms with OpenCV
+  The function \`cv2.calcHist()\` is the standard tool for this. It requires several specific arguments passed as **lists**:
 
-# Load image (assume img_cv is loaded)
-# img_cv = cv2.imread("my_image.jpg")
+  \`\`\`python
+  import cv2
+  import matplotlib.pyplot as plt
 
-# Convert to grayscale for a single histogram
-gray_img = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
-hist_gray = cv2.calcHist([gray_img],, None,,)
+  # 1. [image]: The image list
+  # 2. [0]: The channel index (0 for Grayscale, or B=0, G=1, R=2 for Color)
+  # 3. None: No mask (we want the whole image)
+  # 4. [256]: The number of "bins" (0-255)
+  # 5. [0, 256]: The range of values
+  hist = cv2.calcHist([img], [0], None, [256], [0, 256])
 
-# Plotting the grayscale histogram
-plt.plot(hist_gray)
-plt.title("Grayscale Histogram")
-plt.xlabel("Intensity")
-plt.ylabel("Frequency")
-plt.show()
-\`\`\`
+  # Plotting with Matplotlib
+  plt.plot(hist)
+  plt.show()
+  \`\`\`
 
-#### Dominant Colors
-Finding dominant colors is related to histograms. It's about identifying the colors that appear most frequently. Advanced techniques like K-Means clustering can be used for this, but for simpler analysis, looking at the peaks of the color histograms can give clues.
+  ---
 
-## Practice
+  ## 3. Extracting Dominant Colors
+  While a histogram shows the *range* of colors, sometimes we just want the "average" feel of an image. This is a common technique in **Distant Viewing**—an approach where researchers analyze the color palettes of every frame in a movie or every painting in a gallery to see how visual styles change over time.
 
-::: try-it
-If an image is mostly black and white, what would its Red, Green, and Blue histograms look like? (Hint: They would be very similar, with peaks at 0 and 255).
-:::
+  A simple way to find the "average color" is to calculate the **mean** of all pixel values across the Height and Width of the image.
 
-## Transfer
+  \`\`\`python
+  # Calculate the average Red, Green, and Blue across the whole image
+  avg_color = np.mean(img_array, axis=(0, 1))
+  \`\`\`
 
-*   **Art History**: Analyze the dominant color palettes of different artistic periods (e.g., Renaissance vs. Impressionism). Are there distinct color tendencies?
-*   **Textile Analysis**: Identify the primary dyes used in historical fabrics by analyzing their color histograms.
+  ::: tip
+  **DH Use Case**: Scholars use these tools to identify "visual trends" in historical archives. For example, did the invention of synthetic dyes in the 19th century lead to a measurable spike in "saturated" color frequencies in fashion photography?
+  :::
 
-::: challenge
-Calculate and plot a simple grayscale histogram.
-:::`,
+  ::: challenge
+  In Challenge 1, calculate a histogram for a grayscale gradient. In Challenge 2, calculate the average color of a four-color "quilt" image.
+  :::`,
     challenges: [
       {
         id: 'image-analysis-03-c1',
@@ -5073,131 +5093,93 @@ Calculate and plot a simple grayscale histogram.
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `import cv2
-import numpy as np
-import matplotlib.pyplot as plt
+  import numpy as np
 
-# Create a dummy grayscale image (50x50 pixels)
-# Let's make it a gradient from black (0) to white (255)
-# Each row will have intensities from 0 to 255, but since it's 50x50, we'll repeat values.
-image = np.zeros((50, 50), dtype=np.uint8)
-for i in range(50):
-    image[i, :] = np.linspace(0, 255, 50) # Fill row with gradient
+  # Create a 50x50 grayscale gradient image
+  image = np.zeros((50, 50), dtype=np.uint8)
+  for i in range(50):
+      image[i, :] = np.linspace(0, 255, 50)
 
-# 1. Calculate the histogram for this grayscale image.
-# Use cv2.calcHist.
-# - images: [image] (a list containing our image)
-# - channels: (index of the channel)
-# - mask: None (we use the whole image)
-# - histSize: (number of bins, 0-255)
-# - ranges: (the range of pixel values)
+  # Goal: Calculate the histogram for this image
+  # 1. Use cv2.calcHist()
+  # 2. Use [image] as the source
+  # 3. Channel index is [0]
+  # 4. No mask (None)
+  # 5. Use [256] bins and the range [0, 256]
 
-hist = None
+  hist = 
 
-# Your code here
+  # Your code here
 
-# 2. Plot the histogram using matplotlib.pyplot as plt
-# plt.plot(hist)
-# plt.title("Gradient Histogram")
-# plt.xlabel("Intensity")
-# plt.ylabel("Frequency")
-# plt.show() # Note: plt.show() won't run in this environment, but it's good practice.
-
-# We'll just print the shape to check if calculation was successful
-print(hist.shape)
-`,
+  # Verify the shape of the histogram array
+  print(hist.shape)
+  `,
         expectedOutput: '(256, 1)',
         hints: [
-          'The `cv2.calcHist` function expects the image in a list: `[image]`.',
-          'The `histSize` and `ranges` parameters are standard for 0-255 intensity.',
-          'The output `hist` will be a NumPy array.',
+          'The syntax is: cv2.calcHist([image], [0], None, [256], [0, 256])',
+          'Make sure all parameters except for the mask (None) are enclosed in square brackets.',
+          'The output will be a NumPy array of 256 rows and 1 column.'
         ],
         solution: `import cv2
-import numpy as np
-import matplotlib.pyplot as plt
+  import numpy as np
 
-image = np.zeros((50, 50), dtype=np.uint8)
-for i in range(50):
-    image[i, :] = np.linspace(0, 255, 50) 
+  image = np.zeros((50, 50), dtype=np.uint8)
+  for i in range(50):
+      image[i, :] = np.linspace(0, 255, 50)
 
-# Calculate histogram
-hist = cv2.calcHist([image],, None,,)
+  # Calculate the histogram
+  hist = cv2.calcHist([image], [0], None, [256], [0, 256])
 
-# Plotting (commented out for execution environment)
-# plt.plot(hist)
-# plt.title("Gradient Histogram")
-# plt.xlabel("Intensity")
-# plt.ylabel("Frequency")
-# plt.show()
-
-print(hist.shape)
-`,
+  print(hist.shape)`,
       },
       {
         id: 'image-analysis-03-c2',
-        title: 'Extracting Dominant Color (Simplified)',
+        title: 'Extracting the Average Color',
         language: 'python',
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         starterCode: `import numpy as np
-from PIL import Image
 
-# Create a simple image with large blocks of color
-# Shape (height, width, channels)
-img_array = np.zeros((100, 100, 3), dtype=np.uint8)
+  # Creating a 100x100 image with 4 equal blocks of color
+  # Each block is 50x50 pixels
+  img = np.zeros((100, 100, 3), dtype=np.uint8)
 
-# Red block (top-left)
-img_array[0:50, 0:50] =
-# Blue block (bottom-right)
-img_array[50:100, 50:100] =
-# Green block (top-right)
-img_array[0:50, 50:100] =
-# Yellow block (bottom-left) - 50x50 pixels
-img_array[50:100, 0:50] =
+  img[0:50, 0:50] = [255, 0, 0]      # Top-left: Red
+  img[0:50, 50:100] = [0, 255, 0]    # Top-right: Green
+  img[50:100, 0:50] = [255, 255, 0]  # Bottom-left: Yellow
+  img[50:100, 50:100] = [0, 0, 0]    # Bottom-right: Black
 
-img = Image.fromarray(img_array)
+  # Goal: Find the average R, G, B values for the whole image
+  # 1. Convert img to float64 for accurate math
+  # 2. Use np.mean(..., axis=(0, 1)) to average across Height/Width
+  # 3. Convert back to uint8 using .astype(np.uint8)
 
-# 1. A very basic way to find a dominant color:
-# Take the average color across the *entire* image.
-# This requires converting the image array to float for accurate averaging.
-# Then, convert back to uint8 for display.
+  # Your code here
 
-# Convert image to numpy array and then to float
-img_np_float = np.array(img, dtype=np.float64)
-
-# Calculate the mean across the height (axis 0) and width (axis 1)
-# This will give you the average R, G, B values for the whole image.
-avg_color_float = np.mean(img_np_float, axis=(0, 1))
-
-# Convert back to uint8
-avg_color_uint8 = avg_color_float.astype(np.uint8)
-
-# Your code here to print the average color
-print(avg_color_uint8)
-`,
+  print(avg_color_uint8)
+  `,
         expectedOutput: '[127 127   0]',
         hints: [
-          'The `np.mean()` function is used correctly in the starter code.',
-          'The result `avg_color_uint8` is already calculated. You just need to print it.',
-          'The output `[127 127 0]` represents a yellowish-greenish color, which makes sense given the four equal blocks of Red, Blue, Green, and Yellow. (255+0+0+255)/4 = 127 for Red. (0+0+255+255)/4 = 127 for Green. (0+255+0+0)/4 = 63 for Blue. Hmm, my calculation is off for Blue. Ah, Yellow is (255, 255, 0). So average is R: (255+0+0+255)/4 = 127.5 -> 127. G: (0+0+255+255)/4 = 127.5 -> 127. B: (0+255+0+0)/4 = 63.75 -> 63.',
-          '**Correction to Expected Output**: The output should reflect this calculation. The example output `[127 127 0]` is incorrect for the given colors. Let\'s re-evaluate. Average R: (255+0+0+255)/4 = 127. Average G: (0+0+255+255)/4 = 127. Average B: (0+255+0+0)/4 = 63. So it should be `[127 127 63]`.',
-          'The provided "Expected Output" `[127 127 0]` seems to imply Yellow has 0 blue. Let\'s assume for the sake of the exercise that the provided output is what\'s expected, and the yellow might be a simplified representation, or the problem intends a specific calculation method I\'m missing. For now, I\'ll keep the starter code as is.',
+          'To average the image, use: np.mean(img_float, axis=(0, 1))',
+          'Math: Red is (255+0+255+0)/4 = 127.5. Green is (0+255+255+0)/4 = 127.5.',
+          'Casting 127.5 to uint8 will truncate it to 127.',
+          'The Blue channel will be 0 across the entire image.'
         ],
         solution: `import numpy as np
-from PIL import Image
 
-img_array = np.zeros((100, 100, 3), dtype=np.uint8)
-img_array[0:50, 0:50] =      # Red
-img_array[50:100, 50:100] = # Blue
-img_array[0:50, 50:100] =   # Green
-img_array[50:100, 0:50] = # Yellow
+  img = np.zeros((100, 100, 3), dtype=np.uint8)
+  img[0:50, 0:50] = [255, 0, 0]
+  img[0:50, 50:100] = [0, 255, 0]
+  img[50:100, 0:50] = [255, 255, 0]
+  img[50:100, 50:100] = [0, 0, 0]
 
-img = Image.fromarray(img_array)
+  # Convert and calculate mean
+  img_float = img.astype(np.float64)
+  avg_color = np.mean(img_float, axis=(0, 1))
 
-img_np_float = np.array(img, dtype=np.float64)
-avg_color_float = np.mean(img_np_float, axis=(0, 1))
-avg_color_uint8 = avg_color_float.astype(np.uint8)
+  # Final result in standard color format
+  avg_color_uint8 = avg_color.astype(np.uint8)
 
-print(avg_color_uint8)
-`,
+  print(avg_color_uint8)`,
       },
     ],
   },
@@ -5209,115 +5191,104 @@ print(avg_color_uint8)
     estimatedTimeMinutes: 40,
     difficulty: 'advanced',
     learningObjectives: [
-      'Understand how images can be represented numerically for comparison',
-      'Calculate the "distance" between image representations',
-      'Apply a simple similarity metric to a set of images',
+      'Understand how images are represented as numerical "feature vectors"',
+      'Calculate the Euclidean distance between image representations',
+      'Explain the importance of normalization in similarity metrics',
+      'Distinguish between Euclidean distance and Cosine similarity'
     ],
-    keywords: ['image similarity', 'feature extraction', 'distance metric', 'cosine similarity', 'color histogram comparison'],
-    content: `# Detecting Visual Similarity
+    keywords: ['image similarity', 'feature extraction', 'distance metric', 'cosine similarity', 'normalization'],
+    content: `# Detecting Visual Similarity: The Visual Fingerprint
 
-## Analogy
+  ## Analogy
+  If you want to find two paintings in a gallery that look alike, you don't just stare at them. You look for similarities in their color palettes, their composition, or the texture of the brushstrokes. 
 
-If you want to find two paintings in a museum that look alike, you don't just stare at them for hours. You might look for similarities in their dominant colors, their overall composition, or the texture of the brushstrokes. Similarly, to find visually similar images programmatically, we need to extract "features" from the images and then measure the "distance" between these features.
+  In Digital Humanities, we do this by turning an image into a **Vector**. Think of a vector as a "visual fingerprint." Just as no two fingerprints are exactly the same, but some are very similar, we can measure the mathematical "distance" between image fingerprints to find matches in an archive.
 
-## Key Concepts
+  ---
 
-### Image Representation
-Before we can compare images, we need to convert them into a numerical format that captures their essence. Common methods include:
-1.  **Color Histograms**: As we saw, this captures the distribution of colors.
-2.  **Pixel Data**: The raw NumPy array itself can be treated as a high-dimensional vector.
-3.  **Feature Descriptors**: More advanced techniques (like SIFT, SURF, or deep learning embeddings) extract more abstract features.
+  ## 1. Feature Extraction: Vectorizing the Archive
+  Before we can compare two images, we must turn them into a list of numbers (a vector). 
+  *   **Average Color**: A simple 3-number vector (R, G, B).
+  *   **Color Histogram**: A 256-number vector representing the distribution of light.
+  *   **Embeddings**: A high-dimensional vector created by Deep Learning that captures abstract concepts like "style" or "content."
 
-### Distance Metrics
-Once images are represented numerically (e.g., as vectors), we can measure how "far apart" they are.
-*   **Euclidean Distance**: Standard "as the crow flies" distance between two points in space.
-*   **Cosine Similarity**: Measures the angle between two vectors. It's useful when the *magnitude* (e.g., overall brightness) doesn't matter as much as the *direction* (e.g., the color balance). A cosine similarity of 1 means vectors point in the exact same direction.
+  ---
 
-### Comparing Histograms
-A straightforward way to compare images is by comparing their color histograms.
+  ## 2. Distance Metrics: The Math of "Close"
+  Once our images are vectors, we can calculate how "far apart" they are in mathematical space.
 
-\`\`\`python
-import cv2
-import numpy as np
-import matplotlib.pyplot as plt
+  ### Euclidean Distance
+  This is the standard "as the crow flies" distance between two points. It is calculated by finding the difference between every number in the vector, squaring them, and taking the square root. 
+  - **Use Case**: Best for comparing overall intensity or exact color matches.
 
-# Assume img1_gray and img2_gray are grayscale images (NumPy arrays)
+  ### Cosine Similarity
+  This measures the **angle** between two vectors. It ignores how "long" the vectors are (e.g., how bright the images are) and focuses only on their direction (e.g., the balance of colors).
+  - **Use Case**: Best for finding images with similar style even if one is much darker than the other.
 
-# Calculate histograms
-hist1 = cv2.calcHist([img1_gray],, None,,)
-hist2 = cv2.calcHist([img2_gray],, None,,)
+  ---
 
-# Normalize histograms so their sum is 1 (percentage of pixels)
-cv2.normalize(hist1, hist1, alpha=1, beta=0, norm_type=cv2.NORM_MINMAX)
-cv2.normalize(hist2, hist2, alpha=1, beta=0, norm_type=cv2.NORM_MINMAX)
+  ## 3. The Level Playing Field: Normalization
+  If you are comparing a tiny thumbnail to a huge high-res scan, the high-res scan will have millions more pixels, making its histogram counts much larger. To compare them fairly, we must **Normalize** the data—scaling the values so they always sum up to 1 (treating them as percentages rather than raw counts).
 
-# Compare histograms using a metric (e.g., Bhattacharyya distance)
-# Lower values mean more similar
-distance = cv2.compareHist(hist1, hist2, cv2.HISTCMP_BHATTACHARYYA)
+  \`\`\`python
+  import cv2
 
-print(f"Histogram similarity (Bhattacharyya distance): {distance}") 
-\`\`\`
+  # Normalize a histogram so it represents the % of pixels per bin
+  cv2.normalize(hist, hist, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX)
+  \`\`\`
 
-## Practice
+  ---
 
-::: try-it
-If two images have identical color histograms, what would their Bhattacharyya distance be? (Hint: It's the smallest possible distance).
-:::
+  ## 4. DH Application: Duplicate Detection
+  Large digital archives often contain near-duplicates (e.g., a scanned letter and a slightly cropped version of the same letter). By calculating the distance between their histograms, we can automatically flag these "visual twins" for the archivist.
 
-## Transfer
+  ::: tip
+  **DH Insight**: "Visual Similarity" is a subjective scholarly concept. By choosing different metrics (Euclidean vs. Cosine), you are making a research decision about what kind of "similarity" matters most to your project.
+  :::
 
-*   **Art Provenance**: Identify if two paintings *could* be by the same artist by comparing their color palettes and textures.
-*   **Digital Archives**: Find duplicate or near-duplicate images in a large collection, saving storage space and organizing content.
-
-::: challenge
-Calculate the Euclidean distance between two simplified image representations.
-:::`,
+  ::: challenge
+  In this challenge, you will calculate the **Euclidean Distance** between the average colors of two different images. If the distance is small, the images are visually similar in color.
+  :::`,
     challenges: [
       {
         id: 'image-analysis-04-c1',
-        title: 'Euclidean Distance Between Color Vectors',
+        title: 'Calculate Euclidean Distance',
         language: 'python',
         difficulty: 'advanced',
         starterCode: `import numpy as np
 
-# Representing the *average* color of two images as vectors.
-# Image 1: A slightly reddish-yellowish image
-color_vector1 = np.array()
+  # Average RGB colors of two historical photographs
+  # Image 1 is a warm sepia tone
+  img1_avg = np.array([120, 100, 50])
 
-# Image 2: A similar, but slightly different image
-color_vector2 = np.array()
+  # Image 2 is a slightly darker, cooler tone
+  img2_avg = np.array([130, 90, 70])
 
-# 1. Calculate the Euclidean distance between these two color vectors.
-# Formula: sqrt( sum( (v1_i - v2_i)^2 ) )
+  # Goal: Calculate the Euclidean Distance between these vectors
+  # 1. Subtract img2 from img1
+  # 2. Use np.linalg.norm() to find the distance
+  # 3. Print the result formatted to 4 decimal places
 
-# Use numpy for this!
-# You can subtract arrays directly: diff = color_vector1 - color_vector2
-# You can square elements: squared_diff = diff**2
-# You can sum elements: sum_squared_diff = np.sum(squared_diff)
-# You can take the square root: distance = np.sqrt(sum_squared_diff)
+  # Your code here
 
-distance = 0.0
-
-# Your code here
-
-print(f"{distance:.4f}")
-`,
-        expectedOutput: '22.3607',
+  print(f"{distance:.4f}")
+  `,
+        expectedOutput: '24.4949',
         hints: [
-          'NumPy\'s `np.linalg.norm()` function can calculate the Euclidean distance directly between two arrays.',
-          '`np.linalg.norm(array1 - array2)`',
-          'The result should be approximately 22.3607.',
+          'The formula is: distance = np.linalg.norm(vector1 - vector2)',
+          'NumPy handles the subtraction and the square-root-of-squares automatically.',
+          'The result should be the square root of ( (120-130)^2 + (100-90)^2 + (50-70)^2 ).'
         ],
         solution: `import numpy as np
 
-color_vector1 = np.array()
-color_vector2 = np.array()
+  img1_avg = np.array([120, 100, 50])
+  img2_avg = np.array([130, 90, 70])
 
-# Calculate Euclidean distance using numpy's linalg.norm
-distance = np.linalg.norm(color_vector1 - color_vector2)
+  # Calculate Euclidean distance
+  # (Calculates the square root of the sum of squared differences)
+  distance = np.linalg.norm(img1_avg - img2_avg)
 
-print(f"{distance:.4f}")
-`,
+  print(f"{distance:.4f}")`,
       },
     ],
   },
