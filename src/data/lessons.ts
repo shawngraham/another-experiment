@@ -338,272 +338,541 @@ print(decoded)`,
     },
   ],
 },
-  {
-    id: 'python-basics-01',
-    title: 'Variables and Data Types',
-    moduleId: 'python-basics',
-    prerequisites: ['digital-literacy-foundations'],
-    estimatedTimeMinutes: 30,
-    difficulty: 'beginner',
-    learningObjectives: [
-      'Declare and update variables',
-      'Identify the four core primitive types (str, int, float, bool)',
-      'Perform basic type conversion',
-    ],
-    keywords: ['variables', 'types', 'strings', 'integers', 'booleans'],
-    content: `# Variables and Data Types
+ {
+  id: 'python-basics-01',
+  title: 'Variables and Data Types',
+  moduleId: 'python-basics',
+  prerequisites: ['digital-literacy-foundations'],
+  estimatedTimeMinutes: 30,
+  difficulty: 'beginner',
+  learningObjectives: [
+    'Declare and update variables',
+    'Identify the four core primitive types (str, int, float, bool)',
+    'Perform basic type conversion (casting)',
+    'Use the type() function to inspect data'
+  ],
+  keywords: ['variables', 'types', 'strings', 'integers', 'booleans'],
+  content: `# Variables and Data Types
 
 ## Labeled Storage
-In Python, a **variable** is a name that refers to a value. Think of it like a label on a box.
+In Python, a **variable** is a name that refers to a value stored in the computer's memory. In Digital Humanities, we use variables to store everything from the text of a novel to the coordinates of a historical site.
+
+To create a variable, we use the assignment operator (\`=\`):
 
 \`\`\`python
-book_title = "The Great Gatsby" # A String (str)
-page_count = 180                 # An Integer (int)
-price = 12.99                    # A Float (float)
-is_public_domain = True          # A Boolean (bool)
+# Variable assignment
+project_name = "Mapping the Republic of Letters"
 \`\`\`
 
-## Why Types Matter
-Python needs to know what *kind* of data is in the box to know what it can do with it. You can't divide a string by an integer!
+---
+
+## The Four Core Types
+To process humanities data correctly, Python needs to know what *kind* of data it is dealing with.
+
+1. **String (\`str\`)**: Text data, always wrapped in quotes.
+   - Example: \`author = "Toni Morrison"\`
+2. **Integer (\`int\`)**: Whole numbers (no decimals).
+   - Example: \`publication_year = 1987\`
+3. **Float (\`float\`)**: Decimal numbers. Useful for statistics or coordinates.
+   - Example: \`average_sentence_length = 15.4\`
+4. **Boolean (\`bool\`)**: Logical values. Either \`True\` or \`False\` (note the capital letters).
+   - Example: \`is_digitized = True\`
+
+---
+
+## Inspecting and Updating
+### Finding the Type
+If you are unsure what a variable is, you can ask Python using the \`type()\` function:
+
+\`\`\`python
+year = 1818
+print(type(year)) # Output: <class 'int'>
+\`\`\`
+
+### Updating Values
+Variables are called "variables" because their values can vary. You can overwrite a variable by assigning it a new value.
+
+\`\`\`python
+current_page = 10
+current_page = 11 # The value 10 is now replaced with 11
+\`\`\`
+
+---
+
+## Type Conversion (Casting)
+Sometimes you need to treat a number like a string (for example, to print it as part of a sentence).
+
+- \`str(1818)\` -> converts to \`"1818"\`
+- \`int("50")\` -> converts to \`50\`
+- \`float(5)\`   -> converts to \`5.0\`
 
 ::: definition
-**Type Casting**: Forcing a value from one type to another. 
-Example: \`str(1818)\` turns the number into the text "1818".
+**Naming Rules**: Variable names should be descriptive and use **snake_case** (lowercase letters with underscores). 
+- ✅ \`word_count = 500\`
+- ❌ \`WordCount = 500\` (Not standard Python style)
+- ❌ \`2_word_count = 500\` (Cannot start with a number)
 :::
-
-## Naming Conventions
-- Use \`snake_case\` (all lowercase with underscores).
-- Be descriptive! Use \`word_count\` instead of just \`x\`.
 
 ::: try-it
-Experiment with the \`type()\` function. It will tell you exactly what Python thinks your data is.
+In the challenge below, remember that when you use \`print(type(variable_name))\`, Python will output the "class" of that variable (e.g., \`<class 'str'>\`).
 :::
 `,
-    challenges: [
-      {
-        id: 'python-basics-01-c1',
-        title: 'Create variables',
-        language: 'python',
-        difficulty: 'beginner',
-        starterCode: `# 1. Create a variable 'book_title' with value "Frankenstein"\n# 2. Create a variable 'pub_year' with value 1818\n# 3. Print both variables\n# 4. Print the type of 'book_title' and 'pub_year'\n`,
-        expectedOutput: 'Frankenstein\n1818\n<class \'str\'>\n<class \'int\'>',
-        hints: ['Use type(variable_name) to see the class.', 'Variable names should not have quotes, but string values must.'],
-        solution: `book_title = "Frankenstein"\npub_year = 1818\nprint(book_title)\nprint(pub_year)\nprint(type(book_title))\nprint(type(pub_year))`,
-      },
-    ],
-  },
+  challenges: [
+    {
+      id: 'python-basics-01-c1',
+      title: 'Create and Inspect Variables',
+      language: 'python',
+      difficulty: 'beginner',
+      starterCode: `# 1. Create a variable 'book_title' with the value "Frankenstein"
+# 2. Create a variable 'pub_year' with the value 1818
+# 3. Use the print() function to display 'book_title'
+# 4. Use the print() function to display 'pub_year'
+# 5. Use print(type(...)) to show the data type of both variables
+
+# Your code here
+`,
+      expectedOutput: "Frankenstein\n1818\n<class 'str'>\n<class 'int'>",
+      hints: [
+        'To print a type, use: print(type(your_variable_name))',
+        'Make sure "Frankenstein" is in quotes because it is a string.',
+        'The variable pub_year should be a number (1818) without quotes.',
+      ],
+      solution: `book_title = "Frankenstein"
+pub_year = 1818
+print(book_title)
+print(pub_year)
+print(type(book_title))
+print(type(pub_year))`,
+    },
+  ],
+},
   {
-    id: 'python-basics-02',
-    title: 'Lists and Dictionaries',
-    moduleId: 'python-basics',
-    prerequisites: ['python-basics-01'],
-    estimatedTimeMinutes: 35,
-    difficulty: 'beginner',
-    learningObjectives: [
-      'Store collections of data in Lists',
-      'Use Dictionaries for structured "record-like" data',
-      'Access items using indices and keys',
-    ],
-    keywords: ['lists', 'dictionaries', 'collections', 'indexing'],
-    content: `# Collections of Data
+  id: 'python-basics-02',
+  title: 'Lists and Dictionaries',
+  moduleId: 'python-basics',
+  prerequisites: ['python-basics-01'],
+  estimatedTimeMinutes: 35,
+  difficulty: 'beginner',
+  learningObjectives: [
+    'Store collections of data in Lists',
+    'Use Dictionaries for structured "record-like" data',
+    'Access items using indices and keys',
+    'Calculate the size of a collection using len()',
+  ],
+  keywords: ['lists', 'dictionaries', 'collections', 'indexing'],
+  content: `# Collections of Data
 
-Rarely do we work with just one book title. We usually have a **corpus** (a collection of texts).
+In Digital Humanities, we rarely work with a single piece of data. We work with **corpora** (collections of texts) and **metadata** (structured information about those texts). To handle these, Python uses **Lists** and **Dictionaries**.
 
-## Lists (Ordered Sequences)
-Lists are used when order matters. They are zero-indexed, meaning the first item is at position \`0\`.
+---
+
+## 1. Lists (Ordered Sequences)
+A list is an ordered collection of items. In DH, you might use a list to store a series of stop-words or the titles of all poems in a collection.
+
+- **Syntax**: Uses square brackets \`[]\`.
+- **Ordering**: Items stay in the order you put them in.
+- **Indexing**: Python starts counting at **0**.
+
 \`\`\`python
+# A list of authors
 authors = ["Austen", "Shelley", "Brontë"]
+
 print(authors[0]) # Output: Austen
+print(authors[1]) # Output: Shelley
 \`\`\`
 
-## Dictionaries (Key-Value Pairs)
-Dictionaries are like a real-world dictionary: you look up a **key** to find a **value**. This is perfect for metadata.
+::: tip
+To find out how many items are in a list, use the \`len()\` function (short for length):
 \`\`\`python
-book = {
+print(len(authors)) # Output: 3
+\`\`\`
+:::
+
+---
+
+## 2. Dictionaries (Key-Value Pairs)
+A dictionary is an unordered collection of "labels" (keys) and "data" (values). This is the perfect format for **metadata**.
+
+- **Syntax**: Uses curly braces \`{}\`.
+- **Structure**: \`"Key": Value\`
+- **Access**: You don't use a number to get data; you use the **Key**.
+
+\`\`\`python
+book_data = {
     "title": "Frankenstein", 
     "author": "Shelley", 
     "year": 1818
 }
-print(book["author"]) # Output: Shelley
+
+# Looking up the value associated with the "author" key
+print(book_data["author"]) # Output: Shelley
 \`\`\`
 
+---
+
+## Which one should I use?
+- Use a **List** if you have a simple sequence of items where the order matters (like chapters in a book).
+- Use a **Dictionary** if you need to label your data (like a library catalog record).
+
 ::: definition
-**Mutable**: Both lists and dictionaries can be changed after they are created (you can add, remove, or update items).
+**Mutable**: Both lists and dictionaries are "mutable," meaning you can change them after they are created. You can add a new author to your list or update the publication year in your dictionary.
 :::
 
 ::: try-it
-Create a list of numbers and try using \`len()\` to see how many items it has.
+Try creating a list of four years. Use \`print(years[0])\` to see the first year and \`print(years[3])\` to see the last one. What happens if you try to print \`years[4]\`?
 :::
 `,
-    challenges: [
-      {
-        id: 'python-basics-02-c1',
-        title: 'Work with collections',
-        language: 'python',
-        difficulty: 'beginner',
-        starterCode: `# 1. Create a list 'books' with 3 titles\n# 2. Create a dictionary 'meta' with keys: title, author, year\n# 3. Print the length of the list\n# 4. Print the author from the dictionary\n`,
-        expectedOutput: '3\nShelley',
-        hints: ['len(list) gives the size.', 'Access dictionary values with meta["author"].'],
-        solution: `books = ["Frankenstein", "Dracula", "Jane Eyre"]\nmeta = {"title": "Frankenstein", "author": "Shelley", "year": 1818}\nprint(len(books))\nprint(meta["author"])`,
-      },
-    ],
-  },
-  {
-    id: 'python-basics-03',
-    title: 'Control Flow',
-    moduleId: 'python-basics',
-    prerequisites: ['python-basics-02'],
-    estimatedTimeMinutes: 35,
-    difficulty: 'beginner',
-    learningObjectives: [
-      'Write conditional logic (if/else)',
-      'Automate repetitive tasks with for-loops',
-      'Understand indentation as logic in Python',
-    ],
-    keywords: ['if', 'else', 'for', 'loops', 'indentation'],
-    content: `# Control Flow
+  challenges: [
+    {
+      id: 'python-basics-02-c1',
+      title: 'Work with collections',
+      language: 'python',
+      difficulty: 'beginner',
+      starterCode: `# 1. Create a list called 'books' containing 3 book titles (strings)
+# 2. Create a dictionary called 'meta' with these keys: "title", "author", "year"
+#    (Use "Frankenstein", "Shelley", and 1818 as the values)
+# 3. Print the length of the 'books' list using len()
+# 4. Print the author's name from the 'meta' dictionary
 
-## Logic and Loops
-Programming is the art of telling the computer: "If this happens, do that. Otherwise, do this. And keep doing it until you're finished."
+# Your code here
+`,
+      expectedOutput: '3\nShelley',
+      hints: [
+        'For the list, use square brackets: books = ["A", "B", "C"]',
+        'For the length, use print(len(books))',
+        'To get the author from the dictionary, use meta["author"]',
+      ],
+      solution: `books = ["Frankenstein", "Dracula", "Jane Eyre"]
+meta = {
+    "title": "Frankenstein", 
+    "author": "Shelley", 
+    "year": 1818
+}
+print(len(books))
+print(meta["author"])`,
+    },
+  ],
+},
+ {
+  id: 'python-basics-03',
+  title: 'Control Flow',
+  moduleId: 'python-basics',
+  prerequisites: ['python-basics-02'],
+  estimatedTimeMinutes: 35,
+  difficulty: 'beginner',
+  learningObjectives: [
+    'Write conditional logic (if/else) using comparison operators',
+    'Automate repetitive tasks with for-loops',
+    'Understand indentation as a requirement for Python logic',
+    'Combine loops and conditionals to filter data'
+  ],
+  keywords: ['if', 'else', 'for', 'loops', 'indentation', 'logic'],
+  content: `# Control Flow: Logic and Loops
 
-### 1. Conditionals (\`if\`, \`elif\`, \`else\`)
-Used to make decisions.
+Programming is the art of telling the computer: *"If this condition is met, do that. Otherwise, do this. And keep doing it until you reach the end of the list."* This is known as **Control Flow**.
+
+---
+
+## 1. Conditionals (\`if\`, \`elif\`, \`else\`)
+Conditionals allow your script to make decisions. In DH, you might use this to categorize texts by century or to find specific keywords.
+
+To make decisions, we use **Comparison Operators**:
+- \`==\` (Equal to)
+- \`!=\` (Not equal to)
+- \`>\` (Greater than)
+- \`<\` (Less than)
+
 \`\`\`python
 year = 1850
+
 if year < 1800:
-    print("Pre-19th Century")
+    print("This is an early modern text.")
 elif year < 1900:
-    print("19th Century")
+    print("This is a 19th-century text.")
 else:
-    print("Modern")
+    print("This is a modern text.")
 \`\`\`
 
-### 2. For Loops
-Used to iterate over a collection.
+---
+
+## 2. For Loops
+A \`for\` loop tells Python to take a collection (like a list) and perform the same action for **every item** in that collection.
+
 \`\`\`python
 corpus = ["Moby Dick", "Oliver Twist", "Beloved"]
+
+# 'book' is a temporary name we give to the current item
 for book in corpus:
-    print(f"Analyzing {book}...")
+    print("Analyzing " + book)
 \`\`\`
 
-::: definition
-**Whitespace Matters**: In Python, you must indent the code inside a loop or an \`if\` statement using 4 spaces or a tab. This tells Python which code belongs to that block.
-:::
-`,
-    challenges: [
-      {
-        id: 'python-basics-03-c1',
-        title: 'Loop and filter',
-        language: 'python',
-        difficulty: 'beginner',
-        starterCode: `# Given a list of word counts, print only those greater than 1000\nword_counts = [500, 1200, 800, 3000, 150, 2500]\n\n# Your code here\n`,
-        expectedOutput: '1200\n3000\n2500',
-        hints: ['Use "for count in word_counts:"', 'Inside the loop, use an "if" statement.'],
-        solution: `word_counts = [500, 1200, 800, 3000, 150, 2500]\nfor count in word_counts:\n    if count > 1000:\n        print(count)`,
-      },
-    ],
-  },
-  {
-    id: 'python-basics-04',
-    title: 'Functions',
-    moduleId: 'python-basics',
-    prerequisites: ['python-basics-03'],
-    estimatedTimeMinutes: 30,
-    difficulty: 'beginner',
-    learningObjectives: [
-      'Encapsulate logic into reusable Functions',
-      'Use parameters and return values',
-      'Understand scope',
-    ],
-    keywords: ['functions', 'def', 'return', 'arguments'],
-    content: `# Functions: Your Custom Tools
+---
 
-## Don't Repeat Yourself (DRY)
-A function is a block of code that only runs when called. If you find yourself copying and pasting the same code 10 times, you should probably write a function instead.
+## 3. The Golden Rule: Indentation
+In many languages, curly brackets \`{}\` are used to group code. In Python, we use **indentation** (usually 4 spaces or one Tab). 
 
-## Anatomy of a Function
+Anything indented under an \`if\` or a \`for\` statement is considered "inside" 그 block. When you stop indenting, the block ends.
+
 \`\`\`python
-def calculate_ratio(pos_words, neg_words):
-    # 'pos_words' and 'neg_words' are parameters
-    ratio = pos_words / neg_words
-    return ratio # 'return' sends the result back to you
+for book in corpus:
+    print(book) # This is INSIDE the loop and runs 3 times.
+print("Done!")  # This is OUTSIDE and runs only once at the end.
 \`\`\`
 
-## Why Use Functions?
-1. **Readability**: Your code looks like English.
-2. **Maintenance**: Fix a bug in the function, and it's fixed everywhere.
-3. **Collaboration**: You can write a function for "Cleaning Text" and share it with a colleague.
+---
+
+## 4. Combining the Two (Filtering)
+A very common DH task is to loop through a list and only print items that meet a certain requirement. This is called **filtering**.
+
+\`\`\`python
+# Example: Find years in the 20th Century
+years = [1750, 1920, 1810, 1950]
+
+for y in years:
+    if y >= 1900:
+        print(y) # This only runs if the 'if' condition is True
+\`\`\`
 
 ::: try-it
-Try writing a function that greets a researcher by name.
+Look at the challenge below. You will need to "nest" an \`if\` statement inside a \`for\` loop. Make sure your \`if\` is indented once, and your \`print\` is indented twice!
 :::
 `,
-    challenges: [
-      {
-        id: 'python-basics-04-c1',
-        title: 'Write a function',
-        language: 'python',
-        difficulty: 'beginner',
-        starterCode: `# Write a function 'reading_time' that takes a text string\n# and returns the estimated reading time in minutes.\n# Assume 200 words per minute.\n\ndef reading_time(text):\n    # 1. Count words (text.split())\n    # 2. Return count / 200\n    pass\n\nsample = "word " * 400\nprint(reading_time(sample))`,
-        expectedOutput: '2.0',
-        hints: ['len(text.split()) gives you the number of words.', 'Make sure the function returns a value.'],
-        solution: `def reading_time(text):\n    words = len(text.split())\n    return words / 200\n\nsample = "word " * 400\nprint(reading_time(sample))`,
-      },
-    ],
-  },
+  challenges: [
+    {
+      id: 'python-basics-03-c1',
+      title: 'Loop and Filter Word Counts',
+      language: 'python',
+      difficulty: 'beginner',
+      starterCode: `# A list of word counts from different chapters
+word_counts = [500, 1200, 800, 3000, 150, 2500]
+
+# Goal: Loop through the list and print ONLY the counts greater than 1000
+
+# Your code here
+`,
+      expectedOutput: '1200\n3000\n2500',
+      hints: [
+        'Start with: for count in word_counts:',
+        'Inside the loop, add an if statement: if count > 1000:',
+        'Remember to indent the print() function so it is inside the if statement.',
+      ],
+      solution: `word_counts = [500, 1200, 800, 3000, 150, 2500]
+
+for count in word_counts:
+    if count > 1000:
+        print(count)`,
+    },
+  ],
+},
   {
-    id: 'python-basics-05',
-    title: 'Reading and Writing Files',
-    moduleId: 'python-basics',
-    prerequisites: ['python-basics-04'],
-    estimatedTimeMinutes: 30,
-    difficulty: 'beginner',
-    learningObjectives: [
-      'Safely open files using Context Managers',
-      'Read entire files or line-by-line',
-      'Output results to a permanent .txt file',
-    ],
-    keywords: ['files', 'open', 'read', 'write', 'with'],
-    content: `# Reading and Writing Files
+  id: 'python-basics-04',
+  title: 'Functions: Building Your DH Toolkit',
+  moduleId: 'python-basics',
+  prerequisites: ['python-basics-03'],
+  estimatedTimeMinutes: 30,
+  difficulty: 'beginner',
+  learningObjectives: [
+    'Encapsulate logic into reusable Functions',
+    'Use parameters to pass data into functions',
+    'Use the return keyword to output data',
+    'Understand the difference between printing and returning',
+  ],
+  keywords: ['functions', 'def', 'return', 'arguments', 'split'],
+  content: `# Functions: Your Custom Tools
 
-## The "With" Statement
-In Python, we use the \`with\` keyword to open files. This is a **Context Manager**; it ensures the file is closed properly even if your code crashes.
+## Don't Repeat Yourself (DRY)
+In Digital Humanities, you often perform the same task hundreds of times—cleaning a text, calculating word frequencies, or formatting dates. A **function** is a reusable "recipe" that you write once and call whenever you need it.
 
-### Reading
+---
+
+## 1. Anatomy of a Function
+To create a function, we use the \`def\` keyword (short for define).
+
 \`\`\`python
+def greet_researcher(name):
+    # 'name' is a parameter (a placeholder for data)
+    message = "Hello, " + name + "! Welcome to the lab."
+    return message
+
+# To use it, we "call" the function with an argument
+print(greet_researcher("Alex")) 
+# Output: Hello, Alex! Welcome to the lab.
+\`\`\`
+
+---
+
+## 2. Inputs and Outputs: Parameters vs. Return
+Think of a function like a specialized machine in a library:
+- **Parameters (Inputs)**: The raw materials you put into the machine.
+- **Return (Output)**: The finished product the machine hands back to you.
+
+::: warning
+**Print vs. Return**: 
+- \`print()\` just shows a value on your screen. It’s like looking at a book.
+- \`return\` hands the value back to the program so you can use it later. **If a function doesn't have a \`return\`, it won't give you any data back to store in a variable!**
+:::
+
+---
+
+## 3. A Handy DH Tool: \`.split()\`
+In the challenge below, you need to count words. In Python, you can turn a long string of text into a **List of words** using the \`.split()\` method.
+
+\`\`\`python
+sentence = "Digital Humanities is great"
+words = sentence.split() 
+print(words) 
+# Output: ['Digital', 'Humanities', 'is', 'great']
+
+# Now you can use len() to count them!
+print(len(words)) # Output: 4
+\`\`\`
+
+---
+
+## Why Use Functions in Research?
+1. **Readability**: Your code looks like a series of logical steps (\`clean_text()\`, then \`count_words()\`).
+2. **Maintenance**: If you decide to change how you count words, you only have to fix it in one place (the function definition).
+3. **Collaboration**: You can write a complex function for "Parsing 18th Century Dates" and share it with other historians.
+
+::: try-it
+Functions must be defined *before* they are called. In your code, always put your \`def\` blocks at the top of the file.
+:::
+`,
+  challenges: [
+    {
+      id: 'python-basics-04-c1',
+      title: 'Write a Reading Time Function',
+      language: 'python',
+      difficulty: 'beginner',
+      starterCode: `# Write a function 'reading_time' that takes a text string
+# and returns the estimated reading time in minutes.
+
+def reading_time(text):
+    # 1. Split the text into a list of words
+    # 2. Count how many words are in that list using len()
+    # 3. Calculate minutes (assume 200 words per minute)
+    # 4. Return the result
+    pass
+
+# Test your function
+sample_text = "word " * 400  # This creates a string of 400 words
+result = reading_time(sample_text)
+print(result)
+`,
+      expectedOutput: '2.0',
+      hints: [
+        'Use words = text.split() to get a list of words.',
+        'The number of words is len(words).',
+        'Your last line inside the function should be something like: return word_count / 200',
+      ],
+      solution: `def reading_time(text):
+    words = text.split()
+    word_count = len(words)
+    minutes = word_count / 200
+    return minutes
+
+sample_text = "word " * 400
+print(reading_time(sample_text))`,
+    },
+  ],
+},
+ {
+  id: 'python-basics-05',
+  title: 'Reading and Writing Files',
+  moduleId: 'python-basics',
+  prerequisites: ['python-basics-04'],
+  estimatedTimeMinutes: 30,
+  difficulty: 'beginner',
+  learningObjectives: [
+    'Safely open files using Context Managers (the "with" statement)',
+    'Identify the difference between Read (r) and Write (w) modes',
+    'Use newline characters (\\n) to format output',
+    'Output research results to a permanent .txt file',
+  ],
+  keywords: ['files', 'open', 'read', 'write', 'with', 'newline'],
+  content: `# Reading and Writing Files
+
+The power of Digital Humanities comes from moving beyond the screen. We need to be able to pull in a collection of texts (Reading) and save our analysis results (Writing).
+
+---
+
+## 1. The "With" Statement (Context Managers)
+In Python, the safest way to handle a file is with the \`with\` keyword. It creates a temporary "bridge" to the file. Once the code inside the block is finished, Python automatically "closes" the bridge.
+
+\`\`\`python
+# Open for reading ('r')
 with open('diary.txt', 'r', encoding='utf-8') as f:
     text = f.read()
-    print(text)
+    # After this line, the file is automatically closed!
 \`\`\`
 
-### Writing
+---
+
+## 2. Modes: Read vs. Write
+When you open a file, you must tell Python what you intend to do with it.
+
+| Mode | Name | Action |
+| :--- | :--- | :--- |
+| **'r'** | Read | Opens a file for reading. (Throws an error if the file doesn't exist). |
+| **'w'** | Write | Creates a new file or **overwrites** an existing one completely! |
+| **'a'** | Append | Adds new text to the end of an existing file without deleting it. |
+
+---
+
+## 3. Formatting with Newlines
+Computers don't see the "Enter" key like we do. To tell Python to move to a new line in a file, we use the **newline character**: \`\\n\`.
+
 \`\`\`python
-with open('results.txt', 'w', encoding='utf-8') as f:
-    f.write('The most common word was: "the"')
+# Writing two lines to a file
+with open('output.txt', 'w', encoding='utf-8') as f:
+    f.write("First Line of Analysis\\nSecond Line of Analysis")
 \`\`\`
 
-## Modes
-- \`'r'\`: Read (default).
-- \`'w'\`: Write (overwrites everything!).
-- \`'a'\`: Append (adds to the end).
+---
 
-::: definition
-**Encoding**: Always specify \`encoding='utf-8'\` when opening files to avoid character errors across different computers.
+## 4. Why Encoding Matters (Again!)
+As a DH researcher, you will often work with historical texts or data from international archives. Always include \`encoding='utf-8'\`. If you leave it out, your script might work on your computer but break on a colleague's machine, or it might turn accented characters into "mojibake."
+
+::: warning
+**The 'w' Mode Danger**: Be careful! Opening a file with \`'w'\` wipes it clean immediately. Never use \`'w'\` on your only copy of a primary source!
+:::
+
+::: try-it
+In the challenge below, you will perform two steps. First, you will "Save" some data to a file. Then, in a second block, you will "Open" it back up to prove it was saved correctly.
 :::
 `,
-    challenges: [
-      {
-        id: 'python-basics-05-c1',
-        title: 'File operations',
-        language: 'python',
-        difficulty: 'beginner',
-        starterCode: `# 1. Write "Line 1\\nLine 2\\nLine 3" to a file named 'test.txt'\n# 2. Read that file back and print the contents\n`,
-        expectedOutput: 'Line 1\nLine 2\nLine 3',
-        hints: ['\\n creates a new line in a string.', 'Open with "w" first, then "r" in a separate block.'],
-        solution: `with open('test.txt', 'w') as f:\n    f.write('Line 1\\nLine 2\\nLine 3')\nwith open('test.txt', 'r') as f:\n    print(f.read())`,
-      },
-    ],
-  },
+  challenges: [
+    {
+      id: 'python-basics-05-c1',
+      title: 'Create and Read an Archive File',
+      language: 'python',
+      difficulty: 'beginner',
+      starterCode: `# 1. Use a 'with' statement to open a file named 'test.txt' in WRITE mode ('w')
+# 2. Write three lines to it: "Line 1", "Line 2", and "Line 3" 
+#    (Hint: Use \\n to separate them)
+
+# 3. Use a second 'with' statement to open 'test.txt' in READ mode ('r')
+# 4. Read the contents into a variable and print it
+
+# Your code here
+`,
+      expectedOutput: 'Line 1\nLine 2\nLine 3',
+      hints: [
+        'The string you write should look like "Line 1\\nLine 2\\nLine 3".',
+        'Make sure you stop indenting after the first block before starting the second "with" block.',
+        'Always use encoding="utf-8" as a best practice.',
+      ],
+      solution: `# Step 1 & 2: Writing
+with open('test.txt', 'w', encoding='utf-8') as f:
+    f.write('Line 1\\nLine 2\\nLine 3')
+
+# Step 3 & 4: Reading
+with open('test.txt', 'r', encoding='utf-8') as f:
+    content = f.read()
+    print(content)`,
+    },
+  ],
+},
   {
     id: 'text-analysis-01',
     title: 'Introduction to String Operations',
