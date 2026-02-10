@@ -6238,66 +6238,90 @@ print(years)`,
     title: 'Dictionary vs ML Approaches',
     moduleId: 'sentiment-analysis',
     prerequisites: ['text-analysis-fundamentals'],
-    estimatedTimeMinutes: 20,
+    estimatedTimeMinutes: 30,
     difficulty: 'beginner',
     learningObjectives: [
       'Distinguish between lexicon-based (dictionary) and machine learning sentiment analysis',
-      'Implement a simple "Bag of Words" sentiment scorer',
-      'Understand the concept of polarity',
+      'Understand the "Bag of Words" model and its limitations',
+      'Explain the role of polarity and valence in sentiment scores',
+      'Identify common pitfalls in historical text analysis (e.g., semantic shift)',
+      'Implement a functional Python sentiment scorer'
     ],
-    keywords: ['sentiment', 'lexicon', 'polarity', 'bag of words', 'dictionary approach'],
+    keywords: ['sentiment', 'lexicon', 'polarity', 'bag of words', 'dictionary approach', 'VADER', 'AFINN'],
     content: `# Dictionary vs ML Approaches
 
-## Analogy
+In Digital Humanities, we often want to track "vibes" or attitudes across thousands of pages of text—something a human cannot do alone. To do this, we use **Sentiment Analysis**.
 
-Imagine you want to know if a restaurant review is positive or negative.
-Method A: You have a list of "good words" (delicious, tasty, friendly) and "bad words" (gross, cold, rude). You circle them and count which list has more circles. This is the **Dictionary (Lexicon)** approach.
-Method B: You feed thousands of reviews into a computer, telling it "this pile is 5 stars, this pile is 1 star." The computer eventually learns patterns you might miss (like "not bad" being good). This is the **Machine Learning** approach.
+## The Analogy: Two Ways to Grade a Paper
+
+Imagine you are a teacher grading a student's essay for "enthusiasm."
+
+*   **Approach A (The Dictionary):** You have a list of 100 "enthusiastic" words (great, amazing, best). You simply count how many of those words appear in the essay. You don't need to read the whole thing; you just look for the words.
+*   **Approach B (Machine Learning):** You read 1,000 essays that were already graded for enthusiasm. You start to notice that enthusiasm isn't just about single words—it's about sentence structure and context (e.g., "I can't believe how good it was" vs. "I can't believe how bad it was").
 
 ## Key Concepts
 
-### Polarity
-Sentiment analysis usually boils text down to a single number called **polarity**:
+### 1. Polarity and Valence
+Most sentiment tools assign a **polarity** score.
 *   **+1.0**: Extremely Positive
-*   **0.0**: Neutral
+*   **0.0**: Neutral (or "Objective")
 *   **-1.0**: Extremely Negative
 
-### The Dictionary Approach
-This relies on a pre-defined list of words with associated scores. It is transparent (you know *why* a score was given) but struggles with context (sarcasm, slang).
+Some dictionaries also measure **Valence** (the intensity of the word). "Happy" might be a +1, but "Ecstatic" might be a +3.
+
+### 2. The "Bag of Words" Model
+Both simple dictionary and early ML approaches often treat text as a **Bag of Words**. This means the computer ignores the order of words and just looks at their frequency. 
+*   *Problem:* "The dog bit the man" and "The man bit the dog" look identical to a Bag of Words model, even though the sentiment for the man is very different!
+
+### 3. The Dictionary (Lexicon) Approach
+This is the "Gold Standard" for transparency in DH. You know exactly *why* a text got a score because you can see the word list.
+
+**Popular Lexicons:**
+*   **AFINN:** A list of English words rated from -5 to +5.
+*   **VADER:** Specialized for social media; it understands emojis (😊), capitalization (GREAT!), and "boosters" (extremely good).
+
+#### Simple Python Implementation
+Notice how we lowercase the text so it matches our dictionary.
 
 \`\`\`python
-# A simple sentiment dictionary
-lexicon = {
-    "love": 1,
-    "hate": -1,
-    "happy": 1,
-    "sad": -1
-}
+# A simple sentiment dictionary (Lexicon)
+lexicon = {"love": 2, "like": 1, "bad": -1, "hate": -2}
 
-text = "I love this happy place"
-words = text.split()
+text = "I LOVE this place, it is not bad"
+# Preprocessing: Lowercase and split
+words = text.lower().replace(",", "").split()
 
 score = 0
 for word in words:
-    # get(word, 0) returns 0 if the word isn't in the dictionary
     score += lexicon.get(word, 0) 
 
-print(score) # Output: 2
+print(f"Total Sentiment Score: {score}") # Output: 1 (2 from love, -1 from bad)
 \`\`\`
+
+### 4. The Machine Learning (ML) Approach
+ML doesn't use a fixed list. It uses a **Training Set** (a "Gold Standard" of thousands of hand-coded examples) to learn patterns.
+*   **Pros:** It can handle "negation" (it learns that "not good" is negative) and sarcasm.
+*   **Cons:** It is a "Black Box." It's hard to explain to a fellow historian exactly *why* the computer gave a 19th-century diary a negative score.
+
+---
 
 ## Practice
 
 ::: try-it
-Write a list of words that are positive in a modern context but might have been negative in the 18th century (e.g., "terrific" used to mean terror-inducing). This highlights the risk of using modern dictionaries on historical text.
+**The Semantic Shift Challenge**
+In the 1800s, the word "awful" often meant "full of awe" (positive/profound), whereas today it is purely negative. 
+1. Think of a word that has changed meaning (e.g., "nice," "gay," or "terrific"). 
+2. How would using a modern sentiment dictionary on a 1700s text lead to a "false" research finding?
 :::
 
-## Transfer
+## Transfer: DH Use Cases
 
-*   **Political Science**: Tracking the positivity of campaign speeches over time using a fixed dictionary.
-*   **Marketing**: flagging tweets containing "broken", "worst", or "fail" for immediate customer support.
+*   **Literary Studies:** Mapping the "Emotional Arc" of a novel by calculating the sentiment of every chapter.
+*   **Historical Newspapers:** Analyzing how public sentiment toward "Automobiles" changed between 1900 and 1920.
+*   **Sociology:** Comparing the sentiment of tweets from different geographic regions during an election.
 
 ::: challenge
-Build a manual sentiment scorer.
+Build a manual sentiment scorer that handles basic intensity.
 :::`,
     challenges: [
       {
@@ -6306,46 +6330,46 @@ Build a manual sentiment scorer.
         language: 'python',
         difficulty: 'beginner',
         starterCode: `# 1. The Sentiment Dictionary
-# Keys are words, Values are their sentiment score
+# Words are weighted by intensity
 mood_dict = {
-    "joy": 2,
+    "joy": 3,
     "good": 1,
-    "meh": 0,
+    "ok": 0,
     "bad": -1,
-    "terrible": -2
+    "terrible": -3
 }
 
 # 2. The Sentence to Analyze
-sentence = "the joy was good but the food was terrible"
+sentence = "The food was good but the service was terrible"
 
 # 3. Calculate the total score
-# Split the sentence into a list of words
-# Loop through the words
-# Add the score from mood_dict to 'total_score'
-# (If a word isn't in the dict, add 0)
-
+# Task: 
+# - Ensure the sentence is lowercased
+# - Split the sentence into words
+# - Loop through and sum the scores
 total_score = 0
 
 # Your code here
 
 print(total_score)
 `,
-        expectedOutput: '1',
+        expectedOutput: '-2',
         hints: [
-          'Use `sentence.split()` to get the words.',
-          'Use `mood_dict.get(word, 0)` to handle words not in the dictionary safeley.',
-          '"joy"(2) + "good"(1) + "terrible"(-2) = 1.',
+          'Use `sentence.lower()` to ensure "The" matches "the".',
+          'Use `sentence.split()` to create a list of words.',
+          'Remember: 1 (good) + -3 (terrible) should equal -2.',
+          'Use `mood_dict.get(word, 0)` inside your for-loop.'
         ],
         solution: `mood_dict = {
-    "joy": 2,
+    "joy": 3,
     "good": 1,
-    "meh": 0,
+    "ok": 0,
     "bad": -1,
-    "terrible": -2
+    "terrible": -3
 }
 
-sentence = "the joy was good but the food was terrible"
-words = sentence.split()
+sentence = "The food was good but the service was terrible"
+words = sentence.lower().split()
 
 total_score = 0
 
@@ -6365,54 +6389,77 @@ print(total_score)
     estimatedTimeMinutes: 30,
     difficulty: 'beginner',
     learningObjectives: [
-      'Understand why VADER is optimized for social media text',
-      'Interpret the \'compound\' score',
-      'Use the NLTK library to score text',
+      'Explain the four heuristics VADER uses to modify sentiment scores',
+      'Interpret the "compound" score vs. the "pos/neu/neg" distribution',
+      'Initialize and run the VADER analyzer using the NLTK library',
+      'Apply sentiment analysis to a collection of short-form texts'
     ],
-    keywords: ['vader', 'nltk', 'compound score', 'social media'],
+    keywords: ['vader', 'nltk', 'compound score', 'social media', 'heuristics'],
     content: `# Using VADER for Social Data
 
-## Analogy
+## Why VADER?
 
-If the Dictionary approach is a simple ruler, **VADER** (Valence Aware Dictionary and sEntiment Reasoner) is a precision caliper. It doesn't just know that "good" is positive; it knows that "GOOD!!!" is more positive than "good", and that "not good" is actually negative. It is specifically designed for the messy, emoji-filled, capitalized world of social media.
+If a basic dictionary is a simple ruler, **VADER** (Valence Aware Dictionary and sEntiment Reasoner) is a precision caliper. 
 
-## Key Concepts
+Standard dictionaries fail on social media because humans don't write perfectly. VADER was specifically built to handle the "messy" language of the internet. It is **rule-based**, meaning it uses a dictionary but applies five smart "heuristics" (rules) to adjust the score.
 
-### NLTK and VADER
-We use the Python library **NLTK** (Natural Language Toolkit).
+### The 5 Rules of VADER
+1.  **Punctuation**: "Enjoyed!" is positive, but "Enjoyed!!!" is *more* positive.
+2.  **Capitalization**: "THE WORST" is more negative than "the worst."
+3.  **Degree Modifiers**: "Extremely happy" vs. "Slightly happy."
+4.  **Negation**: It knows that "not good" is negative.
+5.  **Contrastive Conjunctions**: It understands that "but" shifts the meaning (e.g., "The food was great, but the service was terrible" will lean negative).
+
+## Implementation in Python
+
+We use the **NLTK** (Natural Language Toolkit) library to access VADER.
 
 \`\`\`python
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 
-# Initialize the tool
+# Essential: Download the VADER lexicon data
+nltk.download('vader_lexicon')
+
+# Initialize the analyzer
 sia = SentimentIntensityAnalyzer()
 
-# Score text
-text = "I LOVE this movie!!! :)"
+text = "The book was sort of good, but the ending was HORRIBLE!!!"
 scores = sia.polarity_scores(text)
 
 print(scores)
 \`\`\`
 
-### Interpreting Output
-VADER returns a dictionary with four numbers:
-1.  **neg**: Negative (0.0 to 1.0)
-2.  **neu**: Neutral (0.0 to 1.0)
-3.  **pos**: Positive (0.0 to 1.0)
-4.  **compound**: A normalized summary score from -1 (most negative) to +1 (most positive).
+## Interpreting the Output
 
-For most DH analysis, we focus on the **compound** score.
+VADER returns a dictionary of four scores:
+*   **neg**: Negative (0.0 to 1.0)
+*   **neu**: Neutral (0.0 to 1.0)
+*   **pos**: Positive (0.0 to 1.0)
+*   **compound**: The "Gold Standard" score. It is a single number representing the sum of all words, normalized between **-1 (extremely negative)** and **+1 (extremely positive)**.
+
+**Standard Thresholds:**
+*   **Positive**: Compound score >= 0.05
+*   **Neutral**: Between -0.05 and 0.05
+*   **Negative**: Compound score <= -0.05
+
+---
 
 ## Practice
 
 ::: try-it
-How would VADER score "The movie was not bad"? A simple dictionary sees "bad" (-1). VADER sees "not" flipping the polarity.
+**Testing the Rules**
+Compare the scores of these two sentences using the logic above:
+1. "The lecture was good."
+2. "The lecture was GOOD!!!" 
+Notice how the compound score jumps significantly just by adding caps and exclamation points.
 :::
 
-## Transfer
+## Transfer: DH in Practice
 
-Using VADER allows researchers to analyze vast amounts of Twitter or Reddit data to gauge public reaction to events in real-time.
+*   **Public History:** Analyzing thousands of YouTube comments on a historical documentary to see how the public reacts to controversial topics.
+*   **Digital Ethnography:** Measuring the "toxicity" of different online gaming communities or forums over time.
+*   **Crisis Response:** Using real-time Twitter data to track the "mood" of a city during a natural disaster or protest.
 
 ::: challenge
 Analyze a list of "tweets" to find the most positive one.
@@ -6424,66 +6471,83 @@ Analyze a list of "tweets" to find the most positive one.
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `# To avoid dependency issues in the browser, we will mock the VADER functionality.
-# In real life, you would import SentimentIntensityAnalyzer from nltk.sentiment
+# In a local environment, you would use: sia = SentimentIntensityAnalyzer()
 
 class MockVader:
     def polarity_scores(self, text):
-        # A simplified mock logic for this challenge
+        # This mock simulates VADER's logic for punctuation and intensity
         score = 0.0
-        if "love" in text: score += 0.8
-        if "hate" in text: score -= 0.8
-        if "!" in text: score *= 1.5 
-        return {"compound": score}
+        text_lower = text.lower()
+        if "love" in text_lower: score += 0.5
+        if "hate" in text_lower: score -= 0.5
+        if "coding" in text_lower: score += 0.2
+        
+        # Rule 1: Punctuation booster
+        if "!!!" in text: score *= 1.5 
+        # Rule 2: Capitalization booster
+        if text.isupper(): score *= 1.2
+        
+        return {"compound": round(score, 2)}
 
 sia = MockVader()
 
 tweets = [
     "I hate traffic",
     "I love coding",
-    "I love coding!!!"
+    "I LOVE CODING!!!",
+    "It was okay"
 ]
 
-# 1. Loop through the tweets
-# 2. Use sia.polarity_scores(tweet)['compound'] to get the score
-# 3. Find and print the text of the tweet with the highest score
-
+# Task: Find the tweet with the highest compound score.
 best_tweet = ""
-highest_score = -100
+highest_score = -1.0
 
-# Your code here
+# Your code here:
+# 1. Loop through the tweets
+# 2. Get the compound score for each
+# 3. If it's higher than the current highest_score, update best_tweet and highest_score
+
+for tweet in tweets:
+    # Get the score dictionary
+    # Extract the 'compound' value
+    pass
 
 print(best_tweet)
 `,
-        expectedOutput: 'I love coding!!!',
+        expectedOutput: 'I LOVE CODING!!!',
         hints: [
-          'Create a loop: `for t in tweets:`.',
-          'Get the score: `current_score = sia.polarity_scores(t)[\'compound\']`.',
-          'Compare: `if current_score > highest_score:` update the variables.',
+          'Inside your loop, use `score_dict = sia.polarity_scores(tweet)`',
+          'Access the compound value with `score_dict["compound"]`',
+          'To find the maximum, use an if-statement: `if current_score > highest_score:`',
         ],
         solution: `class MockVader:
     def polarity_scores(self, text):
         score = 0.0
-        if "love" in text: score += 0.8
-        if "hate" in text: score -= 0.8
-        if "!" in text: score *= 1.5 
-        return {"compound": score}
+        text_lower = text.lower()
+        if "love" in text_lower: score += 0.5
+        if "hate" in text_lower: score -= 0.5
+        if "coding" in text_lower: score += 0.2
+        if "!!!" in text: score *= 1.5 
+        if text.isupper(): score *= 1.2
+        return {"compound": round(score, 2)}
 
 sia = MockVader()
 
 tweets = [
     "I hate traffic",
     "I love coding",
-    "I love coding!!!"
+    "I LOVE CODING!!!",
+    "It was okay"
 ]
 
 best_tweet = ""
-highest_score = -100
+highest_score = -1.0
 
-for t in tweets:
-    score = sia.polarity_scores(t)['compound']
-    if score > highest_score:
-        highest_score = score
-        best_tweet = t
+for tweet in tweets:
+    current_score = sia.polarity_scores(tweet)['compound']
+    if current_score > highest_score:
+        highest_score = current_score
+        best_tweet = tweet
 
 print(best_tweet)
 `,
@@ -6498,55 +6562,78 @@ print(best_tweet)
     estimatedTimeMinutes: 40,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Segment a text into narrative chunks',
-      'Calculate sentiment for each chunk',
-      'Apply rolling averages to smooth noisy data',
+      'Segment long-form text into narrative chunks for longitudinal analysis',
+      'Explain the relationship between "noise" and "signal" in sentiment data',
+      'Apply rolling averages (moving windows) using the Pandas library',
+      'Interpret narrative "shapes" such as the Tragedy or the Man in a Hole'
     ],
-    keywords: ['narrative arc', 'rolling average', 'smoothing', 'visualization', 'plot'],
+    keywords: ['narrative arc', 'rolling average', 'smoothing', 'syuzhet', 'pandas', 'time-series'],
     content: `# Plotting Emotional Arcs
 
-## Analogy
+In Digital Humanities, we often treat a book not as a single object, but as a **timeline**. By measuring sentiment from the first page to the last, we can visualize the "Emotional Arc" or "Shape" of a story.
 
-If you measure the temperature outside every second, the graph will look jagged and messy due to passing clouds or wind gusts. To see the trend (it's getting warmer), you average the temperature over the last hour.
-Similarly, individual sentences in a novel fluctuate wildly. To see the "Shape of the Story" (Tragedy, Rags to Riches), we calculate a **Moving Average** of the sentiment scores.
+## The Problem of Noise
 
-## Key Concepts
+If you plot the sentiment of every single sentence in a novel, the resulting graph looks like "static" or "noise." This is because a happy chapter might still contain a sentence like *"He died of laughter,"* which a computer sees as negative.
 
-### Segmentation
-First, we break a text into chunks (sentences or chapters).
+To see the **signal** (the overall trend) through the **noise** (individual word fluctuations), we use a **Rolling Average**.
+
+## The Workflow
+
+### 1. Segmentation (Chunking)
+We break the text into equal parts. In DH, we often use "windows" of 100 or 500 words rather than chapters, because chapters vary in length.
+
 \`\`\`python
+# Simple split by sentence
 sentences = full_text.split('.')
 \`\`\`
 
-### Scoring
-We generate a list of numbers representing the emotional path.
+### 2. The Sentiment Timeline
+We calculate the score for every chunk and store it in a list. This creates a **Time Series**.
+
 \`\`\`python
-# e.g., [0.5, 0.2, -0.1, -0.8, -0.5, 0.2, 0.9]
-sentiment_timeline = [get_score(s) for s in sentences]
+# A list of compound scores
+timeline = [0.1, 0.2, -0.5, -0.6, 0.1, 0.8] 
 \`\`\`
 
-### Smoothing (Rolling Window)
-We average the current score with its neighbors to reveal the arc.
+### 3. Smoothing with Pandas
+We use the **Pandas** library to calculate a "Moving Average." This replaces each score with the average of itself and its neighbors. This "smooths" the jagged peaks into a readable curve.
+
 \`\`\`python
 import pandas as pd
-s_series = pd.Series(sentiment_timeline)
-# Take the average of every 5 sentences
-smoothed = s_series.rolling(window=5).mean()
+
+# Convert list to a Pandas Series
+series = pd.Series(timeline)
+
+# Calculate average using a window of 10 sentences
+smoothed_arc = series.rolling(window=10).mean()
 \`\`\`
+
+## Narrative Shapes
+
+There is an idea that most stories follow specific shapes:
+*   **"Rags to Riches"**: A steady rise in sentiment.
+*   **"Tragedy/Oedipus"**: A steady fall.
+*   **"Person in a Hole"**: Fall, then a rise.
+*   **"Cinderella"**: Rise, fall, then a massive rise.
+
+---
 
 ## Practice
 
 ::: try-it
-Consider "Harry Potter". The books often start happy (Summer), get dark (School danger), and end with triumph. What would that line look like?
+**Conceptualizing Windows**
+If you have a window size of 1 (no smoothing), your graph is a zigzag. If your window size is 10,000 (the whole book), your graph is a flat line. Success in DH often involves finding the "Goldilocks" window size that shows the arc without losing too much detail.
 :::
 
 ## Transfer
 
-*   **Literature**: Testing Kurt Vonnegut's theory that all stories fall into a few basic emotional shapes.
-*   **History**: Analyzing the emotional tone of diplomatic cables leading up to a war.
+*   **Literary Studies**: Comparing the emotional arcs of 19th-century British novels vs. American novels.
+*   **Film Studies**: Analyzing screenplays to see if "Action" movies have more frequent sentiment fluctuations than "Dramas."
+*   **History**: Mapping the "rhetorical heat" of a long-running parliamentary debate to find the moment of peak tension.
 
 ::: challenge
-Smooth a jagged list of sentiment scores.
+Smooth a jagged list of sentiment scores and identify the turning points.
 :::`,
     challenges: [
       {
@@ -6556,37 +6643,34 @@ Smooth a jagged list of sentiment scores.
         difficulty: 'intermediate',
         starterCode: `import pandas as pd
 
-# Raw sentiment scores from 10 consecutive sentences
-# It's jagged: Up, Down, Up, Down...
-raw_scores = [1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0]
+# Raw sentiment scores from a short story
+# Notice the "noise": 0.8 followed immediately by -0.8
+raw_scores = [0.5, 0.6, 0.8, -0.8, -0.2, -0.5, 0.1, 0.4, 0.9, 1.0]
 
 # 1. Convert the list to a Pandas Series
 series = pd.Series(raw_scores)
 
-# 2. Calculate a rolling mean with a window of 2
-# This averages index 0 and 1, then 1 and 2, etc.
-# e.g., (1.0 + -1.0) / 2 = 0.0
+# 2. Calculate a rolling mean with a window of 3
+# Your code here
 smoothed = 
 
-# Your code here
-
-# Print the last value in the smoothed series
-# Note: In a window of 2, the first value will be NaN (Not a Number) because it has no predecessor.
-print(smoothed.iloc[-1])
+# 3. Print the last value of the smoothed arc
+print(round(smoothed.iloc[-1], 2))
 `,
-        expectedOutput: '0.0',
+        expectedOutput: '0.77',
         hints: [
-          'Use `series.rolling(window=2).mean()`.',
-          'The average of `1.0` and `-1.0` is `0.0`.',
+          'Use `series.rolling(window=3).mean()`.',
+          'The last value is the average of 0.1, 0.4, and 0.9.',
+          'Note: The first two values will be `NaN` because a window of 3 needs at least 3 numbers.'
         ],
         solution: `import pandas as pd
 
-raw_scores = [1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0, -1.0]
+raw_scores = [0.5, 0.6, 0.8, -0.8, -0.2, -0.5, 0.1, 0.4, 0.9, 1.0]
 
 series = pd.Series(raw_scores)
-smoothed = series.rolling(window=2).mean()
+smoothed = series.rolling(window=3).mean()
 
-print(smoothed.iloc[-1])
+print(round(smoothed.iloc[-1], 2))
 `,
       },
       {
@@ -6594,29 +6678,32 @@ print(smoothed.iloc[-1])
         title: 'Identifying the Climax',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `# Narrative Arc: Starts neutral, goes low (conflict), goes high (resolution)
-scores = [0.1, 0.0, -0.2, -0.5, -0.8, -0.9, -0.4, 0.2, 0.6, 0.8]
+        starterCode: `# A smoothed emotional arc of a story
+# 0-2: Introduction, 3-5: Conflict, 6-9: Resolution
+scores = [0.1, 0.2, 0.1, -0.4, -0.8, -0.3, 0.2, 0.5, 0.8, 0.9]
 
-# 1. Find the index of the lowest point (the darkest moment)
-# You can use the standard python function min() or list methods
+# Task: Find the "Darkest Moment" (lowest score) and its position
+# 1. Find the minimum value in the list
+# 2. Find the index (position) of that value
+
+min_val = 0
+min_index = 0
 
 # Your code here
-min_val = min(scores)
-min_index = scores.index(min_val)
 
-print(f"Darkest moment at sentence {min_index} with score {min_val}")
+print(f"Darkest moment at index {min_index} with score {min_val}")
 `,
-        expectedOutput: 'Darkest moment at sentence 5 with score -0.9',
+        expectedOutput: 'Darkest moment at index 4 with score -0.8',
         hints: [
-          '`min(list)` finds the lowest value.',
-          '`list.index(value)` finds the position of that value.',
+          'Use `min(scores)` to find the lowest number.',
+          'Use `scores.index(some_value)` to find where it is in the list.'
         ],
-        solution: `scores = [0.1, 0.0, -0.2, -0.5, -0.8, -0.9, -0.4, 0.2, 0.6, 0.8]
+        solution: `scores = [0.1, 0.2, 0.1, -0.4, -0.8, -0.3, 0.2, 0.5, 0.8, 0.9]
 
 min_val = min(scores)
 min_index = scores.index(min_val)
 
-print(f"Darkest moment at sentence {min_index} with score {min_val}")
+print(f"Darkest moment at index {min_index} with score {min_val}")
 `,
       },
     ],
@@ -6626,72 +6713,92 @@ print(f"Darkest moment at sentence {min_index} with score {min_val}")
     title: 'Limitations and Bias',
     moduleId: 'sentiment-analysis',
     prerequisites: ['sentiment-02'],
-    estimatedTimeMinutes: 25,
+    estimatedTimeMinutes: 30,
     difficulty: 'beginner',
     learningObjectives: [
-      'Identify common failure points in sentiment analysis (negation, sarcasm)',
-      'Understand how historical context shifts word meanings',
-      'Implement basic negation handling',
+      'Identify linguistic failure points such as negation, sarcasm, and irony',
+      'Explain how "historical semantic shift" can invalidate modern sentiment lexicons',
+      'Recognize algorithmic bias in sentiment tools when applied to non-standard dialects',
+      'Implement a "look-back" window to handle simple negation in Python'
     ],
-    keywords: ['negation', 'bias', 'sarcasm', 'context', 'critique'],
+    keywords: ['negation', 'bias', 'sarcasm', 'semantic shift', 'AAVE', 'critique'],
     content: `# Limitations and Bias
 
-## Analogy
+Sentiment analysis is a powerful tool, but in Digital Humanities, it is often a "leaky" abstraction. If we don't understand where it fails, we risk making false claims about the past or present.
 
-Imagine a time traveler from 1920 arriving today and hearing someone say, "That movie was wicked!" The time traveler would think the movie was evil. A sentiment analysis tool is often like that time traveler—it lacks the cultural context, slang knowledge, and ability to detect sarcasm ("Oh, great. Another flat tire.") that humans possess.
+## 1. The Time Traveler Problem (Semantic Shift)
 
-## Key Concepts
+Imagine a sentiment tool trained on 2024 movie reviews. If you use it to analyze a diary from 1750, it will fail.
+*   **"Wicked"**: Today might mean "cool" (positive); in 1750, it meant "evil" (negative).
+*   **"Nice"**: In the 14th century, it meant "foolish" or "ignorant."
+*   **"Terrific"**: Originally meant "causing terror."
 
-### Negation
-The most common error in simple "Bag of Words" models is ignoring negation.
-*   "Good" = +1
-*   "Not Good" = +1 (if we just count the word "Good")
+**DH Rule:** Always match your dictionary to your era. Using VADER (designed for social media) on a Victorian novel is a methodological risk.
 
-To fix this, we need logic that looks at the word *before* the target word.
+## 2. The Sarcasm Gap
 
-### Bias in Training Data
-If a Machine Learning model is trained on movie reviews, it might learn that the word "unpredictable" is positive (an exciting plot). If you use that same model on financial news, "unpredictable" is highly negative (market instability). **Context matters.**
+Computers struggle with irony.
+*   *Text:* "Oh great, another 5-hour meeting. Just what I wanted."
+*   *VADER:* Likely sees "great" and "wanted" and gives a **positive** score.
+*   *Human:* Clearly understands the frustration.
+
+## 3. Negation: The "Not" Problem
+
+Simple "Bag of Words" models treat sentences as a soup of words. 
+*   "The service was **good**." (+1)
+*   "The service was **not good**." (+1 if the computer only looks for "good")
+
+To fix this, we need **Heuristics** (rules) that look for "valence shifters" like *not, never, no, or hardly*.
+
+## 4. Algorithmic Bias
+
+Sentiment analyzers are trained on specific datasets (often Wikipedia or news). 
+*   **Dialect Bias:** Research has shown that sentiment tools often flag **AAVE (African American Vernacular English)** as more "negative" or "toxic" than Standard American English, even when the sentiment is positive.
+*   **Domain Bias:** In a medical context, the word "Positive" (as in a test result) is often very "Negative" for the patient.
+
+---
 
 ## Practice
 
 ::: try-it
-Find a sentence where the sentiment changes entirely based on the speaker's tone. "Yeah, right."
+**Contextual Flip**
+Think of the word "Unpredictable." 
+1. Write a sentence where "unpredictable" is a **compliment** (e.g., a thriller movie).
+2. Write a sentence where "unpredictable" is a **complaint** (e.g., a car's brakes).
+How would a single dictionary score both fairly?
 :::
 
-## Transfer
+## Transfer: DH Critique
 
-*   **History**: The word "terror" in the French Revolution ("The Terror") vs. modern usage.
-*   **Sociology**: Algorithms often flag AAVE (African American Vernacular English) as more "negative" or "offensive" simply because the training data (Standard American English) didn't include it.
+*   **Social Justice:** Investigating if automated content moderation (which uses sentiment analysis) unfairly silences marginalized voices.
+*   **History of Emotions:** Using sentiment analysis to track the changing meaning of "Melancholy" from a medical condition to a poetic state.
 
 ::: challenge
-Fix a broken scorer by handling "not".
+Improve a manual scorer by implementing a "Look-Back" negation rule.
 :::`,
     challenges: [
       {
         id: 'sentiment-04-c1',
-        title: 'Handling Negation',
+        title: 'The Negation Fix',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `# A simple positive word list
-positive_words = ["good", "happy", "excellent"]
+        starterCode: `positive_words = ["good", "happy", "excellent", "great"]
 
 def get_sentiment(sentence):
-    words = sentence.split()
+    words = sentence.lower().split()
     score = 0
     
-    # Iterate through words using index so we can look back
     for i in range(len(words)):
         word = words[i]
         
         if word in positive_words:
-            # Check if the PREVIOUS word was "not"
-            # Be careful not to look at index -1 if i is 0!
-            if i > 0 and words[i-1] == "not":
-                # It's a negation! Flip the score or make it negative
-                score -= 1
-            else:
-                # Normal positive word
-                score += 1
+            # TASK: Check if the word BEFORE (i-1) is "not"
+            # 1. Ensure i > 0 (so we don't look for words before the start)
+            # 2. If words[i-1] is "not", subtract 1 from the score
+            # 3. Otherwise, add 1 to the score
+            
+            # Your code here
+            pass
                 
     return score
 
@@ -6701,30 +6808,21 @@ print(f"Score 2: {get_sentiment('this is not good')}")
 `,
         expectedOutput: 'Score 1: 1\nScore 2: -1',
         hints: [
-          'The logic is mostly written, you just need to trace it.',
-          'In \'this is not good\':',
-          'i=0 (\'this\'): nothing',
-          'i=1 (\'is\'): nothing',
-          'i=2 (\'not\'): nothing (it\'s not in positive_words)',
-          'i=3 (\'good\'): It IS in positive_words. Check i-1 (\'not\').',
-          'The logic seems correct in the starter code? Wait, the challenge usually requires writing code. The starter code has the logic fully implemented.',
-          '**Task**: The starter code implements the logic but contains a bug or needs completion?',
+          'Use an `if` statement to check `if i > 0 and words[i-1] == "not":`.',
+          'If the condition is true, use `score -= 1`.',
+          'Use an `else:` block to handle the cases where "not" isn\'t there.',
         ],
-        solution: `positive_words = ["good", "happy", "excellent"]
+        solution: `positive_words = ["good", "happy", "excellent", "great"]
 
 def get_sentiment(sentence):
-    words = sentence.split()
+    words = sentence.lower().split()
     score = 0
     
     for i in range(len(words)):
         word = words[i]
         
         if word in positive_words:
-            is_negated = False
             if i > 0 and words[i-1] == "not":
-                is_negated = True
-            
-            if is_negated:
                 score -= 1
             else:
                 score += 1
@@ -6742,117 +6840,133 @@ print(f"Score 2: {get_sentiment('this is not good')}")
     title: 'Working with Metadata',
     moduleId: 'structured-data',
     prerequisites: ['structured-data-02'],
-    estimatedTimeMinutes: 35,
+    estimatedTimeMinutes: 40,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Explain what metadata is and why it matters for humanities research',
-      'Extract and transform metadata from structured records',
-      'Summarise a collection by its metadata facets',
+      'Distinguish between descriptive, administrative, and structural metadata',
+      'Explain the importance of interoperability and standards like Dublin Core',
+      'Extract and transform metadata from complex nested dictionaries',
+      'Perform faceted analysis (summarizing a collection by metadata fields)',
     ],
-    keywords: ['metadata', 'cataloguing', 'dublin core', 'faceted search', 'collections'],
+    keywords: ['metadata', 'cataloguing', 'dublin core', 'faceted search', 'collections', 'interoperability'],
     content: `# Working with Metadata
 
-## Analogy
+## The Analogy: The Library Spine
 
-Walk into any library and pull a book off the shelf. The book itself is the **data** — the words, the story, the argument. But the label on the spine, the catalogue card, the ISBN — that is all **metadata**: data *about* the data. Metadata tells you what something is, who created it, when, and where, without you having to read the entire object. In digital humanities, managing metadata well is the difference between a searchable archive and a pile of files.
+If you walk into a library, the book itself is the **data**—the words, characters, and plot. But the label on the spine, the barcode, and the entry in the digital catalog are the **metadata**: data *about* the data. 
+
+In Digital Humanities, metadata is what allows us to organize a "pile of files" into a "searchable archive." Without it, we couldn't ask questions like "How did the sentiment of novels change between 1850 and 1900?" because the computer wouldn't know which file belongs to which year.
 
 ## Key Concepts
 
-### What Is Metadata?
+### 1. Types of Metadata
+Humanities researchers typically deal with three types:
+*   **Descriptive**: Information about the content (Title, Author, Abstract, Keywords).
+*   **Administrative**: Technical details (File format, Rights/Copyright, Date of Digitization).
+*   **Structural**: How the resource is put together (e.g., Page 1 comes before Page 2).
 
-Metadata is structured information that describes, explains, or locates a resource. In the humanities, common metadata standards include Dublin Core (used by libraries and digital repositories) and TEI headers (used for encoded texts).
+### 2. Standards and Interoperability
+If every archive used their own names for fields (one uses "Author," another "Writer," another "Creator"), we couldn't combine them. We use **Standards** to ensure **Interoperability**.
 
 ::: definition
-**Dublin Core**: A set of fifteen standard metadata elements (Title, Creator, Subject, Description, Date, etc.) widely used in digital libraries and archives to describe resources consistently.
+**Dublin Core (DC)**: A set of 15 "core" elements used globally by libraries and museums. Common fields include *Title, Creator, Subject, Description, Publisher, Contributor, Date, Type, Format, Identifier, Source, Language, Relation, Coverage, and Rights*.
 :::
 
-### Metadata as Dictionaries
-
-In Python, a metadata record maps naturally to a dictionary — each field is a key, each value describes one facet of the resource:
+### 3. Metadata as Dictionaries
+In Python, a single metadata record is almost always represented as a **Dictionary**. Often, these are "nested," meaning a value might be a list or another dictionary.
 
 \`\`\`python
+# A typical DH metadata record
 record = {
-    "title": "Frankenstein; or, The Modern Prometheus",
-    "creator": "Mary Shelley",
-    "date": "1818",
-    "subject": ["Gothic fiction", "Science fiction"],
-    "language": "English",
-    "format": "text",
+    "dc:title": "The Last Man",
+    "dc:creator": ["Mary Shelley"],
+    "dc:date": "1826-01-23",
+    "dc:subject": ["Apocalyptic fiction", "Pandemic", "Gothic"],
+    "admin": {
+        "scanner_model": "Epson v600",
+        "rights": "Public Domain"
+    }
 }
-print(f"{record['title']} by {record['creator']} ({record['date']})")
+
+# Accessing a nested field
+print(f"Format: {record['admin']['rights']}") 
+# Accessing an item in a list
+print(f"Primary Subject: {record['dc:subject'][0]}")
 \`\`\`
 
-### Faceted Summaries
+### 4. Faceted Analysis
+Once we have a collection of records, we can "facet" them. This means grouping them by a specific field (like "Date" or "Subject") to see the bird's-eye view of a collection.
 
-When you have a collection of records, metadata lets you answer questions like "How many items per decade?" or "Which subjects appear most often?" without examining every item individually:
+## The Reality: Metadata Cleaning
+Real-world metadata is often "dirty." You will frequently need to:
+1.  **Normalize Dates**: Changing "Jan 1826" and "1826-01-23" both to "1826".
+2.  **Split Strings**: Changing "Shelley, Mary; Byron, Lord" into a clean list of names.
+3.  **Handle Missing Data**: Deciding what to do if a record has no "Creator."
 
-\`\`\`python
-from collections import Counter
-
-dates = ["1818", "1820", "1826", "1831", "1835", "1844"]
-decades = [d[:3] + "0s" for d in dates]
-print(Counter(decades))
-\`\`\`
-
-### Extracting and Reshaping
-
-Real-world metadata often needs reshaping. Dates arrive as strings, subjects as semicolon-separated lists, creators in "Last, First" format. Cleaning metadata is a prerequisite to any collection-level analysis.
+---
 
 ## Practice
 
 ::: try-it
-Take the \`record\` dictionary above and add more Dublin Core fields: \`publisher\`, \`rights\`, \`type\`. How would you represent a resource with multiple creators?
+**The Archivist's Choice**
+Look at the `record` above. If you were building a website for this collection, which fields would you use for a "Search Bar" and which would you use for a "Filter" (facet)? Why?
 :::
 
-## Transfer
+## Transfer: DH Use Cases
 
-If you work with a digital archive or repository, its metadata schema determines what questions you can ask. A collection with good date metadata supports temporal analysis; one with rich subject tags supports thematic browsing. Understanding metadata is understanding the *shape* of your research possibilities.
+*   **Museum Studies**: Analyzing the "Provenance" (history of ownership) of artifacts using the `source` and `description` fields.
+*   **Digital Archives**: Using tools like **Omeka** or **Tropy**, which are built entirely around the Dublin Core standard.
+*   **Zotero**: When you save a paper to Zotero, you are actually just capturing its metadata for later citation.
 
 ::: challenge
-Given a collection of metadata records, produce a summary report showing the number of items per subject and per decade.
+Produce a summary report from a mock archive.
 :::`,
     challenges: [
       {
         id: 'structured-data-06-c1',
-        title: 'Summarise a collection by subject',
+        title: 'Summarize by Subject',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `# A small digital collection with metadata
-from collections import Counter
+        starterCode: `from collections import Counter
 
+# A small digital collection from a Gothic Archive
 collection = [
-    {"title": "Frankenstein", "creator": "Mary Shelley", "date": "1818", "subjects": ["Gothic", "Science Fiction"]},
-    {"title": "The Vampyre", "creator": "John Polidori", "date": "1819", "subjects": ["Gothic", "Horror"]},
-    {"title": "The Last Man", "creator": "Mary Shelley", "date": "1826", "subjects": ["Science Fiction"]},
-    {"title": "Northanger Abbey", "creator": "Jane Austen", "date": "1817", "subjects": ["Gothic", "Satire"]},
-    {"title": "The Mysteries of Udolpho", "creator": "Ann Radcliffe", "date": "1794", "subjects": ["Gothic"]},
+    {"title": "Frankenstein", "subjects": ["Gothic", "Science Fiction"]},
+    {"title": "The Vampyre", "subjects": ["Gothic", "Horror"]},
+    {"title": "The Last Man", "subjects": ["Science Fiction", "Post-Apocalyptic"]},
+    {"title": "Northanger Abbey", "subjects": ["Gothic", "Satire"]},
+    {"title": "The Monk", "subjects": ["Gothic", "Horror"]},
 ]
 
-# 1. Count how many items appear under each subject
-# 2. Print each subject and its count, sorted alphabetically by subject
-# Format: "<Subject>: <count>"
+# Task:
+# 1. Create a list called 'all_subjects' containing every subject from every book
+# 2. Use Counter to find the frequencies
+# 3. Print the results sorted alphabetically: "Subject: Count"
+
+all_subjects = []
 
 # Your code here
+
 `,
-        expectedOutput: 'Gothic: 4\nHorror: 1\nSatire: 1\nScience Fiction: 2',
+        expectedOutput: 'Gothic: 4\nHorror: 2\nPost-Apocalyptic: 1\nSatire: 1\nScience Fiction: 2',
         hints: [
-          'Loop through each record and then through each item in its `subjects` list, collecting all subjects into a flat list.',
-          'Use `Counter` on the flat list to get counts per subject.',
-          'Sort the counter items with `sorted(counter.items())` and print each pair.',
+          'Use a nested loop: `for item in collection:` then `for sub in item["subjects"]:`',
+          'Use `all_subjects.append(sub)` or `all_subjects.extend(item["subjects"])`',
+          'Use `sorted(counts.items())` to get the alphabetical order.'
         ],
         solution: `from collections import Counter
 
 collection = [
-    {"title": "Frankenstein", "creator": "Mary Shelley", "date": "1818", "subjects": ["Gothic", "Science Fiction"]},
-    {"title": "The Vampyre", "creator": "John Polidori", "date": "1819", "subjects": ["Gothic", "Horror"]},
-    {"title": "The Last Man", "creator": "Mary Shelley", "date": "1826", "subjects": ["Science Fiction"]},
-    {"title": "Northanger Abbey", "creator": "Jane Austen", "date": "1817", "subjects": ["Gothic", "Satire"]},
-    {"title": "The Mysteries of Udolpho", "creator": "Ann Radcliffe", "date": "1794", "subjects": ["Gothic"]},
+    {"title": "Frankenstein", "subjects": ["Gothic", "Science Fiction"]},
+    {"title": "The Vampyre", "subjects": ["Gothic", "Horror"]},
+    {"title": "The Last Man", "subjects": ["Science Fiction", "Post-Apocalyptic"]},
+    {"title": "Northanger Abbey", "subjects": ["Gothic", "Satire"]},
+    {"title": "The Monk", "subjects": ["Gothic", "Horror"]},
 ]
 
 all_subjects = []
-for record in collection:
-    all_subjects.extend(record["subjects"])
+for item in collection:
+    all_subjects.extend(item["subjects"])
 
 counts = Counter(all_subjects)
 for subject, count in sorted(counts.items()):
@@ -6861,48 +6975,47 @@ for subject, count in sorted(counts.items()):
       },
       {
         id: 'structured-data-06-c2',
-        title: 'Items per decade',
+        title: 'Cleaning Dates for Decades',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `# Using the same collection, group items by decade
-from collections import Counter
+        starterCode: `from collections import Counter
 
+# Metadata often has inconsistent date formats
 collection = [
-    {"title": "Frankenstein", "date": "1818"},
-    {"title": "The Vampyre", "date": "1819"},
-    {"title": "The Last Man", "date": "1826"},
-    {"title": "Northanger Abbey", "date": "1817"},
-    {"title": "The Mysteries of Udolpho", "date": "1794"},
-    {"title": "The Monk", "date": "1796"},
-    {"title": "Caleb Williams", "date": "1794"},
+    {"title": "Work A", "date": "1794-05-12"},
+    {"title": "Work B", "date": "1818"},
+    {"title": "Work C", "date": "1819-12-01"},
+    {"title": "Work D", "date": "1796"},
+    {"title": "Work E", "date": "1826-01-01"},
 ]
 
-# 1. Convert each date to a decade label (e.g., "1818" -> "1810s")
-# 2. Count items per decade
-# 3. Print each decade and count, sorted chronologically
-# Format: "<decade>: <count>"
+# Task: 
+# 1. Extract the year (first 4 characters) from each date string
+# 2. Convert that year into a decade (e.g., "1818" -> "1810s")
+# 3. Print the count of items per decade, sorted chronologically
 
 # Your code here
 `,
-        expectedOutput: '1790s: 3\n1810s: 3\n1820s: 1',
+        expectedOutput: '1790s: 2\n1810s: 2\n1820s: 1',
         hints: [
-          'To get the decade from a year string, take the first three characters and append "0s": `date[:3] + "0s"`.',
-          'Build a list of decade labels and pass it to `Counter`.',
-          'Sort the counter items — since decade strings are in chronological order, alphabetical sorting works.',
+          'To get the decade, use string slicing: `date_str[:3] + "0s"`',
+          'Example: "1794"[:3] is "179". Adding "0s" makes it "1790s".'
         ],
         solution: `from collections import Counter
 
 collection = [
-    {"title": "Frankenstein", "date": "1818"},
-    {"title": "The Vampyre", "date": "1819"},
-    {"title": "The Last Man", "date": "1826"},
-    {"title": "Northanger Abbey", "date": "1817"},
-    {"title": "The Mysteries of Udolpho", "date": "1794"},
-    {"title": "The Monk", "date": "1796"},
-    {"title": "Caleb Williams", "date": "1794"},
+    {"title": "Work A", "date": "1794-05-12"},
+    {"title": "Work B", "date": "1818"},
+    {"title": "Work C", "date": "1819-12-01"},
+    {"title": "Work D", "date": "1796"},
+    {"title": "Work E", "date": "1826-01-01"},
 ]
 
-decades = [r["date"][:3] + "0s" for r in collection]
+decades = []
+for item in collection:
+    year_prefix = item["date"][:3]
+    decades.append(year_prefix + "0s")
+
 counts = Counter(decades)
 for decade, count in sorted(counts.items()):
     print(f"{decade}: {count}")
@@ -6915,239 +7028,191 @@ for decade, count in sorted(counts.items()):
     title: 'Working with Digital Archives',
     moduleId: 'web-data-collection',
     prerequisites: ['web-data-03'],
-    estimatedTimeMinutes: 40,
+    estimatedTimeMinutes: 45,
     difficulty: 'intermediate',
     learningObjectives: [
-      'Navigate and parse structured data from digital archive APIs',
-      'Extract and organise metadata from nested JSON archive records',
-      'Build a simple catalogue from API responses',
+      'Navigate and parse structured data from cultural heritage APIs (JSON)',
+      'Extract metadata from deeply nested records using safe navigation patterns',
+      'Handle "dirty data" (missing fields or empty lists) in archival records',
+      'Flatten complex archive responses into a research-ready catalogue',
     ],
-    keywords: ['archives', 'digital collections', 'cultural heritage', 'api', 'cataloguing'],
+    keywords: ['archives', 'digital collections', 'cultural heritage', 'api', 'json', 'nested data'],
     content: `# Working with Digital Archives
 
-## Analogy
+## Analogy: The Digital Finding Aid
 
-Imagine walking into a vast physical archive — rows of filing cabinets, each drawer labelled by year or subject. You cannot read every document, so you start with the **finding aid**: a structured guide that tells you what is in each drawer, who created it, and when. Digital archives work the same way, but instead of a printed finding aid, they offer **APIs** that return structured data about their holdings. Learning to navigate these APIs is like learning to read the finding aid — it is the key to the collection.
+In a physical archive, you use a **finding aid**—a guide that tells you which box contains which letter. In a digital archive, the **API (Application Programming Interface)** serves a similar purpose. 
+
+Instead of flipping through a paper folder, you send a digital request and receive a **JSON record**. This record is the digital equivalent of a catalogue card, containing everything the archive knows about an item: its author, the type of paper it's on, its dimensions, and a link to the scanned image.
 
 ## Key Concepts
 
-### What Are Digital Archives?
+### 1. The Complexity of Archival JSON
+Archival data is rarely a simple list. Because history is complex (a letter can have multiple authors, various dates, and several subject tags), the data is **nested**. 
 
-Digital archives are online collections of cultural heritage materials — manuscripts, photographs, maps, newspapers, artworks — along with structured metadata describing each item. Major examples include the Internet Archive, Europeana, the Digital Public Library of America (DPLA), and university special collections.
-
-::: definition
-**Finding aid**: A structured description of an archival collection, listing its contents, organisation, and context. In digital archives, this role is fulfilled by metadata records accessible through APIs or search interfaces.
-:::
-
-### Archive Records as Nested Data
-
-Archive API responses are typically JSON with deeply nested structures. A single record might contain the item title, multiple creators, a hierarchy of subjects, physical dimensions, and links to digital scans:
+One record is usually a dictionary containing lists, which contain more dictionaries:
 
 \`\`\`python
-# A simplified archive record (typical of DPLA or Europeana responses)
+# A typical nested archive record
 record = {
-    "id": "ark:/12345/abc",
-    "title": "Letter from Mary Shelley to Leigh Hunt",
-    "date": {"displayDate": "14 June 1823", "year": 1823},
-    "creator": [
-        {"name": "Shelley, Mary Wollstonecraft", "role": "author"}
-    ],
-    "subject": [
-        {"name": "English literature"},
-        {"name": "Correspondence"}
-    ],
-    "format": "manuscript",
-    "repository": "Bodleian Library, Oxford",
+    "id": "item-992",
+    "title": "Journal entry by Mary Shelley",
+    "metadata": {
+        "dates": [{"year": 1814, "type": "composition"}],
+        "creators": [{"name": "Shelley, Mary", "role": "author"}]
+    },
+    "subjects": ["Travel", "France", "Gothic"]
 }
-
-# Extracting nested values safely
-title = record.get("title", "Untitled")
-year = record.get("date", {}).get("year", "Unknown")
-creator = record["creator"][0]["name"] if record.get("creator") else "Unknown"
-print(f"{title} ({year}) by {creator}")
 \`\`\`
 
-### Navigating Nested JSON Safely
+### 2. Defending Against "KeyErrors"
+In a perfect world, every record has a date and a creator. In a digital archive, many records are incomplete. If you try to access \`record["date"]\` and it doesn't exist, your Python script will crash.
 
-Archive data is often inconsistent — some records have a date, others do not; some have multiple creators, others have none. The \`.get()\` method with default values prevents your code from crashing:
+We use **Defensive Extraction**:
+1.  **The \`.get()\` method**: Returns \`None\` (or a default) instead of crashing.
+2.  **Conditional checks**: "If this list exists, give me the first item."
 
 \`\`\`python
-# Safely extract all subject names from a record
-subjects = [s["name"] for s in record.get("subject", [])]
-print(f"Subjects: {', '.join(subjects)}")
+# Safe extraction
+title = record.get("title", "Unknown Title")
+
+# Nested safe extraction
+# We use .get("metadata", {}) to ensure we have a dict to call .get() on again
+year = record.get("metadata", {}).get("dates", [{}])[0].get("year", "n.d.")
 \`\`\`
 
-### Building a Catalogue
+### 3. Building a "Flat" Catalogue
+For analysis (like counting items per year), we want to turn those nested "clouds" of data into a clean, flat table. This process is called **Normalization**.
 
-When you retrieve multiple records from an archive API, you often want to reshape the data into a simpler, flat structure for analysis — a catalogue:
-
-\`\`\`python
-def extract_record(raw):
-    return {
-        "title": raw.get("title", "Untitled"),
-        "year": raw.get("date", {}).get("year", "Unknown"),
-        "creator": raw["creator"][0]["name"] if raw.get("creator") else "Unknown",
-        "format": raw.get("format", "Unknown"),
-    }
-\`\`\`
+---
 
 ## Practice
 
 ::: try-it
-Modify the \`extract_record\` function to also extract the repository name and all subject terms. What happens when a record has no \`repository\` field?
+**Exploring Hierarchy**
+Look at the `record` example above. How would you access the string "France"? 
+*Answer: `record["subjects"][1]`.*
+Now imagine a collection of 10,000 records. If only 5,000 of them have a "subjects" list, how would your code need to change to avoid breaking?
 :::
 
-## Transfer
+## Transfer: DH in the Real World
 
-Whether you are studying 19th-century correspondence, medieval manuscripts, or early photographs, digital archives expose their holdings through similar patterns. The skill of navigating nested JSON and extracting structured metadata from messy records transfers directly to any collection you work with — from the British Library to a small local historical society that has just digitised its holdings.
+*   **DPLA (Digital Public Library of America)**: Aggregates millions of records from US libraries into a single API.
+*   **The Smithsonian**: Provides an API to search millions of museum objects, from fossils to space suits.
+*   **Trove (National Library of Australia)**: A massive API for historical newspapers and gazettes.
+
+Understanding how to "dig" through JSON layers is a superpower for DH researchers. It allows you to build your own datasets instead of relying on what a website's "Search" button chooses to show you.
 
 ::: challenge
-Parse a set of archive records, extract key metadata fields, and produce a sorted catalogue.
+Build a clean catalogue from a messy API response.
 :::`,
     challenges: [
       {
         id: 'web-data-04-c1',
-        title: 'Build a catalogue from archive records',
+        title: 'Archive Record Flattener',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `# Parse these archive records and build a sorted catalogue
-# Extract: title, year, creator, and format from each record
-
-records = [
+        starterCode: `# Mock API response: A list of nested archive records
+raw_api_data = [
     {
-        "title": "Letter from Mary Shelley to Leigh Hunt",
-        "date": {"displayDate": "14 June 1823", "year": 1823},
-        "creator": [{"name": "Mary Shelley", "role": "author"}],
-        "format": "manuscript",
+        "title": "Letter to Lord Byron",
+        "info": {"date": 1816, "format": "manuscript"},
+        "people": [{"name": "Mary Shelley"}]
     },
     {
-        "title": "Portrait of Percy Bysshe Shelley",
-        "date": {"year": 1819},
-        "creator": [{"name": "Amelia Curran", "role": "artist"}],
-        "format": "painting",
+        "title": "Frankenstein MS",
+        "info": {"date": 1818, "format": "manuscript"},
+        "people": [{"name": "Mary Shelley"}]
     },
     {
-        "title": "Frankenstein, first edition",
-        "date": {"displayDate": "1 January 1818", "year": 1818},
-        "creator": [{"name": "Mary Shelley", "role": "author"}],
-        "format": "printed book",
-    },
-    {
-        "title": "Map of Geneva and surroundings",
-        "date": {"year": 1815},
-        "creator": [],
-        "format": "map",
-    },
-]
-
-# 1. Extract title, year, creator name (use "Unknown" if no creator), and format
-# 2. Sort by year
-# 3. Print each as: "<year> | <title> | <creator> | <format>"
-
-# Your code here
-`,
-        expectedOutput: '1815 | Map of Geneva and surroundings | Unknown | map\n1818 | Frankenstein, first edition | Mary Shelley | printed book\n1819 | Portrait of Percy Bysshe Shelley | Amelia Curran | painting\n1823 | Letter from Mary Shelley to Leigh Hunt | Mary Shelley | manuscript',
-        hints: [
-          'For each record, use `.get("date", {}).get("year", 0)` to safely extract the year, and check if the `creator` list is non-empty before accessing `[0]["name"]`.',
-          'Build a list of simplified dictionaries, then sort with `sorted(catalogue, key=lambda r: r["year"])`.',
-          'Use an f-string with `|` separators for the output format.',
-        ],
-        solution: `records = [
-    {
-        "title": "Letter from Mary Shelley to Leigh Hunt",
-        "date": {"displayDate": "14 June 1823", "year": 1823},
-        "creator": [{"name": "Mary Shelley", "role": "author"}],
-        "format": "manuscript",
-    },
-    {
-        "title": "Portrait of Percy Bysshe Shelley",
-        "date": {"year": 1819},
-        "creator": [{"name": "Amelia Curran", "role": "artist"}],
-        "format": "painting",
-    },
-    {
-        "title": "Frankenstein, first edition",
-        "date": {"displayDate": "1 January 1818", "year": 1818},
-        "creator": [{"name": "Mary Shelley", "role": "author"}],
-        "format": "printed book",
-    },
-    {
-        "title": "Map of Geneva and surroundings",
-        "date": {"year": 1815},
-        "creator": [],
-        "format": "map",
-    },
-]
-
-catalogue = []
-for r in records:
-    entry = {
-        "title": r.get("title", "Untitled"),
-        "year": r.get("date", {}).get("year", 0),
-        "creator": r["creator"][0]["name"] if r.get("creator") else "Unknown",
-        "format": r.get("format", "Unknown"),
+        "title": "Geneva Map",
+        "info": {"date": 1810}, # Missing format!
+        "people": [] # Missing person!
     }
-    catalogue.append(entry)
+]
 
-for entry in sorted(catalogue, key=lambda e: e["year"]):
-    print(f"{entry['year']} | {entry['title']} | {entry['creator']} | {entry['format']}")
+# Task:
+# 1. Loop through raw_api_data
+# 2. Extract: Title, Date, Format, and the first Person's Name
+# 3. If format is missing, use "unknown"
+# 4. If person is missing, use "Anonymous"
+# 5. Print as: "<Date> | <Title> | <Name> (<Format>)"
+
+for item in raw_api_data:
+    # Your code here
+    pass
+`,
+        expectedOutput: '1816 | Letter to Lord Byron | Mary Shelley (manuscript)\n1818 | Frankenstein MS | Mary Shelley (manuscript)\n1810 | Geneva Map | Anonymous (unknown)',
+        hints: [
+          'Use `item.get("info", {}).get("format", "unknown")` for the format.',
+          'For the person, check if the list is empty: `if item["people"]:`',
+          'Access the first person with `item["people"][0]["name"]` if the list is not empty.'
+        ],
+        solution: `raw_api_data = [
+    {
+        "title": "Letter to Lord Byron",
+        "info": {"date": 1816, "format": "manuscript"},
+        "people": [{"name": "Mary Shelley"}]
+    },
+    {
+        "title": "Frankenstein MS",
+        "info": {"date": 1818, "format": "manuscript"},
+        "people": [{"name": "Mary Shelley"}]
+    },
+    {
+        "title": "Geneva Map",
+        "info": {"date": 1810},
+        "people": []
+    }
+]
+
+for item in raw_api_data:
+    title = item.get("title", "Unknown")
+    date = item.get("info", {}).get("date", "Unknown")
+    fmt = item.get("info", {}).get("format", "unknown")
+    
+    if item.get("people"):
+        name = item["people"][0]["name"]
+    else:
+        name = "Anonymous"
+        
+    print(f"{date} | {title} | {name} ({fmt})")
 `,
       },
       {
         id: 'web-data-04-c2',
-        title: 'Count items by format and creator',
+        title: 'Sorting the Archive',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `# Analyse this collection: count items by format and by creator
-from collections import Counter
-
-records = [
-    {"title": "Letter to Leigh Hunt", "creator": "Mary Shelley", "format": "manuscript"},
-    {"title": "Letter to Maria Gisborne", "creator": "Mary Shelley", "format": "manuscript"},
-    {"title": "Frankenstein, first edition", "creator": "Mary Shelley", "format": "printed book"},
-    {"title": "Portrait of Shelley", "creator": "Amelia Curran", "format": "painting"},
-    {"title": "Sketch of Lake Geneva", "creator": "Amelia Curran", "format": "drawing"},
-    {"title": "Map of Geneva", "creator": "Unknown", "format": "map"},
-    {"title": "The Last Man", "creator": "Mary Shelley", "format": "printed book"},
+        starterCode: `# A flattened list of archival items
+items = [
+    {"year": 1823, "title": "Valperga"},
+    {"year": 1818, "title": "Frankenstein"},
+    {"year": 1826, "title": "The Last Man"},
+    {"year": 1817, "title": "History of a Six Weeks' Tour"}
 ]
 
-# 1. Count items by format, print sorted alphabetically:
-#    "By format:"
-#    "  <format>: <count>"
-# 2. Count items by creator, print sorted alphabetically:
-#    "By creator:"
-#    "  <creator>: <count>"
+# Task: Sort the list so the oldest items appear first.
+# Print the title of each item in chronological order.
 
 # Your code here
 `,
-        expectedOutput: 'By format:\n  drawing: 1\n  manuscript: 2\n  map: 1\n  painting: 1\n  printed book: 2\nBy creator:\n  Amelia Curran: 2\n  Mary Shelley: 4\n  Unknown: 1',
+        expectedOutput: "History of a Six Weeks' Tour\nFrankenstein\nValperga\nThe Last Man",
         hints: [
-          'Use `Counter(r["format"] for r in records)` to count by format, and similarly for creator.',
-          'Print the heading first, then loop through `sorted(counter.items())` for each category.',
-          'Use two spaces of indentation before each entry to match the expected output.',
+          'Use the `sorted()` function.',
+          'Pass a key to the sort: `sorted(items, key=lambda x: x["year"])`.'
         ],
-        solution: `from collections import Counter
-
-records = [
-    {"title": "Letter to Leigh Hunt", "creator": "Mary Shelley", "format": "manuscript"},
-    {"title": "Letter to Maria Gisborne", "creator": "Mary Shelley", "format": "manuscript"},
-    {"title": "Frankenstein, first edition", "creator": "Mary Shelley", "format": "printed book"},
-    {"title": "Portrait of Shelley", "creator": "Amelia Curran", "format": "painting"},
-    {"title": "Sketch of Lake Geneva", "creator": "Amelia Curran", "format": "drawing"},
-    {"title": "Map of Geneva", "creator": "Unknown", "format": "map"},
-    {"title": "The Last Man", "creator": "Mary Shelley", "format": "printed book"},
+        solution: `items = [
+    {"year": 1823, "title": "Valperga"},
+    {"year": 1818, "title": "Frankenstein"},
+    {"year": 1826, "title": "The Last Man"},
+    {"year": 1817, "title": "History of a Six Weeks' Tour"}
 ]
 
-format_counts = Counter(r["format"] for r in records)
-creator_counts = Counter(r["creator"] for r in records)
+sorted_items = sorted(items, key=lambda x: x["year"])
 
-print("By format:")
-for fmt, count in sorted(format_counts.items()):
-    print(f"  {fmt}: {count}")
-
-print("By creator:")
-for creator, count in sorted(creator_counts.items()):
-    print(f"  {creator}: {count}")
+for item in sorted_items:
+    print(item["title"])
 `,
       },
     ],

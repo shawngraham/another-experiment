@@ -1,4 +1,3 @@
-import { useState } from 'react';  
   
 export function AboutPage() {  
   return (  
@@ -57,7 +56,7 @@ export function AboutPage() {
 
       <section>  
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Who built this?</h2>  
-        <p className="text-gray-600 mb-8">This project was conceived and designed by Shawn Graham, and implemented after a series of experiments with various flavours of 'literate programming' approaches. Some of it was hand-coded by Shawn, while other parts were developed in the context of his 2024/25 HIST4805a seminar on AI and/of History class. Some of the plumbing was created through a careful process of defining a specification and iterating with Claude Opus 4.6. The framework developed can be forked on Github and redeployed with new content, so feel free to do so for your own teaching purposes.</p>  
+        <p className="text-gray-600 mb-8">This project was supported through a Teaching Award from Carleton University. The project was conceived and designed by Shawn Graham, and implemented after a series of experiments with various flavours of 'literate programming' approaches. Some of it was hand-coded by Shawn, while other parts were developed in the context of his 2024/25 HIST4805a seminar on AI and/of History class. Some of the plumbing was created through a careful process of defining a specification and iterating with Claude Opus 4.6. The framework developed can be forked on Github and redeployed with new content, so feel free to do so for your own teaching purposes.</p>  
       </section>  
     </div>  
     
