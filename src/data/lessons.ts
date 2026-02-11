@@ -7217,6 +7217,1261 @@ for item in sorted_items:
       },
     ],
   },
+  // --- Compiled from lessons-in-development (2026-02-10) ---
+  {
+    id: 'rel-mod-01',
+    title: 'The Geometry of Language',
+    moduleId: 'relational-models',
+    prerequisites: ['python-basics'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Explain the distributional hypothesis ("words are known by the company they keep")',
+      'Visualize words as coordinates in a multi-dimensional space',
+      'Calculate basic similarity between two word concepts using Python',
+    ],
+    keywords: ['word-vectors', 'embeddings', 'similarity', 'abs'],
+    content: `# The Geometry of Language
+
+## The Library of Proximity
+
+Imagine a library where books aren't organized by alphabet or author, but by **meaning**. 
+
+In this library, the distance between two books tells you how much they have in common. To find a book about "Sailing," you don't look for the letter 'S'; you walk toward the "Ocean" section. 
+
+If you walk 5 steps from "King" to "Man," and then walk 5 steps from "Queen" in the same direction, you should arrive at "Woman." This "Map of Meaning" is what computer scientists call a **Vector Space**.
+
+## Key Concepts
+
+### 1. The Distributional Hypothesis
+Computers don't have childhood memories or sensory experiences. They learn what "Coffee" is by noticing it often appears near words like "mug," "drink," "caffeine," and "morning."
+
+:::definition
+**Distributional Hypothesis**: The idea that words appearing in similar contexts share similar meanings.
+:::
+
+### 2. Words as Coordinates
+To place a word on a map, we give it coordinates. In a 2D map, a point is \`[x, y]\`. In language models, we might use hundreds of dimensions.
+
+Imagine we score words based on two features: **[Nature, Technology]**.
+*   **Tree**: \`[0.9, 0.1]\` (High nature, Low tech)
+*   **Circuit**: \`[0.1, 0.9]\` (Low nature, High tech)
+*   **Park**: \`[0.7, 0.2]\` (Mostly nature, some tech like benches/lights)
+
+These lists of numbers are called **Word Vectors** or **Embeddings**.
+
+### 3. Measuring the Gap
+To find out how similar two words are, we calculate the **distance** between their coordinates. 
+
+A simple way to do this in Python is using the \`abs()\` (absolute value) function. This tells us the positive distance between two numbers, regardless of which one is larger.
+
+\`\`\`python
+# If "Forest" is at 10 and "Bush" is at 8
+distance = abs(10 - 8) # Result is 2
+\`\`\`
+
+## Practice: The Feature Map
+
+In the sandbox, we are using a 1D coordinate system (just one number) representing **"Wetness."** 
+
+:::try-it
+Assign a value from 1 to 10 for these three words based on how "wet" they are. Then, calculate the distance between \`rain\` and \`umbrella\`.
+
+\`\`\`python
+rain = 10
+umbrella = 2
+desert = 0
+
+# Calculate the distance
+gap = abs(rain - umbrella)
+print(f"The distance is: {gap}")
+\`\`\`
+:::
+
+## Transfer: Changing Contexts
+
+How might "Word Vectors" change based on the archive you use? 
+
+If you trained a model on **18th-century medical journals**, the word "Treatment" would be geographically very close to "Leeches" and "Bloodletting." In a **21st-century** model, "Treatment" would move far away from "Leeches" and closer to "Antibiotics" or "Therapy."`,
+    challenges: [
+      {
+        id: 'rel-mod-01-c1',
+        title: 'Calculating Similarity',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# Coordinates: [Nature Score, Urban Score]
+forest = [10, 1]
+tree = [9, 2]
+skyscraper = [1, 10]
+
+# 1. Calculate the distance between forest and tree 
+# Hint: Use index [0] for the Nature Score
+dist_tree = abs(forest[0] - tree[0])
+
+# 2. Calculate the distance between forest and skyscraper
+# Hint: Subtract the Nature score of skyscraper from forest
+dist_city = 
+
+# 3. Use an if statement to print the smaller distance
+if dist_tree < dist_city:
+    print(dist_tree)
+else:
+    print(dist_city)
+`,
+        expectedOutput: '1',
+        hints: [
+          'To get the first number in a list, use `list_name[0]`.',
+          'Use `abs(forest[0] - skyscraper[0])` to find the distance for the city.',
+          'The "smaller distance" represents the word that is more "similar" in meaning.',
+        ],
+        solution: `forest = [10, 1]
+tree = [9, 2]
+skyscraper = [1, 10]
+
+# Calculate distances using the first dimension (Nature)
+dist_tree = abs(forest[0] - tree[0])
+dist_city = abs(forest[0] - skyscraper[0])
+
+# Compare and print the smaller value
+if dist_tree < dist_city:
+    print(dist_tree)
+else:
+    print(dist_city)
+`,
+      },
+    ],
+  },
+  {
+    id: 'rel-mod-02',
+    title: 'Linking Facts with Knowledge Graph Embedding Models',
+    moduleId: 'relational-models',
+    prerequisites: ['rel-mod-01'],
+    estimatedTimeMinutes: 45,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Define the structure of a "Triple" (Head-Relation-Tail)',
+      'Understand how Knowledge Graph Embeddings (KGE) model structured relationships',
+      'Identify potential gaps in historical linked data',
+    ],
+    keywords: ['knowledge-graphs', 'pykeen', 'linked-data', 'triples'],
+    content: `# Linking Facts with Knowledge Graph Embedding Models
+
+## Analogy: From Clouds to Constellations
+
+In the previous lesson, we saw that **Word Vectors** are like a cloud of stars: we know which stars are near each other, but we don't necessarily know *why*.
+
+A **Knowledge Graph** (also know as a relational model) is a constellation. It doesn't just put stars in a space; it draws explicit lines between them and labels those lines. It tells us that Star A is "connected to" Star B by a specific relationship, like "is-the-parent-of" or "was-written-by."
+
+## Key Concepts
+
+### 1. The Triple
+While word vectors learn from messy, unstructured sentences, **Knowledge Graph Embeddings (KGE)** learn from structured facts called **Triples**. A triple is the smallest unit of information in a graph.
+
+:::definition
+**Triple**: A statement consisting of three parts:
+1.  **Head** (Subject): The starting entity.
+2.  **Relation** (Predicate): The link or verb.
+3.  **Tail** (Object): The ending entity.
+:::
+
+In Python, we can represent a single fact using a simple list.
+
+\`\`\`python
+# Representing a triple: [Head, Relation, Tail]
+triple = ["Jane_Austen", "author_of", "Persuasion"]
+
+print(f"Entity 1: {triple[0]}")
+print(f"Relationship: {triple[1]}")
+print(f"Entity 2: {triple[2]}")
+\`\`\`
+
+### 2. PyKEEN and Predictive History
+**PyKEEN** is a Python library used to train models on these triples. Once a model understands the "geometry" of your graph, it can predict missing links.
+
+If the graph knows that *Person A* was born in *City B*, and *City B* is in *Country C*, PyKEEN helps the computer mathematically "guess" that *Person A* is a citizen of *Country C*. 
+
+\`\`\`python
+# A Knowledge Graph is just a collection of these triples
+knowledge_graph = [
+    ["London", "located_in", "United_Kingdom"],
+    ["Charles_Dickens", "born_in", "Landport"],
+    ["Landport", "located_in", "United_Kingdom"]
+]
+
+print(f"Our graph contains {len(knowledge_graph)} facts.")
+\`\`\`
+
+## Practice: Navigating the List
+
+When we store triples in a list, we use **indexes** to access the different parts:
+*   \`triple[0]\` is the **Head**
+*   \`triple[1]\` is the **Relation**
+*   \`triple[2]\` is the **Tail**
+
+:::try-it
+In the sandbox, try to print just the **Relation** from this historical triple.
+
+\`\`\`python
+fact = ["Rosalind_Franklin", "discovered", "DNA_Structure"]
+
+# Access index 1 to get the relation
+print(fact[1]) 
+\`\`\`
+:::
+
+## Transfer: The Silence of the Archive
+
+Knowledge Graphs are powerful, but they are only as good as their data. If an archive primarily records the letters of "Great Men," a Knowledge Graph will visualize women and marginalized groups as **"Isolated Nodes"**—stars with no lines connecting them to the rest of the constellation. 
+
+When you build a graph, ask: *Who is missing a connection, and why?*
+
+:::challenge
+Represent a knowledge statement as a triplet and extract specific labels from a collection of facts.
+:::`,
+    challenges: [
+      {
+        id: 'rel-mod-02-c1',
+        title: 'Building a Triple',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# A Triple must have a Head, Relation, and Tail.
+# Complete the triple to show that 'London' is the 'capital_of' 'UK'.
+
+head = "London"
+relation = "" # What's the nature of the relationship?
+tail = "" # What goes here?
+
+# Combine them into a list called 'my_triple'
+# Hint: use [head, relation, tail]
+my_triple = []
+
+print(my_triple)
+`,
+        expectedOutput: '[\'London\', \'capital_of\', \'UK\']',
+        hints: [
+          'Assign the string `"capital_of"` to the `relation` variable.',
+          'Assign the string `"UK"` to the `tail` variable.',
+          'Inside the square brackets for `my_triple`, list the variables separated by commas: `head, relation, tail`.',
+        ],
+        solution: `head = "London"
+relation = "capital_of"
+tail = "UK"
+
+my_triple = [head, relation, tail]
+
+print(my_triple)
+`,
+      },
+      {
+        id: 'rel-mod-02-c2',
+        title: 'Relation Extraction',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# The archive is a list of lists (triples)
+archive = [
+    ["The_Hobbit", "written_by", "Tolkien"],
+    ["London", "located_in", "UK"],
+    ["Emma", "written_by", "Austen"]
+]
+
+for triple in archive:
+    # 1. Check if the relation (index 1) is equal to "written_by"
+    if triple[1] == "written_by":
+        # 2. Print the name of the book (index 0)
+        print()
+`,
+        expectedOutput: 'The_Hobbit\nEmma',
+        hints: [
+          '`triple[1]` accesses the middle part of each list (the relationship).',
+          '`triple[0]` accesses the first part of each list (the book name).',
+          'Make sure your `print()` statement is indented inside the `if` block!',
+        ],
+        solution: `archive = [
+    ["The_Hobbit", "written_by", "Tolkien"],
+    ["London", "located_in", "UK"],
+    ["Emma", "written_by", "Austen"]
+]
+
+for triple in archive:
+    if triple[1] == "written_by":
+        # triple[0] refers to the head/subject
+        print(triple[0])
+`,
+      },
+    ],
+  },
+  {
+    id: 'rel-mod-03',
+    title: 'Vector Arithmetic in 2D Space',
+    moduleId: 'relational-models',
+    prerequisites: ['rel-mod-02'],
+    estimatedTimeMinutes: 35,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Perform element-wise vector addition and subtraction in Python',
+      'Define the "TransE" model (Translation Embeddings) in a 2D space',
+      'Explain how relations act as directional "journeys" between entities',
+    ],
+    keywords: ['vector-arithmetic', 'TransE', 'embedding-space', '2D-vectors'],
+    content: `# Vector Arithmetic: Thinking with Directions
+
+## Analogy: A Map of Meaning
+
+Imagine a map where cities aren't placed by geography, but by **culture**. The North-South axis measures **Artistic Significance**, and the East-West axis measures **Economic Power**.
+
+On this map, to get from "Florence" to "Leonardo da Vinci," you would travel a specific direction: **North-West** (High Art, Lower Economic Power). This "journey"—\`[Change in Economy, Change in Art]\`—is a **vector**. 
+
+If you start at "Rome" and take that *exact same journey*, you should land near "Michelangelo." The relationship "was_home_to_artist" is a repeatable, directional step on the map.
+
+## Key Concepts
+
+### 1. Relationships as Translations (TransE)
+The model that powers this is called **TransE**. It treats relationships as a literal translation (or "shift") across the map.
+
+:::definition
+**TransE (Translation Embedding)**: A model that represents entities as points and relationships as vectors. It assumes that if you start at the Head's coordinates and "walk" along the Relation's vector, you will arrive at the Tail's coordinates.
+\`Head + Relation ≈ Tail\`
+:::
+
+### 2. The Arithmetic of Meaning
+In Python, we represent these 2D coordinates as lists with two numbers. To add vectors, we add each element at the same index.
+
+\`\`\`python
+# Coordinates: [Economic_Power, Artistic_Significance]
+florence = [7, 9]
+was_home_to_artist = [-2, 1] # Move left (less econ), move up (more art)
+
+# Predict the artist's location
+# Add the first elements: 7 + (-2) = 5
+# Add the second elements: 9 + 1 = 10
+da_vinci = [florence[0] + was_home_to_artist[0], florence[1] + was_home_to_artist[1]]
+
+print(f"The artist is at: {da_vinci}")
+\`\`\`
+
+## Practice
+
+:::try-it
+In the sandbox, create coordinates for "UK" \`[8, 6]\` and a "capital_of" relation \`[-1, 2]\`. Calculate the coordinates for "London" by adding the two vectors element-wise.
+
+\`\`\`python
+uk = [8, 6]
+capital_of = [-1, 2]
+
+london_x = uk[0] + capital_of[0]
+london_y = uk[1] + capital_of[1]
+
+print([london_x, london_y])
+\`\`\`
+:::
+
+## Transfer: Detecting Bias through Subtraction
+
+This vector arithmetic is a powerful tool for digital humanities research. By training a model on historical texts, we can uncover hidden biases.
+
+If we calculate the vector for \`Doctor - Man + Woman\`, a perfectly unbiased model would result in \`Doctor\`. However, models trained on 20th-century texts often result in \`Nurse\`. The vector difference between the expected and actual result gives us a measurable coordinate for the social bias present in the archive.
+
+:::challenge
+Apply vector arithmetic to predict entity positions and identify relationship vectors.
+:::`,
+    challenges: [
+      {
+        id: 'rel-mod-03-c1',
+        title: 'Predicting the Tail in 2D',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# Coordinates: [Military_Power, Political_Influence]
+rome = [10, 8]
+had_emperor = [-1, 2] # Relation: Less military, more political
+
+# 1. Add the first elements (index 0) together
+x = rome[0] + had_emperor[0]
+
+# 2. Add the second elements (index 1) together
+# Your code here
+y = 
+
+# 3. Combine them into the final coordinate list
+augustus = [x, y]
+print(augustus)
+`,
+        expectedOutput: '[9, 10]',
+        hints: [
+          'To get the second number in a list, use `list_name[1]`.',
+          'The `y` coordinate should be `rome[1] + had_emperor[1]`.',
+          'If you just did `rome + had_emperor`, you would get a list with 4 items. We want a list with 2 items!',
+        ],
+        solution: `rome = [10, 8]
+had_emperor = [-1, 2]
+
+x = rome[0] + had_emperor[0]
+y = rome[1] + had_emperor[1]
+
+augustus = [x, y]
+print(augustus)
+`,
+      },
+      {
+        id: 'rel-mod-03-c2',
+        title: 'Finding the Relationship Vector',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# Coordinates: [Political_Power, Cultural_Significance]
+france = [10, 7]
+eiffel_tower = [4, 10]
+
+# Calculate the relation vector by subtracting
+# Hint: tail - head
+# 1. Subtract index 0 of France from index 0 of Eiffel Tower
+x = eiffel_tower[0] - france[0]
+
+# 2. Subtract index 1 of France from index 1 of Eiffel Tower
+y = 
+
+is_location_of = [x, y]
+print(is_location_of)
+`,
+        expectedOutput: '[-6, 3]',
+        hints: [
+          'Remember the formula: `Relation = Tail - Head`.',
+          'To find the change in "Cultural Significance" (y), calculate `eiffel_tower[1] - france[1]`.',
+        ],
+        solution: `# Coordinates: [Political_Power, Cultural_Significance]
+france = [10, 7]
+eiffel_tower = [4, 10]
+
+# Calculate the relation vector by subtracting
+x = eiffel_tower[0] - france[0]
+y = eiffel_tower[1] - france[1]
+
+is_location_of = [x, y]
+print(is_location_of)
+`,
+      },
+    ],
+  },
+  {
+    id: 'rel-mod-04',
+    title: 'Predicting the Unknown',
+    moduleId: 'relational-models',
+    prerequisites: ['rel-mod-03'],
+    estimatedTimeMinutes: 40,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Explain how models perform "Link Prediction"',
+      'Calculate the "Error Score" of a predicted triple',
+      'Understand why models provide a ranked list of candidates rather than one "correct" answer',
+    ],
+    keywords: ['link-prediction', 'scoring-function', 'rank', 'candidates'],
+    content: `# Predicting the Unknown
+
+## Analogy: The Search Party
+
+Imagine you are looking for a lost traveler. You know their starting point (**The Head**) and the direction they were walking (**The Relation**). 
+
+You follow their tracks and arrive at a clearing in the forest. The traveler isn't standing exactly there, but you see three cabins nearby. 
+*   **Cabin A** is 10 meters away.
+*   **Cabin B** is 50 meters away.
+*   **Cabin C** is 200 meters away.
+
+You would conclude that **Cabin A** is the most likely place to find them. In Knowledge Graphs, this is called **Link Prediction**. We calculate where we *should* land, and then look at which real-world entities are closest to that spot.
+
+## Key Concepts
+
+### 1. The Scoring Function
+In the previous lesson, we used the formula \`Head + Relation = Tail\`. In the real world, the math is rarely perfect. The landing spot usually falls in the empty space *near* the actual target. The distance between your "predicted spot" and the "actual entity" is called the **Score**. 
+
+:::definition
+**Scoring Function**: A calculation of how "plausible" a triple is. In many models, the lower the distance (score), the more likely the triple is to be true.
+:::
+
+\`\`\`python
+# Predicted landing spot [x, y]
+prediction = [10, 10]
+# Actual entity location
+entity_loc = [12, 10]
+
+# Distance (Score) calculation
+score = abs(prediction[0] - entity_loc[0]) + abs(prediction[1] - entity_loc[1])
+print(f"Plausibility Score: {score}") # Lower is better!
+\`\`\`
+
+### 2. Candidate Ranking
+Because models are probabilistic, they don't give one answer. They look at every entity in the archive and **rank** them from the smallest distance to the largest.
+
+\`\`\`python
+predicted_spot = [5, 10]
+
+# Candidate entities and their coordinates
+candidates = {
+    "Shakespeare": [5, 11],  # Distance: 1
+    "Newton": [10, 15],      # Distance: 10
+    "Dickens": [4, 8]        # Distance: 3
+}
+
+# The model ranks Shakespeare as the #1 prediction.
+\`\`\`
+
+## Practice
+
+:::try-it
+In the sandbox, we have a predicted coordinate of \`[10, 10]\`. There are two entities: \`Archive_A\` at \`[12, 10]\` and \`Archive_B\` at \`[20, 10]\`. Calculate the distance for both.
+
+\`\`\`python
+pred = [10, 10]
+a = [12, 10]
+b = [20, 10]
+
+score_a = abs(pred[0] - a[0]) + abs(pred[1] - a[1])
+score_b = abs(pred[0] - b[0]) + abs(pred[1] - b[1])
+
+print(f"A Score: {score_a}, B Score: {score_b}")
+\`\`\`
+:::
+
+## Transfer: Beyond the Known
+
+Link prediction is used by historians to fill "gaps" in archives. If a 19th-century letter mentions a "Doctor" but the name is smudged, a Knowledge Graph can look at the context—the location, the date, and the social circle—to predict the missing name.
+
+However, we must be careful: a model will only predict things similar to what it has already seen. If your model only knows about male doctors, it will never predict a woman's name for that smudged text, even if she was there. **Ranking is not just math; it is a reflection of the data's history.**
+
+:::challenge
+Calculate prediction errors and identify the most likely candidate from a list.
+:::`,
+    challenges: [
+      {
+        id: 'rel-mod-04-c1',
+        title: 'Calculating the Prediction Error',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# Where the math says we should land
+predicted_point = [10, 20]
+
+# Where the actual entity "Jane_Austen" is
+actual_point = [12, 19]
+
+# 1. Find the distance for the X coordinate
+dist_x = abs(predicted_point[0] - actual_point[0])
+
+# 2. Find the distance for the Y coordinate
+# Hint: use abs() and subtract the index 1 values
+dist_y = 
+
+# 3. Add them together to get the total "Error Score"
+total_error = 
+
+print(total_error)
+`,
+        expectedOutput: '3',
+        hints: [
+          '`dist_y` is the absolute difference between `predicted_point[1]` and `actual_point[1]`.',
+          '`abs(a - b)` ensures the distance is always a positive number.',
+          'Add `dist_x` and `dist_y` together to get the final result.',
+        ],
+        solution: `predicted_point = [10, 20]
+actual_point = [12, 19]
+
+dist_x = abs(predicted_point[0] - actual_point[0])
+dist_y = abs(predicted_point[1] - actual_point[1])
+
+total_error = dist_x + dist_y
+print(total_error)
+`,
+      },
+      {
+        id: 'rel-mod-04-c2',
+        title: 'Identifying the Top Result',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# Candidates and their distance from the predicted point
+# Format: [Name, Score]
+results = [
+    ["Entity_A", 15],
+    ["Entity_B", 2],
+    ["Entity_C", 8]
+]
+
+# We want to find the entity with the minimum score
+best_entity = ""
+lowest_score = 100 # A high starting number
+
+for candidate in results:
+    name = candidate[0]
+    score = candidate[1]
+    
+    # Check if the current score is lower than our 'lowest_score'
+    if score < lowest_score:
+        # Update lowest_score and best_entity
+        # Your code here
+        pass
+
+print(best_entity)
+`,
+        expectedOutput: 'Entity_B',
+        hints: [
+          'Inside the `if` block, you need to set `lowest_score = score`.',
+          'You also need to set `best_entity = name` so the program remembers which one was the best.',
+        ],
+        solution: `results = [
+    ["Entity_A", 15],
+    ["Entity_B", 2],
+    ["Entity_C", 8]
+]
+
+best_entity = ""
+lowest_score = 100 
+
+for candidate in results:
+    name = candidate[0]
+    score = candidate[1]
+    
+    if score < lowest_score:
+        lowest_score = score
+        best_entity = name
+
+print(best_entity)
+`,
+      },
+    ],
+  },
+  {
+    id: 'rel-mod-05',
+    title: 'Measuring Truth: Evaluation Metrics',
+    moduleId: 'relational-models',
+    prerequisites: ['rel-mod-04'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Define "Negative Sampling" and why it is necessary for training',
+      'Calculate a simple "Hits@K" metric',
+      'Interpret model performance in the context of historical archives',
+    ],
+    keywords: ['evaluation', 'hits-at-k', 'negative-sampling', 'accuracy'],
+    content: `# Measuring Truth: Evaluation Metrics
+
+## Analogy: The Multiple Choice Test
+
+Imagine you are an English teacher. You give a student a question: *"Who wrote Frankenstein?"*
+
+If the student just says "A person," they aren't exactly wrong, but they aren't right either. To really test them, you give them a list of choices:
+1. Mary Shelley
+2. Percy Shelley
+3. Lord Byron
+4. Bram Stoker
+
+If the correct answer is in their **Top 1** guess, they are an expert. If the correct answer is at least in their **Top 3** list, they are doing okay. In Knowledge Graphs, we call this **Hits@K**.
+
+## Key Concepts
+
+### 1. Negative Sampling
+To learn what is "true," a model like PyKEEN must also see what is "false." If a model only ever sees correct triples, it might start to believe that *everyone* wrote *Frankenstein*. 
+
+:::definition
+**Negative Sampling**: The process of creating "fake" triples by taking a real triple and swapping the Head or Tail with a random entity. 
+*Real: (Shelley, wrote, Frankenstein)*
+*Fake: (Napoleon, wrote, Frankenstein)*
+:::
+
+### 2. Hits@K
+When we evaluate a model, we ask: "When you ranked all possible answers, where did the correct one land?"
+
+*   **Hits@1**: Was the correct answer the #1 choice?
+*   **Hits@3**: Was the correct answer in the top 3?
+*   **Hits@10**: Was the correct answer in the top 10?
+
+\`\`\`python
+# A model's ranked guesses for "Capital of France"
+predictions = ["Lyon", "Marseille", "Paris", "Nice", "Bordeaux"]
+
+# In Python, index 2 is the 3rd item
+# Hits@3 = True (It's in the first 3)
+# Hits@1 = False (It's not in the first 1)
+\`\`\`
+
+## Practice
+
+:::try-it
+Imagine a model is trying to predict which philosopher influenced **Mary Wollstonecraft**. It has ranked its top 5 guesses in a list. 
+
+In the sandbox, use **list slicing** to extract the "Top 3" and check if "Rousseau" made the cut.
+
+\`\`\`python
+# The model's ranked guesses (Index 0 is the #1 guess)
+guesses = ["Godwin", "Locke", "Rousseau", "Burke", "Paine"]
+
+# 1. Get the first three items
+top_3 = guesses[0:3]
+
+# 2. Print the top_3 list to see who is in it
+print(f"Top 3 Candidates: {top_3}")
+
+# 3. Check if 'Rousseau' is in that specific slice
+if "Rousseau" in top_3:
+    print("Result: Hit@3")
+\`\`\`
+:::
+
+## Transfer: What is a "Good" Score?
+
+In the hard sciences, a low Hits@1 score might be considered a failure. But in the **Digital Humanities**, a model that can't get the #1 answer might still be incredibly useful. 
+
+If a model's Hits@10 is high, it means the model has learned the "neighborhood" of truth. It might not know exactly which monk wrote a specific manuscript, but it knows the correct *monastery* or *time period*. In an archive of thousands of people, narrowing a mystery down to the "Top 10" candidates is often a massive breakthrough.
+
+:::challenge
+Determine if the correct answers fall within the model's top-ranked results.
+:::`,
+    challenges: [
+      {
+        id: 'rel-mod-05-c1',
+        title: 'The Hits@3 Test',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `predictions = ["Vinci", "Michelangelo", "Raphael", "Donatello", "Titian"]
+correct_answer = "Raphael"
+
+# 1. Get the Top 3 candidates using a list slice
+# Hint: list_name[0:3]
+top_three = 
+
+# 2. Check if the correct_answer is in the top_three list
+if correct_answer in top_three:
+    print("Hit@3")
+else:
+    print("Miss")
+`,
+        expectedOutput: 'Hit@3',
+        hints: [
+          'Use `predictions[0:3]` to get the first three elements.',
+          'The `in` keyword in Python is used to check if a value exists inside a list.',
+        ],
+        solution: `predictions = ["Vinci", "Michelangelo", "Raphael", "Donatello", "Titian"]
+correct_answer = "Raphael"
+
+# Slicing from index 0 up to (but not including) 3
+top_three = predictions[0:3]
+
+if correct_answer in top_three:
+    print("Hit@3")
+else:
+    print("Miss")
+`,
+      },
+      {
+        id: 'rel-mod-05-c2',
+        title: 'Calculating Accuracy (Mean Hits)',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# Did the model get the answer right for these three queries?
+# 1 = Hit, 0 = Miss
+results = [1, 0, 1]
+
+# Calculate the sum of the hits
+total_hits = sum(results)
+
+# Calculate the accuracy: total_hits divided by the number of results
+# Hint: use len(results) to get the count
+accuracy = 
+
+print(accuracy)
+`,
+        expectedOutput: '0.6666666666666666',
+        hints: [
+          'Divide `total_hits` by `len(results)`.',
+          'The forward slash `/` is the operator for division in Python.',
+        ],
+        solution: `results = [1, 0, 1]
+
+total_hits = sum(results)
+# Accuracy is the average of the hits
+accuracy = total_hits / len(results)
+
+print(accuracy)
+`,
+      },
+    ],
+  },
+  // --- Compiled from lessons-in-development (2026-02-10) ---
+  {
+    id: 'generative-01',
+    title: 'The Oulipo and Constraint-based Writing',
+    moduleId: 'generative-poetics',
+    prerequisites: ['python-basics'],
+    estimatedTimeMinutes: 45,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Explain the Oulipian concept of "constrained writing"',
+      'Implement a basic "N+7" algorithm in Python',
+      'Understand how formal constraints can bypass "writer\'s block"',
+    ],
+    keywords: ['oulipo', 'constraints', 'n+7', 'algorithms'],
+    content: `# The Oulipo and Constraint-based Writing
+
+## Analogy
+Imagine you are a chef, but you are told you cannot use the letter "E" in any of your ingredients. No *eggs*, no *cheese*, no *beef*. This constraint seems like a limitation, but it actually forces you to discover new flavors (like *calamari* or *mushrooms*) that you might have ignored otherwise. In the 1960s, a group of writers called the **Oulipo** (Ouvroir de littérature potentielle) used similar "rules" to spark creativity.
+
+## Key Concepts
+The Oulipo believed that "inspiration" was a myth. Instead, they used mathematical structures and algorithms to produce "potential" literature.
+
+:::definition
+**Constraint**: A formal rule (mathematical, grammatical, or alphabetical) imposed on a writer to force specific creative choices.
+:::
+
+One of their most famous methods is the **N+7** method. To perform it:
+1. Take a text.
+2. For every noun in that text, find its entry in a dictionary.
+3. Replace that noun with the 7th noun following it in the dictionary.
+
+In Python, we can simulate this by using a list of words as our "dictionary."
+
+\`\`\`python
+dictionary = ["apple", "bird", "cloud", "dance", "eagle", "forest", "ghost", "house", "ice"]
+word = "bird"
+
+# Find index and add 7
+old_index = dictionary.index(word)
+new_index = (old_index + 2) % len(dictionary) # We use +2 for this short list
+print(dictionary[new_index]) # Output: "dance"
+\`\`\`
+
+## Practice
+:::try-it
+Change the \`index + 2\` to \`index + 5\` in the example above. What happens if the index goes past the end of the list? (Hint: The \`%\` operator helps "wrap" it back to the start).
+:::
+
+## Transfer
+Constraints are not just for games; they are used in DH to reveal the "underlying skeleton" of a text. By forcing a text into a new shape, we see patterns we missed.
+
+:::challenge
+Write a function that takes a short sentence and replaces every word with the word located **3 positions later** in a provided word list.
+:::`,
+    challenges: [
+      {
+        id: 'generative-01-c1',
+        title: 'Implement N+3 Replacement',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# A small dictionary of nouns
+vocabulary = ["apple", "bread", "candle", "dolphin", "elephant", "forest", "guitar", "hill", "island", "jungle"]
+
+sentence = ["apple", "forest"]
+
+# 1. Create an empty list called 'result'
+# 2. Loop through each word in 'sentence'
+# 3. Find the index of that word in 'vocabulary'
+# 4. Find the word at (index + 3)
+# 5. Append it to 'result'
+
+result = []
+
+# Your code here
+
+print(result)
+`,
+        expectedOutput: '[\'dolphin\', \'island\']',
+        hints: [
+          'Use `vocabulary.index(word)` to find the number position of a word.',
+          'Remember that `list[new_index]` retrieves the item at that position.',
+          'If you want to be safe, use `(index + 3) % len(vocabulary)` to avoid errors if the word is at the end of the list.',
+        ],
+        solution: `vocabulary = ["apple", "bread", "candle", "dolphin", "elephant", "forest", "guitar", "hill", "island", "jungle"]
+sentence = ["apple", "forest"]
+
+result = []
+for word in sentence:
+    idx = vocabulary.index(word)
+    new_word = vocabulary[idx + 3]
+    result.append(new_word)
+
+print(result)
+`,
+      },
+    ],
+  },
+  {
+    id: 'generative-02',
+    title: 'Stochastic Text: Building Markov Chain Generators',
+    moduleId: 'generative-poetics',
+    prerequisites: ['generative-01'],
+    estimatedTimeMinutes: 60,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Define "stochastic" and "state" in text generation',
+      'Build a Markov chain dictionary (transition table)',
+      'Generate a sentence based on word probabilities',
+    ],
+    keywords: ['markov chains', 'probability', 'stochastic', 'text generation'],
+    content: `# Stochastic Text: Building Markov Chain Generators
+
+## Analogy
+Think of a Markov Chain like your smartphone’s "Auto-complete" or "Predictive Text." It doesn't know *what* you are trying to say; it only knows that when you type "How," the most likely next word is "are." It looks at the **current state** to guess the **next state**.
+
+## Key Concepts
+
+:::definition
+**Stochastic**: A process that is randomly determined but follows a specific pattern of probability.
+:::
+
+In a **Markov Chain**, we look at a "source text" and count which words follow which other words. 
+
+If our source is: *"The cat sat. The cat slept."*
+*   After **"The"**, the next word is always **"cat"**.
+*   After **"cat"**, the next word is **"sat"** (50% chance) or **"slept"** (50% chance).
+
+We store this in a dictionary where the **Key** is the word, and the **Value** is a list of all words that have followed it.
+
+\`\`\`python
+# A simple transition dictionary
+markov_model = {
+    "The": ["cat", "dog"],
+    "cat": ["sat", "slept"],
+    "dog": ["barked"]
+}
+
+import random
+current_word = "The"
+next_word = random.choice(markov_model[current_word])
+print(next_word)
+\`\`\`
+
+## Practice
+:::try-it
+Add more words to the \`markov_model\` above. Try adding "sat": ["down"] and see if you can generate a three-word chain.
+:::
+
+## Transfer
+This is the basis of early "AI" poetry. By feeding a Markov model the works of Shakespeare, the computer "learns" the *style* of Shakespeare (the word transitions) without understanding the *meaning*.
+
+:::challenge
+Build a transition dictionary from a provided list of words. For every word, store the word that comes immediately after it.
+:::`,
+    challenges: [
+      {
+        id: 'generative-02-c1',
+        title: 'Build the Markov Model',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `text = "the-sun-shined-the-sun-rose-the-moon-rose".split("-")
+# Result: ['the', 'sun', 'shined', 'the', 'sun', 'rose', 'the', 'moon', 'rose']
+
+model = {}
+
+# Loop through the list (stop before the last word)
+for i in range(len(text) - 1):
+    current_word = text[i]
+    next_word = text[i+1]
+    
+    # If current_word is not in model, add it as an empty list
+    if current_word not in model:
+        model[current_word] = []
+    
+    # Append the next_word to the list for that current_word
+    # Your code here
+
+print(model["the"])
+`,
+        expectedOutput: '[\'sun\', \'sun\', \'moon\']',
+        hints: [
+          'Inside the loop, you need to `append` the `next_word` to `model[current_word]`.',
+          '`model[current_word]` is a list, so use the `.append()` method.',
+        ],
+        solution: `text = "the-sun-shined-the-sun-rose-the-moon-rose".split("-")
+model = {}
+
+for i in range(len(text) - 1):
+    current_word = text[i]
+    next_word = text[i+1]
+    if current_word not in model:
+        model[current_word] = []
+    model[current_word].append(next_word)
+
+print(model["the"])
+`,
+      },
+    ],
+  },
+  {
+    id: 'generative-03',
+    title: 'Recursive Structures: Context-Free Grammars',
+    moduleId: 'generative-poetics',
+    prerequisites: ['python-basics'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Understand the "Symbol: Replacement" logic of grammars',
+      'Use recursion or iteration to expand a grammar',
+      'Create a "Mad Libs" style generator',
+    ],
+    keywords: ['grammars', 'tracery', 'recursion', 'symbols'],
+    content: `# Recursive Structures: Context-Free Grammars
+
+## Analogy
+Think of a formal grammar like a **Russian Nesting Doll** or a **Tree**. You start with a big idea ("Sentence"), and you open it up to find smaller parts ("Noun" and "Verb"). You open the "Noun" doll and find "The Octopus." You keep replacing symbols with actual words until there are no more dolls to open.
+
+## Key Concepts
+
+:::definition
+**Grammar**: A set of rules where a "Symbol" (like \`#color#\`) is replaced by a random selection from a list of options (like \`["red", "blue"]\`).
+:::
+
+This is the logic behind **Tracery**, a popular tool for making Twitter bots and generative stories. We use a dictionary to hold our rules.
+
+\`\`\`python
+rules = {
+    "animal": ["cat", "walrus", "owl"],
+    "action": ["sleeps", "dances", "computes"]
+}
+
+import random
+# A template using placeholders
+template = "The #animal# #action#."
+
+# Replacing one placeholder
+animal_choice = random.choice(rules["animal"])
+output = template.replace("#animal#", animal_choice)
+print(output)
+\`\`\`
+
+## Practice
+:::try-it
+Create a rule called \`"mood"\` with three adjectives. Add \`#mood#\` to the template string and use \`.replace()\` to insert it.
+:::
+
+## Transfer
+Grammars allow for **infinite** variety with very little data. By nesting rules (e.g., a \`#noun#\` could be a \`#descriptor# #object#\`), you can create complex, poetic sentences that never repeat.
+
+:::challenge
+Complete the "story" by replacing the symbols \`#hero#\` and \`#weapon#\` with random choices from the grammar dictionary.
+:::`,
+    challenges: [
+      {
+        id: 'generative-03-c1',
+        title: 'The Story Expander',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import random
+
+grammar = {
+    "hero": ["Knight", "Coder", "Librarian"],
+    "weapon": ["Sword", "Python Script", "Index Card"]
+}
+
+story = "The #hero# fought with a #weapon#."
+
+# 1. Pick a random hero from grammar["hero"]
+# 2. Pick a random weapon from grammar["weapon"]
+# 3. Use .replace() to update the 'story' string
+# 4. Print the result
+
+# Your code here
+`,
+        expectedOutput: 'The [Random Hero] fought with a [Random Weapon].',
+        hints: [
+          '`random.choice(list)` is the best way to get one item.',
+          'You need to call `.replace("#hero#", choice)` and then call `.replace()` again on the *result* of the first one.',
+        ],
+        solution: `import random
+
+grammar = {
+    "hero": ["Knight", "Coder", "Librarian"],
+    "weapon": ["Sword", "Python Script", "Index Card"]
+}
+
+story = "The #hero# fought with a #weapon#."
+
+h = random.choice(grammar["hero"])
+w = random.choice(grammar["weapon"])
+
+story = story.replace("#hero#", h).replace("#weapon#", w)
+print(story)
+`,
+      },
+    ],
+  },
+  {
+    id: 'generative-04',
+    title: 'Erasure and Deformance',
+    moduleId: 'generative-poetics',
+    prerequisites: ['text-analysis-fundamentals'],
+    estimatedTimeMinutes: 40,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Define "Deformance" as a critical DH method',
+      'Create an "Erasure Poetry" script',
+      'Programmatically filter text based on conditions',
+    ],
+    keywords: ['deformance', 'erasure', 'blackout poetry', 'filtering'],
+    content: `# Erasure and Deformance
+
+## Analogy
+Imagine taking a newspaper and a thick black marker. You cross out almost every word until only a few remain. The remaining words create a new, hidden poem. This is **Blackout Poetry**. In Digital Humanities, we call this "Deformance"—intentionally "breaking" a text to see it in a new light.
+
+## Key Concepts
+
+:::definition
+**Deformance**: A portmanteau of "performance" and "deformity." It is the act of programmatically altering a text to interpret it.
+:::
+
+One way to "deform" a text is to remove everything except specific types of words. For example, what happens if you remove everything from a novel except the verbs? You are left with a "pure action" version of the story.
+
+In Python, we can do this using a simple loop and an \`if\` statement.
+
+\`\`\`python
+original = "The heavy rain fell on the quiet roof"
+words = original.split()
+# Keep only words shorter than 4 letters
+erased = [w if len(w) < 4 else "___" for w in words]
+print(" ".join(erased))
+# Output: "The ___ ___ ___ on the ___ ___"
+\`\`\`
+
+## Practice
+:::try-it
+Modify the code above to replace words with dots \`...\` instead of underscores.
+:::
+
+## Transfer
+Erasure is a powerful tool for political DH. By erasing parts of a legal document or a historical archive, artists highlight the voices that are suppressed or the hidden biases within the text.
+
+:::challenge
+Create a "Vowel Erasure" function. Loop through a string and if a character is a vowel (a, e, i, o, u), replace it with an asterisk \`*\`.
+:::`,
+    challenges: [
+      {
+        id: 'generative-04-c1',
+        title: 'Vowel Blackout',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `text = "DIGITAL HUMANITIES"
+vowels = "AEIOU"
+output = ""
+
+# Loop through each character in 'text'
+# If the character is in 'vowels', add "*" to output
+# Otherwise, add the character itself to output
+
+# Your code here
+
+print(output)
+`,
+        expectedOutput: 'D*G*T*L H*M*N*T**S',
+        hints: [
+          'Use `for char in text:` to look at every letter.',
+          'Use `if char in vowels:` to check for a vowel.',
+        ],
+        solution: `text = "DIGITAL HUMANITIES"
+vowels = "AEIOU"
+output = ""
+
+for char in text:
+    if char in vowels:
+        output += "*"
+    else:
+        output += char
+
+print(output)
+`,
+      },
+    ],
+  },
+  {
+    id: 'generative-05',
+    title: 'Visualizing Poetry',
+    moduleId: 'generative-poetics',
+    prerequisites: ['data-visualization'],
+    estimatedTimeMinutes: 60,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Map text strings to 2D coordinates (X, Y)',
+      'Use Matplotlib to render text-based art',
+      'Randomize visual properties (size, color, position)',
+    ],
+    keywords: ['matplotlib', 'concrete poetry', 'visualization', 'spatial'],
+    content: `# Visualizing Poetry
+
+## Analogy
+Think of a **Concrete Poem** (like George Herbert’s "Easter Wings"). The words are not just meant to be read; they are meant to be *seen*. The shape of the poem on the page is part of its meaning. In this lesson, we treat the screen as a canvas and the words as physical objects with coordinates.
+
+## Key Concepts
+Instead of printing text line-by-line, we can use a plotting library like \`matplotlib\` to place words anywhere on an X/Y axis.
+
+\`\`\`python
+import matplotlib.pyplot as plt
+
+# Create a blank plot
+plt.figure(figsize=(5,5))
+# Place a word at X=0.5, Y=0.5
+plt.text(0.5, 0.5, "CENTER", fontsize=20, ha='center')
+plt.xlim(0, 1)
+plt.ylim(0, 1)
+plt.show()
+\`\`\`
+
+By using a loop and \`random.random()\`, we can scatter words across the screen to create "Atmospheric" or "Chaotic" poetry.
+
+## Practice
+:::try-it
+Run the code above and try changing the \`fontsize\` or the \`0.5\` coordinates. Note how the coordinate system works (0,0 is bottom-left).
+:::
+
+## Transfer
+Visualizing text allows us to represent "uncertainty" or "distance." For example, you could plot words from a novel where the "heavier" words (high frequency) are larger, or "sad" words are placed lower on the Y-axis.
+
+:::challenge
+Create a "Word Rain" visualization. Loop through a list of words and plot each one at a random X position, but with a Y position that decreases slightly each time, like they are falling.
+:::`,
+    challenges: [
+      {
+        id: 'generative-05-c1',
+        title: 'Generate Word Rain',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import matplotlib.pyplot as plt
+import random
+
+words = ["pitter", "patter", "drip", "drop", "rain", "fall"]
+
+plt.figure(figsize=(5,5))
+
+y_pos = 0.9  # Starting height
+
+for w in words:
+    x_pos = random.random() # Random float between 0 and 1
+    
+    # 1. Plot the word 'w' at x_pos and y_pos
+    # Use plt.text(x, y, word)
+    
+    # 2. Subtract 0.1 from y_pos so the next word is lower
+    
+    # Your code here
+
+plt.xlim(0, 1)
+plt.ylim(0, 1)
+plt.show()
+`,
+        expectedOutput: '(A plot showing the words scattered horizontally but stepping downwards)',
+        hints: [
+          'The function is `plt.text(x_pos, y_pos, w)`.',
+          'Don\'t forget to update `y_pos = y_pos - 0.1` inside the loop.',
+        ],
+        solution: `import matplotlib.pyplot as plt
+import random
+
+words = ["pitter", "patter", "drip", "drop", "rain", "fall"]
+plt.figure(figsize=(5,5))
+y_pos = 0.9
+
+for w in words:
+    x_pos = random.random()
+    plt.text(x_pos, y_pos, w, fontsize=12)
+    y_pos -= 0.1
+
+plt.xlim(0, 1)
+plt.ylim(0, 1)
+plt.show()
+`,
+      },
+    ],
+  },
 ];
 
 export function getLessonById(id: string): LessonDefinition | undefined {
