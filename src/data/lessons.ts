@@ -3103,7 +3103,7 @@ print(years)`,
     ],
   },
   {
-    id: 'sonification-01',
+    id: 'sonification-03',
     title: 'Multimodal Mapping (Pitch and Volume)',
     moduleId: 'data-sonification',
     prerequisites: ['sonification-02'],
@@ -7263,28 +7263,31 @@ These lists of numbers are called **Word Vectors** or **Embeddings**.
 ### 3. Measuring the Gap
 To find out how similar two words are, we calculate the **distance** between their coordinates. 
 
-A simple way to do this in Python is using the \`abs()\` (absolute value) function. This tells us the positive distance between two numbers, regardless of which one is larger.
+A simple way to start is with the \`abs()\` (absolute value) function. This tells us the positive distance between two numbers, regardless of which one is larger.
 
 \`\`\`python
-# If "Forest" is at 10 and "Bush" is at 8
-distance = abs(10 - 8) # Result is 2
+# If "Epic_Poetry" has a Formality score of 9
+# and "Diary_Entry" has a Formality score of 3
+distance = abs(9 - 3) # Result: 6 — they are quite different
 \`\`\`
 
-## Practice: The Feature Map
+When we have **two features**, we find the total distance by adding the absolute differences for each dimension. This is called the **Manhattan Distance** (imagine walking along a city grid rather than flying in a straight line).
 
-In the sandbox, we are using a 1D coordinate system (just one number) representing **"Wetness."** 
+## Practice: Comparing Texts on a Feature Map
+
+In the sandbox, we place two types of historical text on a 2D map of **[Formality, Sentiment]** and calculate the total gap across both dimensions.
 
 :::try-it
-Assign a value from 1 to 10 for these three words based on how "wet" they are. Then, calculate the distance between \`rain\` and \`umbrella\`.
+Calculate the distance between a royal proclamation and a love letter using both features.
 
 \`\`\`python
-rain = 10
-umbrella = 2
-desert = 0
+# Coordinates: [Formality, Sentiment]
+royal_proclamation = [9, 3]
+love_letter = [2, 9]
 
-# Calculate the distance
-gap = abs(rain - umbrella)
-print(f"The distance is: {gap}")
+# Total distance = abs difference in Formality + abs difference in Sentiment
+dist = abs(royal_proclamation[0] - love_letter[0]) + abs(royal_proclamation[1] - love_letter[1])
+print(f"The distance is: {dist}")
 \`\`\`
 :::
 
@@ -7296,47 +7299,46 @@ If you trained a model on **18th-century medical journals**, the word "Treatment
     challenges: [
       {
         id: 'rel-mod-01-c1',
-        title: 'Calculating Similarity',
+        title: 'Which Text Is More Similar?',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `# Coordinates: [Nature Score, Urban Score]
-forest = [10, 1]
-tree = [9, 2]
-skyscraper = [1, 10]
+        starterCode: `# Coordinates: [Formality, Sentiment]
+# Three types of historical text scored on two features
+diary_entry = [2, 8]
+legal_contract = [9, 1]
+personal_letter = [3, 7]
 
-# 1. Calculate the distance between forest and tree 
-# Hint: Use index [0] for the Nature Score
-dist_tree = abs(forest[0] - tree[0])
+# 1. Calculate total distance from diary_entry to legal_contract
+# (done for you as an example)
+dist_contract = abs(diary_entry[0] - legal_contract[0]) + abs(diary_entry[1] - legal_contract[1])
 
-# 2. Calculate the distance between forest and skyscraper
-# Hint: Subtract the Nature score of skyscraper from forest
-dist_city = 
+# 2. Calculate total distance from diary_entry to personal_letter
+# Follow the same pattern for BOTH dimensions
+dist_letter =
 
-# 3. Use an if statement to print the smaller distance
-if dist_tree < dist_city:
-    print(dist_tree)
+# 3. Print the name of whichever text type is closer to the diary
+if dist_letter < dist_contract:
+    print("letter")
 else:
-    print(dist_city)
+    print("contract")
 `,
-        expectedOutput: '1',
+        expectedOutput: 'letter',
         hints: [
-          'To get the first number in a list, use `list_name[0]`.',
-          'Use `abs(forest[0] - skyscraper[0])` to find the distance for the city.',
-          'The "smaller distance" represents the word that is more "similar" in meaning.',
+          'Follow the pattern: `abs(list_a[0] - list_b[0]) + abs(list_a[1] - list_b[1])`.',
+          'Replace the two lists with `diary_entry` and `personal_letter`.',
+          'A diary entry is informal and emotional — which other text type shares those features?',
         ],
-        solution: `forest = [10, 1]
-tree = [9, 2]
-skyscraper = [1, 10]
+        solution: `diary_entry = [2, 8]
+legal_contract = [9, 1]
+personal_letter = [3, 7]
 
-# Calculate distances using the first dimension (Nature)
-dist_tree = abs(forest[0] - tree[0])
-dist_city = abs(forest[0] - skyscraper[0])
+dist_contract = abs(diary_entry[0] - legal_contract[0]) + abs(diary_entry[1] - legal_contract[1])
+dist_letter = abs(diary_entry[0] - personal_letter[0]) + abs(diary_entry[1] - personal_letter[1])
 
-# Compare and print the smaller value
-if dist_tree < dist_city:
-    print(dist_tree)
+if dist_letter < dist_contract:
+    print("letter")
 else:
-    print(dist_city)
+    print("contract")
 `,
       },
     ],
@@ -7435,11 +7437,11 @@ Represent a knowledge statement as a triplet and extract specific labels from a 
         language: 'python',
         difficulty: 'beginner',
         starterCode: `# A Triple must have a Head, Relation, and Tail.
-# Complete the triple to show that 'London' is the 'capital_of' 'UK'.
+# Complete the triple: 'Mary_Shelley' is the 'author_of' 'Frankenstein'.
 
-head = "London"
-relation = "" # What's the nature of the relationship?
-tail = "" # What goes here?
+head = "Mary_Shelley"
+relation = "" # What connects the author to the work?
+tail = "" # What did they write?
 
 # Combine them into a list called 'my_triple'
 # Hint: use [head, relation, tail]
@@ -7447,15 +7449,15 @@ my_triple = []
 
 print(my_triple)
 `,
-        expectedOutput: '[\'London\', \'capital_of\', \'UK\']',
+        expectedOutput: "['Mary_Shelley', 'author_of', 'Frankenstein']",
         hints: [
-          'Assign the string `"capital_of"` to the `relation` variable.',
-          'Assign the string `"UK"` to the `tail` variable.',
+          'The relation describes what connects the head to the tail: `"author_of"`.',
+          'The tail is the object — the literary work: `"Frankenstein"`.',
           'Inside the square brackets for `my_triple`, list the variables separated by commas: `head, relation, tail`.',
         ],
-        solution: `head = "London"
-relation = "capital_of"
-tail = "UK"
+        solution: `head = "Mary_Shelley"
+relation = "author_of"
+tail = "Frankenstein"
 
 my_triple = [head, relation, tail]
 
@@ -7616,36 +7618,37 @@ print(augustus)
         title: 'Finding the Relationship Vector',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `# Coordinates: [Political_Power, Cultural_Significance]
-france = [10, 7]
-eiffel_tower = [4, 10]
+        starterCode: `# Coordinates: [Critical_Acclaim, Popular_Reach]
+jane_austen = [8, 7]
+pride_and_prejudice = [9, 10]
 
-# Calculate the relation vector by subtracting
-# Hint: tail - head
-# 1. Subtract index 0 of France from index 0 of Eiffel Tower
-x = eiffel_tower[0] - france[0]
+# The triple is: (Austen, "authored", Pride_and_Prejudice)
+# Head = jane_austen, Tail = pride_and_prejudice
+# Calculate the relation vector: Tail - Head
 
-# 2. Subtract index 1 of France from index 1 of Eiffel Tower
-y = 
+# 1. Subtract index 0 of the Head from index 0 of the Tail
+x = pride_and_prejudice[0] - jane_austen[0]
 
-is_location_of = [x, y]
-print(is_location_of)
+# 2. Subtract index 1 of the Head from index 1 of the Tail
+y =
+
+authored = [x, y]
+print(authored)
 `,
-        expectedOutput: '[-6, 3]',
+        expectedOutput: '[1, 3]',
         hints: [
           'Remember the formula: `Relation = Tail - Head`.',
-          'To find the change in "Cultural Significance" (y), calculate `eiffel_tower[1] - france[1]`.',
+          'To find the change in "Popular Reach" (y), calculate `pride_and_prejudice[1] - jane_austen[1]`.',
         ],
-        solution: `# Coordinates: [Political_Power, Cultural_Significance]
-france = [10, 7]
-eiffel_tower = [4, 10]
+        solution: `jane_austen = [8, 7]
+pride_and_prejudice = [9, 10]
 
-# Calculate the relation vector by subtracting
-x = eiffel_tower[0] - france[0]
-y = eiffel_tower[1] - france[1]
+# Relation = Tail - Head
+x = pride_and_prejudice[0] - jane_austen[0]
+y = pride_and_prejudice[1] - jane_austen[1]
 
-is_location_of = [x, y]
-print(is_location_of)
+authored = [x, y]
+print(authored)
 `,
       },
     ],
@@ -7780,15 +7783,15 @@ print(total_error)
       },
       {
         id: 'rel-mod-04-c2',
-        title: 'Identifying the Top Result',
+        title: 'Identifying the Top Candidate',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `# Candidates and their distance from the predicted point
-# Format: [Name, Score]
+        starterCode: `# The model predicts: "Who influenced Mary_Wollstonecraft?"
+# Each candidate has a distance score (lower = more likely)
 results = [
-    ["Entity_A", 15],
-    ["Entity_B", 2],
-    ["Entity_C", 8]
+    ["Voltaire", 15],
+    ["Rousseau", 2],
+    ["Hume", 8]
 ]
 
 # We want to find the entity with the minimum score
@@ -7798,7 +7801,7 @@ lowest_score = 100 # A high starting number
 for candidate in results:
     name = candidate[0]
     score = candidate[1]
-    
+
     # Check if the current score is lower than our 'lowest_score'
     if score < lowest_score:
         # Update lowest_score and best_entity
@@ -7807,24 +7810,24 @@ for candidate in results:
 
 print(best_entity)
 `,
-        expectedOutput: 'Entity_B',
+        expectedOutput: 'Rousseau',
         hints: [
           'Inside the `if` block, you need to set `lowest_score = score`.',
-          'You also need to set `best_entity = name` so the program remembers which one was the best.',
+          'You also need to set `best_entity = name` so the program remembers which candidate was closest.',
         ],
         solution: `results = [
-    ["Entity_A", 15],
-    ["Entity_B", 2],
-    ["Entity_C", 8]
+    ["Voltaire", 15],
+    ["Rousseau", 2],
+    ["Hume", 8]
 ]
 
 best_entity = ""
-lowest_score = 100 
+lowest_score = 100
 
 for candidate in results:
     name = candidate[0]
     score = candidate[1]
-    
+
     if score < lowest_score:
         lowest_score = score
         best_entity = name
@@ -7926,12 +7929,14 @@ Determine if the correct answers fall within the model's top-ranked results.
         title: 'The Hits@3 Test',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `predictions = ["Vinci", "Michelangelo", "Raphael", "Donatello", "Titian"]
-correct_answer = "Raphael"
+        starterCode: `# Model predicts: "Who authored Frankenstein?"
+# Ranked guesses (index 0 = the model's top guess)
+predictions = ["Percy_Shelley", "Byron", "Mary_Shelley", "Polidori", "Godwin"]
+correct_answer = "Mary_Shelley"
 
 # 1. Get the Top 3 candidates using a list slice
 # Hint: list_name[0:3]
-top_three = 
+top_three =
 
 # 2. Check if the correct_answer is in the top_three list
 if correct_answer in top_three:
@@ -7942,12 +7947,12 @@ else:
         expectedOutput: 'Hit@3',
         hints: [
           'Use `predictions[0:3]` to get the first three elements.',
-          'The `in` keyword in Python is used to check if a value exists inside a list.',
+          'The `in` keyword checks if a value exists inside a list.',
+          'Mary_Shelley is at index 2, so she IS within the first 3 items (indices 0, 1, 2).',
         ],
-        solution: `predictions = ["Vinci", "Michelangelo", "Raphael", "Donatello", "Titian"]
-correct_answer = "Raphael"
+        solution: `predictions = ["Percy_Shelley", "Byron", "Mary_Shelley", "Polidori", "Godwin"]
+correct_answer = "Mary_Shelley"
 
-# Slicing from index 0 up to (but not including) 3
 top_three = predictions[0:3]
 
 if correct_answer in top_three:
@@ -7961,28 +7966,28 @@ else:
         title: 'Calculating Accuracy (Mean Hits)',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `# Did the model get the answer right for these three queries?
-# 1 = Hit, 0 = Miss
-results = [1, 0, 1]
+        starterCode: `# We tested the model on 5 historical "Who authored X?" queries.
+# 1 = the correct author was in the model's top-3 guesses, 0 = it was not
+results = [1, 0, 1, 1, 0]
 
-# Calculate the sum of the hits
+# Calculate the sum of correct guesses
 total_hits = sum(results)
 
-# Calculate the accuracy: total_hits divided by the number of results
+# Calculate the accuracy: total_hits divided by the number of queries
 # Hint: use len(results) to get the count
-accuracy = 
+accuracy =
 
 print(accuracy)
 `,
-        expectedOutput: '0.6666666666666666',
+        expectedOutput: '0.6',
         hints: [
           'Divide `total_hits` by `len(results)`.',
           'The forward slash `/` is the operator for division in Python.',
+          '`sum([1, 0, 1, 1, 0])` is 3 and `len(results)` is 5, so accuracy is 3/5.',
         ],
-        solution: `results = [1, 0, 1]
+        solution: `results = [1, 0, 1, 1, 0]
 
 total_hits = sum(results)
-# Accuracy is the average of the hits
 accuracy = total_hits / len(results)
 
 print(accuracy)

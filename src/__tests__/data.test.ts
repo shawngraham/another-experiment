@@ -2,8 +2,8 @@ import { modules, getModuleById, getModulesByTrack } from '../data/modules.ts';
 import { lessons, getLessonById, getLessonsByModule } from '../data/lessons.ts';
 
 describe('modules data', () => {
-  it('has 6 modules', () => {
-    expect(modules).toHaveLength(6);
+  it('has 14 modules', () => {
+    expect(modules).toHaveLength(14);
   });
 
   it('all modules have required fields', () => {
