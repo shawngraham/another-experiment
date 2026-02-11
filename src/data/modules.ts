@@ -160,6 +160,34 @@ export const modules: ModuleDefinition[] = [
   disciplines: ['literature', 'linguistics', 'sociology', 'marketing'],
   keywords: ['sentiment', 'emotions', 'vader', 'textblob', 'valence'],
 },
+{
+  id: 'relational-models',
+  title: 'Relational Models & Cultural Mapping',
+  description: 'Explore how DH researchers move from text to "space." Learn about Word Vectors, Knowledge Graphs, and how to represent historical relationships as mathematical triples.',
+  estimatedHours: 4,
+  prerequisites: ['python-basics','network-analysis'],
+  lessons: ['rel-mod-01', 'rel-mod-02', 'rel-mod-03', 'rel-mod-04', 'rel-mod-05'],
+  track: 'dh-methods',
+  disciplines: ['linguistics', 'history', 'philosophy'],
+  keywords: ['embeddings', 'word2vec', 'knowledge-graphs', 'linked-data'],
+},
+{
+  id: 'generative-poetics',
+  title: 'Generative Poetics and Creative Coding',
+  description: 'Using algorithms to generate literature and art. Explore Markov chains, context-free grammars, and the Oulipo movement as a foundation for computational creativity.',
+  estimatedHours: 5,
+  prerequisites: ['python-basics', 'text-analysis-fundamentals'],
+  lessons: [
+    'generative-01', // The Oulipo and Constraint-based Writing
+    'generative-02', // Stochastic Text: Building Markov Chain Generators
+    'generative-03', // Recursive Structures: Context-Free Grammars (Tracery-style logic)
+    'generative-04', // Erasure and Deformance: Algorithmic editing of existing corpora
+    'generative-05', // Visualizing Poetry: Combining text generation with Matplotlib/Pillow
+  ],
+  track: 'dh-methods',
+  disciplines: ['literature', 'media-studies', 'creative-writing', 'art-history'],
+  keywords: ['generative', 'markov chains', 'oulipo', 'creative coding', 'deformance', 'poetry'],
+},
 ];
 
 export function getModuleById(id: string): ModuleDefinition | undefined {
