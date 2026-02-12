@@ -2,7 +2,7 @@ import type { UserProfile, Pathway } from '../types/index.ts';
 import { modules } from '../data/modules.ts';
 import { v4 as uuidv4 } from 'uuid';
 
-const MAX_DISCIPLINE_MODULES = 4;
+const MAX_DISCIPLINE_MODULES = 5;
 
 // Keys match the IDs sent by InterestMapping.tsx
 const INTEREST_MODULE_MAP: Record<string, string[]> = {

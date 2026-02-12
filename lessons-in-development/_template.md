@@ -27,7 +27,7 @@ humanities-relevant metaphor where possible.
 
 Introduce the core ideas. Use headings, short paragraphs, and code examples.
 
-::: definition
+:::definition
 **Term**: A clear, concise definition of an important term.
 :::
 
@@ -43,7 +43,7 @@ print(example)
 
 ## Practice
 
-::: try-it
+:::try-it
 Informal exercise: ask the learner to experiment in the sandbox.
 :::
 
@@ -51,7 +51,7 @@ Informal exercise: ask the learner to experiment in the sandbox.
 
 Connect the concept to the learner's own research or a new situation.
 
-::: challenge
+:::challenge
 Description of the graded challenge that follows.
 :::
 

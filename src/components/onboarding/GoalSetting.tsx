@@ -5,10 +5,12 @@ import { useUserStore } from '../../stores/userStore.ts';
 const SUGGESTED_GOALS = [
   'Learn to analyze texts computationally',
   'Create data visualizations for research',
+  'Build generative art or literature tools', 
+  'Analyze visual or auditory cultural data', 
   'Build a digital archive or collection',
   'Learn programming for academic work',
   'Scrape and collect web data',
-  'Process large text collections',
+  'Map networks and historical relationships', 
 ];
 
 export function GoalSetting() {

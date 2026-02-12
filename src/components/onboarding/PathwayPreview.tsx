@@ -18,6 +18,10 @@ const INTEREST_LABELS: Record<string, string> = {
   'data-cleaning': 'Data cleaning',
   'metadata': 'Working with metadata',
   'archives': 'Working with archives',
+  'generative': 'Computational Creativity',
+  'image-analysis': 'Computer Vision',
+  'sonification': 'Data Sonification',
+  'knowledge-graphs': 'Relational Modeling',
 };
 
 const EXPERIENCE_LABELS: Record<string, string> = {

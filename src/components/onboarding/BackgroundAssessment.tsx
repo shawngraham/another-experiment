@@ -4,8 +4,8 @@ import { useUserStore } from '../../stores/userStore.ts';
 
 const DISCIPLINES = [
   'Literature', 'History', 'Art History', 'Linguistics',
-  'Philosophy', 'Religious Studies', 'Classics', 'Music',
-  'Archaeology', 'Anthropology', 'Other',
+  'Media Studies', 'Creative Writing', 'Philosophy', 
+  'Music', 'Archaeology', 'Anthropology', 'Other',
 ];
 
 const ROLES = [
