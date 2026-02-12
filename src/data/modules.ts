@@ -31,7 +31,7 @@ export const modules: ModuleDefinition[] = [
     prerequisites: ['python-basics'],
     lessons: ['text-analysis-01', 'text-analysis-02', 'text-analysis-03', 'text-analysis-04', 'text-analysis-05', 'text-analysis-06'],
     track: 'dh-methods',
-    disciplines: ['literature', 'linguistics', 'history'],
+    disciplines: ['literature', 'linguistics', 'history', 'philosophy', 'religious-studies', 'classics', 'anthropology'],
     keywords: ['text', 'nlp', 'regex', 'frequency', 'nltk'],
   },
   {
@@ -42,7 +42,7 @@ export const modules: ModuleDefinition[] = [
     prerequisites: ['python-basics'],
     lessons: ['structured-data-01', 'structured-data-02', 'structured-data-03', 'structured-data-04','structured-data-05', 'structured-data-06'],
     track: 'dh-methods',
-    disciplines: ['history', 'art-history', 'linguistics'],
+    disciplines: ['history', 'art-history', 'linguistics', 'archaeology', 'classics', 'music', 'anthropology', 'religious-studies', 'philosophy'],
     keywords: ['csv', 'pandas', 'tabular', 'metadata', 'dataframe'],
   },
   {
@@ -53,7 +53,7 @@ export const modules: ModuleDefinition[] = [
     prerequisites: ['python-basics'],
     lessons: ['data-viz-01', 'data-viz-02', 'data-viz-03', 'data-viz-04', 'data-viz-05', 'data-viz-06'],
     track: 'dh-methods',
-    disciplines: ['history', 'art-history', 'literature'],
+    disciplines: ['history', 'art-history', 'literature', 'archaeology', 'linguistics', 'music', 'anthropology', 'sociology'],
     keywords: ['matplotlib', 'visualization', 'charts', 'graphs', 'maps'],
   },
   {
@@ -64,7 +64,7 @@ export const modules: ModuleDefinition[] = [
     prerequisites: ['python-basics'],
     lessons: ['web-data-01', 'web-data-02', 'web-data-03', 'web-data-04'],
     track: 'dh-methods',
-    disciplines: [],
+    disciplines: ['history', 'literature', 'classics', 'archaeology', 'anthropology', 'art-history'],
     keywords: ['web', 'scraping', 'api', 'html', 'json'],
   },
     {
@@ -75,7 +75,7 @@ export const modules: ModuleDefinition[] = [
     prerequisites: ['python-basics'],
     lessons: ['sonification-01', 'sonification-02', 'sonification-03'],
     track: 'dh-methods',
-    disciplines: ['music', 'history', 'literature','archaeology'],
+    disciplines: ['music', 'history', 'literature', 'archaeology', 'anthropology'],
     keywords: ['sonification', 'audio', 'midi', 'mapping', 'multimodal'],
   },
   {
@@ -91,7 +91,7 @@ export const modules: ModuleDefinition[] = [
       'topic-modeling-04',
     ],
     track: 'dh-methods',
-    disciplines: ['literature', 'history', 'sociology','archaeology'],
+    disciplines: ['literature', 'history', 'sociology', 'archaeology', 'philosophy', 'religious-studies', 'classics', 'anthropology'],
     keywords: ['lda', 'topic modeling', 'gensim', 'distant reading', 'nlp', 'unsupervised learning'],
   },
   {
@@ -109,7 +109,7 @@ export const modules: ModuleDefinition[] = [
     'network-analysis-06'
   ],
   track: 'dh-methods',
-  disciplines: ['history', 'sociology', 'literature', 'anthropology'],
+  disciplines: ['history', 'sociology', 'literature', 'anthropology', 'philosophy', 'classics', 'art-history', 'music', 'religious-studies'],
   keywords: ['graphs', 'nodes', 'edges', 'networkx', 'relationships'],
 },
 {
@@ -125,7 +125,7 @@ export const modules: ModuleDefinition[] = [
     'geospatial-04', // Creating interactive maps with Folium
   ],
   track: 'dh-methods',
-  disciplines: ['history', 'archaeology', 'anthropology', 'classics'],
+  disciplines: ['history', 'archaeology', 'anthropology', 'classics', 'religious-studies'],
   keywords: ['gis', 'maps', 'geopandas', 'folium', 'coordinates', 'spatial'],
 },
 {
@@ -141,7 +141,7 @@ export const modules: ModuleDefinition[] = [
     'image-analysis-04', // Detecting visual similarity
   ],
   track: 'dh-methods',
-  disciplines: ['art-history', 'media-studies', 'history', 'archaeology'],
+  disciplines: ['art-history', 'media-studies', 'history', 'archaeology', 'classics', 'anthropology', 'religious-studies'],
   keywords: ['computer vision', 'images', 'pixels', 'color analysis', 'opencv'],
 },
 {
@@ -157,7 +157,7 @@ export const modules: ModuleDefinition[] = [
     'sentiment-04', // Limitations and bias in sentiment tools
   ],
   track: 'dh-methods',
-  disciplines: ['literature', 'linguistics', 'sociology', 'marketing'],
+  disciplines: ['literature', 'linguistics', 'sociology', 'marketing', 'history', 'religious-studies'],
   keywords: ['sentiment', 'emotions', 'vader', 'textblob', 'valence'],
 },
 {
@@ -168,7 +168,7 @@ export const modules: ModuleDefinition[] = [
   prerequisites: ['python-basics','network-analysis'],
   lessons: ['rel-mod-01', 'rel-mod-02', 'rel-mod-03', 'rel-mod-04', 'rel-mod-05'],
   track: 'dh-methods',
-  disciplines: ['linguistics', 'history', 'philosophy'],
+  disciplines: ['linguistics', 'history', 'philosophy', 'classics', 'religious-studies'],
   keywords: ['embeddings', 'word2vec', 'knowledge-graphs', 'linked-data'],
 },
 {
@@ -185,7 +185,7 @@ export const modules: ModuleDefinition[] = [
     'generative-05', // Visualizing Poetry: Combining text generation with Matplotlib/Pillow
   ],
   track: 'dh-methods',
-  disciplines: ['literature', 'media-studies', 'creative-writing', 'art-history'],
+  disciplines: ['literature', 'media-studies', 'creative-writing', 'art-history', 'music', 'linguistics'],
   keywords: ['generative', 'markov chains', 'oulipo', 'creative coding', 'deformance', 'poetry'],
 },
 ];
