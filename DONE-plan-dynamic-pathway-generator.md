@@ -1,3 +1,5 @@
+nb: this has been accomplished.
+
 # Plan: Make pathwayGenerator.ts Data-Driven
 
 ## Problem
