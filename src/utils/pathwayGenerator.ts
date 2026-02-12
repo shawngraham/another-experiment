@@ -2,31 +2,60 @@ import type { UserProfile, Pathway } from '../types/index.ts';
 import { modules } from '../data/modules.ts';
 import { v4 as uuidv4 } from 'uuid';
 
-const DISCIPLINE_MODULE_MAP: Record<string, string[]> = {
-  literature: ['text-analysis-fundamentals', 'data-visualization'],
-  history: ['structured-data', 'data-visualization', 'web-data-collection'],
-  linguistics: ['text-analysis-fundamentals', 'structured-data'],
-  'art-history': ['data-visualization', 'structured-data', 'web-data-collection'],
+const MAX_DISCIPLINE_MODULES = 4;
+
+// Keys match the IDs sent by InterestMapping.tsx
+const INTEREST_MODULE_MAP: Record<string, string[]> = {
+  'text-analysis':    ['text-analysis-fundamentals'],
+  'visualization':    ['data-visualization'],
+  'timelines':        ['data-visualization'],
+  'mapping':          ['geospatial-analysis', 'data-visualization'],
+  'web-scraping':     ['web-data-collection'],
+  'regex':            ['text-analysis-fundamentals'],
+  'sentiment':        ['sentiment-analysis'],
+  'networks':         ['network-analysis'],
+  'topic-modeling':   ['topic-modeling'],
+  'data-cleaning':    ['structured-data'],
+  'metadata':         ['structured-data'],
+  'archives':         ['web-data-collection', 'structured-data'],
+  'network-analysis': ['network-analysis', 'relational-models'],
 };
 
-const INTEREST_MODULE_MAP: Record<string, string[]> = {
-  'text analysis': ['text-analysis-fundamentals'],
-  'data visualization': ['data-visualization'],
-  'web scraping': ['web-data-collection'],
-  'structured data': ['structured-data'],
-  'word frequency': ['text-analysis-fundamentals'],
-  'creating timelines': ['data-visualization'],
-  'mapping historical events': ['data-visualization'],
-  'exploring relationships in data': ['network-analysis'],
-  'analyzing word frequency': ['text-analysis-fundamentals'],
-  'working with archives': ['web-data-collection', 'structured-data'],
-};
+/**
+ * Return all module IDs whose disciplines[] include the given discipline.
+ */
+export function modulesForDiscipline(discipline: string): string[] {
+  return modules
+    .filter((m) => m.disciplines.includes(discipline.toLowerCase()))
+    .map((m) => m.id);
+}
+
+/**
+ * Return the top N discipline modules, ranked by keyword overlap with the
+ * user's interests (higher is better) then by prerequisite count (lower is
+ * better). Ties preserve the curated order from modules.ts.
+ */
+function topModulesForDiscipline(discipline: string, interests: string[]): string[] {
+  const matches = modulesForDiscipline(discipline);
+
+  const scored = matches.map((id) => {
+    const mod = modules.find((m) => m.id === id)!;
+    const keywordHits = mod.keywords.filter((k) =>
+      interests.some((i) => i.includes(k) || k.includes(i))
+    ).length;
+    const prereqCount = mod.prerequisites.length;
+    return { id, score: keywordHits * 10 - prereqCount };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+  return scored.slice(0, MAX_DISCIPLINE_MODULES).map((s) => s.id);
+}
 
 export function generatePathway(profile: UserProfile): Pathway {
   const selectedModules: string[] = [];
 
   // Determine recommended language
-  const textHeavyInterests = ['text analysis', 'word frequency', 'nlp', 'analyzing word frequency'];
+  const textHeavyInterests = ['text-analysis', 'regex', 'topic-modeling'];
   const statisticalInterests = ['statistics', 'statistical analysis'];
 
   const interests = profile.background.researchInterests.map((i) => i.toLowerCase());
@@ -46,9 +75,9 @@ export function generatePathway(profile: UserProfile): Pathway {
     selectedModules.push('python-basics');
   }
 
-  // Add discipline-specific modules
+  // Add discipline-specific modules (dynamic lookup, capped and scored)
   const discipline = profile.background.discipline.toLowerCase();
-  const disciplineModules = DISCIPLINE_MODULE_MAP[discipline] || [];
+  const disciplineModules = topModulesForDiscipline(discipline, interests);
   for (const modId of disciplineModules) {
     if (!selectedModules.includes(modId)) {
       selectedModules.push(modId);
@@ -89,7 +118,7 @@ export function generatePathway(profile: UserProfile): Pathway {
 }
 
 export function matchDisciplineModules(discipline: string): string[] {
-  return DISCIPLINE_MODULE_MAP[discipline.toLowerCase()] || [];
+  return modulesForDiscipline(discipline);
 }
 
 export function getMethodModules(interest: string): string[] {
