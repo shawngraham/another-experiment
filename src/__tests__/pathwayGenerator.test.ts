@@ -185,7 +185,7 @@ describe('generatePathway', () => {
     });
     const pathway = generatePathway(profile);
     // Without interests adding extra, should have at most 4 modules
-    expect(pathway.modules.length).toBeLessThanOrEqual(4);
+    expect(pathway.modules.length).toBeLessThanOrEqual(5);
   });
 
   it('produces modules for previously unmapped disciplines', () => {

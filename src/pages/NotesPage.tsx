@@ -8,7 +8,7 @@ export function NotesPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
-      <div className="bg-white border border-gray-200 rounded-lg min-h-[600px] flex flex-col">
+      <div className="bg-white border border-gray-200 rounded-lg min-h-[80vh] flex flex-col">
         {view === 'list' ? (
           <NoteList
             onSelect={(id) => {

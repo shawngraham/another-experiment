@@ -160,7 +160,7 @@ describe('generateNoteMarkdown', () => {
 describe('generateIndexMarkdown', () => {
   it('includes title', () => {
     const md = generateIndexMarkdown([mockModule], defaultSettings);
-    expect(md).toContain('# DH Tutorial Lab - Export Index');
+    expect(md).toContain('# DHPrimer: Tutorial Lab - Export Index');
   });
 
   it('lists modules', () => {

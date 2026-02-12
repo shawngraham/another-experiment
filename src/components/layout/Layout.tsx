@@ -19,7 +19,7 @@ export function Layout() {
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <NavLink to="/dashboard" className="text-lg font-bold text-indigo-600">
-            DH Tutorial Lab
+            DHPrimer: Tutorial Lab
           </NavLink>
           {profile?.onboardingCompleted && (
             <nav className="flex gap-1">

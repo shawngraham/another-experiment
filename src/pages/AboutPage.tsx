@@ -3,12 +3,12 @@ export function AboutPage() {
   return (  
     <div className="max-w-4xl mx-auto p-8 prose prose-indigo">  
       
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">About DH Tutorial Lab</h1>  
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">About DHPrimer: Tutorial Lab</h1>  
   
       <section>  
         <h2 className="text-lg font-semibold text-gray-800 mb-4">What this site does</h2>  
          <p className="text-gray-600 mb-8">  
-          DH Tutorial Lab is a local-first, privacy-preserving learning environment for Digital Humanities methods. It provides interactive, browser-based lessons with live coding challenges, note-taking, and progress tracking—all stored entirely in your browser. No accounts, no servers, no data leaves your device.</p>  
+          DHPrimer: Tutorial Lab is a local-first, privacy-preserving learning environment for Digital Humanities methods. It provides interactive, browser-based lessons with live coding challenges, note-taking, and progress tracking—all stored entirely in your browser. No accounts, no servers, no data leaves your device.</p>  
       </section>  
   
       <section>

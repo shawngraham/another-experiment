@@ -12,7 +12,7 @@ const renderWithRouter = (ui: React.ReactElement, { route = '/' } = {}) => {
 describe('Welcome', () => {
   it('renders welcome heading', () => {
     renderWithRouter(<Welcome />);
-    expect(screen.getByText('Welcome to DH Tutorial Lab')).toBeInTheDocument();
+    expect(screen.getByText('Welcome to the DHPrimer: Tutorial Lab')).toBeInTheDocument();
   });
 
   it('renders get started button', () => {

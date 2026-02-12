@@ -1,4 +1,4 @@
-# DH Tutorial Lab
+# DHPrimer: Tutorial Lab
 
 An interactive web-based tutorial environment for introduction to digital humanities. Features personalized learning pathways, in-browser Python code execution, note-taking, and Obsidian export.
 

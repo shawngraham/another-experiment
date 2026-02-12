@@ -121,7 +121,7 @@ export function generateIndexMarkdown(
   settings: ExportSettings
 ): string {
   const lines = [
-    '# DH Tutorial Lab - Export Index',
+    '# DHPrimer Tutorial Lab - Export Index',
     '',
     `Exported on: ${new Date().toISOString().split('T')[0]}`,
     '',

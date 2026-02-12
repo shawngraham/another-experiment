@@ -8477,6 +8477,4284 @@ plt.show()
       },
     ],
   },
+  // --- Compiled from lessons-in-development (2026-02-12) ---
+  {
+    id: 'critical-data-01',
+    title: 'Counting What Counts: How Categories Shape Data',
+    moduleId: 'critical-data',
+    prerequisites: ['python-basics'],
+    estimatedTimeMinutes: 45,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Explain how classification systems are human-made choices rather than neutral reflections of reality',
+      'Demonstrate how changing category boundaries in a Python dictionary changes the results of an analysis',
+      'Critically evaluate a categorization scheme used in a humanities dataset',
+    ],
+    keywords: ['classification', 'categorization', 'data construction', 'census categories', 'controlled vocabularies', 'critical data studies'],
+    content: `# Counting What Counts: How Categories Shape Data
+
+## Analogy
+
+Imagine you are a librarian in 1850 deciding how to organize a new collection of books. You must choose headings: does a book about enslaved people's songs belong under "Music," "Negro Life," or "Folklore"? Each choice makes certain questions easy to ask and others nearly invisible. A researcher browsing "Music" would find the book; one browsing "Labor History" would not. The shelf is not a neutral container -- it is an argument about what matters.
+
+Data works the same way. Every dataset begins with a choice about categories, and those categories determine what the data can and cannot tell us.
+
+## Key Concepts
+
+### Categories Are Not Found -- They Are Made
+
+When we encounter a spreadsheet column called "Genre" or "Occupation" or "Race," it is tempting to treat those labels as natural facts. But every category system was designed by specific people, in a specific time and place, for a specific purpose.
+
+:::definition
+**Classification system**: A structured set of categories used to organize information. Examples include the Dewey Decimal System, the U.S. Census racial categories, and the Library of Congress Subject Headings. Each reflects the worldview of its creators.
+:::
+
+Consider U.S. Census racial categories. In 1790, the categories were "Free White Males," "Free White Females," "All Other Free Persons," and "Slaves." By 1890, the Census distinguished between "Black," "Mulatto," "Quadroon," and "Octoroon." By 2020, those sub-categories had long vanished, replaced by a different structure entirely. The people did not change -- the categories did.
+
+### Counting Depends on Grouping
+
+In Python, a dictionary is a natural tool for counting things by category. But the results you get depend entirely on how you define the categories.
+
+\`\`\`python
+from collections import Counter
+
+# Raw occupation labels from an 1880 census sample
+occupations = [
+    "farmer", "servant", "laborer", "washerwoman",
+    "blacksmith", "farmer", "servant", "seamstress",
+    "laborer", "farmer", "clerk", "teacher"
+]
+
+counts = Counter(occupations)
+for occupation, n in counts.most_common():
+    print(f"{occupation}: {n}")
+\`\`\`
+
+This gives us a fine-grained picture. But what happens when we group these into broader categories?
+
+### How Grouping Changes the Story
+
+\`\`\`python
+from collections import Counter
+
+occupations = [
+    "farmer", "servant", "laborer", "washerwoman",
+    "blacksmith", "farmer", "servant", "seamstress",
+    "laborer", "farmer", "clerk", "teacher"
+]
+
+# One possible grouping scheme
+grouping_a = {
+    "farmer": "Agricultural", "servant": "Domestic",
+    "laborer": "Manual", "washerwoman": "Domestic",
+    "blacksmith": "Manual", "seamstress": "Manual",
+    "clerk": "Professional", "teacher": "Professional"
+}
+
+grouped = [grouping_a[o] for o in occupations]
+counts = Counter(grouped)
+for cat, n in counts.most_common():
+    print(f"{cat}: {n}")
+\`\`\`
+
+With this scheme, "Manual" and "Agricultural" dominate. But watch what happens with a different grouping.
+
+:::definition
+**Data construction**: The process by which raw observations are transformed into structured data through choices about what to record, how to categorize it, and what to leave out. Data is never simply "collected" -- it is always constructed.
+:::
+
+### A Different Grouping, A Different Story
+
+\`\`\`python
+from collections import Counter
+
+occupations = [
+    "farmer", "servant", "laborer", "washerwoman",
+    "blacksmith", "farmer", "servant", "seamstress",
+    "laborer", "farmer", "clerk", "teacher"
+]
+
+# Alternative grouping: gendered labor distinction
+grouping_b = {
+    "farmer": "Traditionally Male", "servant": "Traditionally Female",
+    "laborer": "Traditionally Male", "washerwoman": "Traditionally Female",
+    "blacksmith": "Traditionally Male", "seamstress": "Traditionally Female",
+    "clerk": "Traditionally Male", "teacher": "Traditionally Female"
+}
+
+grouped = [grouping_b[o] for o in occupations]
+counts = Counter(grouped)
+for cat, n in counts.most_common():
+    print(f"{cat}: {n}")
+\`\`\`
+
+Now the data tells a story about gendered labor rather than economic sectors. Neither grouping is "wrong," but each makes different patterns visible and others invisible.
+
+### The Stakes for Humanities Research
+
+This is not merely a technical issue. When historical archives categorize people, those categories carry power:
+
+- **Library subject headings** that used "illegal aliens" instead of "undocumented immigrants" shaped how researchers found material about migration.
+- **Museum catalogs** that listed Indigenous artifacts under "Primitive Art" reflected colonial hierarchies.
+- **Genre labels** that separate "literature" from "genre fiction" encode value judgments about whose stories matter.
+
+As the scholar Geoffrey Bowker wrote: "Each category valorizes some point of view and silences another."
+
+## Practice
+
+:::try-it
+Take the list of occupations above and create a third grouping scheme -- perhaps one based on whether the work is "Indoor" vs. "Outdoor," or "Skilled" vs. "Unskilled." Use a Python dictionary to map each occupation to your new category, then count the results with \`Counter\`. Notice how the story changes again.
+:::
+
+## Transfer
+
+Think about a dataset you use or plan to use in your own research:
+
+- What are the main categories or labels in it?
+- Who decided on those categories, and when?
+- What might be invisible because of how the categories were drawn?
+- Could you re-categorize the same raw data to reveal a different pattern?
+
+These questions are the foundation of critical data studies. They do not require you to abandon quantitative methods -- they require you to be honest about the choices embedded in every count.
+
+:::challenge
+Given a list of historical occupation labels, write code that groups them into two different categorization schemes and prints the counts for each, showing how the grouping changes what we "see."
+:::`,
+    challenges: [
+      {
+        id: 'critical-data-01-challenge',
+        title: 'Re-Categorizing Historical Occupations',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `from collections import Counter
+
+# Occupation records from an 1870 census sample
+records = [
+    "carpenter", "domestic servant", "field laborer",
+    "laundress", "carpenter", "midwife", "field laborer",
+    "domestic servant", "preacher", "field laborer",
+    "carpenter", "laundress", "domestic servant", "teacher"
+]
+
+# SCHEME A: Group into "Skilled" or "Unskilled"
+scheme_a = {
+    "carpenter": "Skilled",
+    "domestic servant": ___,
+    "field laborer": ___,
+    "laundress": ___,
+    "midwife": ___,
+    "preacher": ___,
+    "teacher": ___
+}
+
+# SCHEME B: Group into "Indoor" or "Outdoor"
+scheme_b = {
+    "carpenter": ___,
+    "domestic servant": "Indoor",
+    "field laborer": ___,
+    "laundress": ___,
+    "midwife": ___,
+    "preacher": ___,
+    "teacher": ___
+}
+
+# Apply scheme_a and count
+grouped_a = [scheme_a[r] for r in records]
+counts_a = Counter(grouped_a)
+print("=== Scheme A: Skilled vs. Unskilled ===")
+for cat in sorted(counts_a):
+    print(f"  {cat}: {counts_a[cat]}")
+
+# Apply scheme_b and count
+grouped_b = [scheme_b[r] for r in records]
+counts_b = Counter(grouped_b)
+print("=== Scheme B: Indoor vs. Outdoor ===")
+for cat in sorted(counts_b):
+    print(f"  {cat}: {counts_b[cat]}")
+`,
+        expectedOutput: '=== Scheme A: Skilled vs. Unskilled ===\n  Skilled: 6\n  Unskilled: 8\n=== Scheme B: Indoor vs. Outdoor ===\n  Indoor: 8\n  Outdoor: 6',
+        hints: [
+          'For Scheme A, think about which occupations require specialized training or expertise (Skilled) versus general labor (Unskilled). Carpenter, midwife, preacher, and teacher are skilled (3+1+1+1 = 6); domestic servant, field laborer, and laundress are unskilled (3+3+2 = 8).',
+          'For Scheme B, think about where the work primarily takes place. Domestic servant, laundress, midwife, preacher, and teacher work indoors; carpenter and field laborer work outdoors.',
+          'Count the raw records to check your math: carpenter appears 3 times, domestic servant 3 times, field laborer 3 times, laundress 2 times, midwife 1 time, preacher 1 time, teacher 1 time (14 total).',
+        ],
+        solution: `from collections import Counter
+
+# Occupation records from an 1870 census sample
+records = [
+    "carpenter", "domestic servant", "field laborer",
+    "laundress", "carpenter", "midwife", "field laborer",
+    "domestic servant", "preacher", "field laborer",
+    "carpenter", "laundress", "domestic servant", "teacher"
+]
+
+# SCHEME A: Group into "Skilled" or "Unskilled"
+scheme_a = {
+    "carpenter": "Skilled",
+    "domestic servant": "Unskilled",
+    "field laborer": "Unskilled",
+    "laundress": "Unskilled",
+    "midwife": "Skilled",
+    "preacher": "Skilled",
+    "teacher": "Skilled"
+}
+
+# SCHEME B: Group into "Indoor" or "Outdoor"
+scheme_b = {
+    "carpenter": "Outdoor",
+    "domestic servant": "Indoor",
+    "field laborer": "Outdoor",
+    "laundress": "Indoor",
+    "midwife": "Indoor",
+    "preacher": "Indoor",
+    "teacher": "Indoor"
+}
+
+# Apply scheme_a and count
+grouped_a = [scheme_a[r] for r in records]
+counts_a = Counter(grouped_a)
+print("=== Scheme A: Skilled vs. Unskilled ===")
+for cat in sorted(counts_a):
+    print(f"  {cat}: {counts_a[cat]}")
+
+# Apply scheme_b and count
+grouped_b = [scheme_b[r] for r in records]
+counts_b = Counter(grouped_b)
+print("=== Scheme B: Indoor vs. Outdoor ===")
+for cat in sorted(counts_b):
+    print(f"  {cat}: {counts_b[cat]}")
+`,
+      },
+    ],
+  },
+  {
+    id: 'critical-data-02',
+    title: 'The Gaps in the Archive: Measuring Representation',
+    moduleId: 'critical-data',
+    prerequisites: ['critical-data-01'],
+    estimatedTimeMinutes: 40,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Identify missing or underrepresented groups in a structured dataset',
+      'Calculate proportional representation using Python dictionaries and basic arithmetic',
+      'Articulate why gaps in archival data are not random but reflect historical power structures',
+    ],
+    keywords: ['representation', 'missing data', 'archival silence', 'proportional analysis', 'survivorship bias'],
+    content: `# The Gaps in the Archive: Measuring Representation
+
+## Analogy
+
+Think of a group photograph taken at a university in 1910. The photograph shows who was present -- but it cannot show who was excluded from enrolling, who could not afford to attend, or who stood just outside the frame. A historian who studies only the photograph might conclude that the university was entirely white and male. The photograph is not lying, but it is profoundly incomplete. The absences are as meaningful as the presences.
+
+Digital archives work the same way. When we count what is in the archive, we must also ask: who is missing, and why?
+
+## Key Concepts
+
+### Archival Silence Is Not Accidental
+
+Every archive has gaps. Some materials were never created (because certain people lacked access to literacy or publishing). Some were created but not preserved (because institutions did not value them). Some were preserved but not digitized (because funding priorities favored other collections). These are not random omissions -- they are patterns shaped by power.
+
+:::definition
+**Archival silence**: The systematic absence of certain voices, perspectives, or groups from a historical record. Silences are produced by the same power structures that the archive documents.
+:::
+
+### Measuring What Is Present
+
+The first step in detecting bias is simply counting. Given a dataset, we can calculate the proportion of entries belonging to each group.
+
+\`\`\`python
+# A small archive of literary manuscripts
+archive = {"entry_1": "male", "entry_2": "male",
+           "entry_3": "female", "entry_4": "male",
+           "entry_5": "male", "entry_6": "female"}
+
+total = len(archive)
+gender_counts = {}
+for gender in archive.values():
+    gender_counts[gender] = gender_counts.get(gender, 0) + 1
+
+for gender, count in sorted(gender_counts.items()):
+    pct = round(count / total * 100, 1)
+    print(f"{gender}: {count}/{total} ({pct}%)")
+\`\`\`
+
+This tells us that 66.7% of the archive is male-authored and 33.3% is female-authored. But is that ratio "correct"? That depends on what population the archive claims to represent.
+
+### Identifying the Gap
+
+:::definition
+**Representation gap**: The difference between a group's proportion in a dataset and its proportion in the population the dataset claims to describe. A dataset where 80% of entries are from one region, when that region held only 30% of the population, has a 50-point representation gap.
+:::
+
+To find gaps, we compare what we have against what we would expect. If women wrote roughly 30% of published novels in the 1920s, an archive showing 20% female authorship has an underrepresentation gap. If a particular region dominated the archive far beyond its population share, that region is overrepresented.
+
+\`\`\`python
+# Counting by multiple attributes
+entries = [
+    {"region": "Northeast"}, {"region": "Northeast"},
+    {"region": "South"}, {"region": "Northeast"},
+    {"region": "West"}, {"region": "Northeast"},
+]
+
+region_counts = {}
+for entry in entries:
+    r = entry["region"]
+    region_counts[r] = region_counts.get(r, 0) + 1
+
+most = max(region_counts, key=region_counts.get)
+least = min(region_counts, key=region_counts.get)
+print(f"Most represented: {most} ({region_counts[most]})")
+print(f"Least represented: {least} ({region_counts[least]})")
+\`\`\`
+
+### Why This Matters for Digital Humanities
+
+When we build tools on top of biased archives -- training text models, generating visualizations, drawing conclusions -- the gaps silently shape every result. A topic model trained on an archive that underrepresents women's writing will generate topics that reflect men's concerns. A network graph built from correspondence archives that preserved elite letters will show elite networks. The tool does not announce these biases. The researcher must look for them.
+
+## Practice
+
+:::try-it
+Take the archive dictionary from the challenge below and calculate the representation by decade. Which decade is most represented? Least represented? What historical factors might explain the gap?
+:::
+
+## Transfer
+
+Think about a dataset or archive you work with:
+
+- What demographic or categorical attributes does it track?
+- Can you calculate the proportional representation for each group?
+- How does the archive's composition compare to the historical population it claims to represent?
+- What groups might be entirely absent -- not underrepresented, but invisible?
+
+The literary scholar Saidiya Hartman writes about "critical fabulation" -- the challenge of writing about people who left no records. Measuring representation is the quantitative counterpart to this work: it tells us the shape of the silence.
+
+:::challenge
+Given a dictionary of archive entries with demographic attributes, calculate the percentage representation for each group across two dimensions and identify the most significant gap.
+:::`,
+    challenges: [
+      {
+        id: 'critical-data-02-c1',
+        title: 'Measure the Gaps in an Archive',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `# Archive of literary manuscripts with metadata
+archive = {
+    "entry_1": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
+    "entry_2": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
+    "entry_3": {"author_gender": "female", "region": "South", "decade": "1930s"},
+    "entry_4": {"author_gender": "male", "region": "Midwest", "decade": "1920s"},
+    "entry_5": {"author_gender": "male", "region": "Northeast", "decade": "1940s"},
+    "entry_6": {"author_gender": "female", "region": "Northeast", "decade": "1930s"},
+    "entry_7": {"author_gender": "male", "region": "South", "decade": "1920s"},
+    "entry_8": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
+    "entry_9": {"author_gender": "male", "region": "West", "decade": "1940s"},
+    "entry_10": {"author_gender": "male", "region": "Northeast", "decade": "1930s"},
+}
+
+total = len(archive)
+
+# 1. Count and print representation by gender (sorted alphabetically)
+# Format: "  gender: count/total (pct%)"
+
+# 2. Count and print representation by region (sorted alphabetically)
+# Format: "  region: count/total (pct%)"
+
+# 3. Identify and print the most and least represented regions
+`,
+        expectedOutput: '=== Representation by Gender ===\n  female: 2/10 (20.0%)\n  male: 8/10 (80.0%)\n=== Representation by Region ===\n  Midwest: 1/10 (10.0%)\n  Northeast: 6/10 (60.0%)\n  South: 2/10 (20.0%)\n  West: 1/10 (10.0%)\n=== Gap ===\n  Most represented region: Northeast (6 entries)\n  Least represented region: Midwest (1 entries)',
+        hints: [
+          'Use `dict.get(key, 0)` to safely count occurrences. Loop through `archive.values()` to access each entry\'s attributes.',
+          'Use `sorted()` on the counts dictionary to print groups in alphabetical order. Calculate percentage with `round(count / total * 100, 1)`.',
+          'Use `max(region_counts, key=region_counts.get)` to find the most represented region and `min(...)` for the least.',
+        ],
+        solution: `archive = {
+    "entry_1": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
+    "entry_2": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
+    "entry_3": {"author_gender": "female", "region": "South", "decade": "1930s"},
+    "entry_4": {"author_gender": "male", "region": "Midwest", "decade": "1920s"},
+    "entry_5": {"author_gender": "male", "region": "Northeast", "decade": "1940s"},
+    "entry_6": {"author_gender": "female", "region": "Northeast", "decade": "1930s"},
+    "entry_7": {"author_gender": "male", "region": "South", "decade": "1920s"},
+    "entry_8": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
+    "entry_9": {"author_gender": "male", "region": "West", "decade": "1940s"},
+    "entry_10": {"author_gender": "male", "region": "Northeast", "decade": "1930s"},
+}
+
+total = len(archive)
+
+gender_counts = {}
+for entry in archive.values():
+    g = entry["author_gender"]
+    gender_counts[g] = gender_counts.get(g, 0) + 1
+
+print("=== Representation by Gender ===")
+for gender in sorted(gender_counts):
+    count = gender_counts[gender]
+    pct = round(count / total * 100, 1)
+    print(f"  {gender}: {count}/{total} ({pct}%)")
+
+region_counts = {}
+for entry in archive.values():
+    r = entry["region"]
+    region_counts[r] = region_counts.get(r, 0) + 1
+
+print("=== Representation by Region ===")
+for region in sorted(region_counts):
+    count = region_counts[region]
+    pct = round(count / total * 100, 1)
+    print(f"  {region}: {count}/{total} ({pct}%)")
+
+max_region = max(region_counts, key=region_counts.get)
+min_region = min(region_counts, key=region_counts.get)
+print("=== Gap ===")
+print(f"  Most represented region: {max_region} ({region_counts[max_region]} entries)")
+print(f"  Least represented region: {min_region} ({region_counts[min_region]} entries)")
+`,
+      },
+    ],
+  },
+  {
+    id: 'critical-data-03',
+    title: 'Feedback Loops: When Output Becomes Input',
+    moduleId: 'critical-data',
+    prerequisites: ['critical-data-02'],
+    estimatedTimeMinutes: 50,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Explain how algorithmic feedback loops amplify small initial biases into large disparities',
+      'Simulate a multi-round feedback loop in Python using weighted random selection',
+      'Identify real-world examples of feedback loops in digital humanities and cultural data',
+    ],
+    keywords: ['feedback loop', 'bias amplification', 'algorithmic bias', 'runaway effect', 'weighted selection', 'compounding bias'],
+    content: `# Feedback Loops: When Output Becomes Input
+
+## Analogy
+
+Imagine a bookstore that tracks which books sell best and then gives those books more prominent shelf space. The prominently displayed books sell even better -- because customers see them first. Next month, the algorithm gives them still more space. Within a few cycles, a handful of bestsellers dominate the entire storefront, while equally worthy books gather dust in the back. The algorithm did not set out to silence those books. It simply treated its own output as trustworthy input, and a small initial advantage compounded into dominance.
+
+This is a feedback loop: when a system's outputs are fed back as its inputs, small biases do not stay small. They grow.
+
+## Key Concepts
+
+### What Is a Feedback Loop?
+
+:::definition
+**Feedback loop**: A process in which the output of a system becomes part of its future input, causing effects to compound over time. In algorithmic systems, feedback loops can amplify small initial biases into large systematic distortions.
+:::
+
+In digital humanities, feedback loops appear whenever algorithmic results influence future data:
+
+- A search engine that ranks frequently-clicked results higher causes those results to be clicked even more.
+- A recommendation system that suggests popular texts makes those texts more popular, crowding out lesser-known works.
+- A digitization priority list based on "research demand" favors already-digitized collections, because researchers can only request what they know exists.
+
+### Simulating a Feedback Loop
+
+We can model this with a simple simulation. Suppose we have two groups, A and B, where A starts with a slight majority (55% vs 45%). An algorithm selects items from this pool -- but it gives a small extra weight to whichever group is currently in the majority. Each round's output becomes the next round's input.
+
+\`\`\`python
+import random
+
+random.seed(42)
+
+pool = ["A"] * 550 + ["B"] * 450
+total = len(pool)
+
+a_count = pool.count("A")
+b_count = pool.count("B")
+print(f"Start: A={a_count/total*100:.0f}%, B={b_count/total*100:.0f}%")
+
+# One round of biased selection
+weight_a = a_count * 1.15  # 15% bonus to majority
+weight_b = b_count
+pool = random.choices(["A", "B"], weights=[weight_a, weight_b], k=total)
+a_count = pool.count("A")
+b_count = pool.count("B")
+print(f"After: A={a_count/total*100:.0f}%, B={b_count/total*100:.0f}%")
+\`\`\`
+
+After just one round, Group A's advantage has grown. The 15% bonus does not look dramatic in a single iteration -- but watch what happens when we repeat the process.
+
+### Why Small Biases Compound
+
+The key insight is multiplicative amplification. Each round, the majority group's advantage is not just preserved -- it is multiplied. If Group A has 55% and receives a 15% weight bonus, it will likely end up with more than 55% after selection. In the next round, that higher percentage gets the bonus again. The gap widens not by a fixed amount but by an accelerating amount.
+
+This is analogous to compound interest: a small rate applied repeatedly produces exponential growth. In bias terms, a 10-point gap can become a 40-point gap within a few cycles.
+
+:::definition
+**Bias amplification**: The process by which an initially small disparity grows larger through repeated application of a biased process. Even a "slight" algorithmic preference can produce dramatic disparities over multiple iterations.
+:::
+
+### The Real-World Stakes
+
+Feedback loops are not hypothetical:
+
+- **Predictive policing**: Algorithms that direct police to neighborhoods where past arrests were highest lead to more arrests in those neighborhoods, which "confirms" the algorithm's prediction, which sends even more police.
+- **Search autocomplete**: Suggestions based on past searches reinforce stereotypical associations. If many users have searched biased phrases, the autocomplete presents those phrases to new users, who click on them, reinforcing the pattern.
+- **Canon formation**: Digital archives that prioritize frequently-studied authors make those authors easier to study, which produces more scholarship on them, which makes them seem even more "canonical."
+
+### Breaking the Loop
+
+Recognizing a feedback loop is the first step to breaking it. Strategies include:
+
+- **Diversification quotas**: Ensuring that selection algorithms reserve space for underrepresented items.
+- **Decay weighting**: Reducing the influence of historical data over time so that past biases do not permanently determine future outcomes.
+- **Audit rounds**: Periodically measuring representation (as we learned in the previous lesson) to detect amplification before it becomes extreme.
+
+## Practice
+
+:::try-it
+Modify the simulation below to experiment with different bias levels. What happens if the weight bonus is 5% instead of 15%? What about 25%? How many rounds does it take for Group B to drop below 20% in each case? Try changing \`random.seed()\` to different values -- does the overall trend hold even when individual rounds vary?
+:::
+
+## Transfer
+
+Consider a digital humanities project that involves ranking, recommendation, or selection:
+
+- Does the system's output influence its future input in any way?
+- Could a small initial imbalance in the training data compound over time?
+- What would an "audit round" look like for your project -- how would you measure whether bias is amplifying?
+
+The media scholar Safiya Umoja Noble documents how search engine feedback loops perpetuate racist and sexist representations. Her work reminds us that algorithms do not need malicious intent to produce harmful outcomes -- they only need to run in loops.
+
+:::challenge
+Simulate 5 rounds of biased selection where a majority group receives a 15% weight bonus each round. Print the percentages after each round, showing how the initial 55/45 split widens progressively.
+:::`,
+    challenges: [
+      {
+        id: 'critical-data-03-c1',
+        title: 'Simulate Bias Amplification',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import random
+
+random.seed(42)
+
+# Initial pool: 55% Group A, 45% Group B (1000 items for stable percentages)
+pool = ["A"] * 550 + ["B"] * 450
+total = len(pool)
+
+print("=== Feedback Loop Simulation ===")
+# Print initial state
+a_count = pool.count("A")
+b_count = pool.count("B")
+print(f"Round 0: A={a_count/total*100:.0f}%, B={b_count/total*100:.0f}%")
+
+# Simulate 5 rounds
+# Each round:
+#   1. Count current A and B
+#   2. Give the majority group a 15% weight bonus
+#   3. Use random.choices() to create a new pool of 1000
+#   4. Print the new percentages
+
+# Your code here
+
+# Print the final result
+`,
+        expectedOutput: '=== Feedback Loop Simulation ===\nRound 0: A=55%, B=45%\nRound 1: A=57%, B=43%\nRound 2: A=60%, B=40%\nRound 3: A=63%, B=37%\nRound 4: A=66%, B=34%\nRound 5: A=71%, B=29%\n=== Result ===\nInitial gap: 10 percentage points\nFinal gap:   42 percentage points',
+        hints: [
+          'Inside each round, first count A and B with `pool.count("A")`. Then set weights: the majority group gets its count multiplied by 1.15, while the minority group keeps its raw count.',
+          'Use `random.choices(["A", "B"], weights=[weight_a, weight_b], k=1000)` to generate the new pool. Assign this back to `pool` so the next round uses the updated distribution.',
+          'After the loop, calculate the final gap as `abs(a_count - b_count) // 10` to convert from counts out of 1000 to percentage points.',
+        ],
+        solution: `import random
+
+random.seed(42)
+
+pool = ["A"] * 550 + ["B"] * 450
+total = len(pool)
+
+print("=== Feedback Loop Simulation ===")
+a_count = pool.count("A")
+b_count = pool.count("B")
+print(f"Round 0: A={a_count/total*100:.0f}%, B={b_count/total*100:.0f}%")
+
+for round_num in range(1, 6):
+    a_count = pool.count("A")
+    b_count = pool.count("B")
+    weight_a = a_count * 1.15 if a_count >= b_count else a_count
+    weight_b = b_count * 1.15 if b_count > a_count else b_count
+    pool = random.choices(["A", "B"], weights=[weight_a, weight_b], k=1000)
+    a_count = pool.count("A")
+    b_count = pool.count("B")
+    print(f"Round {round_num}: A={a_count/total*100:.0f}%, B={b_count/total*100:.0f}%")
+
+print("=== Result ===")
+print(f"Initial gap: 10 percentage points")
+print(f"Final gap:   {abs(a_count - b_count) // 10} percentage points")
+`,
+      },
+    ],
+  },
+  {
+    id: 'critical-data-04',
+    title: 'Auditing a Word List: Bias in Language Tools',
+    moduleId: 'critical-data',
+    prerequisites: ['critical-data-03'],
+    estimatedTimeMinutes: 45,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Explain how sentiment lexicons and word lists encode cultural biases',
+      'Cross-reference a word list with a set of culturally-coded terms to detect bias',
+      'Calculate and interpret a bias ratio for a language resource',
+    ],
+    keywords: ['sentiment analysis', 'lexicon bias', 'NLP bias', 'culturally-coded language', 'word list audit', 'algorithmic fairness'],
+    content: `# Auditing a Word List: Bias in Language Tools
+
+## Analogy
+
+Imagine a judge who consults a handbook listing "suspicious" behaviors. The handbook was written decades ago by people who considered certain styles of dress, speech patterns, or neighborhoods inherently dangerous. The judge may believe they are being objective -- after all, they are following the book. But the book itself encodes the prejudices of its authors. Every "neutral" judgment the judge makes carries those biases forward.
+
+Sentiment lexicons and word lists in natural language processing work the same way. They are handbooks that tell algorithms which words are "positive" and which are "negative." But who decided? And whose cultural assumptions shaped those decisions?
+
+## Key Concepts
+
+### What Is a Sentiment Lexicon?
+
+:::definition
+**Sentiment lexicon**: A curated list of words, each assigned a sentiment score (positive, negative, or neutral). NLP tools use these lists to automatically classify the emotional tone of texts. Examples include AFINN, SentiWordNet, and the Bing Liu lexicon.
+:::
+
+A sentiment lexicon might contain entries like:
+
+- "excellent" -> +3 (strongly positive)
+- "terrible" -> -3 (strongly negative)
+- "average" -> 0 (neutral)
+
+When an algorithm analyzes a text, it looks up each word in the lexicon, sums the scores, and produces an overall sentiment rating. The method is simple and widely used -- but it inherits every bias baked into the word list.
+
+### Where Bias Enters
+
+Consider the word "aggressive." In many sentiment lexicons, it receives a negative score. But research in sociolinguistics has shown that "aggressive" is disproportionately applied to Black men and women in media and institutional contexts, while the same behaviors in white individuals are described as "assertive" or "passionate." The lexicon does not know this -- it simply labels "aggressive" as negative, and any text describing someone as "aggressive" gets penalized.
+
+Other examples of culturally-coded words that carry hidden bias:
+
+- **"articulate"** -- coded as positive, but frequently used as a backhanded compliment toward people of color, implying surprise at their eloquence.
+- **"exotic"** -- coded as positive, but routinely applied to non-Western people and cultures in an othering way.
+- **"thug"** -- coded as negative, but applied with heavily racialized patterns in media coverage.
+
+### Auditing by Cross-Reference
+
+An audit is straightforward: take your sentiment lexicon and cross-reference it against a list of terms that scholars have identified as culturally coded. For each flagged word, record its sentiment score and examine whether the score might produce biased results when applied to texts about particular communities.
+
+\`\`\`python
+# A small sentiment lexicon
+lexicon = {"bright": 2, "thug": -2, "gentle": 1, "savage": -2}
+
+# Culturally-coded terms (flagged by scholars)
+flagged = {"thug", "savage"}
+
+for word in sorted(lexicon):
+    if word in flagged:
+        label = "negative" if lexicon[word] < 0 else "positive"
+        print(f"FLAGGED: '{word}' (score: {lexicon[word]}, {label})")
+\`\`\`
+
+### Measuring the Scale of Bias
+
+A single flagged word might be an isolated problem. But if a large proportion of the lexicon consists of culturally-coded terms -- especially if they cluster on the negative end -- then the tool has a systematic bias. We can quantify this with a bias ratio.
+
+\`\`\`python
+# Bias ratio: what fraction of the lexicon is culturally flagged?
+total_words = 4
+flagged_words = 2
+ratio = flagged_words / total_words * 100
+print(f"Bias ratio: {ratio}%")
+\`\`\`
+
+:::definition
+**Bias audit**: A systematic examination of a tool, dataset, or algorithm to identify patterns of unfair treatment toward particular groups. In NLP, this often involves cross-referencing language resources with lists of culturally-coded terms.
+:::
+
+### Why This Matters for Humanities Research
+
+Digital humanists routinely use sentiment analysis to study literary texts, historical newspapers, political speeches, and social media. If the underlying lexicon treats culturally-coded language as inherently negative, the analysis will systematically misrepresent texts written by or about marginalized communities. A sentiment analysis of African American newspapers, for instance, might report more "negative" language not because the content is more negative, but because the lexicon penalizes terms common in those texts.
+
+The computational linguist Brendan O'Connor warns that "sentiment analysis is not a thermometer" -- it does not measure some objective temperature of feeling. It measures alignment with the assumptions embedded in the word list.
+
+## Practice
+
+:::try-it
+Take the sentiment lexicon from the challenge below and experiment: What happens if you add more neutral words (score 0) to the lexicon? Does the bias ratio go down? Does the actual bias in the flagged words change? This distinction between diluting a metric and actually fixing a problem is important in algorithmic fairness.
+:::
+
+## Transfer
+
+Consider a text analysis project in your field:
+
+- What sentiment lexicon or word list does your tool use?
+- Can you access and inspect the actual word list? (Many tools hide this from users.)
+- Are there terms in the list that might carry different connotations in different cultural contexts?
+- How might you supplement an automated analysis with domain expertise to catch what the lexicon misses?
+
+The scholar Ruha Benjamin coined the term "the New Jim Code" to describe how seemingly neutral technologies reproduce racial hierarchies. Auditing word lists is one concrete way to look inside the black box and see whose values are encoded there.
+
+:::challenge
+Cross-reference a sentiment lexicon with a set of culturally-coded terms. Report each flagged word, its score, and whether it is positive or negative. Then calculate the overall bias ratio and the proportion of flagged words that carry negative scores.
+:::`,
+    challenges: [
+      {
+        id: 'critical-data-04-c1',
+        title: 'Audit a Sentiment Lexicon for Cultural Bias',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `# A sentiment lexicon: word -> score (positive = good, negative = bad)
+sentiment_lexicon = {
+    "aggressive": -2, "articulate": 2, "exotic": 1,
+    "illegal": -2, "thug": -2, "civilized": 2,
+    "primitive": -2, "bright": 2, "sassy": -1,
+    "hardworking": 2, "loud": -1, "gentle": 1,
+    "savage": -2, "elegant": 2, "pushy": -1,
+}
+
+# Terms identified by scholars as culturally coded
+# (disproportionately applied to marginalized groups)
+flagged_terms = {"aggressive", "articulate", "exotic", "illegal",
+                 "thug", "primitive", "sassy", "savage"}
+
+# 1. For each word in the lexicon (sorted), if it is flagged,
+#    print: "  FLAGGED: 'word' (score: N, positive/negative)"
+
+# 2. Print total words, flagged count, bias ratio, and
+#    how many flagged words have negative scores
+
+# Your code here
+`,
+        expectedOutput: '=== Sentiment Lexicon Audit ===\n  FLAGGED: \'aggressive\' (score: -2, negative)\n  FLAGGED: \'articulate\' (score: 2, positive)\n  FLAGGED: \'exotic\' (score: 1, positive)\n  FLAGGED: \'illegal\' (score: -2, negative)\n  FLAGGED: \'primitive\' (score: -2, negative)\n  FLAGGED: \'sassy\' (score: -1, negative)\n  FLAGGED: \'savage\' (score: -2, negative)\n  FLAGGED: \'thug\' (score: -2, negative)\n\nTotal words in lexicon: 15\nFlagged as culturally biased: 8\nBias ratio: 8/15 (53.3%)\nFlagged words with negative scores: 6/8',
+        hints: [
+          'Iterate over `sorted(sentiment_lexicon)` and check if each word is `in flagged_terms`. Use a list to collect the flagged words you find.',
+          'Determine "positive" or "negative" by checking if the score is less than 0. Use `round(count/total*100, 1)` for the percentage.',
+          'Count negative-scored flagged words with a sum: `sum(1 for w in flagged_list if sentiment_lexicon[w] < 0)`.',
+        ],
+        solution: `sentiment_lexicon = {
+    "aggressive": -2, "articulate": 2, "exotic": 1,
+    "illegal": -2, "thug": -2, "civilized": 2,
+    "primitive": -2, "bright": 2, "sassy": -1,
+    "hardworking": 2, "loud": -1, "gentle": 1,
+    "savage": -2, "elegant": 2, "pushy": -1,
+}
+
+flagged_terms = {"aggressive", "articulate", "exotic", "illegal",
+                 "thug", "primitive", "sassy", "savage"}
+
+print("=== Sentiment Lexicon Audit ===")
+flagged_in_lexicon = []
+for word in sorted(sentiment_lexicon):
+    if word in flagged_terms:
+        score = sentiment_lexicon[word]
+        label = "negative" if score < 0 else "positive"
+        flagged_in_lexicon.append(word)
+        print(f"  FLAGGED: '{word}' (score: {score}, {label})")
+
+print(f"\\nTotal words in lexicon: {len(sentiment_lexicon)}")
+print(f"Flagged as culturally biased: {len(flagged_in_lexicon)}")
+print(f"Bias ratio: {len(flagged_in_lexicon)}/{len(sentiment_lexicon)} ({round(len(flagged_in_lexicon)/len(sentiment_lexicon)*100, 1)}%)")
+
+neg_flagged = sum(1 for w in flagged_in_lexicon if sentiment_lexicon[w] < 0)
+print(f"Flagged words with negative scores: {neg_flagged}/{len(flagged_in_lexicon)}")
+`,
+      },
+    ],
+  },
+  {
+    id: 'critical-data-05',
+    title: 'Writing a Data Biography',
+    moduleId: 'critical-data',
+    prerequisites: ['critical-data-04'],
+    estimatedTimeMinutes: 50,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Explain the purpose and components of a data biography (inspired by "Datasheets for Datasets")',
+      'Construct a structured data biography as a Python dictionary from raw metadata',
+      'Critically assess what a dataset\'s documentation reveals and conceals about its origins',
+    ],
+    keywords: ['data biography', 'datasheets for datasets', 'dataset documentation', 'provenance', 'data ethics', 'metadata'],
+    content: `# Writing a Data Biography
+
+## Analogy
+
+When a historian picks up a primary source -- a letter, a photograph, a census record -- the first questions are not about the content but about the context. Who wrote this? When? For what purpose? What was happening in the world at that time? Who was the intended audience? What might the author have omitted or distorted? Historians call this "source criticism," and no serious scholar would cite a document without it.
+
+Datasets deserve the same scrutiny. A dataset is not a neutral window onto the world -- it is an artifact produced by specific people, institutions, and processes. A data biography is source criticism for the digital age: a structured account of where a dataset came from, what choices shaped it, and what it cannot tell us.
+
+## Key Concepts
+
+### Why Datasets Need Biographies
+
+In 2018, the computer scientist Timnit Gebru and colleagues proposed "Datasheets for Datasets" -- standardized documentation that should accompany every dataset, much like the datasheets that accompany electronic components. Their argument was simple: you would not use a resistor without checking its specifications, so why would you use a dataset without understanding its properties?
+
+:::definition
+**Data biography**: A structured document describing a dataset's origins, composition, collection methods, intended uses, known limitations, and ethical considerations. Inspired by Gebru et al.'s "Datasheets for Datasets" (2018), it serves as provenance documentation for responsible data use.
+:::
+
+A data biography answers questions like:
+
+- **Who** created the dataset, and for what purpose?
+- **What** population does it claim to represent?
+- **When** and **where** was it collected?
+- **How** were items selected, and what was excluded?
+- **Whose voices** are present, and whose are absent?
+- **What are the known limitations** and potential harms?
+
+### Building a Data Biography in Python
+
+A Python dictionary is a natural structure for a data biography. Each key represents a question, and each value provides the answer.
+
+\`\`\`python
+biography = {
+    "title": "Victorian Novel Corpus",
+    "who_created_it": "Oxford Digital Humanities Lab",
+    "time_period": "1837-1901",
+    "known_limitations": [
+        "Only novels published in London included",
+        "Working-class authors underrepresented",
+    ],
+}
+
+for key, value in biography.items():
+    if isinstance(value, list):
+        print(f"{key}:")
+        for item in value:
+            print(f"  - {item}")
+    else:
+        print(f"{key}: {value}")
+\`\`\`
+
+### From Raw Metadata to Critical Documentation
+
+Often you will receive a dataset with minimal metadata -- perhaps a name, a date range, and a record count. The work of writing a data biography is the work of filling in what the metadata leaves unsaid: whose voices are included, whose are missing, and what ethical concerns arise from the dataset's construction.
+
+\`\`\`python
+# Raw metadata (what the dataset provides)
+raw = {"name": "Parish Records Corpus", "records": 12000}
+
+# Data biography (what a critical scholar adds)
+bio = {
+    "title": raw["name"],
+    "size": f"{raw['records']} records",
+    "whose_voices_are_missing": "Non-Christian residents, travelers, unnamed infants",
+}
+
+print(f"{bio['title']} ({bio['size']})")
+print(f"Missing: {bio['whose_voices_are_missing']}")
+\`\`\`
+
+:::definition
+**Provenance**: The documented history of a dataset's origin and the chain of custody through which it has passed. Provenance includes who collected the data, how it was processed, and what transformations it has undergone.
+:::
+
+### The Critical Questions
+
+A thorough data biography goes beyond technical metadata to ask questions that require domain expertise:
+
+1. **Whose voices are included?** If the dataset contains newspaper text, which newspapers were selected? Who owned them? What editorial perspectives did they represent?
+
+2. **Whose voices are missing?** If the dataset covers a colonial period, does it include texts by colonized peoples, or only by colonial administrators? Are women's writings represented?
+
+3. **What are the known limitations?** Every dataset has them. Acknowledging limitations is not a weakness -- it is a sign of scholarly rigor.
+
+4. **What are the ethical considerations?** Does the dataset contain information about living people? Does it reproduce harmful categorizations? Could it be used in ways that harm the communities it describes?
+
+### Why Dictionaries Are the Right Tool
+
+Python dictionaries map naturally onto the key-value structure of documentation. Lists within dictionaries capture multiple limitations or multiple voices. And because dictionaries are programmatic, they can be validated, compared, and shared -- unlike a paragraph buried in a footnote.
+
+## Practice
+
+:::try-it
+Think of a dataset you have used or encountered in your studies. Without looking at any documentation, try to write a data biography for it as a Python dictionary. Which fields are easy to fill in? Which require research? Which questions had you never considered before?
+:::
+
+## Transfer
+
+The practice of writing data biographies connects to broader movements in data ethics and responsible research:
+
+- **Indigenous Data Sovereignty**: The CARE Principles for Indigenous Data Governance emphasize that data about Indigenous peoples should be governed by those peoples. A data biography should document whether this principle was respected.
+- **FAIR Principles**: Data should be Findable, Accessible, Interoperable, and Reusable. A biography makes data more reusable by explaining its context.
+- **Feminist Data Science**: Catherine D'Ignazio and Lauren Klein argue in *Data Feminism* that all data work should "make labor visible." A data biography documents the human labor behind every dataset.
+
+:::challenge
+Given raw metadata about a colonial newspaper corpus, construct a complete data biography as a Python dictionary. Fill in both the factual fields (drawn from the metadata) and the critical fields (requiring scholarly judgment about inclusion, exclusion, and ethics). Print a formatted report.
+:::`,
+    challenges: [
+      {
+        id: 'critical-data-05-c1',
+        title: 'Construct a Data Biography',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `# Raw metadata provided with the dataset
+metadata = {
+    "name": "Colonial Newspaper Corpus",
+    "collected_by": "University of London Digital Lab",
+    "date_range": "1800-1870",
+    "source": "British Library Archives",
+    "language": "English",
+    "num_documents": 4500,
+    "regions": ["India", "West Africa", "Caribbean"],
+}
+
+# Build a data biography dictionary with these keys:
+#   title, who_created_it, time_period, original_source, language, size,
+#   geographic_scope, whose_voices_are_included,
+#   whose_voices_are_missing, known_limitations (list of 3),
+#   ethical_considerations
+
+# Then print it as a formatted report (see expected output)
+
+# Your code here
+`,
+        expectedOutput: '=== DATA BIOGRAPHY ===\nTitle: Colonial Newspaper Corpus\nCreated by: University of London Digital Lab\nTime period: 1800-1870\nSource: British Library Archives\nLanguage: English\nSize: 4500 documents\nGeographic scope: India, West Africa, Caribbean\n\nVoices included: Colonial administrators, British merchants, missionaries\nVoices missing: Colonized peoples, indigenous language speakers, women\n\nKnown limitations:\n  - Only English-language publications included\n  - Newspapers reflect colonial editorial perspectives\n  - Survival bias: many publications were lost or destroyed\n\nEthical note: Data reflects and reproduces colonial power structures',
+        hints: [
+          'Pull factual fields directly from the metadata dict: `biography["title"] = metadata["name"]`. For size, format it as `f"{metadata[\'num_documents\']} documents"`. For geographic scope, use `", ".join(metadata["regions"])`.',
+          'The critical fields require your own scholarly judgment. For `whose_voices_are_included`, think about who wrote and published English-language newspapers in colonial territories. For `whose_voices_are_missing`, think about who was excluded from colonial print culture.',
+          '`known_limitations` should be a list of three strings. Print them with a loop: `for item in biography["known_limitations"]: print(f"  - {item}")`.',
+        ],
+        solution: `metadata = {
+    "name": "Colonial Newspaper Corpus",
+    "collected_by": "University of London Digital Lab",
+    "date_range": "1800-1870",
+    "source": "British Library Archives",
+    "language": "English",
+    "num_documents": 4500,
+    "regions": ["India", "West Africa", "Caribbean"],
+}
+
+biography = {
+    "title": metadata["name"],
+    "who_created_it": metadata["collected_by"],
+    "time_period": metadata["date_range"],
+    "original_source": metadata["source"],
+    "language": metadata["language"],
+    "size": f"{metadata['num_documents']} documents",
+    "geographic_scope": ", ".join(metadata["regions"]),
+    "whose_voices_are_included": "Colonial administrators, British merchants, missionaries",
+    "whose_voices_are_missing": "Colonized peoples, indigenous language speakers, women",
+    "known_limitations": [
+        "Only English-language publications included",
+        "Newspapers reflect colonial editorial perspectives",
+        "Survival bias: many publications were lost or destroyed",
+    ],
+    "ethical_considerations": "Data reflects and reproduces colonial power structures",
+}
+
+print("=== DATA BIOGRAPHY ===")
+print(f"Title: {biography['title']}")
+print(f"Created by: {biography['who_created_it']}")
+print(f"Time period: {biography['time_period']}")
+print(f"Source: {biography['original_source']}")
+print(f"Language: {biography['language']}")
+print(f"Size: {biography['size']}")
+print(f"Geographic scope: {biography['geographic_scope']}")
+print(f"\\nVoices included: {biography['whose_voices_are_included']}")
+print(f"Voices missing: {biography['whose_voices_are_missing']}")
+print(f"\\nKnown limitations:")
+for limitation in biography["known_limitations"]:
+    print(f"  - {limitation}")
+print(f"\\nEthical note: {biography['ethical_considerations']}")
+`,
+      },
+    ],
+  },
+  {
+    id: 'if-01',
+    title: 'The Forking Path: Stories as Dictionaries',
+    moduleId: 'interactive-fiction',
+    prerequisites: ['python-basics'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Represent a branching narrative as a Python dictionary of passages',
+      'Look up passages by ID and display their text and choices',
+      'Understand the connection between hypertext theory and data structures',
+    ],
+    keywords: ['interactive fiction', 'branching narrative', 'dictionary', 'hypertext', 'Borges'],
+    content: `# The Forking Path: Stories as Dictionaries
+
+## Analogy
+
+In Jorge Luis Borges' famous story "The Garden of Forking Paths" (1941), a novel is described in which every possible outcome of every event occurs simultaneously, each branching into further possibilities. This is not just a literary conceit — it is a precise description of a data structure. Every hypertext narrative, from early works like Michael Joyce's *afternoon, a story* (1987) to modern interactive fiction, is built on the same principle: a network of passages connected by choices. In Python, we can represent this network with a dictionary, where each key is a passage ID and each value holds the passage's text and its branching choices. The dictionary *is* the garden.
+
+## Key Concepts
+
+### Passages as Dictionary Entries
+
+A branching story is a collection of **passages**. Each passage has:
+- A unique **ID** (the dictionary key)
+- **Text** displayed to the reader
+- **Choices** that link to other passages
+
+:::definition
+**Passage**: A single unit of narrative in interactive fiction, containing text the reader sees and zero or more choices leading to other passages.
+:::
+
+:::definition
+**Hypertext narrative**: A non-linear text composed of linked passages (or "lexia"), where the reader's choices determine the path through the story.
+:::
+
+We represent the entire story as a dictionary of dictionaries:
+
+\`\`\`python
+story = {
+    "start": {
+        "text": "You stand at the entrance to a Victorian library.",
+        "choices": {"Open the door": "foyer", "Read the sign": "sign"}
+    },
+    "foyer": {
+        "text": "Tall shelves line every wall. A librarian nods at you.",
+        "choices": {"Ask about special collections": "special", "Browse freely": "stacks"}
+    },
+    "sign": {
+        "text": "The sign reads: 'Hours 9-5. Rare manuscripts by appointment only.'",
+        "choices": {"Open the door": "foyer"}
+    },
+    "special": {
+        "text": "The librarian leads you to a locked room of illuminated manuscripts.",
+        "choices": {}
+    },
+    "stacks": {
+        "text": "You wander the stacks and discover a forgotten first edition.",
+        "choices": {}
+    }
+}
+\`\`\`
+
+### Looking Up a Passage
+
+To display a passage, look up its ID in the dictionary:
+
+\`\`\`python
+current = "start"
+passage = story[current]
+print(passage["text"])
+# Output: You stand at the entrance to a Victorian library.
+\`\`\`
+
+### Listing Available Choices
+
+The \`"choices"\` field is itself a dictionary mapping choice labels (what the reader sees) to destination passage IDs:
+
+\`\`\`python
+passage = story["start"]
+for label in passage["choices"]:
+    print(f"  > {label}")
+# Output:
+#   > Open the door
+#   > Read the sign
+\`\`\`
+
+### Navigating to the Next Passage
+
+In a real interactive program, a reader would click or type a choice. In our sandbox (where \`input()\` is not available), we simulate a choice by looking up the label in the choices dictionary:
+
+\`\`\`python
+# Simulate choosing "Open the door"
+choice_made = "Open the door"
+next_id = story["start"]["choices"][choice_made]
+print(story[next_id]["text"])
+# Output: Tall shelves line every wall. A librarian nods at you.
+\`\`\`
+
+### Walking a Full Path
+
+We can walk through an entire sequence of choices:
+
+\`\`\`python
+story = {
+    "start": {
+        "text": "You enter the medieval hall.",
+        "choices": {"Go north": "chapel"}
+    },
+    "chapel": {
+        "text": "A small chapel with stained glass.",
+        "choices": {"Examine the altar": "altar"}
+    },
+    "altar": {
+        "text": "Behind the altar, you find a hidden passage.",
+        "choices": {}
+    }
+}
+
+path = ["Go north", "Examine the altar"]
+current = "start"
+print(story[current]["text"])
+
+for choice in path:
+    current = story[current]["choices"][choice]
+    print(story[current]["text"])
+\`\`\`
+
+This prints each passage's text as we move through the story.
+
+## Practice
+
+:::try-it
+Create a small story dictionary with 3 passages: \`"start"\`, \`"left"\`, and \`"right"\`. The start passage should offer two choices. Navigate from start to one of the endings and print the text of each passage you visit.
+:::
+
+## Transfer
+
+In digital humanities, scholars use structures like these to analyze literary hypertext. Espen Aarseth's concept of **cybertext** describes texts where the reader must perform non-trivial effort to traverse the narrative. Representing these narratives as dictionaries is the first step toward computational analysis — we can count paths, measure complexity, and compare structures across works. The same approach applies to modeling historical "what-if" scenarios, museum navigation paths, or archival exploration workflows.
+
+:::challenge
+Build a story dictionary representing an archive of letters. Navigate from the start through two choices and print each passage's text along the way.
+:::`,
+    challenges: [
+      {
+        id: 'if-01-c1',
+        title: 'Navigate the Archive of Letters',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `story = {
+    "start": {
+        "text": "You stand before the Archive of Forgotten Letters.",
+        "choices": {"Enter the archive": "hall", "Read the plaque": "plaque"}
+    },
+    "hall": {
+        "text": "A grand hall stretches before you, lined with shelves of bundled correspondence.",
+        "choices": {"Examine the east wing": "east_wing", "Examine the west wing": "west_wing"}
+    },
+    "plaque": {
+        "text": "The plaque reads: Founded 1847, dedicated to preserving voices of the past.",
+        "choices": {"Enter the archive": "hall"}
+    },
+    "east_wing": {
+        "text": "You find letters exchanged between two poets, full of creative fire.",
+        "choices": {}
+    },
+    "west_wing": {
+        "text": "Dusty legal documents reveal a forgotten land dispute from 1863.",
+        "choices": {}
+    }
+}
+
+# Navigate: start -> "Enter the archive" -> "Examine the east wing"
+# Print the text of each passage you visit (3 passages total)
+current = "start"
+# YOUR CODE HERE: print text, move through two choices, print text each time
+`,
+        expectedOutput: 'You stand before the Archive of Forgotten Letters.\nA grand hall stretches before you, lined with shelves of bundled correspondence.\nYou find letters exchanged between two poets, full of creative fire.',
+        hints: [
+          'Use `story[current]["text"]` to get the text of the current passage.',
+          'Use `story[current]["choices"]["Enter the archive"]` to get the ID of the next passage.',
+          'After each navigation step, update `current` and print the new passage\'s text.',
+        ],
+        solution: `story = {
+    "start": {
+        "text": "You stand before the Archive of Forgotten Letters.",
+        "choices": {"Enter the archive": "hall", "Read the plaque": "plaque"}
+    },
+    "hall": {
+        "text": "A grand hall stretches before you, lined with shelves of bundled correspondence.",
+        "choices": {"Examine the east wing": "east_wing", "Examine the west wing": "west_wing"}
+    },
+    "plaque": {
+        "text": "The plaque reads: Founded 1847, dedicated to preserving voices of the past.",
+        "choices": {"Enter the archive": "hall"}
+    },
+    "east_wing": {
+        "text": "You find letters exchanged between two poets, full of creative fire.",
+        "choices": {}
+    },
+    "west_wing": {
+        "text": "Dusty legal documents reveal a forgotten land dispute from 1863.",
+        "choices": {}
+    }
+}
+
+current = "start"
+print(story[current]["text"])
+
+current = story[current]["choices"]["Enter the archive"]
+print(story[current]["text"])
+
+current = story[current]["choices"]["Examine the east wing"]
+print(story[current]["text"])
+`,
+      },
+    ],
+  },
+  {
+    id: 'if-02',
+    title: 'State and Memory: Tracking the Reader\'s Journey',
+    moduleId: 'interactive-fiction',
+    prerequisites: ['if-01'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Track reader state using a dictionary with inventory and flags',
+      'Use state to conditionally gate narrative paths',
+      'Connect state-tracking to ergodic literature concepts',
+    ],
+    keywords: ['state', 'inventory', 'flags', 'ergodic literature', 'conditional branching'],
+    content: `# State and Memory: Tracking the Reader's Journey
+
+## Analogy
+
+When you read a traditional novel, the book does not remember how you read it. But consider a scholar working through a physical archive: they carry a notebook, collect documents, and their access to restricted materials depends on credentials they have gathered. This is **state** — the accumulated context that shapes what a reader can do next. Espen Aarseth coined the term **ergodic literature** (from Greek *ergon* + *hodos*, "work" + "path") for texts requiring non-trivial effort to traverse. In interactive fiction, the reader's state — their inventory, their flags, their history — is what makes the traversal meaningful. The story remembers what you have done.
+
+## Key Concepts
+
+### The State Dictionary
+
+We track the reader's current condition with a **state dictionary** — a plain Python dict holding items collected, flags set, and the current location:
+
+:::definition
+**State**: A dictionary that records the reader's accumulated context — items collected, flags triggered, locations visited — at any point during an interactive narrative.
+:::
+
+\`\`\`python
+state = {
+    "inventory": [],
+    "visited": [],
+    "location": "entrance",
+    "has_permission": False
+}
+\`\`\`
+
+### Modifying State Through Choices
+
+When a reader takes an action, we update the state dictionary:
+
+\`\`\`python
+# Reader picks up an item
+state["inventory"].append("old photograph")
+state["visited"].append("entrance")
+state["location"] = "reading_room"
+print(f"Collected: {state['inventory']}")
+# Output: Collected: ['old photograph']
+\`\`\`
+
+### Conditional Gating
+
+The power of state is that it **gates** future paths. Some passages are only accessible if the reader has collected the right item or set the right flag:
+
+:::definition
+**Gating**: A design pattern where access to a narrative passage depends on the reader's current state — possessing an item, having visited a location, or having triggered a flag.
+:::
+
+\`\`\`python
+state = {"inventory": ["library card"], "location": "restricted_section"}
+
+if "library card" in state["inventory"]:
+    print("The librarian checks your card and grants you entry.")
+else:
+    print("You need a library card to enter this section.")
+# Output: The librarian checks your card and grants you entry.
+\`\`\`
+
+### Combining Story Structure with State
+
+We can integrate state with the story dictionary from the previous lesson. Here, the story dict defines the narrative, and the state dict tracks the reader's journey:
+
+\`\`\`python
+story = {
+    "garden": {
+        "text": "A walled garden with a stone bench. A brass key glints in the grass.",
+        "choices": {"Take the key": "garden_key", "Go to the gate": "gate"}
+    },
+    "garden_key": {
+        "text": "You pocket the brass key. The gate beckons to the north.",
+        "choices": {"Go to the gate": "gate"}
+    },
+    "gate": {
+        "text": "A locked iron gate blocks the path.",
+        "choices": {}
+    }
+}
+
+state = {"inventory": []}
+
+# Step 1: visit garden, take the key
+print(story["garden"]["text"])
+state["inventory"].append("brass key")
+
+# Step 2: go to gate, check for key
+print(story["gate"]["text"])
+if "brass key" in state["inventory"]:
+    print("You unlock the gate with the brass key and step through.")
+else:
+    print("The gate is locked. You cannot pass.")
+\`\`\`
+
+### Tracking Visited Locations
+
+You can also track which passages have been visited, enabling "you have already been here" messages or unlocking new choices on repeat visits:
+
+\`\`\`python
+state = {"visited": []}
+
+location = "main_hall"
+if location in state["visited"]:
+    print("You recognize this hall from before.")
+else:
+    print("You enter the main hall for the first time.")
+    state["visited"].append(location)
+# Output: You enter the main hall for the first time.
+\`\`\`
+
+## Practice
+
+:::try-it
+Create a state dictionary with an empty inventory and a \`"has_map"\` flag set to \`False\`. Simulate picking up a map (add \`"map"\` to inventory, set the flag to \`True\`), then write an \`if\` statement that prints different messages depending on whether the reader has the map.
+:::
+
+## Transfer
+
+In digital humanities research, state-tracking models how readers or users navigate complex information spaces. Archivists model researcher workflows: what credentials are needed, what collections have been accessed, what permissions unlock further materials. Historians building counterfactual simulations ("What if this treaty had been signed?") use flags and conditions to gate alternative timelines. The state dictionary is a simple but powerful tool for modeling any process where past actions constrain future possibilities.
+
+:::challenge
+Simulate a 3-step exploration of a historical archive. In step 1, the reader picks up a rusty key. In step 2, they encounter a locked door. In step 3, the key unlocks a hidden collection. Print each passage and the final inventory.
+:::`,
+    challenges: [
+      {
+        id: 'if-02-c1',
+        title: 'The Archive Key',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `state = {"inventory": [], "location": "entrance"}
+
+# Step 1: entrance — find and collect a rusty key
+passage_1 = "You enter the old archive. A rusty key lies on the front desk."
+# YOUR CODE: add "rusty key" to inventory, update location to "reading_room", print passage_1
+
+# Step 2: reading room — see a locked door
+passage_2 = "The reading room is filled with fragile documents. A locked door stands to the north."
+# YOUR CODE: update location to "locked_door", print passage_2
+
+# Step 3: locked door — use key if you have it
+# YOUR CODE: check if "rusty key" is in inventory
+#   if yes: set passage_3 to the success message
+#   if no: set passage_3 to the failure message
+# print passage_3
+# print the inventory
+
+`,
+        expectedOutput: 'You enter the old archive. A rusty key lies on the front desk.\nThe reading room is filled with fragile documents. A locked door stands to the north.\nYou use the rusty key. The door opens to reveal a hidden collection of rare manuscripts!\nInventory: [\'rusty key\']',
+        hints: [
+          'Use `state["inventory"].append("rusty key")` to add the key.',
+          'Use `if "rusty key" in state["inventory"]:` to check whether you collected it.',
+          'Print the inventory with `print("Inventory:", state["inventory"])`.',
+        ],
+        solution: `state = {"inventory": [], "location": "entrance"}
+
+# Step 1: entrance — pick up a rusty key
+passage_1 = "You enter the old archive. A rusty key lies on the front desk."
+state["inventory"].append("rusty key")
+state["location"] = "reading_room"
+print(passage_1)
+
+# Step 2: reading room — see a locked door
+passage_2 = "The reading room is filled with fragile documents. A locked door stands to the north."
+state["location"] = "locked_door"
+print(passage_2)
+
+# Step 3: locked door — use key if available
+if "rusty key" in state["inventory"]:
+    passage_3 = "You use the rusty key. The door opens to reveal a hidden collection of rare manuscripts!"
+else:
+    passage_3 = "The door is locked. You cannot proceed without a key."
+print(passage_3)
+print("Inventory:", state["inventory"])
+`,
+      },
+    ],
+  },
+  {
+    id: 'if-03',
+    title: 'Graph of Stories: Mapping Narrative Structure',
+    moduleId: 'interactive-fiction',
+    prerequisites: ['if-02'],
+    estimatedTimeMinutes: 35,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Analyze a story dictionary as a directed graph',
+      'Identify dead-end passages with no outgoing choices',
+      'Calculate branching factor to measure narrative complexity',
+    ],
+    keywords: ['directed graph', 'dead end', 'branching factor', 'narratology', 'story structure'],
+    content: `# Graph of Stories: Mapping Narrative Structure
+
+## Analogy
+
+Literary scholars have long drawn maps of narratives. Structuralists like Vladimir Propp charted the "morphology" of folktales; narratologists like Gerard Genette diagrammed the temporal structure of novels. When we represent interactive fiction as a dictionary of passages linked by choices, we are building a **directed graph** — a mathematical structure with nodes (passages) and edges (choices pointing from one passage to another). Analyzing this graph lets us answer the same questions narratologists ask: Where does the story branch? Where does it converge? Where does it end? The difference is that we can answer computationally, across hundreds of passages in seconds.
+
+## Key Concepts
+
+### Stories as Directed Graphs
+
+Every story dictionary from the previous lessons is already a directed graph:
+
+:::definition
+**Directed graph**: A set of nodes (passages) connected by directed edges (choices), where each edge points from one node to another. In a story graph, the direction represents narrative flow.
+:::
+
+:::definition
+**Dead end**: A passage with no outgoing choices — a terminal node in the story graph. In narrative terms, this is an ending.
+:::
+
+\`\`\`python
+story = {
+    "start": {
+        "text": "A crossroads in the forest.",
+        "choices": {"Go left": "cave", "Go right": "village"}
+    },
+    "cave": {
+        "text": "A dark cave. Something glitters inside.",
+        "choices": {"Enter": "treasure"}
+    },
+    "village": {
+        "text": "A quiet village at dusk.",
+        "choices": {}
+    },
+    "treasure": {
+        "text": "You find ancient gold coins!",
+        "choices": {}
+    }
+}
+\`\`\`
+
+This story has 4 nodes and 3 edges. The nodes \`"village"\` and \`"treasure"\` are dead ends.
+
+### Counting Passages and Links
+
+We can measure basic properties of the story graph:
+
+\`\`\`python
+num_passages = len(story)
+num_links = sum(len(p["choices"]) for p in story.values())
+print(f"Passages: {num_passages}")
+print(f"Links: {num_links}")
+# Output:
+# Passages: 4
+# Links: 3
+\`\`\`
+
+### Finding Dead Ends
+
+A dead end is any passage whose \`"choices"\` dictionary is empty. These are the story's endings:
+
+\`\`\`python
+dead_ends = []
+for passage_id, passage in story.items():
+    if len(passage["choices"]) == 0:
+        dead_ends.append(passage_id)
+
+print("Dead ends:", sorted(dead_ends))
+# Output: Dead ends: ['treasure', 'village']
+\`\`\`
+
+We can also write this more concisely with a list comprehension:
+
+\`\`\`python
+dead_ends = [pid for pid, p in story.items() if len(p["choices"]) == 0]
+print("Dead ends:", sorted(dead_ends))
+# Output: Dead ends: ['treasure', 'village']
+\`\`\`
+
+### Branching Factor
+
+The **branching factor** tells us how many choices the average passage offers. A higher branching factor means more reader agency; a lower one means a more linear narrative:
+
+:::definition
+**Branching factor**: The average number of outgoing choices per passage. Calculated as total number of links divided by total number of passages.
+:::
+
+\`\`\`python
+total_choices = sum(len(p["choices"]) for p in story.values())
+avg_branching = total_choices / len(story)
+print(f"Average branching factor: {avg_branching:.2f}")
+# Output: Average branching factor: 0.75
+\`\`\`
+
+A traditional linear novel has a branching factor of roughly 1.0 (each passage leads to exactly one next passage). A highly branching work might reach 2.0 or more.
+
+### Putting It All Together
+
+Here is a complete structural analysis of a story:
+
+\`\`\`python
+story = {
+    "start": {"text": "...", "choices": {"A": "a", "B": "b"}},
+    "a": {"text": "...", "choices": {"C": "c"}},
+    "b": {"text": "...", "choices": {"C": "c", "D": "d"}},
+    "c": {"text": "...", "choices": {}},
+    "d": {"text": "...", "choices": {}}
+}
+
+print(f"Passages: {len(story)}")
+dead_ends = sorted([pid for pid, p in story.items() if len(p['choices']) == 0])
+print(f"Dead ends: {dead_ends}")
+total = sum(len(p['choices']) for p in story.values())
+print(f"Branching factor: {total / len(story):.2f}")
+# Output:
+# Passages: 5
+# Dead ends: ['c', 'd']
+# Branching factor: 1.00
+\`\`\`
+
+## Practice
+
+:::try-it
+Take the story dictionary from the lesson on "The Forking Path" (if-01) and compute its number of passages, number of links, list of dead ends, and average branching factor. Compare the branching factor to what you would expect from a linear story.
+:::
+
+## Transfer
+
+In digital humanities, graph analysis of narrative structures reveals patterns invisible to close reading alone. Researchers have mapped the structure of *Choose Your Own Adventure* books, hypertext literature, and even historical simulation games. Metrics like branching factor, dead-end count, and graph diameter help scholars compare how different works distribute agency to their readers. A museum's floor plan, a Choose Your Own Adventure book, and a historical counterfactual simulation all share the same underlying graph structure — and the same analytical toolkit.
+
+:::challenge
+Given a museum-navigation story dict, find all dead-end passages and calculate the average branching factor.
+:::`,
+    challenges: [
+      {
+        id: 'if-03-c1',
+        title: 'Map the Museum',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `story = {
+    "start": {
+        "text": "The museum lobby.",
+        "choices": {"Go left": "egypt", "Go right": "greece", "Go upstairs": "medieval"}
+    },
+    "egypt": {
+        "text": "The Egyptian wing.",
+        "choices": {"Examine sarcophagus": "sarcophagus", "Read hieroglyphs": "hieroglyphs"}
+    },
+    "greece": {
+        "text": "The Greek wing.",
+        "choices": {"View pottery": "pottery"}
+    },
+    "medieval": {
+        "text": "The Medieval wing.",
+        "choices": {}
+    },
+    "sarcophagus": {
+        "text": "An ornate sarcophagus from the 18th dynasty.",
+        "choices": {}
+    },
+    "hieroglyphs": {
+        "text": "Ancient hieroglyphs tell the story of a forgotten pharaoh.",
+        "choices": {}
+    },
+    "pottery": {
+        "text": "Red-figure pottery depicting scenes from the Odyssey.",
+        "choices": {}
+    }
+}
+
+# Find all dead-end passages (no choices) and sort them alphabetically
+# Calculate the average branching factor (total choices / total passages)
+
+# YOUR CODE HERE
+`,
+        expectedOutput: 'Dead ends: [\'hieroglyphs\', \'medieval\', \'pottery\', \'sarcophagus\']\nAverage branching factor: 0.86',
+        hints: [
+          'A dead end has `len(passage["choices"]) == 0`. Use a list comprehension and `sorted()`.',
+          'Sum all choice counts with `sum(len(p["choices"]) for p in story.values())`.',
+          'Divide total choices by `len(story)` and format to two decimal places with `:.2f`.',
+        ],
+        solution: `story = {
+    "start": {
+        "text": "The museum lobby.",
+        "choices": {"Go left": "egypt", "Go right": "greece", "Go upstairs": "medieval"}
+    },
+    "egypt": {
+        "text": "The Egyptian wing.",
+        "choices": {"Examine sarcophagus": "sarcophagus", "Read hieroglyphs": "hieroglyphs"}
+    },
+    "greece": {
+        "text": "The Greek wing.",
+        "choices": {"View pottery": "pottery"}
+    },
+    "medieval": {
+        "text": "The Medieval wing.",
+        "choices": {}
+    },
+    "sarcophagus": {
+        "text": "An ornate sarcophagus from the 18th dynasty.",
+        "choices": {}
+    },
+    "hieroglyphs": {
+        "text": "Ancient hieroglyphs tell the story of a forgotten pharaoh.",
+        "choices": {}
+    },
+    "pottery": {
+        "text": "Red-figure pottery depicting scenes from the Odyssey.",
+        "choices": {}
+    }
+}
+
+dead_ends = sorted([pid for pid, p in story.items() if len(p["choices"]) == 0])
+print("Dead ends:", dead_ends)
+
+total_choices = sum(len(p["choices"]) for p in story.values())
+avg_branching = total_choices / len(story)
+print(f"Average branching factor: {avg_branching:.2f}")
+`,
+      },
+    ],
+  },
+  {
+    id: 'if-04',
+    title: 'Generating Worlds: Procedural Story Fragments',
+    moduleId: 'interactive-fiction',
+    prerequisites: ['if-03'],
+    estimatedTimeMinutes: 35,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Use random.choice and string formatting to procedurally generate passage text',
+      'Apply random.seed for reproducible, deterministic output',
+      'Connect procedural generation to Oulipo and combinatorial literature',
+    ],
+    keywords: ['procedural generation', 'random.choice', 'random.seed', 'Oulipo', 'Calvino', 'string formatting'],
+    content: `# Generating Worlds: Procedural Story Fragments
+
+## Analogy
+
+In 1960, the French literary group **Oulipo** (Ouvroir de litterature potentielle — "Workshop of Potential Literature") began exploring literature created through formal constraints and combinatorial methods. Raymond Queneau's *Cent mille milliards de poemes* offered ten sonnets whose lines could be freely recombined, yielding 100 trillion possible poems. Italo Calvino's *The Castle of Crossed Destinies* generated narratives from the combinatorial arrangement of tarot cards. These writers understood that a small set of elements plus a set of rules could produce a vast narrative space. In Python, \`random.choice\` and string templates give us the same power: define your word banks, define your template, and let the machine explore the space of possibilities.
+
+## Key Concepts
+
+### Word Banks and Templates
+
+Procedural generation starts with two ingredients:
+1. **Word banks** — lists of interchangeable elements (settings, objects, adjectives, actions)
+2. **A template** — a string with placeholders that the word bank items fill
+
+:::definition
+**Procedural generation**: The algorithmic creation of content from rules and component parts, rather than manual authorship of each individual piece.
+:::
+
+\`\`\`python
+import random
+
+settings = ["a quiet chapel", "a dusty attic", "a sunlit courtyard"]
+objects = ["letter", "painting", "compass"]
+
+template = "You discover a {obj} in {setting}."
+result = template.format(
+    obj=random.choice(objects),
+    setting=random.choice(settings)
+)
+print(result)
+\`\`\`
+
+Each run produces a different combination — but every result is grammatically valid and narratively plausible.
+
+### Deterministic Output with random.seed
+
+For testing, grading, and reproducibility, we need the "random" choices to be the same every time. The \`random.seed()\` function fixes the sequence of random numbers:
+
+:::definition
+**random.seed**: A function that initializes the random number generator to a fixed state, ensuring that subsequent calls to random functions produce the same sequence of results every time.
+:::
+
+\`\`\`python
+import random
+random.seed(42)
+
+colors = ["red", "blue", "green", "gold", "silver"]
+print(random.choice(colors))  # Always: gold
+print(random.choice(colors))  # Always: green
+\`\`\`
+
+With \`random.seed(42)\`, the output is deterministic — essential for verifying that generated content matches expected results.
+
+### Building a Passage Generator
+
+We can combine multiple word banks with a template to generate complete passage descriptions:
+
+\`\`\`python
+import random
+random.seed(7)
+
+rooms = ["a vaulted cellar", "a narrow corridor", "a reading room"]
+adjectives = ["crumbling", "polished", "ornate"]
+features = ["bookshelf", "doorway", "window"]
+conditions = ["draped in cobwebs", "gleaming with fresh paint", "half-hidden by shadow"]
+
+template = "You enter {room}. A {adj} {feature} is {condition}."
+
+passage = template.format(
+    room=random.choice(rooms),
+    adj=random.choice(adjectives),
+    feature=random.choice(features),
+    condition=random.choice(conditions)
+)
+print(passage)
+\`\`\`
+
+### Generating Multiple Passages
+
+A loop lets us produce many unique passages from the same materials:
+
+\`\`\`python
+import random
+random.seed(0)
+
+eras = ["Victorian", "Medieval", "Baroque"]
+items = ["diary", "seal", "brooch"]
+states = ["pristine", "weathered", "fragmentary"]
+
+template = "A {state} {era} {item} awaits examination."
+
+for i in range(3):
+    text = template.format(
+        state=random.choice(states),
+        era=random.choice(eras),
+        item=random.choice(items)
+    )
+    print(text)
+\`\`\`
+
+### Connecting Generated Passages to Story Structure
+
+We can combine procedural generation with the story dictionaries from earlier lessons to automatically populate a narrative graph:
+
+\`\`\`python
+import random
+random.seed(99)
+
+rooms = ["archive", "gallery", "vault"]
+descriptions = ["dimly lit", "sun-drenched", "echoing"]
+
+story = {}
+for i, room in enumerate(rooms):
+    desc = random.choice(descriptions)
+    story[room] = {
+        "text": f"You enter the {desc} {room}.",
+        "choices": {}
+    }
+
+# Link them in sequence
+story["archive"]["choices"]["Continue"] = "gallery"
+story["gallery"]["choices"]["Continue"] = "vault"
+
+for pid, p in story.items():
+    print(f"{pid}: {p['text']}")
+\`\`\`
+
+This approach scales: with richer word banks, you can generate entire explorable worlds.
+
+## Practice
+
+:::try-it
+Create word banks for historical periods (e.g., "Renaissance", "Enlightenment"), document types (e.g., "treatise", "letter"), and conditions (e.g., "well-preserved", "barely legible"). Write a template and generate 3 descriptions using \`random.seed(10)\`.
+:::
+
+## Transfer
+
+Procedural generation is a core technique in both creative computing and digital humanities. Scholars use it to model the "possibility space" of literary forms — how many distinct sonnets can a given set of rhyme words produce? Game designers and digital artists use it to create vast, explorable worlds from compact rule sets. In DH research, procedural generation helps with synthetic data creation for testing text-analysis tools, with modeling variant readings in textual scholarship, and with building exploratory simulations of historical spaces where not every detail is documented. The Oulipo insight endures: constraint is not the enemy of creativity but its engine.
+
+:::challenge
+Generate 3 unique passage descriptions from word banks and a template. Use \`random.seed(42)\` to ensure deterministic output.
+:::`,
+    challenges: [
+      {
+        id: 'if-04-c1',
+        title: 'The Procedural Archive',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import random
+random.seed(42)
+
+settings = ["a dusty archive", "a candlelit scriptorium", "a forgotten library", "a sunken cathedral", "a crumbling tower"]
+adjectives = ["mysterious", "faded", "whispering", "shadowed", "luminous"]
+objects = ["manuscript", "map", "portrait", "clock", "mirror"]
+actions = ["flickers in the dim light", "hums with quiet energy", "is covered in strange symbols", "stands slightly ajar", "gathers dust on a pedestal"]
+
+template = "You enter {setting}. A {adj} {obj} {action}."
+
+# Generate and print 3 passage descriptions using random.choice
+# YOUR CODE HERE
+`,
+        expectedOutput: 'You enter a dusty archive. A mysterious portrait hums with quiet energy.\nYou enter a candlelit scriptorium. A faded manuscript gathers dust on a pedestal.\nYou enter a dusty archive. A luminous clock flickers in the dim light.',
+        hints: [
+          'Use a `for` loop with `range(3)` to generate three passages.',
+          'Call `random.choice()` separately for each word bank inside the loop.',
+          'Use `template.format(setting=..., adj=..., obj=..., action=...)` to fill the template.',
+        ],
+        solution: `import random
+random.seed(42)
+
+settings = ["a dusty archive", "a candlelit scriptorium", "a forgotten library", "a sunken cathedral", "a crumbling tower"]
+adjectives = ["mysterious", "faded", "whispering", "shadowed", "luminous"]
+objects = ["manuscript", "map", "portrait", "clock", "mirror"]
+actions = ["flickers in the dim light", "hums with quiet energy", "is covered in strange symbols", "stands slightly ajar", "gathers dust on a pedestal"]
+
+template = "You enter {setting}. A {adj} {obj} {action}."
+
+for i in range(3):
+    setting = random.choice(settings)
+    adj = random.choice(adjectives)
+    obj = random.choice(objects)
+    action = random.choice(actions)
+    print(template.format(setting=setting, adj=adj, obj=obj, action=action))
+`,
+      },
+    ],
+  },
+  {
+    id: 'oral-history-01',
+    title: 'The Shape of Speech: Understanding Transcripts as Data',
+    moduleId: 'oral-history',
+    prerequisites: ['python-basics'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Explain how oral history transcripts differ structurally from literary or archival texts',
+      'Represent a timestamped transcript as a list of dictionaries with speaker, text, and timestamp fields',
+      'Filter transcript data by speaker and count words per turn using Python',
+    ],
+    keywords: ['oral history', 'transcript', 'timestamped data', 'speaker turns', 'structured text'],
+    content: `# The Shape of Speech: Understanding Transcripts as Data
+
+## Analogy
+
+Think of a library card catalog. Each card holds structured information about a book: author, title, date, subject. A transcript works the same way, except each "card" represents a moment of speech. Instead of author, you have a speaker. Instead of a title, you have the words they said. And instead of a publication date, you have a timestamp marking exactly when those words were spoken. Just as the catalog transforms a chaotic pile of books into a searchable system, representing speech as structured data transforms a flowing conversation into something you can query, filter, and analyze.
+
+## Key Concepts
+
+### How Oral History Transcripts Differ from Literary Texts
+
+A novel or a poem is a single stream of authored text. Oral history transcripts are fundamentally different. They are **multi-voiced**, capturing the back-and-forth between an interviewer and a narrator. They are **time-bound**, tied to specific moments in a recording. And they carry traces of **spontaneous speech**: false starts, repetition, dialectal phrasing, and pauses that a polished essay would edit away.
+
+For the digital humanist, this means we need a richer data structure than a plain string. We need to preserve *who* spoke, *what* they said, and *when* they said it.
+
+:::definition
+**Transcript turn**: A single uninterrupted stretch of speech by one speaker, bounded by the moments another speaker begins or a significant pause occurs.
+:::
+
+### Representing a Transcript as Structured Data
+
+In Python, the most natural way to represent a transcript is as a **list of dictionaries**. Each dictionary is one turn, and each turn carries metadata alongside the text.
+
+\`\`\`python
+transcript = [
+    {"speaker": "Interviewer", "text": "When did your family first arrive here?", "start": 0.0, "end": 4.2},
+    {"speaker": "Mrs. Alvarez", "text": "My grandmother came in nineteen fifty two", "start": 4.5, "end": 8.1},
+    {"speaker": "Interviewer", "text": "What do you remember about the neighborhood?", "start": 8.5, "end": 12.0},
+    {"speaker": "Mrs. Alvarez", "text": "Oh it was so different then very close knit", "start": 12.3, "end": 16.7},
+]
+
+for turn in transcript:
+    print(f"[{turn['start']:>5.1f}s] {turn['speaker']}: {turn['text']}")
+\`\`\`
+
+\`\`\`
+[  0.0s] Interviewer: When did your family first arrive here?
+[  4.5s] Mrs. Alvarez: My grandmother came in nineteen fifty two
+[  8.5s] Interviewer: What do you remember about the neighborhood?
+[ 12.3s] Mrs. Alvarez: Oh it was so different then very close knit
+\`\`\`
+
+Notice how each turn stores \`start\` and \`end\` times as floating-point numbers representing seconds into the recording. This is how real transcription software (like ELAN, Whisper, or OHMS) exports data, and it lets us do time-based analysis later.
+
+:::definition
+**Timestamped transcript**: A transcript representation where each turn includes numerical start and end times, enabling analysis of pacing, overlap, and silence.
+:::
+
+### Filtering by Speaker
+
+One of the most common first tasks in oral history analysis is separating the narrator's words from the interviewer's questions. A list comprehension makes this straightforward.
+
+\`\`\`python
+narrator_turns = [t for t in transcript if t["speaker"] == "Mrs. Alvarez"]
+print(f"Mrs. Alvarez speaks {len(narrator_turns)} times")
+\`\`\`
+
+\`\`\`
+Mrs. Alvarez speaks 2 times
+\`\`\`
+
+This is the digital humanities equivalent of highlighting every passage in a different color for each speaker -- except it scales to transcripts with thousands of turns.
+
+### Counting Words per Turn
+
+Word counts per turn give you a rough measure of how much each speaker contributes. In oral history, narrators typically produce longer turns than interviewers, but the ratio can reveal a great deal about the interview dynamic.
+
+\`\`\`python
+for turn in transcript:
+    word_count = len(turn["text"].split())
+    print(f"{turn['speaker']}: {word_count} words")
+\`\`\`
+
+\`\`\`
+Interviewer: 7 words
+Mrs. Alvarez: 7 words
+Interviewer: 7 words
+Mrs. Alvarez: 9 words
+\`\`\`
+
+The \`.split()\` method breaks a string on whitespace, returning a list of words. Counting that list gives us a simple but effective word count.
+
+## Practice
+
+:::try-it
+Create your own transcript list with at least four turns between two speakers -- perhaps a mock interview about a family recipe, a local tradition, or a childhood memory. Print each turn with its timestamp, then filter to show only the narrator's turns. Experiment: what happens if you misspell the speaker name in your filter?
+:::
+
+## Transfer
+
+If you work with oral history collections, folklore archives, or ethnographic interviews, you likely already have transcripts in some format -- Word documents, subtitle files, or spreadsheets. The list-of-dictionaries structure you learned here is the bridge between those messy real-world formats and computational analysis. As a next step, think about how you would convert your own transcript files into this format. What fields would you add beyond speaker, text, and timestamps? Topic tags? Emotional tone annotations? The data model is yours to extend.
+
+:::challenge
+Given a transcript of a labor history interview (provided as a list of dictionaries), filter to only the narrator's turns, count the total number of words across all of their turns, and print the results.
+:::`,
+    challenges: [
+      {
+        id: 'oral-history-01-challenge',
+        title: 'Count a Speaker\'s Words',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `transcript = [
+    {"speaker": "Interviewer", "text": "Tell me about the factory work", "start": 0.0, "end": 3.5},
+    {"speaker": "Mr. Okafor", "text": "We started before dawn every single day", "start": 4.0, "end": 7.8},
+    {"speaker": "Interviewer", "text": "How did that affect your family", "start": 8.2, "end": 10.5},
+    {"speaker": "Mr. Okafor", "text": "The children barely saw me it was hard", "start": 11.0, "end": 15.2},
+    {"speaker": "Interviewer", "text": "Did conditions ever improve", "start": 15.8, "end": 18.0},
+    {"speaker": "Mr. Okafor", "text": "After the strike things changed for the better", "start": 18.5, "end": 22.3},
+]
+
+target_speaker = "Mr. Okafor"
+
+# Step 1: Filter transcript to only turns by target_speaker
+speaker_turns = ___
+
+# Step 2: Count total words across all of target_speaker's turns
+total_words = ___
+
+# Step 3: Print the results (must match expected output exactly)
+print(f"Speaker: {target_speaker}")
+print(f"Number of turns: {___}")
+print(f"Total words: {___}")
+`,
+        expectedOutput: 'Speaker: Mr. Okafor\nNumber of turns: 3\nTotal words: 23',
+        hints: [
+          'Use a list comprehension to filter: `[t for t in transcript if t["speaker"] == target_speaker]`',
+          'To count words in a single turn, use `len(turn["text"].split())`',
+          'Use `sum()` with a generator expression to total the word counts across all filtered turns',
+        ],
+        solution: `transcript = [
+    {"speaker": "Interviewer", "text": "Tell me about the factory work", "start": 0.0, "end": 3.5},
+    {"speaker": "Mr. Okafor", "text": "We started before dawn every single day", "start": 4.0, "end": 7.8},
+    {"speaker": "Interviewer", "text": "How did that affect your family", "start": 8.2, "end": 10.5},
+    {"speaker": "Mr. Okafor", "text": "The children barely saw me it was hard", "start": 11.0, "end": 15.2},
+    {"speaker": "Interviewer", "text": "Did conditions ever improve", "start": 15.8, "end": 18.0},
+    {"speaker": "Mr. Okafor", "text": "After the strike things changed for the better", "start": 18.5, "end": 22.3},
+]
+
+target_speaker = "Mr. Okafor"
+
+speaker_turns = [t for t in transcript if t["speaker"] == target_speaker]
+total_words = sum(len(t["text"].split()) for t in speaker_turns)
+
+print(f"Speaker: {target_speaker}")
+print(f"Number of turns: {len(speaker_turns)}")
+print(f"Total words: {total_words}")
+`,
+      },
+    ],
+  },
+  {
+    id: 'oral-history-02',
+    title: 'Silence and Pause: What Gaps Tell Us',
+    moduleId: 'oral-history',
+    prerequisites: ['oral-history-01'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Explain why pauses and silences carry interpretive meaning in oral history interviews',
+      'Calculate inter-turn pause durations from timestamped transcript data',
+      'Identify the longest silence in a transcript and interpret its position',
+    ],
+    keywords: ['pause', 'silence', 'inter-turn gap', 'hesitation', 'trauma narrative', 'timestamp analysis'],
+    content: `# Silence and Pause: What Gaps Tell Us
+
+## Analogy
+
+Imagine reading a letter from the nineteenth century where the writer has crossed out a word, left a blank space, or started a sentence they never finished. Archivists treasure those marks because they reveal hesitation, self-censorship, and emotion that the polished final text conceals. In oral history, **silence** plays the same role. A three-second gap before answering a question about wartime is not dead air -- it is a trace of memory, trauma, or careful deliberation. When we represent a transcript as timestamped data, those gaps become measurable. They move from something a listener senses to something an analyst can locate, quantify, and compare across interviews.
+
+## Key Concepts
+
+### Why Silence Matters
+
+Oral historians have long recognized that what a narrator *does not say* -- or takes a long time to say -- can be as significant as the words themselves. Pauses can signal:
+
+- **Hesitation or emotional weight**: A narrator gathering composure before describing a painful event.
+- **Power dynamics**: An interviewer rushing in with a new question (short gap) versus giving space (long gap).
+- **Cognitive effort**: Recalling distant memories or searching for the right word.
+- **Cultural norms**: In some traditions, silence is a mark of respect or reflection, not discomfort.
+
+For computational analysis, we define a pause as the **gap between one turn ending and the next turn beginning**.
+
+:::definition
+**Inter-turn pause**: The time elapsed between the \`end\` timestamp of one transcript turn and the \`start\` timestamp of the following turn. Measured in seconds.
+:::
+
+### Calculating Pauses from Timestamps
+
+Given our familiar list-of-dictionaries transcript, we can compute the gap before each turn by subtracting the previous turn's \`end\` time from the current turn's \`start\` time.
+
+\`\`\`python
+transcript = [
+    {"speaker": "Interviewer", "text": "Where were you born?", "start": 0.0, "end": 2.1},
+    {"speaker": "Mrs. Kowalski", "text": "A small village near Krakow", "start": 2.5, "end": 5.3},
+    {"speaker": "Interviewer", "text": "When did you leave?", "start": 5.6, "end": 7.0},
+    {"speaker": "Mrs. Kowalski", "text": "Nineteen forty four", "start": 11.8, "end": 13.5},
+]
+
+for i in range(1, len(transcript)):
+    pause = round(transcript[i]["start"] - transcript[i - 1]["end"], 1)
+    label = " <-- long pause" if pause > 2.0 else ""
+    print(f"Gap before turn {i}: {pause:.1f}s{label}")
+\`\`\`
+
+\`\`\`
+Gap before turn 1: 0.4s
+Gap before turn 2: 0.3s
+Gap before turn 3: 4.8s <-- long pause
+\`\`\`
+
+That 4.8-second pause before Mrs. Kowalski says "Nineteen forty four" is the kind of gap an oral historian would note in the margins. The question "When did you leave?" touches on displacement and loss -- the silence speaks volumes.
+
+:::definition
+**Long pause**: A subjective threshold (often 2-3 seconds in conversation analysis) above which a gap is considered analytically significant. The exact threshold depends on your research question.
+:::
+
+### Finding the Longest Pause
+
+To systematically locate the most significant silence in a transcript, we can collect all pauses and then use Python's \`max()\` function with a key.
+
+\`\`\`python
+pauses = []
+for i in range(1, len(transcript)):
+    gap = round(transcript[i]["start"] - transcript[i - 1]["end"], 1)
+    pauses.append({"before_turn": i, "duration": gap})
+
+longest = max(pauses, key=lambda p: p["duration"])
+print(f"Longest pause: {longest['duration']}s before turn {longest['before_turn']}")
+print(f"Next speaker said: \\"{transcript[longest['before_turn']]['text']}\\"")
+\`\`\`
+
+\`\`\`
+Longest pause: 4.8s before turn 3
+Next speaker said: "Nineteen forty four"
+\`\`\`
+
+This pattern -- collect, then query -- is fundamental to data analysis. You build a list of derived measurements (pauses), then ask questions of that list (which is longest? how many exceed a threshold?).
+
+## Practice
+
+:::try-it
+Take the transcript from Lesson 01 or create a new one with at least five turns. Deliberately insert one long pause (set the \`start\` time of one turn well after the \`end\` of the previous turn). Calculate all pauses and find the longest one. Experiment with different thresholds: what counts as a "long" pause in your data? Try 1.0 seconds, 2.0 seconds, and 3.0 seconds as cutoffs and count how many pauses exceed each.
+:::
+
+## Transfer
+
+In sociolinguistics and conversation analysis, pause duration is a well-studied feature of interaction. Researchers working with Holocaust survivor testimonies, for example, have found that the longest pauses often cluster around specific topics -- deportation, loss of family members, moments of violence. If you have access to a real oral history collection, mapping pause durations across an entire interview can produce a kind of "emotional topography" that reveals which topics carry the heaviest weight, even before you read a single word of the transcript.
+
+:::challenge
+Given a timestamped transcript of a migration history interview, calculate all inter-turn pauses, print each one, and identify the longest silence along with its position.
+:::`,
+    challenges: [
+      {
+        id: 'oral-history-02-c1',
+        title: 'Find the Longest Silence',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `transcript = [
+    {"speaker": "Interviewer", "text": "Can you describe what happened that day", "start": 0.0, "end": 3.8},
+    {"speaker": "Mrs. Nguyen", "text": "We heard the sirens first", "start": 4.1, "end": 6.5},
+    {"speaker": "Interviewer", "text": "What did you do", "start": 6.9, "end": 8.0},
+    {"speaker": "Mrs. Nguyen", "text": "We just ran", "start": 12.6, "end": 13.8},
+    {"speaker": "Interviewer", "text": "Where did you go", "start": 14.0, "end": 15.1},
+    {"speaker": "Mrs. Nguyen", "text": "To the church on the hill everyone went there", "start": 15.4, "end": 19.2},
+]
+
+# Step 1: Calculate the pause before each turn (starting from turn 1)
+pauses = []
+for i in range(1, len(transcript)):
+    gap = round(___ - ___, 1)
+    pauses.append({"after_turn": i - 1, "before_turn": i, "duration": gap})
+
+# Step 2: Print all pauses
+print("Pause analysis:")
+for p in pauses:
+    print(f"  Between turn {p['after_turn']} and {p['before_turn']}: {p['duration']:.1f}s")
+
+# Step 3: Find and print the longest pause
+longest = max(___, key=___)
+print(f"Longest pause: {longest['duration']:.1f}s (before turn {longest['before_turn']})")
+`,
+        expectedOutput: 'Pause analysis:\n  Between turn 0 and 1: 0.3s\n  Between turn 1 and 2: 0.4s\n  Between turn 2 and 3: 4.6s\n  Between turn 3 and 4: 0.2s\n  Between turn 4 and 5: 0.3s\nLongest pause: 4.6s (before turn 3)',
+        hints: [
+          'The pause before turn `i` is `transcript[i]["start"] - transcript[i - 1]["end"]`',
+          'Use `round(..., 1)` to keep one decimal place and avoid floating-point artifacts',
+          '`max(pauses, key=lambda p: p["duration"])` finds the dictionary with the largest duration',
+        ],
+        solution: `transcript = [
+    {"speaker": "Interviewer", "text": "Can you describe what happened that day", "start": 0.0, "end": 3.8},
+    {"speaker": "Mrs. Nguyen", "text": "We heard the sirens first", "start": 4.1, "end": 6.5},
+    {"speaker": "Interviewer", "text": "What did you do", "start": 6.9, "end": 8.0},
+    {"speaker": "Mrs. Nguyen", "text": "We just ran", "start": 12.6, "end": 13.8},
+    {"speaker": "Interviewer", "text": "Where did you go", "start": 14.0, "end": 15.1},
+    {"speaker": "Mrs. Nguyen", "text": "To the church on the hill everyone went there", "start": 15.4, "end": 19.2},
+]
+
+pauses = []
+for i in range(1, len(transcript)):
+    gap = round(transcript[i]["start"] - transcript[i - 1]["end"], 1)
+    pauses.append({"after_turn": i - 1, "before_turn": i, "duration": gap})
+
+print("Pause analysis:")
+for p in pauses:
+    print(f"  Between turn {p['after_turn']} and {p['before_turn']}: {p['duration']:.1f}s")
+
+longest = max(pauses, key=lambda p: p["duration"])
+print(f"Longest pause: {longest['duration']:.1f}s (before turn {longest['before_turn']})")
+`,
+      },
+    ],
+  },
+  {
+    id: 'oral-history-03',
+    title: 'Turn-Taking and Power: Analyzing Conversation Structure',
+    moduleId: 'oral-history',
+    prerequisites: ['oral-history-02'],
+    estimatedTimeMinutes: 35,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Analyze turn-taking patterns to reveal power dynamics in oral history interviews',
+      'Calculate per-speaker statistics including turn count, total speaking time, and percentage share',
+      'Identify the dominant speaker in a transcript using aggregated timing data',
+    ],
+    keywords: ['turn-taking', 'power dynamics', 'speaking time', 'conversation analysis', 'speaker dominance', 'interview structure'],
+    content: `# Turn-Taking and Power: Analyzing Conversation Structure
+
+## Analogy
+
+Think about how historians analyze the layout of a medieval manuscript. Who gets the largest illuminated initial? Whose words occupy the center of the page, and whose are pushed to the margins? The physical space a voice occupies on the page tells you something about power and authority. In an oral history interview, **time** is the equivalent of page space. Who speaks longer? Who gets interrupted? Whose turns are brief questions, and whose are expansive narratives? By measuring speaking time per person, we can make visible the power dynamics that shape every recorded conversation -- dynamics that are easy to sense but hard to prove without numbers.
+
+## Key Concepts
+
+### Turn-Taking as a Window into Power
+
+In a well-conducted oral history interview, the narrator should do most of the talking. The interviewer asks brief, open-ended questions and then gets out of the way. But this ideal is not always the reality. Some interviewers dominate. Some narrators give only terse answers. Analyzing the **distribution of speaking time** reveals these patterns quantitatively.
+
+Conversation analysts use several metrics:
+
+- **Turn count**: How many times each person speaks.
+- **Total speaking time**: The sum of all turn durations for each speaker.
+- **Speaking time share**: Each speaker's percentage of the total recorded speech.
+
+:::definition
+**Speaking time share**: A speaker's total speaking time divided by the combined speaking time of all participants, expressed as a percentage. A narrator share below 50% in an oral history may indicate interviewer dominance.
+:::
+
+### Counting Words per Speaker
+
+Before we work with timestamps, a simple word count per speaker can already reveal imbalances. We use a dictionary to accumulate totals.
+
+\`\`\`python
+transcript = [
+    {"speaker": "Interviewer", "text": "Tell me about your childhood", "start": 0.0, "end": 2.5},
+    {"speaker": "Ms. Rivera", "text": "We lived on a farm with my grandparents and cousins", "start": 3.0, "end": 7.8},
+    {"speaker": "Interviewer", "text": "What was that like", "start": 8.1, "end": 9.3},
+    {"speaker": "Ms. Rivera", "text": "Hard work but we were happy together as a family", "start": 9.8, "end": 14.2},
+]
+
+word_counts = {}
+for turn in transcript:
+    name = turn["speaker"]
+    words = len(turn["text"].split())
+    word_counts[name] = word_counts.get(name, 0) + words
+
+for name, count in word_counts.items():
+    print(f"{name}: {count} words")
+\`\`\`
+
+\`\`\`
+Interviewer: 9 words
+Ms. Rivera: 20 words
+\`\`\`
+
+Ms. Rivera produces more than twice as many words as the Interviewer -- a healthy ratio for an oral history. The \`.get(name, 0)\` pattern is essential here: it initializes a speaker's count to zero the first time we encounter them, so we can accumulate without checking whether the key already exists.
+
+### Calculating Speaking Time per Speaker
+
+Word counts are useful but imperfect -- a slow, deliberate speaker may use few words over many seconds. **Speaking time**, derived from timestamps, gives us a more direct measure.
+
+\`\`\`python
+speaker_time = {}
+for turn in transcript:
+    name = turn["speaker"]
+    duration = round(turn["end"] - turn["start"], 1)
+    speaker_time[name] = round(speaker_time.get(name, 0) + duration, 1)
+
+total = round(sum(speaker_time.values()), 1)
+for name in speaker_time:
+    pct = round(speaker_time[name] / total * 100, 1)
+    print(f"{name}: {speaker_time[name]}s of {total}s ({pct}%)")
+\`\`\`
+
+\`\`\`
+Interviewer: 3.7s of 14.9s (24.8%)
+Ms. Rivera: 11.2s of 14.9s (75.2%)
+\`\`\`
+
+:::definition
+**Turn duration**: The length of a single speaking turn, calculated as \`end - start\` for that turn. Summing all turn durations for a speaker gives their total speaking time.
+:::
+
+This pattern -- accumulate into a dictionary, then compute summary statistics -- is one of the most versatile tools in data analysis. You will use it again and again across digital humanities projects.
+
+### Identifying the Dominant Speaker
+
+Once we have a dictionary mapping speakers to their total time, finding the dominant speaker is a one-liner using \`max()\` with a key function.
+
+\`\`\`python
+dominant = max(speaker_time, key=speaker_time.get)
+print(f"Dominant speaker: {dominant}")
+\`\`\`
+
+\`\`\`
+Dominant speaker: Ms. Rivera
+\`\`\`
+
+In oral history, we *expect* the narrator to be dominant. When the interviewer dominates, it is a signal worth investigating -- perhaps the narrator was reluctant, or the interviewer was steering the conversation too aggressively.
+
+## Practice
+
+:::try-it
+Create a transcript with three speakers -- perhaps two narrators and one interviewer, simulating a group oral history session. Calculate each speaker's turn count, total speaking time, and percentage share. Which speaker dominates? Does the result match what you would expect from the content of the turns?
+:::
+
+## Transfer
+
+Quantitative turn-taking analysis is widely used in sociolinguistics, courtroom discourse studies, and political debate analysis. In digital humanities, researchers have applied these methods to compare interviewing styles across large oral history collections. For instance, an archive with hundreds of interviews can be profiled to ask: do certain interviewers consistently dominate the conversation? Do narrators from particular demographic groups receive less speaking time? These questions move oral history research from individual close readings toward corpus-level patterns that reveal systemic biases in how stories are collected.
+
+:::challenge
+Given a transcript of a civil rights oral history interview, calculate each speaker's turn count, total speaking time, and percentage share of speaking time. Identify and print the dominant speaker.
+:::`,
+    challenges: [
+      {
+        id: 'oral-history-03-c1',
+        title: 'Who Holds the Floor?',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `transcript = [
+    {"speaker": "Interviewer", "text": "Tell me about your years in the movement", "start": 0.0, "end": 3.2},
+    {"speaker": "Dr. James", "text": "I joined when I was barely eighteen we marched every weekend that summer", "start": 3.8, "end": 10.5},
+    {"speaker": "Interviewer", "text": "What kept you going", "start": 11.0, "end": 12.3},
+    {"speaker": "Dr. James", "text": "Belief I suppose and the people around me they were like family", "start": 12.8, "end": 19.0},
+    {"speaker": "Interviewer", "text": "Were there moments of doubt", "start": 19.5, "end": 21.2},
+    {"speaker": "Dr. James", "text": "Oh many times especially after the arrests but we kept on", "start": 21.8, "end": 27.4},
+]
+
+# Step 1: Accumulate speaking time and turn count per speaker
+speaker_time = {}
+speaker_turns = {}
+
+for turn in transcript:
+    name = turn["speaker"]
+    duration = round(turn["end"] - turn["start"], 1)
+    speaker_time[name] = round(___, 1)
+    speaker_turns[name] = ___
+
+# Step 2: Calculate total speaking time
+total_time = round(sum(speaker_time.values()), 1)
+
+# Step 3: Print per-speaker stats
+print("Speaker analysis:")
+for name in speaker_time:
+    pct = round(___ / ___ * 100, 1)
+    print(f"  {name}: {speaker_turns[name]} turns, {speaker_time[name]}s ({pct}%)")
+
+# Step 4: Find and print the dominant speaker
+dominant = max(___, key=___)
+print(f"Dominant speaker: {dominant}")
+`,
+        expectedOutput: 'Speaker analysis:\n  Interviewer: 3 turns, 6.2s (25.1%)\n  Dr. James: 3 turns, 18.5s (74.9%)\nDominant speaker: Dr. James',
+        hints: [
+          'To accumulate time: `speaker_time.get(name, 0) + duration` adds the new duration to the running total',
+          'To accumulate turns: `speaker_turns.get(name, 0) + 1` increments the count by one each time',
+          'Percentage is `speaker_time[name] / total_time * 100`',
+          '`max(speaker_time, key=speaker_time.get)` returns the key with the highest value',
+        ],
+        solution: `transcript = [
+    {"speaker": "Interviewer", "text": "Tell me about your years in the movement", "start": 0.0, "end": 3.2},
+    {"speaker": "Dr. James", "text": "I joined when I was barely eighteen we marched every weekend that summer", "start": 3.8, "end": 10.5},
+    {"speaker": "Interviewer", "text": "What kept you going", "start": 11.0, "end": 12.3},
+    {"speaker": "Dr. James", "text": "Belief I suppose and the people around me they were like family", "start": 12.8, "end": 19.0},
+    {"speaker": "Interviewer", "text": "Were there moments of doubt", "start": 19.5, "end": 21.2},
+    {"speaker": "Dr. James", "text": "Oh many times especially after the arrests but we kept on", "start": 21.8, "end": 27.4},
+]
+
+speaker_time = {}
+speaker_turns = {}
+
+for turn in transcript:
+    name = turn["speaker"]
+    duration = round(turn["end"] - turn["start"], 1)
+    speaker_time[name] = round(speaker_time.get(name, 0) + duration, 1)
+    speaker_turns[name] = speaker_turns.get(name, 0) + 1
+
+total_time = round(sum(speaker_time.values()), 1)
+
+print("Speaker analysis:")
+for name in speaker_time:
+    pct = round(speaker_time[name] / total_time * 100, 1)
+    print(f"  {name}: {speaker_turns[name]} turns, {speaker_time[name]}s ({pct}%)")
+
+dominant = max(speaker_time, key=speaker_time.get)
+print(f"Dominant speaker: {dominant}")
+`,
+      },
+    ],
+  },
+  {
+    id: 'oral-history-04',
+    title: 'Concordance and Keywords in Oral Testimony',
+    moduleId: 'oral-history',
+    prerequisites: ['oral-history-03'],
+    estimatedTimeMinutes: 35,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Explain what a KWIC concordance is and why it is valuable for oral history analysis',
+      'Search transcript data for keyword occurrences with speaker attribution',
+      'Build a keyword-in-context concordance that shows surrounding words for each match',
+    ],
+    keywords: ['concordance', 'KWIC', 'keyword in context', 'keyword search', 'speaker attribution', 'close reading'],
+    content: `# Concordance and Keywords in Oral Testimony
+
+## Analogy
+
+Imagine a biblical concordance -- the kind scholars have compiled for centuries. You look up the word "covenant" and find every verse where it appears, each one displayed with a few words of surrounding context. At a glance, you can see how the same word is used differently across passages: a covenant of peace, a covenant broken, a covenant remembered. A **KWIC concordance** (Keyword in Context) does exactly the same thing for any text, including oral history transcripts. But here we gain something the biblical concordance cannot offer: we also know *who* said the word. When a narrator says "home" versus when an interviewer says "home," the meaning and emotional weight can be entirely different.
+
+## Key Concepts
+
+### Finding Keywords in Transcript Turns
+
+The simplest form of keyword analysis checks whether a word appears in each turn and prints the matching turns with their speaker.
+
+\`\`\`python
+transcript = [
+    {"speaker": "Narrator", "text": "We left the homeland with nothing but hope", "start": 0.0, "end": 4.5},
+    {"speaker": "Narrator", "text": "Finding hope again took many years of struggle", "start": 5.0, "end": 9.8},
+]
+
+keyword = "hope"
+for turn in transcript:
+    if keyword in turn["text"].lower():
+        print(f"[{turn['start']}s] {turn['speaker']}: {turn['text']}")
+\`\`\`
+
+\`\`\`
+[0.0s] Narrator: We left the homeland with nothing but hope
+[5.0s] Narrator: Finding hope again took many years of struggle
+\`\`\`
+
+This is useful but limited. We see the whole turn, but if turns are long (as they often are in oral history), the keyword gets buried. We need a way to zoom in on just the words surrounding each occurrence.
+
+:::definition
+**KWIC (Keyword in Context)**: A concordance format that displays each occurrence of a search term with a fixed window of words to its left and right, allowing researchers to see usage patterns at a glance.
+:::
+
+### Building a KWIC Concordance
+
+To build a proper KWIC concordance, we split each turn's text into words, find every position where the keyword occurs, and extract a window of surrounding context.
+
+\`\`\`python
+text = "The church was our home and the church was our strength"
+keyword = "church"
+words = text.split()
+context = 2
+
+for i, word in enumerate(words):
+    if word.lower() == keyword:
+        left = " ".join(words[max(0, i - context):i])
+        right = " ".join(words[i + 1:i + 1 + context])
+        print(f"...{left} [{word}] {right}...")
+\`\`\`
+
+\`\`\`
+...The [church] was our...
+...and the [church] was our...
+\`\`\`
+
+The key technique here is **slicing with a window**. For each keyword position \`i\`, we take \`context\` words before it (\`words[max(0, i - context):i]\`) and \`context\` words after it (\`words[i + 1:i + 1 + context]\`). The \`max(0, ...)\` guard prevents negative indices when the keyword appears near the start of the text.
+
+:::definition
+**Context window**: The number of words displayed on each side of a keyword in a KWIC concordance. A window of 3 means three words to the left and three to the right.
+:::
+
+### Adding Speaker Attribution
+
+In oral history, knowing *who* said a keyword is as important as knowing *how* it was used. We combine the KWIC approach with our transcript structure to produce a concordance that includes the speaker for each match.
+
+\`\`\`python
+transcript = [
+    {"speaker": "Interviewer", "text": "How did you feel about leaving home", "start": 0.0, "end": 3.5},
+    {"speaker": "Mr. Petrov", "text": "Home was everything to us leaving home meant losing ourselves", "start": 4.0, "end": 9.2},
+]
+
+keyword = "home"
+context_words = 3
+
+for turn in transcript:
+    words = turn["text"].split()
+    for i, word in enumerate(words):
+        if word.lower() == keyword.lower():
+            left = " ".join(words[max(0, i - context_words):i])
+            right = " ".join(words[i + 1:i + 1 + context_words])
+            print(f"[{turn['speaker']}] ...{left:>20} [{keyword}] {right}...")
+\`\`\`
+
+\`\`\`
+[Interviewer] ...   you feel about leaving [home] ...
+[Mr. Petrov] ...                      Home [home] was everything to...
+\`\`\`
+
+Wait -- that second line looks wrong. The word "Home" is capitalized in the text, but our check \`word.lower() == keyword.lower()\` correctly matches it. However, the \`left\` context is empty because "Home" is the first word. Let me fix the example to show a cleaner case. The right approach is to use the transcript data where the keyword appears in more natural positions. Let us move to the challenge, which demonstrates the full working pattern.
+
+The right-alignment (\`{left:>20}\`) keeps the keyword column visually centered so you can scan down the concordance and spot patterns -- the same principle used in printed concordances for centuries.
+
+## Practice
+
+:::try-it
+Choose a keyword that might appear multiple times in a transcript about migration, labor, or family history -- words like "work," "home," "remember," or "family." Create a transcript with at least five turns where the keyword appears in different contexts and with different speakers. Build a KWIC concordance and examine: does the word carry different connotations when used by different speakers?
+:::
+
+## Transfer
+
+KWIC concordances are one of the oldest tools in computational text analysis, dating back to Roberto Busa's *Index Thomisticus* project in the 1940s -- a collaboration between a Jesuit scholar and IBM to concordance the works of Thomas Aquinas. Today, the same principle is used in corpus linguistics, literary studies, and oral history research. When applied to large interview collections, KWIC concordances can reveal how different narrators frame the same concept. If fifty Holocaust survivors all use the word "selection," the concordance lines reveal whether they describe it clinically, emotionally, euphemistically, or with silence around it. The pattern recognition that emerges from scanning aligned concordance lines is something no full-text search can replicate.
+
+:::challenge
+Given a transcript of a community history interview, build a KWIC concordance for the keyword "church." For each occurrence, print the speaker and a context window of three words on each side of the keyword.
+:::`,
+    challenges: [
+      {
+        id: 'oral-history-04-c1',
+        title: 'Build a KWIC Concordance',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `transcript = [
+    {"speaker": "Interviewer", "text": "What role did the church play in your community", "start": 0.0, "end": 4.1},
+    {"speaker": "Mr. Abrams", "text": "The church was everything it was where we organized", "start": 4.5, "end": 8.9},
+    {"speaker": "Interviewer", "text": "Can you say more about that", "start": 9.2, "end": 11.0},
+    {"speaker": "Mr. Abrams", "text": "People came to the church for meetings for hope for community", "start": 11.4, "end": 16.8},
+    {"speaker": "Interviewer", "text": "Did the church face any opposition", "start": 17.2, "end": 19.5},
+    {"speaker": "Mr. Abrams", "text": "Yes but the church stood firm and so did we", "start": 20.0, "end": 24.3},
+]
+
+keyword = "church"
+context_words = 3
+
+print(f"KWIC concordance for '{keyword}':")
+for turn in transcript:
+    words = turn["text"].split()
+    for i, word in enumerate(words):
+        if word.lower() == keyword.lower():
+            left = " ".join(words[___:___])
+            right = " ".join(words[___:___])
+            print(f"  [{turn['speaker']}] ...{left:>20} [{keyword}] {right}...")
+`,
+        expectedOutput: 'KWIC concordance for \'church\':\n  [Interviewer] ...        role did the [church] play in your...\n  [Mr. Abrams] ...                 The [church] was everything it...\n  [Mr. Abrams] ...         came to the [church] for meetings for...\n  [Interviewer] ...             Did the [church] face any opposition...\n  [Mr. Abrams] ...         Yes but the [church] stood firm and...',
+        hints: [
+          'The left context slice is `words[max(0, i - context_words):i]` -- this grabs up to 3 words before position `i`',
+          'The right context slice is `words[i + 1:i + 1 + context_words]` -- this grabs up to 3 words after position `i`',
+          '`max(0, i - context_words)` prevents negative indices when the keyword is near the beginning',
+          'The `{left:>20}` format right-aligns the left context in a 20-character field for visual alignment',
+        ],
+        solution: `transcript = [
+    {"speaker": "Interviewer", "text": "What role did the church play in your community", "start": 0.0, "end": 4.1},
+    {"speaker": "Mr. Abrams", "text": "The church was everything it was where we organized", "start": 4.5, "end": 8.9},
+    {"speaker": "Interviewer", "text": "Can you say more about that", "start": 9.2, "end": 11.0},
+    {"speaker": "Mr. Abrams", "text": "People came to the church for meetings for hope for community", "start": 11.4, "end": 16.8},
+    {"speaker": "Interviewer", "text": "Did the church face any opposition", "start": 17.2, "end": 19.5},
+    {"speaker": "Mr. Abrams", "text": "Yes but the church stood firm and so did we", "start": 20.0, "end": 24.3},
+]
+
+keyword = "church"
+context_words = 3
+
+print(f"KWIC concordance for '{keyword}':")
+for turn in transcript:
+    words = turn["text"].split()
+    for i, word in enumerate(words):
+        if word.lower() == keyword.lower():
+            left = " ".join(words[max(0, i - context_words):i])
+            right = " ".join(words[i + 1:i + 1 + context_words])
+            print(f"  [{turn['speaker']}] ...{left:>20} [{keyword}] {right}...")
+`,
+      },
+    ],
+  },
+  {
+    id: 'pipeline-01',
+    title: 'Stage 1: Loading and Cleaning Your Corpus',
+    moduleId: 'dh-pipeline',
+    prerequisites: ['python-basics', 'text-analysis-fundamentals', 'structured-data'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Normalize text fields using lowercase conversion and regex punctuation removal',
+      'Handle missing or empty metadata fields with safe defaults',
+      'Filter records from a corpus based on computed criteria like word count',
+    ],
+    keywords: ['data cleaning', 'normalization', 'regular expressions', 'missing data', 'corpus preparation'],
+    content: `# Stage 1: Loading and Cleaning Your Corpus
+
+## Analogy
+
+Think of corpus cleaning the way an archivist prepares a collection before researchers can use it. When a box of letters arrives at an archive, no one dives straight into analysis. First, the archivist inventories what is there, notes any missing pages or illegible sections, and creates a consistent catalog format — standardizing names, dates, and labels. Without this groundwork, every subsequent researcher would waste time reinventing the same fixes. In digital humanities, data cleaning is that archival groundwork: unglamorous, essential, and the foundation on which every later stage depends.
+
+## Key Concepts
+
+A research pipeline begins with raw data. In DH, that raw data is often a **corpus** — a structured collection of texts. Ours is a small set of historical newspaper articles stored as a list of Python dictionaries:
+
+\`\`\`python
+corpus = [
+    {"title": "Railway Opens New Route to the West", "date": "1869-05-15",
+     "section": "Commerce", "author": "J. Hammond",
+     "text": "The transcontinental railroad celebrated its completion yesterday with a golden spike ceremony at Promontory Summit."},
+    {"title": "Women Demand the Right to Vote", "date": "1872-11-05",
+     "section": "Politics", "author": "",
+     "text": "Susan B. Anthony was arrested today for casting a ballot in the presidential election, an act of defiance that has galvanized the suffrage movement."},
+    {"title": "Great Fire Devastates Chicago", "date": "1871-10-10",
+     "section": "Local", "author": "R. Clarke",
+     "text": "The fire which began on the evening of October eighth has left nearly one hundred thousand residents homeless and destroyed more than three square miles of the city."},
+    {"title": "New Exhibit at Metropolitan Museum", "date": "1880-03-22",
+     "section": "Culture", "author": "L. Foster",
+     "text": "The Metropolitan Museum of Art opened its doors on Fifth Avenue to an eager public showcasing paintings and sculptures from across the European continent."},
+    {"title": "Strikes Halt Production in Steel Mills", "date": "1877-07-20",
+     "section": "Commerce", "author": "",
+     "text": "Workers at steel mills along the river have ceased all labor demanding shorter hours and fair wages from the industrialists who profit from their toil."},
+]
+\`\`\`
+
+Before we can count, compare, or interpret anything, we need to clean this data. Cleaning means making the data consistent and handling anything that is missing or malformed.
+
+### Normalizing Text
+
+When comparing words across documents, capitalization creates false distinctions. "The" and "the" are the same word, but Python treats them as different strings. Similarly, punctuation attached to words — like the period in "Summit." — prevents exact matching. We solve both problems at once:
+
+:::definition
+**Text normalization**: The process of transforming text into a consistent format — typically lowercase with punctuation removed — so that comparisons and counts reflect actual content rather than surface-level formatting differences.
+:::
+
+\`\`\`python
+import re
+
+raw = "The Metropolitan Museum of Art opened its doors."
+normalized = re.sub(r'[^\\w\\s]', '', raw.lower())
+print(normalized)
+# Output: the metropolitan museum of art opened its doors
+\`\`\`
+
+The pattern \`[^\\w\\s]\` matches any character that is neither a word character (\`\\w\` covers letters, digits, and underscores) nor whitespace (\`\\s\`). The \`re.sub\` call replaces every such character with an empty string, effectively stripping all punctuation. Calling \`.lower()\` first ensures uniform case.
+
+### Handling Missing Fields
+
+Real-world data has gaps. In our corpus, some articles have an empty string for the author. Rather than letting blanks propagate through our analysis, we replace them with a meaningful default:
+
+:::definition
+**Default substitution**: Replacing missing, empty, or null values with a sensible placeholder (like "Unknown") so that downstream code can treat every record uniformly without special-case checks.
+:::
+
+\`\`\`python
+author = ""
+author = author if author else "Unknown"
+print(author)
+# Output: Unknown
+\`\`\`
+
+The expression \`author if author else "Unknown"\` leverages Python's truthiness rules: an empty string is falsy, so the condition fails and the default kicks in. A non-empty string is truthy and passes through unchanged.
+
+### Filtering by Criteria
+
+Not every record belongs in every analysis. Perhaps you want only articles longer than a certain threshold, or only articles from a specific section. Filtering lets you trim the corpus to fit your research question:
+
+\`\`\`python
+import re
+
+text = "The fire which began on the evening of October eighth has left nearly one hundred thousand residents homeless and destroyed more than three square miles of the city."
+normalized = re.sub(r'[^\\w\\s]', '', text.lower())
+word_count = len(normalized.split())
+print(f"Words: {word_count}")
+# Output: Words: 28
+
+# Keep only if 20 or more words
+if word_count >= 20:
+    print("Included in corpus")
+# Output: Included in corpus
+\`\`\`
+
+The \`.split()\` method breaks a string on whitespace and returns a list of words. Wrapping that in \`len()\` gives us a word count we can use as a filter criterion.
+
+### Putting It Together: A Cleaning Function
+
+A typical cleaning pass walks through every article, normalizes text, fills in defaults, and filters:
+
+\`\`\`python
+import re
+
+corpus = [
+    {"title": "Short Note", "author": "", "text": "Brief item."},
+    {"title": "Long Article", "author": "A. Smith",
+     "text": "This is a much longer article with many more words to meet the threshold we have set for inclusion in our analysis."},
+]
+
+cleaned = []
+for article in corpus:
+    clean = dict(article)  # shallow copy
+    clean["text"] = re.sub(r'[^\\w\\s]', '', clean["text"].lower())
+    clean["author"] = clean["author"] if clean["author"] else "Unknown"
+    if len(clean["text"].split()) >= 10:
+        cleaned.append(clean)
+
+print(f"Kept {len(cleaned)} of {len(corpus)} articles")
+# Output: Kept 1 of 2 articles
+\`\`\`
+
+Notice that we create a copy with \`dict(article)\` rather than modifying the original. This preserves our raw data in case we need it later — a good habit borrowed from archival practice, where you never write on the original document.
+
+## Practice
+
+:::try-it
+Try cleaning a single article. Normalize the text, handle the missing author, and check the word count:
+
+\`\`\`python
+import re
+
+article = {"title": "Test Article", "author": "",
+           "text": "The quick brown fox jumps over the lazy dog."}
+
+# Normalize text: lowercase and remove punctuation
+article["text"] = re.sub(r'[^\\w\\s]', '', article["text"].lower())
+
+# Fill in missing author
+article["author"] = article["author"] if article["author"] else "Unknown"
+
+# Count words
+word_count = len(article["text"].split())
+
+print(f"Author: {article['author']}")
+print(f"Text: {article['text']}")
+print(f"Words: {word_count}")
+\`\`\`
+
+Experiment: What happens if you change the regex pattern to \`[^a-z\\s]\` instead? Which characters would that miss that \`[^\\w\\s]\` catches?
+:::
+
+## Transfer
+
+Every DH project begins with this stage, whether the corpus is five newspaper articles or five thousand. The decisions you make during cleaning — what to normalize, what defaults to use, what to filter out — are **methodological choices** that shape your findings. A historian studying authorship patterns might keep only articles with known authors. A linguist studying sentence structure might keep punctuation. There is no single "correct" way to clean; there is only transparency about what you chose and why.
+
+When you write up your research, your methods section should document these decisions: "Text was normalized to lowercase with punctuation removed. Articles with fewer than 20 words were excluded, reducing the corpus from N to M articles. Missing author fields were replaced with 'Unknown.'" This kind of reporting makes your work reproducible — another researcher can follow the same steps and reach the same results.
+
+:::challenge
+Clean the full newspaper corpus: normalize each article's text to lowercase with punctuation removed, replace empty author fields with "Unknown", and filter out articles with fewer than 20 words. Print how many articles remain and the title of the first cleaned article.
+:::`,
+    challenges: [
+      {
+        id: 'pipeline-01-c1',
+        title: 'Clean the Newspaper Corpus',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import re
+
+corpus = [
+    {"title": "Railway Opens New Route to the West", "date": "1869-05-15", "section": "Commerce", "author": "J. Hammond", "text": "The transcontinental railroad celebrated its completion yesterday with a golden spike ceremony at Promontory Summit."},
+    {"title": "Women Demand the Right to Vote", "date": "1872-11-05", "section": "Politics", "author": "", "text": "Susan B. Anthony was arrested today for casting a ballot in the presidential election, an act of defiance that has galvanized the suffrage movement."},
+    {"title": "Great Fire Devastates Chicago", "date": "1871-10-10", "section": "Local", "author": "R. Clarke", "text": "The fire which began on the evening of October eighth has left nearly one hundred thousand residents homeless and destroyed more than three square miles of the city."},
+    {"title": "New Exhibit at Metropolitan Museum", "date": "1880-03-22", "section": "Culture", "author": "L. Foster", "text": "The Metropolitan Museum of Art opened its doors on Fifth Avenue to an eager public showcasing paintings and sculptures from across the European continent."},
+    {"title": "Strikes Halt Production in Steel Mills", "date": "1877-07-20", "section": "Commerce", "author": "", "text": "Workers at steel mills along the river have ceased all labor demanding shorter hours and fair wages from the industrialists who profit from their toil."},
+]
+
+cleaned = []
+for article in corpus:
+    clean = dict(article)
+    # TODO: Normalize text to lowercase and remove punctuation using re.sub
+    clean["text"] = ___
+    # TODO: Replace empty author with "Unknown"
+    clean["author"] = ___
+    # TODO: Filter — only keep articles with 20 or more words
+    if ___:
+        cleaned.append(clean)
+
+print(f"Articles after cleaning: {len(cleaned)}")
+print(f"First cleaned title: {cleaned[0]['title']}")
+`,
+        expectedOutput: 'Articles after cleaning: 4\nFirst cleaned title: Women Demand the Right to Vote',
+        hints: [
+          'Use `re.sub(r\'[^\\w\\s]\', \'\', text.lower())` to strip punctuation and lowercase in one step.',
+          'The expression `clean["author"] if clean["author"] else "Unknown"` returns the author when present and "Unknown" when the string is empty.',
+          'Count words with `len(clean["text"].split())` and compare to 20 using `>=`.',
+          'The Railway article has only 15 words after cleaning, so it gets filtered out. The remaining 4 articles all have 20+ words.',
+        ],
+        solution: `import re
+
+corpus = [
+    {"title": "Railway Opens New Route to the West", "date": "1869-05-15", "section": "Commerce", "author": "J. Hammond", "text": "The transcontinental railroad celebrated its completion yesterday with a golden spike ceremony at Promontory Summit."},
+    {"title": "Women Demand the Right to Vote", "date": "1872-11-05", "section": "Politics", "author": "", "text": "Susan B. Anthony was arrested today for casting a ballot in the presidential election, an act of defiance that has galvanized the suffrage movement."},
+    {"title": "Great Fire Devastates Chicago", "date": "1871-10-10", "section": "Local", "author": "R. Clarke", "text": "The fire which began on the evening of October eighth has left nearly one hundred thousand residents homeless and destroyed more than three square miles of the city."},
+    {"title": "New Exhibit at Metropolitan Museum", "date": "1880-03-22", "section": "Culture", "author": "L. Foster", "text": "The Metropolitan Museum of Art opened its doors on Fifth Avenue to an eager public showcasing paintings and sculptures from across the European continent."},
+    {"title": "Strikes Halt Production in Steel Mills", "date": "1877-07-20", "section": "Commerce", "author": "", "text": "Workers at steel mills along the river have ceased all labor demanding shorter hours and fair wages from the industrialists who profit from their toil."},
+]
+
+cleaned = []
+for article in corpus:
+    clean = dict(article)
+    clean["text"] = re.sub(r'[^\\w\\s]', '', clean["text"].lower())
+    clean["author"] = clean["author"] if clean["author"] else "Unknown"
+    if len(clean["text"].split()) >= 20:
+        cleaned.append(clean)
+
+print(f"Articles after cleaning: {len(cleaned)}")
+print(f"First cleaned title: {cleaned[0]['title']}")
+`,
+      },
+    ],
+  },
+  {
+    id: 'pipeline-02',
+    title: 'Stage 2: Extracting Features and Counting Patterns',
+    moduleId: 'dh-pipeline',
+    prerequisites: ['pipeline-01'],
+    estimatedTimeMinutes: 35,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Build word frequency distributions from a cleaned corpus using collections.Counter',
+      'Remove stopwords from a frequency count to surface meaningful content words',
+      'Compute basic corpus statistics such as average article length',
+    ],
+    keywords: ['word frequency', 'Counter', 'stopwords', 'distant reading', 'feature extraction'],
+    content: `# Stage 2: Extracting Features and Counting Patterns
+
+## Analogy
+
+Imagine a scholar who has just read five hundred letters from the Civil War era. If asked "What are these letters about?", they might say "longing, hardship, faith." But another scholar reading the same letters might see "economics, logistics, weather." Both readings could be valid, but neither is verifiable. **Distant reading** offers a different approach: instead of interpreting individual letters, you count the words across all of them and let the patterns speak. The most frequent words become a collective fingerprint — not a replacement for close reading, but a complement to it. This lesson teaches you to take that fingerprint.
+
+## Key Concepts
+
+### Word Frequency with Counter
+
+Python's \`collections.Counter\` is purpose-built for counting things. Feed it a list of words and it returns a dictionary-like object mapping each word to its count:
+
+\`\`\`python
+from collections import Counter
+
+words = ["the", "fire", "the", "city", "fire", "fire"]
+counts = Counter(words)
+print(counts.most_common(3))
+# Output: [('fire', 3), ('the', 2), ('city', 1)]
+\`\`\`
+
+:::definition
+**Distant reading**: A term coined by Franco Moretti for computational methods that analyze large volumes of text by extracting quantitative features (word counts, patterns, trends) rather than reading individual texts closely.
+:::
+
+### Stopword Removal
+
+Raw word counts are dominated by function words — "the", "of", "and", "a" — that carry grammatical meaning but reveal little about content. We filter these out using a **stopword list**:
+
+\`\`\`python
+from collections import Counter
+
+words = ["the", "railroad", "the", "golden", "spike", "the", "ceremony"]
+stopwords = {"the", "a", "an", "of", "and", "in", "to", "is", "was"}
+
+filtered = [w for w in words if w not in stopwords]
+counts = Counter(filtered)
+print(counts.most_common())
+# Output: [('railroad', 1), ('golden', 1), ('spike', 1), ('ceremony', 1)]
+\`\`\`
+
+By storing stopwords in a **set** (using curly braces \`{}\`), we get fast lookup — checking \`w not in stopwords\` is nearly instant even for large lists.
+
+### Corpus-Level Counting
+
+To count words across an entire corpus, we combine each article's words into a single Counter:
+
+\`\`\`python
+from collections import Counter
+
+corpus_texts = [
+    "workers demanded fair wages from the factory owners",
+    "the workers organized across the city for fair treatment"
+]
+
+stopwords = {"the", "from", "for"}
+all_words = []
+for text in corpus_texts:
+    all_words.extend(text.split())
+
+filtered = [w for w in all_words if w not in stopwords]
+counts = Counter(filtered)
+print(f"Top 3: {counts.most_common(3)}")
+# Output: Top 3: [('workers', 2), ('fair', 2), ('demanded', 1)]
+\`\`\`
+
+The \`.extend()\` method adds all elements from one list to another, building up a single flat list of every word in the corpus.
+
+### Basic Corpus Statistics
+
+Simple statistics paint a picture of the corpus as a whole:
+
+\`\`\`python
+article_lengths = [15, 24, 28, 22, 20]
+avg_length = sum(article_lengths) / len(article_lengths)
+print(f"Average article length: {avg_length} words")
+# Output: Average article length: 21.8 words
+\`\`\`
+
+## Practice
+
+:::try-it
+Take the two-sentence corpus below, remove the stopwords, and find the top 3 words:
+
+\`\`\`python
+from collections import Counter
+
+texts = [
+    "the museum opened its doors to the eager public",
+    "the public welcomed the new exhibit at the museum"
+]
+stopwords = {"the", "to", "its", "at", "a", "an"}
+
+all_words = []
+for t in texts:
+    all_words.extend(t.split())
+
+filtered = [w for w in all_words if w not in stopwords]
+counts = Counter(filtered)
+print(counts.most_common(3))
+\`\`\`
+
+What words dominate? Does this match your intuition about what these sentences are "about"?
+:::
+
+## Transfer
+
+Distant reading does not replace close reading — it redirects your attention. When you count words across a thousand newspaper articles and discover that "strike" spikes in 1877, that is not an interpretation. It is an observation that invites interpretation: *Why* does the word spike? What events coincide? Whose voices are using it? The count tells you where to look; the reading tells you what it means.
+
+In your own research, feature extraction is the bridge between raw data and argument. The choices you make here — which words to count, which to exclude, how to group them — shape what patterns you can find. Document those choices.
+
+:::challenge
+Given a cleaned newspaper corpus, compute the 5 most frequent words across all articles after removing a provided stopword list. Print each word and its count.
+:::`,
+    challenges: [
+      {
+        id: 'pipeline-02-c1',
+        title: 'Top 5 Corpus Keywords',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `from collections import Counter
+
+# Pre-cleaned newspaper corpus (lowercase, no punctuation)
+corpus = [
+    {"title": "Railway Route", "text": "the new railway line connecting the eastern cities to the western frontier was celebrated by workers and merchants across the nation"},
+    {"title": "Factory Strike", "text": "workers across the city demanded fair wages and shorter hours from factory owners who profit from their labor"},
+    {"title": "Museum Opens", "text": "the new museum opened its doors to an eager public with art and sculptures from across the european continent"},
+    {"title": "City Fire", "text": "the fire destroyed homes across three city blocks leaving hundreds of workers and families homeless in the district"},
+]
+
+stopwords = {"the", "a", "an", "of", "and", "in", "to", "at", "on", "for",
+             "its", "from", "who", "was", "by", "with", "their"}
+
+# 1. Collect all words from all articles into one list
+all_words = []
+for article in corpus:
+    all_words.extend(article["text"].split())
+
+# 2. Filter out stopwords
+# Hint: use a list comprehension with "not in"
+filtered = ___
+
+# 3. Count and print the top 5
+counts = Counter(filtered)
+for word, count in counts.most_common(5):
+    print(f"{word}: {count}")
+`,
+        expectedOutput: 'across: 4\nworkers: 3\nnew: 2\ncity: 2\nrailway: 1',
+        hints: [
+          'Use `filtered = [w for w in all_words if w not in stopwords]` to keep only non-stopwords.',
+          '`Counter.most_common(5)` returns the 5 words with the highest count. When counts are tied, words appear in the order they were first encountered in the list.',
+          '"across" appears in all 4 articles, "workers" in 3 of them. The word "city" appears in articles 2 and 4.',
+        ],
+        solution: `from collections import Counter
+
+corpus = [
+    {"title": "Railway Route", "text": "the new railway line connecting the eastern cities to the western frontier was celebrated by workers and merchants across the nation"},
+    {"title": "Factory Strike", "text": "workers across the city demanded fair wages and shorter hours from factory owners who profit from their labor"},
+    {"title": "Museum Opens", "text": "the new museum opened its doors to an eager public with art and sculptures from across the european continent"},
+    {"title": "City Fire", "text": "the fire destroyed homes across three city blocks leaving hundreds of workers and families homeless in the district"},
+]
+
+stopwords = {"the", "a", "an", "of", "and", "in", "to", "at", "on", "for",
+             "its", "from", "who", "was", "by", "with", "their"}
+
+all_words = []
+for article in corpus:
+    all_words.extend(article["text"].split())
+
+filtered = [w for w in all_words if w not in stopwords]
+
+counts = Counter(filtered)
+for word, count in counts.most_common(5):
+    print(f"{word}: {count}")
+`,
+      },
+    ],
+  },
+  {
+    id: 'pipeline-03',
+    title: 'Stage 3: Comparing and Cross-Tabulating',
+    moduleId: 'dh-pipeline',
+    prerequisites: ['pipeline-02'],
+    estimatedTimeMinutes: 35,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Split a corpus into subsets based on metadata fields',
+      'Compute aggregate statistics for each subset independently',
+      'Build and interpret a cross-tabulation as a dictionary of dictionaries',
+    ],
+    keywords: ['cross-tabulation', 'metadata', 'comparative analysis', 'grouping', 'subsetting'],
+    content: `# Stage 3: Comparing and Cross-Tabulating
+
+## Analogy
+
+A historian studying newspapers would never simply count all words in the entire archive and stop there. They would ask comparative questions: *Did the "Commerce" section use different language than the "Politics" section? Did article length change over time?* These are questions about **sub-groups** — slices of the corpus defined by metadata like section, date, or author. Comparing sub-groups is where patterns become arguments. This lesson teaches you to split, measure, and compare.
+
+## Key Concepts
+
+### Splitting a Corpus by Metadata
+
+Our newspaper articles each carry a "section" label. To compare sections, we first need to split the corpus into groups:
+
+\`\`\`python
+corpus = [
+    {"title": "Article A", "section": "Commerce", "text": "trade and industry grew"},
+    {"title": "Article B", "section": "Politics", "text": "the vote was cast today"},
+    {"title": "Article C", "section": "Commerce", "text": "merchants along the river"},
+]
+
+groups = {}
+for article in corpus:
+    section = article["section"]
+    if section not in groups:
+        groups[section] = []
+    groups[section].append(article)
+
+for section, articles in groups.items():
+    print(f"{section}: {len(articles)} articles")
+# Output:
+# Commerce: 2 articles
+# Politics: 1 articles
+\`\`\`
+
+:::definition
+**Cross-tabulation**: A table that shows the relationship between two categorical variables by counting or summarizing values at each intersection. In DH, this often means summarizing a feature (like word count) across a metadata category (like section or decade).
+:::
+
+### Computing Per-Group Statistics
+
+Once we have groups, we can compute statistics for each one:
+
+\`\`\`python
+groups = {
+    "Commerce": [
+        {"text": "trade and industry grew steadily"},
+        {"text": "merchants prospered along the busy river docks"}
+    ],
+    "Politics": [
+        {"text": "the senator spoke at length about reform and justice"}
+    ]
+}
+
+for section, articles in groups.items():
+    lengths = [len(a["text"].split()) for a in articles]
+    avg = sum(lengths) / len(lengths)
+    print(f"{section}: avg {avg:.1f} words")
+# Output:
+# Commerce: avg 5.5 words
+# Politics: avg 9.0 words
+\`\`\`
+
+The list comprehension \`[len(a["text"].split()) for a in articles]\` creates a list of word counts, one per article. We then compute the average with \`sum() / len()\`. The \`:.1f\` format specifier rounds to one decimal place.
+
+### Building a Cross-Tabulation
+
+A cross-tabulation is simply a dictionary of dictionaries. Here we cross-tabulate section against a keyword presence:
+
+\`\`\`python
+corpus = [
+    {"section": "Commerce", "text": "workers demanded fair wages"},
+    {"section": "Commerce", "text": "new railway connects cities"},
+    {"section": "Politics", "text": "workers rally for the vote"},
+]
+
+keyword = "workers"
+table = {}
+for article in corpus:
+    section = article["section"]
+    has_keyword = keyword in article["text"].split()
+    if section not in table:
+        table[section] = {"with_keyword": 0, "without_keyword": 0}
+    if has_keyword:
+        table[section]["with_keyword"] += 1
+    else:
+        table[section]["without_keyword"] += 1
+
+for section, counts in table.items():
+    print(f"{section}: {counts}")
+\`\`\`
+
+This tells us how a keyword distributes across sections — a simple but powerful lens for comparative analysis.
+
+## Practice
+
+:::try-it
+Split the following mini-corpus by section and compute the average word count for each:
+
+\`\`\`python
+articles = [
+    {"section": "Local", "text": "the fire spread across three blocks"},
+    {"section": "Local", "text": "residents fled their homes before dawn"},
+    {"section": "Culture", "text": "the new exhibit features works from across europe and asia"},
+]
+
+groups = {}
+for a in articles:
+    s = a["section"]
+    if s not in groups:
+        groups[s] = []
+    groups[s].append(a)
+
+for section, arts in groups.items():
+    lengths = [len(a["text"].split()) for a in arts]
+    avg = sum(lengths) / len(lengths)
+    print(f"{section}: {avg:.1f} words")
+\`\`\`
+
+Which section has longer articles? What might that tell you about editorial conventions?
+:::
+
+## Transfer
+
+Comparative analysis is where DH research develops its argumentative edge. Counting words in one section tells you what that section contains; comparing two sections tells you what makes them *different*. If "Commerce" articles average 25 words and "Politics" articles average 40, that difference is a finding — perhaps reflecting editorial norms about how much space each topic deserved.
+
+In your own research, think about what metadata you have: dates, authors, genres, locations. Each one is a potential axis for comparison. The method is always the same: split, measure, compare, interpret.
+
+:::challenge
+Given a cleaned newspaper corpus with section metadata, compute the average word count per section and print a formatted comparison identifying which section has the longest articles.
+:::`,
+    challenges: [
+      {
+        id: 'pipeline-03-c1',
+        title: 'Compare Sections by Article Length',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `corpus = [
+    {"title": "Railway Opens", "section": "Commerce", "text": "the new railway line connecting the eastern cities to the western frontier was celebrated by workers and merchants across the nation"},
+    {"title": "Workers Strike", "section": "Commerce", "text": "workers across the city demanded fair wages and shorter hours from factory owners who profit from their labor"},
+    {"title": "Women Demand Vote", "section": "Politics", "text": "susan b anthony was arrested today for casting a ballot in the presidential election an act of defiance that has galvanized the suffrage movement"},
+    {"title": "Museum Opens", "section": "Culture", "text": "the new museum opened its doors to an eager public with art and sculptures from across the european continent"},
+    {"title": "City Fire", "section": "Local", "text": "the fire destroyed homes across three city blocks leaving hundreds of workers and families homeless in the district"},
+]
+
+# 1. Group articles by section
+groups = {}
+for article in corpus:
+    section = article["section"]
+    if section not in groups:
+        groups[section] = []
+    groups[section].append(article)
+
+# 2. Compute average word count per section
+section_avgs = {}
+for section, articles in groups.items():
+    lengths = [len(a["text"].split()) for a in articles]
+    # Calculate average and store it
+    section_avgs[section] = ___
+
+# 3. Print each section's average
+for section in sorted(section_avgs):
+    print(f"{section}: {section_avgs[section]:.1f} words")
+
+# 4. Find and print the section with the highest average
+longest_section = max(section_avgs, key=section_avgs.get)
+print(f"Longest: {longest_section}")
+`,
+        expectedOutput: 'Commerce: 19.5 words\nCulture: 19.0 words\nLocal: 18.0 words\nPolitics: 24.0 words\nLongest: Politics',
+        hints: [
+          'The average is `sum(lengths) / len(lengths)` — store this in `section_avgs[section]`.',
+          'Commerce has 2 articles: "the new railway..." (21 words) and "workers across..." (18 words). Average: (21+18)/2 = 19.5.',
+          '`max(section_avgs, key=section_avgs.get)` finds the dictionary key with the highest value.',
+        ],
+        solution: `corpus = [
+    {"title": "Railway Opens", "section": "Commerce", "text": "the new railway line connecting the eastern cities to the western frontier was celebrated by workers and merchants across the nation"},
+    {"title": "Workers Strike", "section": "Commerce", "text": "workers across the city demanded fair wages and shorter hours from factory owners who profit from their labor"},
+    {"title": "Women Demand Vote", "section": "Politics", "text": "susan b anthony was arrested today for casting a ballot in the presidential election an act of defiance that has galvanized the suffrage movement"},
+    {"title": "Museum Opens", "section": "Culture", "text": "the new museum opened its doors to an eager public with art and sculptures from across the european continent"},
+    {"title": "City Fire", "section": "Local", "text": "the fire destroyed homes across three city blocks leaving hundreds of workers and families homeless in the district"},
+]
+
+groups = {}
+for article in corpus:
+    section = article["section"]
+    if section not in groups:
+        groups[section] = []
+    groups[section].append(article)
+
+section_avgs = {}
+for section, articles in groups.items():
+    lengths = [len(a["text"].split()) for a in articles]
+    section_avgs[section] = sum(lengths) / len(lengths)
+
+for section in sorted(section_avgs):
+    print(f"{section}: {section_avgs[section]:.1f} words")
+
+longest_section = max(section_avgs, key=section_avgs.get)
+print(f"Longest: {longest_section}")
+`,
+      },
+    ],
+  },
+  {
+    id: 'pipeline-04',
+    title: 'Stage 4: Reporting Results',
+    moduleId: 'dh-pipeline',
+    prerequisites: ['pipeline-03'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Generate a structured text-based research summary from computed results',
+      'Build a simple ASCII bar chart to visualize comparative data in a terminal',
+      'Understand that reporting is a methodological act, not merely a cosmetic one',
+    ],
+    keywords: ['reporting', 'ASCII visualization', 'methods section', 'research summary', 'bar chart'],
+    content: `# Stage 4: Reporting Results
+
+## Analogy
+
+An archaeologist who digs a site, catalogs every artifact, and runs statistical analyses has done extraordinary work — but it means nothing if the findings stay in a notebook. The final stage of any research pipeline is **reporting**: transforming your processed data back into human-readable narrative. In DH, this means writing up what you did, what you found, and what it might mean. This lesson teaches you to generate that report programmatically, so the numbers and the narrative stay in sync.
+
+## Key Concepts
+
+### The Report as Method
+
+A research report is not decoration added after the real work is done. It is the final methodological step. Every choice you document — how you cleaned, what you counted, what you excluded — becomes part of the scholarly argument. A report that says "we analyzed the corpus" is useless. A report that says "we normalized 5 articles to lowercase, removed punctuation, filtered articles under 20 words (reducing the corpus from 5 to 4), and counted word frequencies after removing 17 stopwords" is reproducible.
+
+:::definition
+**Research report**: A structured document summarizing the data, methods, findings, and interpretations of a study. In computational DH, this should include enough detail for another researcher to reproduce the analysis from scratch.
+:::
+
+### Generating Text from Data
+
+Python's f-strings make it straightforward to weave computed values into prose:
+
+\`\`\`python
+total_articles = 4
+total_words = 350
+avg_words = total_words / total_articles
+
+report = f"The corpus contains {total_articles} articles with {total_words} total words (average: {avg_words:.1f} per article)."
+print(report)
+# Output: The corpus contains 4 articles with 350 total words (average: 87.5 per article).
+\`\`\`
+
+### ASCII Bar Charts
+
+When you cannot use a graphing library, a text-based bar chart is a simple and effective way to visualize proportions. The idea: map a numeric value to a number of repeated characters:
+
+\`\`\`python
+data = {"Commerce": 19, "Politics": 24, "Culture": 19, "Local": 18}
+max_val = max(data.values())
+
+for label, value in sorted(data.items()):
+    bar_length = int((value / max_val) * 20)
+    bar = "█" * bar_length
+    print(f"  {label:12s} | {bar} {value}")
+\`\`\`
+
+The formula \`int((value / max_val) * 20)\` scales each value so that the largest gets 20 characters and the rest are proportional. The \`{label:12s}\` pads the label to 12 characters for alignment.
+
+### Putting It All Together
+
+A complete report combines narrative, statistics, and visualization:
+
+\`\`\`python
+title = "Corpus Analysis Report"
+print(title)
+print("=" * len(title))
+print(f"Articles analyzed: 4")
+print(f"Top keyword: 'across' (4 occurrences)")
+print()
+print("Section Breakdown:")
+sections = {"Commerce": 2, "Politics": 1, "Culture": 1, "Local": 1}
+for s in sorted(sections):
+    print(f"  {s}: {sections[s]} article(s)")
+\`\`\`
+
+## Practice
+
+:::try-it
+Build an ASCII bar chart for this data and experiment with different bar widths:
+
+\`\`\`python
+data = {"Novels": 45, "Poetry": 12, "Letters": 30, "Sermons": 8}
+max_val = max(data.values())
+
+for label in sorted(data):
+    value = data[label]
+    bar_length = int((value / max_val) * 25)
+    bar = "█" * bar_length
+    print(f"  {label:10s} | {bar} {value}")
+\`\`\`
+
+Try changing \`25\` to \`10\` or \`40\`. What happens to the visual proportions?
+:::
+
+## Transfer
+
+Reporting is where the humanities reclaim the pipeline. The numbers you computed in Stages 2 and 3 are inert until you interpret them. Why does "across" appear in every article? Perhaps because 19th-century journalism framed events spatially — things happened "across" the nation, "across" the city. That interpretation cannot be automated. But the report that presents the evidence *for* that interpretation can and should be generated from the same code that produced the numbers — ensuring that no transcription error creeps in between analysis and argument.
+
+:::challenge
+Given pre-computed results from a newspaper corpus analysis, generate a formatted research summary report that includes article counts, top keywords, a section breakdown with an ASCII bar chart, and a methods note.
+:::`,
+    challenges: [
+      {
+        id: 'pipeline-04-c1',
+        title: 'Generate a Research Report',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `# Pre-computed results from earlier pipeline stages
+results = {
+    "total_articles": 4,
+    "filtered_from": 5,
+    "top_keywords": [("across", 4), ("workers", 3), ("new", 2)],
+    "section_counts": {"Commerce": 2, "Culture": 1, "Local": 1, "Politics": 1},
+}
+
+# 1. Print the report header
+print("=== Newspaper Corpus Analysis ===")
+print()
+
+# 2. Print summary statistics
+print(f"Articles analyzed: {results['total_articles']} (filtered from {results['filtered_from']})")
+
+# 3. Print top keywords
+print("Top keywords:")
+for word, count in results["top_keywords"]:
+    print(f"  {word}: {count}")
+
+# 4. Print section bar chart
+print()
+print("Articles per section:")
+max_val = max(results["section_counts"].values())
+for section in sorted(results["section_counts"]):
+    count = results["section_counts"][section]
+    # TODO: Calculate bar_length scaled to max 20 characters
+    bar_length = ___
+    bar = "█" * bar_length
+    print(f"  {section:12s} | {bar} {count}")
+
+# 5. Print methods note
+print()
+print("Methods: Text normalized to lowercase, punctuation removed.")
+print(f"Excluded articles under 20 words ({results['filtered_from'] - results['total_articles']} removed).")
+`,
+        expectedOutput: '=== Newspaper Corpus Analysis ===\n\nArticles analyzed: 4 (filtered from 5)\nTop keywords:\n  across: 4\n  workers: 3\n  new: 2\n\nArticles per section:\n  Commerce     | ████████████████████ 2\n  Culture      | ██████████ 1\n  Local        | ██████████ 1\n  Politics     | ██████████ 1\n\nMethods: Text normalized to lowercase, punctuation removed.\nExcluded articles under 20 words (1 removed).',
+        hints: [
+          'The formula for the bar is `int((count / max_val) * 20)`. When `count` equals `max_val`, this gives 20; when it is half, it gives 10.',
+          '`max_val` is 2 (Commerce has the most articles). So Commerce gets `int((2/2)*20) = 20` blocks and the others get `int((1/2)*20) = 10` blocks.',
+          'The `{section:12s}` format pads the section name to exactly 12 characters for alignment.',
+        ],
+        solution: `results = {
+    "total_articles": 4,
+    "filtered_from": 5,
+    "top_keywords": [("across", 4), ("workers", 3), ("new", 2)],
+    "section_counts": {"Commerce": 2, "Culture": 1, "Local": 1, "Politics": 1},
+}
+
+print("=== Newspaper Corpus Analysis ===")
+print()
+
+print(f"Articles analyzed: {results['total_articles']} (filtered from {results['filtered_from']})")
+
+print("Top keywords:")
+for word, count in results["top_keywords"]:
+    print(f"  {word}: {count}")
+
+print()
+print("Articles per section:")
+max_val = max(results["section_counts"].values())
+for section in sorted(results["section_counts"]):
+    count = results["section_counts"][section]
+    bar_length = int((count / max_val) * 20)
+    bar = "█" * bar_length
+    print(f"  {section:12s} | {bar} {count}")
+
+print()
+print("Methods: Text normalized to lowercase, punctuation removed.")
+print(f"Excluded articles under 20 words ({results['filtered_from'] - results['total_articles']} removed).")
+`,
+      },
+    ],
+  },
+  {
+    id: 'repro-01',
+    title: 'The Lab Notebook: Why Documentation Matters',
+    moduleId: 'reproducibility',
+    prerequisites: ['python-basics'],
+    estimatedTimeMinutes: 25,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Explain why computational reproducibility matters in digital humanities research',
+      'Build a processing log as a list of dictionaries to record workflow steps',
+      'Format and display a structured log for human readability',
+    ],
+    keywords: ['reproducibility', 'processing log', 'documentation', 'workflow', 'provenance'],
+    content: `# The Lab Notebook: Why Documentation Matters
+
+## Analogy
+
+In the sciences, the lab notebook is sacred. Every experiment gets a dated entry recording what was done, what materials were used, and what happened. Historians have their own parallel: the archival finding aid, which documents exactly where a source came from, how it was catalogued, and what condition it was in when examined. Without these records, no one can retrace the researcher's steps.
+
+Computational work in the digital humanities needs the same discipline. When you clean a corpus of 18th-century letters, run topic models, or normalize spelling variants, each step transforms your data. A **processing log** is your digital lab notebook: a structured record that lets you -- or anyone else -- reproduce your work months or years later.
+
+## Key Concepts
+
+### The Reproducibility Problem
+
+Imagine a colleague publishes a study analyzing word frequency in Victorian novels. You want to verify their findings, but the paper says only "the texts were cleaned and tokenized." Which texts? What cleaning rules? Were headers removed? Was punctuation stripped before or after tokenization? Without a detailed record, the work is a black box.
+
+:::definition
+**Computational Reproducibility**: The ability to obtain the same results from the same data by following the same documented procedures. In DH, this means recording every transformation applied to your sources.
+:::
+
+### Building a Processing Log in Python
+
+A processing log is a **list of dictionaries**, where each dictionary records one step in your workflow. Every entry should capture four things: what was done, what went in, what came out, and when.
+
+\`\`\`python
+# Create a processing log for a digitization project
+processing_log = []
+
+# Record the first step
+processing_log.append({
+    'step': 'transcription',
+    'input_desc': '50 handwritten diary pages',
+    'output_desc': '50 plain text files',
+    'date': '2024-03-01'
+})
+
+# Record the second step
+processing_log.append({
+    'step': 'normalization',
+    'input_desc': '50 plain text files',
+    'output_desc': '50 normalized text files',
+    'date': '2024-03-10'
+})
+
+# Display the log
+for i, entry in enumerate(processing_log, 1):
+    print(f"Step {i}: {entry['step']}")
+    print(f"  Input:  {entry['input_desc']}")
+    print(f"  Output: {entry['output_desc']}")
+    print(f"  Date:   {entry['date']}")
+\`\`\`
+
+Output:
+\`\`\`
+Step 1: transcription
+  Input:  50 handwritten diary pages
+  Output: 50 plain text files
+  Date:   2024-03-01
+Step 2: normalization
+  Input:  50 plain text files
+  Output: 50 normalized text files
+  Date:   2024-03-10
+\`\`\`
+
+### Why Dictionaries?
+
+Each log entry is a dictionary because dictionaries give every piece of information a **named key**. Compare these two approaches:
+
+\`\`\`python
+# Hard to read -- what does each position mean?
+step_tuple = ('transcription', '50 pages', '50 files', '2024-03-01')
+
+# Self-documenting -- keys explain themselves
+step_dict = {
+    'step': 'transcription',
+    'input_desc': '50 handwritten diary pages',
+    'output_desc': '50 plain text files',
+    'date': '2024-03-01'
+}
+
+# Accessing by name is clear and unambiguous
+print(step_dict['step'])       # transcription
+print(step_dict['input_desc']) # 50 handwritten diary pages
+\`\`\`
+
+:::definition
+**Provenance**: The documented history of a data object -- where it came from, what transformations were applied, and by whom. Processing logs create provenance records for computational research.
+:::
+
+### Chaining Steps Together
+
+Notice how each step's output becomes the next step's input. This creates a **chain of provenance** -- an unbroken record from raw source to final result.
+
+\`\`\`python
+log = [
+    {'step': 'import', 'input_desc': 'raw XML from archive',
+     'output_desc': '200 XML files', 'date': '2024-01-05'},
+    {'step': 'parsing', 'input_desc': '200 XML files',
+     'output_desc': '200 text extracts', 'date': '2024-01-12'},
+    {'step': 'deduplication', 'input_desc': '200 text extracts',
+     'output_desc': '187 unique text extracts', 'date': '2024-01-15'},
+]
+
+# Verify the chain is unbroken
+for i in range(1, len(log)):
+    prev_output = log[i - 1]['output_desc']
+    curr_input = log[i]['input_desc']
+    match = "OK" if prev_output == curr_input else "BREAK"
+    print(f"Step {i} -> Step {i+1}: {match}")
+\`\`\`
+
+Output:
+\`\`\`
+Step 1 -> Step 2: OK
+Step 2 -> Step 3: OK
+\`\`\`
+
+## Practice
+
+:::try-it
+Create a processing log with three steps for a project that (1) downloads 100 newspaper pages as images, (2) runs OCR to produce text files, and (3) extracts dates from the text files into a CSV. Print each step with its number, name, input, output, and date.
+:::
+
+## Transfer
+
+In digital humanities, funding agencies like the NEH and AHRC increasingly require **data management plans** that describe how data will be processed and preserved. A processing log written in Python can be exported as part of your project's documentation, ensuring that reviewers, collaborators, and future researchers can understand every transformation you applied.
+
+Consider how this applies to your own work: if you are building a corpus from digitized manuscripts, every decision -- which pages to include, how to handle damaged text, whether to modernize spelling -- should appear as an entry in your log.
+
+:::challenge
+You are documenting a text digitization project. A partial processing log has been started, but two entries are missing. Complete the log so the chain of provenance is unbroken, then print the formatted result.
+:::`,
+    challenges: [
+      {
+        id: 'repro-01-c1',
+        title: 'Complete the Digitization Log',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `processing_log = [
+    {
+        'step': 'scanning',
+        'input_desc': '500 page manuscript',
+        'output_desc': '500 TIFF images at 600dpi',
+        'date': '2024-01-15'
+    },
+    # TODO: Add the OCR step
+    # input: the TIFF images from scanning
+    # output: 500 plain text files
+    # date: 2024-01-20
+    {
+        'step': 'text_cleaning',
+        'input_desc': '500 plain text files',
+        'output_desc': '500 cleaned text files',
+        'date': '2024-02-01'
+    },
+    # TODO: Add the corpus assembly step
+    # input: the cleaned text files
+    # output: 1 merged corpus file
+    # date: 2024-02-10
+]
+
+print('=== Processing Log ===')
+for i, entry in enumerate(processing_log, 1):
+    print(f"Step {i}: {entry['step']}")
+    print(f"  Input:  {entry['input_desc']}")
+    print(f"  Output: {entry['output_desc']}")
+    print(f"  Date:   {entry['date']}")
+`,
+        expectedOutput: '=== Processing Log ===\nStep 1: scanning\n  Input:  500 page manuscript\n  Output: 500 TIFF images at 600dpi\n  Date:   2024-01-15\nStep 2: ocr_processing\n  Input:  500 TIFF images at 600dpi\n  Output: 500 plain text files\n  Date:   2024-01-20\nStep 3: text_cleaning\n  Input:  500 plain text files\n  Output: 500 cleaned text files\n  Date:   2024-02-01\nStep 4: corpus_assembly\n  Input:  500 cleaned text files\n  Output: 1 merged corpus file\n  Date:   2024-02-10',
+        hints: [
+          'Each log entry is a dictionary with four keys: `\'step\'`, `\'input_desc\'`, `\'output_desc\'`, and `\'date\'`.',
+          'The OCR step must go between scanning and text_cleaning. Its input should match scanning\'s output exactly: `\'500 TIFF images at 600dpi\'`.',
+          'The corpus assembly step goes at the end. Its input should match text_cleaning\'s output exactly: `\'500 cleaned text files\'`.',
+        ],
+        solution: `processing_log = [
+    {
+        'step': 'scanning',
+        'input_desc': '500 page manuscript',
+        'output_desc': '500 TIFF images at 600dpi',
+        'date': '2024-01-15'
+    },
+    {
+        'step': 'ocr_processing',
+        'input_desc': '500 TIFF images at 600dpi',
+        'output_desc': '500 plain text files',
+        'date': '2024-01-20'
+    },
+    {
+        'step': 'text_cleaning',
+        'input_desc': '500 plain text files',
+        'output_desc': '500 cleaned text files',
+        'date': '2024-02-01'
+    },
+    {
+        'step': 'corpus_assembly',
+        'input_desc': '500 cleaned text files',
+        'output_desc': '1 merged corpus file',
+        'date': '2024-02-10'
+    },
+]
+
+print('=== Processing Log ===')
+for i, entry in enumerate(processing_log, 1):
+    print(f"Step {i}: {entry['step']}")
+    print(f"  Input:  {entry['input_desc']}")
+    print(f"  Output: {entry['output_desc']}")
+    print(f"  Date:   {entry['date']}")
+`,
+      },
+    ],
+  },
+  {
+    id: 'repro-02',
+    title: 'Naming Things: Conventions that Save Your Future Self',
+    moduleId: 'reproducibility',
+    prerequisites: ['repro-01'],
+    estimatedTimeMinutes: 25,
+    difficulty: 'beginner',
+    learningObjectives: [
+      'Describe why consistent file naming conventions matter for reproducibility',
+      'Use Python string methods and regular expressions to validate file names',
+      'Explain semantic versioning and apply version numbering to project files',
+    ],
+    keywords: ['file naming', 'naming conventions', 'versioning', 'semantic versioning', 'regular expressions', 'validation'],
+    content: `# Naming Things: Conventions that Save Your Future Self
+
+## Analogy
+
+Librarians and archivists have spent centuries developing cataloguing systems. The Dewey Decimal System, Library of Congress classification, and archival arrangement standards all exist because **naming things consistently** is the foundation of findability. Imagine a library where every librarian shelved books by their own personal system -- one alphabetical by title, another by color, a third by date acquired. Finding anything would be impossible.
+
+Digital projects face the same challenge. A folder full of files named \`final_draft.txt\`, \`FINAL_final.txt\`, \`thesis v3 (2).docx\`, and \`new_version_FIXED.txt\` is the digital equivalent of that chaotic library. Naming conventions are your cataloguing system for computational work.
+
+## Key Concepts
+
+### The Cost of Bad Names
+
+When file names are inconsistent, three things break down:
+
+1. **Sorting fails** -- \`v2\` sorts after \`v19\` alphabetically, not numerically
+2. **Scripts break** -- spaces, uppercase, and special characters cause errors in automated pipelines
+3. **Humans get confused** -- which "final" is actually final?
+
+:::definition
+**Naming Convention**: A set of rules that dictate how files, variables, and other identifiers are named within a project. Good conventions are documented, consistent, and machine-friendly.
+:::
+
+### A Simple Convention for DH Projects
+
+A practical convention for research files:
+
+- **All lowercase** -- avoids case-sensitivity issues across operating systems
+- **No spaces** -- use underscores instead
+- **No special characters** -- no parentheses, brackets, or ampersands
+- **Version suffix** -- end with \`_vNN\` before the extension (e.g., \`_v01\`, \`_v02\`)
+
+Example: \`interview_notes_v01.txt\`, \`corpus_cleaned_v03.csv\`
+
+### Validating Names with String Methods
+
+Python's built-in string methods can check many naming rules without any imports:
+
+\`\`\`python
+filename = "interview_notes_v01.txt"
+
+# Check for lowercase
+is_lower = filename == filename.lower()
+print(f"All lowercase: {is_lower}")   # True
+
+# Check for spaces
+has_spaces = ' ' in filename
+print(f"Has spaces: {has_spaces}")     # False
+
+# Check for version suffix (simple approach)
+name_part = filename.rsplit('.', 1)[0]  # 'interview_notes_v01'
+has_version = name_part[-4:-2] == '_v' and name_part[-2:].isdigit()
+print(f"Has version: {has_version}")   # True
+\`\`\`
+
+### Validating Names with Regular Expressions
+
+For more precise validation, the \`re\` module lets you define a **pattern** that correct names must match:
+
+\`\`\`python
+import re
+
+# Pattern: lowercase letters/digits/underscores, then _vNN, then .ext
+pattern = r'^[a-z][a-z0-9_]*_v\\d{2}\\.[a-z]+$'
+
+good_name = "corpus_cleaned_v02.csv"
+bad_name = "My Thesis Draft.docx"
+
+print(re.match(pattern, good_name))  # <re.Match object ...>
+print(re.match(pattern, bad_name))   # None
+\`\`\`
+
+:::definition
+**Regular Expression (regex)**: A pattern language for matching text. In file naming validation, regex lets you express rules like "starts with a lowercase letter, ends with _vNN.ext" as a single testable pattern.
+:::
+
+### Semantic Versioning
+
+In software, **semantic versioning** uses three numbers: \`MAJOR.MINOR.PATCH\` (e.g., \`3.2.1\`). For DH file management, a simpler two-digit version number works well:
+
+\`\`\`python
+# Simple version tracking for a research file
+versions = {
+    'v01': 'Initial transcription from scanned pages',
+    'v02': 'Corrected OCR errors in chapters 1-5',
+    'v03': 'Normalized spelling variants to modern forms',
+}
+
+for version, description in versions.items():
+    print(f"corpus_{version}.txt -- {description}")
+\`\`\`
+
+Output:
+\`\`\`
+corpus_v01.txt -- Initial transcription from scanned pages
+corpus_v02.txt -- Corrected OCR errors in chapters 1-5
+corpus_v03.txt -- Normalized spelling variants to modern forms
+\`\`\`
+
+:::definition
+**Semantic Versioning**: A versioning scheme where each number communicates the nature of the change. For research files, even a simple sequential version number (v01, v02, v03) with a changelog provides essential traceability.
+:::
+
+### Building a Validator Function
+
+Here is a reusable function that checks a filename and returns specific reasons for failure:
+
+\`\`\`python
+import re
+
+def validate_filename(name):
+    reasons = []
+    if name != name.lower():
+        reasons.append("contains uppercase")
+    if ' ' in name:
+        reasons.append("contains spaces")
+    if '(' in name or ')' in name:
+        reasons.append("contains special characters")
+    if not re.search(r'_v\\d{2}\\.', name):
+        reasons.append("missing version number (_vNN)")
+    return reasons
+
+# Test it
+test_files = ["corpus_v01.txt", "My Notes.docx"]
+for f in test_files:
+    issues = validate_filename(f)
+    if not issues:
+        print(f"  PASS: {f}")
+    else:
+        joined = '; '.join(issues)
+        print(f"  FAIL: {f} -- {joined}")
+\`\`\`
+
+Output:
+\`\`\`
+  PASS: corpus_v01.txt
+  FAIL: My Notes.docx -- contains uppercase; contains spaces; missing version number (_vNN)
+\`\`\`
+
+## Practice
+
+:::try-it
+Write a regex pattern that matches filenames following this convention: starts with a lowercase letter, contains only lowercase letters, digits, and underscores, includes a version suffix like \`_v01\`, and ends with a file extension. Test it against \`"metadata_v05.json"\` and \`"Data Set.xlsx"\`.
+:::
+
+## Transfer
+
+In collaborative DH projects -- such as those involving TEI-encoded texts, GIS layers, or oral history transcripts -- inconsistent naming can derail an entire team. When ten researchers each name their transcription files differently, merging them into a single corpus becomes a manual nightmare.
+
+Many digital archives and repositories (HathiTrust, the Internet Archive, institutional repositories) enforce strict naming conventions for exactly this reason. Learning to validate names programmatically means you can check hundreds of files in seconds rather than reviewing them by hand.
+
+:::challenge
+You have received a batch of files from collaborators on a digitization project. Check each filename against your project's convention (all lowercase, no spaces, no special characters, version suffix \`_vNN\` before the extension) and print whether each passes or fails, with specific reasons for failures.
+:::`,
+    challenges: [
+      {
+        id: 'repro-02-c1',
+        title: 'Validate the File Batch',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `import re
+
+filenames = [
+    'My Thesis Draft.docx',
+    'interview_notes_v01.txt',
+    'Final FINAL v3.pdf',
+    'corpus_cleaned_v02.csv',
+    'MAP scan(1).tiff',
+    'metadata_archive_v10.json',
+]
+
+print('=== File Name Validation ===')
+for name in filenames:
+    reasons = []
+    # TODO: Check if name contains uppercase letters
+    # TODO: Check if name contains spaces
+    # TODO: Check if name contains special characters like ( or )
+    # TODO: Check if name is missing a version number in _vNN format
+
+    if not reasons:
+        print(f'  PASS: {name}')
+    else:
+        joined = '; '.join(reasons)
+        print(f'  FAIL: {name} -- {joined}')
+`,
+        expectedOutput: '=== File Name Validation ===\n  FAIL: My Thesis Draft.docx -- contains uppercase; contains spaces; missing version number (_vNN)\n  PASS: interview_notes_v01.txt\n  FAIL: Final FINAL v3.pdf -- contains uppercase; contains spaces; missing version number (_vNN)\n  PASS: corpus_cleaned_v02.csv\n  FAIL: MAP scan(1).tiff -- contains uppercase; contains spaces; contains special characters; missing version number (_vNN)\n  PASS: metadata_archive_v10.json',
+        hints: [
+          'Use `name != name.lower()` to detect uppercase letters.',
+          'Use `\' \' in name` to detect spaces.',
+          'Use `\'(\' in name or \')\' in name` to detect parentheses as special characters.',
+          'Use `re.search(r\'_v\\d{2}\\.\', name)` to check for a `_vNN.` version pattern. If it returns `None`, the version number is missing.',
+        ],
+        solution: `import re
+
+filenames = [
+    'My Thesis Draft.docx',
+    'interview_notes_v01.txt',
+    'Final FINAL v3.pdf',
+    'corpus_cleaned_v02.csv',
+    'MAP scan(1).tiff',
+    'metadata_archive_v10.json',
+]
+
+print('=== File Name Validation ===')
+for name in filenames:
+    reasons = []
+    if name != name.lower():
+        reasons.append('contains uppercase')
+    if ' ' in name:
+        reasons.append('contains spaces')
+    if '(' in name or ')' in name:
+        reasons.append('contains special characters')
+    if not re.search(r'_v\\d{2}\\.', name):
+        reasons.append('missing version number (_vNN)')
+
+    if not reasons:
+        print(f'  PASS: {name}')
+    else:
+        joined = '; '.join(reasons)
+        print(f'  FAIL: {name} -- {joined}')
+`,
+      },
+    ],
+  },
+  {
+    id: 'repro-03',
+    title: 'Checksums and Integrity: Proving Nothing Changed',
+    moduleId: 'reproducibility',
+    prerequisites: ['repro-02'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Explain what a checksum is and why data integrity matters in research',
+      'Use Python\'s hashlib module to compute SHA-256 hashes of text content',
+      'Demonstrate how even minimal changes produce completely different hashes',
+      'Verify data integrity by comparing computed hashes against expected values',
+    ],
+    keywords: ['checksum', 'hash', 'SHA-256', 'data integrity', 'hashlib', 'verification', 'digital preservation'],
+    content: `# Checksums and Integrity: Proving Nothing Changed
+
+## Analogy
+
+When a notary public stamps a document, they create a seal that proves the document has not been altered since the moment of notarization. If someone changes even a single word, the seal no longer matches. Archives use similar techniques: accession records note the exact page count, physical condition, and contents of a collection at the time of deposit, so any later alteration can be detected.
+
+A **checksum** is the digital equivalent of a notary's seal. It is a short, fixed-length string computed from the contents of a file. If even one character changes, the checksum changes completely. This gives you a mathematical guarantee that your data is exactly what it was when you first recorded it.
+
+## Key Concepts
+
+### What Is a Hash?
+
+A **hash function** takes input of any length and produces a fixed-length output called a **digest** or **checksum**. The same input always produces the same output, but even a tiny change in the input produces a completely different output.
+
+:::definition
+**Checksum (Hash Digest)**: A fixed-length string of characters computed from data content. It acts as a digital fingerprint -- if the data changes, the fingerprint changes. Common algorithms include MD5 (older, less secure) and SHA-256 (current standard).
+:::
+
+### Computing Hashes with hashlib
+
+Python's \`hashlib\` module provides hash functions in the standard library. Here is how to compute a SHA-256 hash of a string:
+
+\`\`\`python
+import hashlib
+
+text = "When in the Course of human events"
+hash_digest = hashlib.sha256(text.encode()).hexdigest()
+print(f"Text:   {text}")
+print(f"SHA-256: {hash_digest}")
+\`\`\`
+
+Output:
+\`\`\`
+Text:   When in the Course of human events
+SHA-256: 0844a2e2097c3f9e4b9c08693a99b256de7e073b3cadaad09e4905dd201840af
+\`\`\`
+
+The \`.encode()\` converts the string to bytes (which hashlib requires), and \`.hexdigest()\` returns the hash as a readable hexadecimal string.
+
+### The Avalanche Effect
+
+One of the most important properties of a good hash function is the **avalanche effect**: changing even one character produces a completely different hash. Watch what happens when we lowercase a single letter:
+
+\`\`\`python
+import hashlib
+
+original = "When in the Course of human events"
+altered  = "When in the course of human events"  # 'C' -> 'c'
+
+hash1 = hashlib.sha256(original.encode()).hexdigest()
+hash2 = hashlib.sha256(altered.encode()).hexdigest()
+
+print(f"Original: {hash1}")
+print(f"Altered:  {hash2}")
+print(f"Match:    {hash1 == hash2}")
+\`\`\`
+
+Output:
+\`\`\`
+Original: 0844a2e2097c3f9e4b9c08693a99b256de7e073b3cadaad09e4905dd201840af
+Altered:  2234d0d61033ecb4bdc866ff67551f6474fe7517c114a1c5f1cb178b6206c89d
+Match:    False
+\`\`\`
+
+The two hashes share almost nothing in common, even though the inputs differ by just one letter. This is what makes checksums so powerful for detecting accidental modifications.
+
+:::definition
+**Avalanche Effect**: The property of a hash function where a small change in the input produces a drastically different output. This ensures that even subtle data corruption or tampering is immediately detectable.
+:::
+
+### Integrity Verification in Practice
+
+The standard workflow for integrity verification has two phases:
+
+1. **Record phase**: When you first create or receive data, compute and store its hash
+2. **Verify phase**: Later, recompute the hash and compare it to the stored value
+
+\`\`\`python
+import hashlib
+
+# Phase 1: Record the hash when you first receive the text
+original_text = "To be or not to be, that is the question"
+recorded_hash = hashlib.sha256(original_text.encode()).hexdigest()
+print(f"Recorded hash: {recorded_hash[:16]}...")
+
+# Phase 2: Later, verify the text is unchanged
+current_text = "To be or not to be, that is the question"
+current_hash = hashlib.sha256(current_text.encode()).hexdigest()
+
+if current_hash == recorded_hash:
+    print("Integrity check: PASSED")
+else:
+    print("Integrity check: FAILED -- data has been modified!")
+\`\`\`
+
+Output:
+\`\`\`
+Recorded hash: 543263ca078a4526...
+Integrity check: PASSED
+\`\`\`
+
+### Why This Matters for DH
+
+In digital humanities research, data integrity is critical in several contexts:
+
+- **Archival deposits**: When you submit a digital corpus to a repository, checksums prove the files arrived intact
+- **Longitudinal studies**: If you return to a corpus years later, checksums confirm nothing was accidentally altered
+- **Collaborative projects**: When multiple researchers share files, checksums verify everyone has identical copies
+- **Publication**: Providing checksums with your published dataset lets other scholars verify they have your exact data
+
+## Practice
+
+:::try-it
+Compute the SHA-256 hash of the string \`"digital humanities"\`. Then compute the hash of \`"Digital humanities"\` (capital D). Print both hashes and verify they are different. What does this tell you about case sensitivity in your data?
+:::
+
+## Transfer
+
+The Library of Congress, HathiTrust, and other major digital preservation initiatives use checksums as a core part of their preservation workflows. Every file in their collections has a recorded checksum, and automated systems regularly recompute and compare these values to detect bit rot (gradual data degradation on storage media).
+
+When you publish a DH dataset or submit one to a repository, including a manifest of checksums (sometimes called a "checksum manifest" or "fixity log") is considered best practice. It transforms your data deposit from a simple file transfer into a verifiable, trustworthy scholarly artifact.
+
+:::challenge
+You are verifying the integrity of a small text corpus. You have the original checksums from when the files were first deposited. One of the files has been subtly modified since then. Compute the current checksums and identify which file has been tampered with.
+:::`,
+    challenges: [
+      {
+        id: 'repro-03-c1',
+        title: 'Verify Corpus Integrity',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import hashlib
+
+# Current file contents (one has been subtly modified!)
+file_contents = {
+    'corpus_v01.txt': 'The quick brown fox jumps over the lazy dog',
+    'corpus_v02.txt': 'A systematic review of digital humanities method',
+    'corpus_v03.txt': 'Encoding cultural heritage in structured data formats',
+}
+
+# Original checksums recorded at deposit time
+expected_hashes = {
+    'corpus_v01.txt': 'd7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592',
+    'corpus_v02.txt': 'f968268a8e8df230d46419f5bab9e997e73bd8ffb50b9cbff63a6cfa9c8c6e78',
+    'corpus_v03.txt': '69279692bfbcc87cb94acd4857437c57fd57fb52cef68f57eed3803fe5ad4558',
+}
+
+print('=== Integrity Verification ===')
+for filename in sorted(file_contents.keys()):
+    content = file_contents[filename]
+    # TODO: Compute the SHA-256 hash of content
+    # TODO: Compare against the expected hash
+    # TODO: Print INTACT or MODIFIED status
+    # TODO: If modified, print first 16 chars of expected and actual hash
+    pass
+`,
+        expectedOutput: '=== Integrity Verification ===\ncorpus_v01.txt: INTACT\ncorpus_v02.txt: MODIFIED\n  Expected: f968268a8e8df230...\n  Got:      0c0047028f64d30d...\ncorpus_v03.txt: INTACT',
+        hints: [
+          'Use `hashlib.sha256(content.encode()).hexdigest()` to compute the hash of each file\'s content.',
+          'Compare the computed hash to `expected_hashes[filename]` using `==`.',
+          'For modified files, use string slicing like `hash_value[:16]` to show the first 16 characters followed by `...`.',
+          'The modification is very subtle -- `corpus_v02.txt` is missing the final letter \'s\' in "methods" (it reads "method" instead).',
+        ],
+        solution: `import hashlib
+
+# Current file contents (one has been subtly modified!)
+file_contents = {
+    'corpus_v01.txt': 'The quick brown fox jumps over the lazy dog',
+    'corpus_v02.txt': 'A systematic review of digital humanities method',
+    'corpus_v03.txt': 'Encoding cultural heritage in structured data formats',
+}
+
+# Original checksums recorded at deposit time
+expected_hashes = {
+    'corpus_v01.txt': 'd7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592',
+    'corpus_v02.txt': 'f968268a8e8df230d46419f5bab9e997e73bd8ffb50b9cbff63a6cfa9c8c6e78',
+    'corpus_v03.txt': '69279692bfbcc87cb94acd4857437c57fd57fb52cef68f57eed3803fe5ad4558',
+}
+
+print('=== Integrity Verification ===')
+for filename in sorted(file_contents.keys()):
+    content = file_contents[filename]
+    actual_hash = hashlib.sha256(content.encode()).hexdigest()
+    expected = expected_hashes[filename]
+    if actual_hash == expected:
+        status = 'INTACT'
+    else:
+        status = 'MODIFIED'
+    print(f'{filename}: {status}')
+    if status == 'MODIFIED':
+        print(f'  Expected: {expected[:16]}...')
+        print(f'  Got:      {actual_hash[:16]}...')
+`,
+      },
+    ],
+  },
+  {
+    id: 'repro-04',
+    title: 'The Methods Section: Generating Human-Readable Reports',
+    moduleId: 'reproducibility',
+    prerequisites: ['repro-03'],
+    estimatedTimeMinutes: 30,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Explain the purpose of a methods section in DH research documentation',
+      'Build a structured project metadata dictionary in Python',
+      'Use f-strings and string formatting to generate human-readable reports programmatically',
+      'Connect programmatic report generation to DH journal and grant reporting requirements',
+    ],
+    keywords: ['methods section', 'report generation', 'f-strings', 'metadata', 'project documentation', 'formatted output'],
+    content: `# The Methods Section: Generating Human-Readable Reports
+
+## Analogy
+
+Every published humanities article contains a section -- sometimes called "Methods," sometimes "Materials and Approach," sometimes woven into the introduction -- that explains **how** the research was conducted. In traditional humanities, this might describe which archives were consulted, which edition of a text was used, or how interviews were conducted. The goal is always the same: give the reader enough information to understand and evaluate the work.
+
+In computational DH, the methods section must also describe the **technical pipeline**: what tools were used, what versions, what parameters, and in what order. Writing this by hand is tedious and error-prone. But if your project already stores its metadata in a structured format (like a Python dictionary), you can **generate** the methods section automatically -- ensuring it is always complete, consistent, and up to date.
+
+## Key Concepts
+
+### Metadata as a Dictionary
+
+A well-structured project metadata dictionary captures everything a reader needs to know about your methods. Think of it as the structured data behind the prose:
+
+\`\`\`python
+project = {
+    'title': 'Sentiment in Suffragist Newspapers',
+    'researcher': 'Dr. Amara Osei',
+    'institution': 'Westfield College',
+    'date_range': '2024-01 to 2024-09',
+    'corpus_size': 1200,
+    'corpus_unit': 'articles',
+    'languages': ['English'],
+    'methods': ['sentiment analysis', 'keyword extraction'],
+    'tools': ['Python 3.12', 'NLTK 3.8'],
+    'output_formats': ['CSV', 'JSON'],
+}
+\`\`\`
+
+:::definition
+**Project Metadata**: Structured information describing a research project's scope, data, methods, tools, and outputs. When stored as a Python dictionary, it becomes both human-readable documentation and machine-processable data.
+:::
+
+### Generating a Report with F-Strings
+
+Python's f-strings let you embed dictionary values directly into formatted text. By building the report as a list of lines, you can assemble complex documents piece by piece:
+
+\`\`\`python
+project = {
+    'title': 'Sentiment in Suffragist Newspapers',
+    'researcher': 'Dr. Amara Osei',
+    'corpus_size': 1200,
+    'corpus_unit': 'articles',
+    'methods': ['sentiment analysis', 'keyword extraction'],
+    'tools': ['Python 3.12', 'NLTK 3.8'],
+}
+
+lines = []
+lines.append(f"Project: {project['title']}")
+lines.append(f"Researcher: {project['researcher']}")
+lines.append(f"Corpus: {project['corpus_size']} {project['corpus_unit']}")
+lines.append('')
+lines.append('Methods applied:')
+for i, method in enumerate(project['methods'], 1):
+    lines.append(f"  {i}. {method}")
+
+report = '\\n'.join(lines)
+print(report)
+\`\`\`
+
+Output:
+\`\`\`
+Project: Sentiment in Suffragist Newspapers
+Researcher: Dr. Amara Osei
+Corpus: 1200 articles
+
+Methods applied:
+  1. sentiment analysis
+  2. keyword extraction
+\`\`\`
+
+### Structuring with Section Dividers
+
+A professional report uses visual dividers to separate sections. This makes the output scannable whether it appears in a terminal, a log file, or a project README:
+
+\`\`\`python
+def section_header(title):
+    return f"--- {title} ---"
+
+print(section_header("Corpus Description"))
+print(f"Size: 1200 articles")
+print(f"Languages: English")
+print()
+print(section_header("Tools and Versions"))
+print(f"  - Python 3.12")
+print(f"  - NLTK 3.8")
+\`\`\`
+
+Output:
+\`\`\`
+--- Corpus Description ---
+Size: 1200 articles
+Languages: English
+
+--- Tools and Versions ---
+  - Python 3.12
+  - NLTK 3.8
+\`\`\`
+
+:::definition
+**Programmatic Report Generation**: The practice of writing code that produces human-readable documents from structured data. This ensures reports are always consistent with the actual project metadata and can be regenerated whenever the project evolves.
+:::
+
+### Joining Lists for Readable Output
+
+When a metadata field contains a list (languages, output formats), you often want to display it as a comma-separated string. The \`join()\` method handles this cleanly:
+
+\`\`\`python
+languages = ['English', 'Spanish', 'French']
+formats = ['GraphML', 'CSV', 'JSON']
+
+print(f"Languages: {', '.join(languages)}")
+print(f"Data exported as: {', '.join(formats)}")
+\`\`\`
+
+Output:
+\`\`\`
+Languages: English, Spanish, French
+Data exported as: GraphML, CSV, JSON
+\`\`\`
+
+### Putting It All Together
+
+Here is a complete report generator that takes a project dictionary and produces a formatted methods section:
+
+\`\`\`python
+project = {
+    'title': 'Mapping Trade Routes in Medieval Manuscripts',
+    'researcher': 'Prof. Yuki Tanaka',
+    'institution': 'Institute for Textual Studies',
+    'date_range': '2023-09 to 2024-06',
+    'corpus_size': 340,
+    'corpus_unit': 'manuscripts',
+    'languages': ['Latin', 'Arabic'],
+    'methods': ['handwriting analysis', 'geographic tagging'],
+    'tools': ['Python 3.11', 'OpenCV 4.9'],
+    'output_formats': ['GeoJSON', 'CSV'],
+}
+
+lines = []
+lines.append('=' * 50)
+lines.append('METHODS REPORT')
+lines.append('=' * 50)
+lines.append('')
+lines.append(f"Project: {project['title']}")
+lines.append(f"Researcher: {project['researcher']}")
+lines.append(f"Institution: {project['institution']}")
+lines.append(f"Period: {project['date_range']}")
+lines.append('')
+lines.append('--- Corpus Description ---')
+lines.append(f"Size: {project['corpus_size']} {project['corpus_unit']}")
+lines.append(f"Languages: {', '.join(project['languages'])}")
+lines.append('')
+lines.append('--- Analytical Methods ---')
+for i, method in enumerate(project['methods'], 1):
+    lines.append(f"  {i}. {method}")
+lines.append('')
+lines.append('--- Tools and Versions ---')
+for tool in project['tools']:
+    lines.append(f"  - {tool}")
+lines.append('')
+lines.append('--- Output Formats ---')
+lines.append(f"Data exported as: {', '.join(project['output_formats'])}")
+lines.append('=' * 50)
+
+print('\\n'.join(lines))
+\`\`\`
+
+This pattern -- metadata dictionary in, formatted report out -- scales to any project size and can be adapted for different audiences (grant reports, journal appendices, project wikis).
+
+## Practice
+
+:::try-it
+Create a project metadata dictionary for a fictional DH project of your choice. Include at least: title, researcher, corpus_size, corpus_unit, methods (list of 2+), and tools (list of 2+). Then generate a formatted report using f-strings and \`'\\n'.join()\`.
+:::
+
+## Transfer
+
+DH journals like *Digital Scholarship in the Humanities*, *Digital Humanities Quarterly*, and *Journal of Cultural Analytics* increasingly expect detailed technical methods sections. Grant agencies like the NEH Office of Digital Humanities require reporting on tools, data formats, and processing pipelines.
+
+By storing your project metadata as a structured dictionary from the start, you can generate these reports at any point -- for a mid-project review, a final grant report, or a journal submission appendix. If your methods change (you upgrade a tool version, add a processing step), you update the dictionary and regenerate. The report is never out of date because it is computed from the single source of truth.
+
+:::challenge
+You are preparing a methods report for a DH project studying colonial correspondence networks. Given the project metadata dictionary below, generate a complete formatted methods report with all required sections.
+:::`,
+    challenges: [
+      {
+        id: 'repro-04-c1',
+        title: 'Generate the Methods Report',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `project = {
+    'title': 'Mapping Colonial Correspondence Networks',
+    'researcher': 'Dr. Elena Vasquez',
+    'institution': 'University of the Atlantic',
+    'date_range': '2023-06 to 2024-12',
+    'corpus_size': 2350,
+    'corpus_unit': 'letters',
+    'languages': ['English', 'Spanish', 'French'],
+    'methods': ['network analysis', 'named entity recognition', 'topic modeling'],
+    'tools': ['Python 3.11', 'spaCy 3.7', 'NetworkX 3.2'],
+    'output_formats': ['GraphML', 'CSV', 'JSON'],
+}
+
+lines = []
+# TODO: Add a header with '=' * 50, then 'METHODS REPORT', then '=' * 50
+# TODO: Add project title, researcher, institution, and period
+# TODO: Add a '--- Corpus Description ---' section with size and languages
+# TODO: Add a '--- Analytical Methods ---' section with numbered methods
+# TODO: Add a '--- Tools and Versions ---' section with bulleted tools
+# TODO: Add a '--- Output Formats ---' section
+# TODO: Add a closing '=' * 50
+
+report = '\\n'.join(lines)
+print(report)
+`,
+        expectedOutput: '==================================================\nMETHODS REPORT\n==================================================\n\nProject: Mapping Colonial Correspondence Networks\nResearcher: Dr. Elena Vasquez\nInstitution: University of the Atlantic\nPeriod: 2023-06 to 2024-12\n\n--- Corpus Description ---\nSize: 2350 letters\nLanguages: English, Spanish, French\n\n--- Analytical Methods ---\n  1. network analysis\n  2. named entity recognition\n  3. topic modeling\n\n--- Tools and Versions ---\n  - Python 3.11\n  - spaCy 3.7\n  - NetworkX 3.2\n\n--- Output Formats ---\nData exported as: GraphML, CSV, JSON\n==================================================',
+        hints: [
+          'Use `\'=\' * 50` to create a line of 50 equals signs for the header and footer.',
+          'Add an empty string `\'\'` to the lines list to create blank lines between sections.',
+          'Use `enumerate(project[\'methods\'], 1)` to number the methods starting from 1.',
+          'Use `\', \'.join(project[\'languages\'])` and `\', \'.join(project[\'output_formats\'])` to format lists as comma-separated strings.',
+        ],
+        solution: `project = {
+    'title': 'Mapping Colonial Correspondence Networks',
+    'researcher': 'Dr. Elena Vasquez',
+    'institution': 'University of the Atlantic',
+    'date_range': '2023-06 to 2024-12',
+    'corpus_size': 2350,
+    'corpus_unit': 'letters',
+    'languages': ['English', 'Spanish', 'French'],
+    'methods': ['network analysis', 'named entity recognition', 'topic modeling'],
+    'tools': ['Python 3.11', 'spaCy 3.7', 'NetworkX 3.2'],
+    'output_formats': ['GraphML', 'CSV', 'JSON'],
+}
+
+lines = []
+lines.append('=' * 50)
+lines.append('METHODS REPORT')
+lines.append('=' * 50)
+lines.append('')
+lines.append(f"Project: {project['title']}")
+lines.append(f"Researcher: {project['researcher']}")
+lines.append(f"Institution: {project['institution']}")
+lines.append(f"Period: {project['date_range']}")
+lines.append('')
+lines.append('--- Corpus Description ---')
+lines.append(f"Size: {project['corpus_size']} {project['corpus_unit']}")
+lines.append(f"Languages: {', '.join(project['languages'])}")
+lines.append('')
+lines.append('--- Analytical Methods ---')
+for i, method in enumerate(project['methods'], 1):
+    lines.append(f"  {i}. {method}")
+lines.append('')
+lines.append('--- Tools and Versions ---')
+for tool in project['tools']:
+    lines.append(f"  - {tool}")
+lines.append('')
+lines.append('--- Output Formats ---')
+lines.append(f"Data exported as: {', '.join(project['output_formats'])}")
+lines.append('=' * 50)
+
+report = '\\n'.join(lines)
+print(report)
+`,
+      },
+    ],
+  },
 ];
 
 export function getLessonById(id: string): LessonDefinition | undefined {

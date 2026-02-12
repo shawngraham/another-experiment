@@ -1,6 +1,6 @@
 # Content Authoring Guide
 
-How to add, modify, and maintain pedagogical content in the DH Tutorial Lab.
+How to add, modify, and maintain pedagogical content in the DHPrimer: Tutorial Lab.
 
 ---
 

@@ -82,7 +82,7 @@ export function NoteEditor({ noteId, lessonId, moduleId, onSave, onCancel }: Not
         </div>
       </div>
 
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-[50vh]">
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}

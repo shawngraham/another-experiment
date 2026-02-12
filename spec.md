@@ -809,7 +809,7 @@ How could you use this to extract names, places, or other entities?
 
 **Primary Navigation:**
 ```
-[Logo] DH Tutorial Lab
+[Logo] DHPrimer: Tutorial Lab
 
 [Dashboard] [My Pathway] [Library] [Notes] [Progress]
                                                   [Export]
