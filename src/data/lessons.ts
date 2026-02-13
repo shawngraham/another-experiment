@@ -611,8 +611,8 @@ for book in corpus:
 ## 3. The Golden Rule: Indentation
 In many languages, curly brackets \`{}\` are used to group code. In Python, we use **indentation** (usually 4 spaces or one Tab). 
 
-Anything indented under an \`if\` or a \`for\` statement is considered "inside" 그 block. When you stop indenting, the block ends.
-
+Anything indented under an \`if\` or a \`for\` statement is considered "inside" the block. When you stop indenting, the block ends.
+ 
 \`\`\`python
 for book in corpus:
     print(book) # This is INSIDE the loop and runs 3 times.
@@ -1340,16 +1340,17 @@ print(years)`,
   The NLTK (\`Natural Language Toolkit\`) tokenizer is designed for research. It knows that a period at the end of a sentence is a separate piece of punctuation and should not be attached to the last word.
 
   \`\`\`python
-  import nltk
-  from nltk.tokenize import word_tokenize
 
-  # We must download the 'instructions' for tokenization first
-  nltk.download('punkt_tab', quiet=True)
+import nltk
+from nltk.tokenize import word_tokenize
 
-  text = "Mary Shelley wrote Frankenstein."
-  tokens = word_tokenize(text)
-  print(tokens) 
-  # Result: ['Mary', 'Shelley', 'wrote', 'Frankenstein', '.']
+# We must download the 'instructions' for tokenization first
+nltk.download('punkt_tab', quiet=True)
+
+text = "Mary Shelley wrote Frankenstein."
+tokens = word_tokenize(text)
+print(tokens) 
+# Result: ['Mary', 'Shelley', 'wrote', 'Frankenstein', '.']
   \`\`\`
 
   ---
@@ -1395,11 +1396,12 @@ print(years)`,
         title: 'Tokenize a Sentence',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `import nltk
-  nltk.download('punkt_tab', quiet=True)
-  from nltk.tokenize import word_tokenize
+        starterCode: `
+import nltk
+nltk.download('punkt_tab', quiet=True)
+from nltk.tokenize import word_tokenize
 
-  text = "Mary Shelley wrote Frankenstein in 1818."
+text = "Mary Shelley wrote Frankenstein in 1818."
 
   # Goal: Use word_tokenize(text) and print the list of tokens
 
@@ -1410,13 +1412,14 @@ print(years)`,
           'Assign the result of word_tokenize(text) to a variable.',
           'Print that variable to see how NLTK handles the period at the end.',
         ],
-        solution: `import nltk
-  nltk.download('punkt_tab', quiet=True)
-  from nltk.tokenize import word_tokenize
+        solution: `
+import nltk
+nltk.download('punkt_tab', quiet=True)
+from nltk.tokenize import word_tokenize
 
-  text = "Mary Shelley wrote Frankenstein in 1818."
-  tokens = word_tokenize(text)
-  print(tokens)`,
+text = "Mary Shelley wrote Frankenstein in 1818."
+tokens = word_tokenize(text)
+print(tokens)`,
       },
       {
         id: 'text-analysis-05-c2',
@@ -2695,7 +2698,7 @@ print(years)`,
   ## 4. Copyright and "Data Sovereignty"
   - **Public vs. Private**: Just because data is visible doesn't mean it's "Public Domain." 
   - **Fair Use**: In many regions, scraping for non-commercial scholarly research is "Fair Use," but re-publishing that data (e.g., putting the full text of a copyrighted novel on your own site) is a violation.
-  - **Indigenous Data**: Be extra cautious with archives of indigenous materials. These may have "Traditional Knowledge" labels that restrict how the data should be handled, even if it is technically accessible.
+  - **Indigenous Data**: Be extra cautious with archives of Indigenous materials. Stop, and consider materials like [The First Nations Principles of OCAP \[link\]](https://fnigc.ca/ocap-training/) first.
 
   :::tip
   **The Golden Rule of Scraping**: Always look for a "Download Data" button or an API (Application Programming Interface) first. Scraping should be your last resort!
@@ -9170,7 +9173,7 @@ print(f"Bias ratio: {ratio}%")
 
 Digital humanists routinely use sentiment analysis to study literary texts, historical newspapers, political speeches, and social media. If the underlying lexicon treats culturally-coded language as inherently negative, the analysis will systematically misrepresent texts written by or about marginalized communities. A sentiment analysis of African American newspapers, for instance, might report more "negative" language not because the content is more negative, but because the lexicon penalizes terms common in those texts.
 
-The computational linguist Brendan O'Connor warns that "sentiment analysis is not a thermometer" -- it does not measure some objective temperature of feeling. It measures alignment with the assumptions embedded in the word list.
+Sentiment analysis does not measure some objective temperature of feeling. It measures alignment with the assumptions embedded in the word list.
 
 ## Practice
 
