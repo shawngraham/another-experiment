@@ -316,7 +316,7 @@ useEffect(() => {
       </div>
 
       <div className="flex-1 flex flex-col min-h-0">
-        <div className="flex-1 min-h-[200px]">
+        <div className="flex-1 basis-1/2 min-h-[120px]">
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
@@ -326,7 +326,7 @@ useEffect(() => {
           />
         </div>
 
-        <div className="flex items-center gap-2 p-2 bg-gray-100 border-y border-gray-200">
+        <div className="flex items-center gap-2 p-2 bg-gray-100 border-y border-gray-200 flex-shrink-0">
           <button
             onClick={runCode}
             disabled={isRunning || runtimeStatus !== 'ready'}
@@ -365,7 +365,7 @@ useEffect(() => {
           </button>
         </div>
 
-        <div className="h-[200px] overflow-y-auto bg-gray-900 p-4">
+        <div className="flex-1 basis-1/2 min-h-[120px] overflow-y-auto bg-gray-900 p-4">
           <pre className="font-mono text-sm text-gray-100 whitespace-pre-wrap">
             {output || 'Output will appear here...'}
           </pre>

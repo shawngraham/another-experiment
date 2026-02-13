@@ -92,7 +92,7 @@ export function LessonViewer() {
           </div>
         </div>
 
-        <div className="lg:w-3/5 flex flex-col">
+        <div className="lg:w-3/5 lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)] flex flex-col">
           {lesson.challenges.length > 0 ? (
             <CodeSandbox
               challenges={lesson.challenges}
