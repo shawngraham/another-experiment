@@ -317,7 +317,7 @@ useEffect(() => {
       </div>
 
       <div className="flex-1 flex flex-col min-h-0">
-        <div className="flex-1 basis-1/2 min-h-[120px]">
+        <div className="flex-1 basis-1/2 min-h-[180px]">
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
@@ -366,7 +366,7 @@ useEffect(() => {
           </button>
         </div>
 
-        <div className="flex-1 basis-1/2 min-h-[120px] overflow-y-auto bg-gray-900 p-4">
+        <div className="flex-1 basis-1/2 min-h-[180px] overflow-y-auto bg-gray-900 p-4">
           <pre className="font-mono text-sm text-gray-100 whitespace-pre-wrap">
             {output || 'Output will appear here...'}
           </pre>
