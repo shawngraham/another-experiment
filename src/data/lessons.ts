@@ -1330,28 +1330,33 @@ print(years)`,
     content: `# Natural Language Processing (NLP)
 
   ## Moving Beyond Strings
-  Up to this point, we have treated text as a simple sequence of characters. **Natural Language Processing (NLP)** allows us to treat text as a linguistic structure. 
+  Up to this point, we have treated text as a simple sequence of characters. **Natural Language Processing (NLP)** allows us to treat text as a linguistic structure.
 
   While \`.split()\` and \`.lower()\` are useful, they don't "understand" the rules of language. To a computer using \`.split()\`, the string "don't" is one word. To an NLP tool, it is two linguistic units: "do" and "n't" (the negation).
 
   ---
 
   ## 1. Smarter Tokenization
-  The NLTK (\`Natural Language Toolkit\`) tokenizer is designed for research. It knows that a period at the end of a sentence is a separate piece of punctuation and should not be attached to the last word.
+  Professional NLP libraries like **NLTK** (\`Natural Language Toolkit\`) include sophisticated tokenizers. A smart tokenizer knows that a period at the end of a sentence is punctuation and should not be attached to the last word.
+
+  We can build a simple tokenizer using Python's \`re\` (regular expressions) module that separates words from punctuation:
 
   \`\`\`python
+  import re
 
-import nltk
-from nltk.tokenize import word_tokenize
+  def word_tokenize(text):
+      """Split text into words and punctuation marks."""
+      return re.findall(r"\\w+|[^\\w\\s]", text)
 
-# We must download the 'instructions' for tokenization first
-nltk.download('punkt_tab', quiet=True)
-
-text = "Mary Shelley wrote Frankenstein."
-tokens = word_tokenize(text)
-print(tokens) 
-# Result: ['Mary', 'Shelley', 'wrote', 'Frankenstein', '.']
+  text = "Mary Shelley wrote Frankenstein."
+  tokens = word_tokenize(text)
+  print(tokens)
+  # Result: ['Mary', 'Shelley', 'wrote', 'Frankenstein', '.']
   \`\`\`
+
+  :::tip
+  **NLTK on your own computer:** When working locally (not in a browser sandbox), you would use \`nltk.tokenize.word_tokenize()\`, which handles edge cases like contractions ("don't" becomes "do" + "n't"). The regex version here teaches the same core concept: separating words from punctuation.
+  :::
 
   ---
 
@@ -1364,10 +1369,12 @@ print(tokens)
   | **JJ** | Adjective | Analyzing descriptive language in a novel. |
   | **VBD** | Verb, Past Tense | Identifying actions in a historical narrative. |
 
+  In practice, a POS tagger (like \`nltk.pos_tag()\`) returns a **List of Tuples** — each word paired with its grammatical tag.
+
   ---
 
   ## 3. Handling the Output: Tuples
-  When you run \`nltk.pos_tag()\`, it returns a **List of Tuples**. A tuple is like a list, but it uses parentheses \`()\`.
+  A tuple is like a list, but it uses parentheses \`()\`. POS taggers return data in this format:
 
   \`\`\`python
   tagged = [('Mary', 'NNP'), ('wrote', 'VBD')]
@@ -1382,12 +1389,12 @@ print(tokens)
   \`\`\`
 
   :::tip
-  **Why use POS tagging?** 
+  **Why use POS tagging?**
   If you want to map a novel, you can't just search for every word that starts with a capital letter (that would include the start of every sentence). By filtering for **NNP**, you get a much cleaner list of actual names and places.
   :::
 
   :::challenge
-  In the first challenge, you will practice smarter tokenization. In the second, you will use a loop to extract only the proper nouns from a sentence about Jane Austen.
+  In the first challenge, you will practice smarter tokenization. In the second, you will work with POS-tagged data to extract only the proper nouns from a sentence about Jane Austen.
   :::
   `,
     challenges: [
@@ -1396,10 +1403,11 @@ print(tokens)
         title: 'Tokenize a Sentence',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `
-import nltk
-nltk.download('punkt_tab', quiet=True)
-from nltk.tokenize import word_tokenize
+        starterCode: `import re
+
+  def word_tokenize(text):
+      """Split text into words and punctuation marks."""
+      return re.findall(r"\\w+|[^\\w\\s]", text)
 
 text = "Mary Shelley wrote Frankenstein in 1818."
 
@@ -1410,12 +1418,13 @@ text = "Mary Shelley wrote Frankenstein in 1818."
         expectedOutput: "['Mary', 'Shelley', 'wrote', 'Frankenstein', 'in', '1818', '.']",
         hints: [
           'Assign the result of word_tokenize(text) to a variable.',
-          'Print that variable to see how NLTK handles the period at the end.',
+          'Print that variable to see how the tokenizer separates the period at the end.',
         ],
-        solution: `
-import nltk
-nltk.download('punkt_tab', quiet=True)
-from nltk.tokenize import word_tokenize
+        solution: `import re
+
+  def word_tokenize(text):
+      """Split text into words and punctuation marks."""
+      return re.findall(r"\\w+|[^\\w\\s]", text)
 
 text = "Mary Shelley wrote Frankenstein in 1818."
 tokens = word_tokenize(text)
@@ -1426,43 +1435,37 @@ print(tokens)`,
         title: 'Extract Proper Nouns',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `import nltk
-  # Downloading the necessary tools
-  nltk.download('punkt_tab', quiet=True)
-  nltk.download('averaged_perceptron_tagger_eng', quiet=True)
-  from nltk.tokenize import word_tokenize
+        starterCode: `# In a local environment, you would generate this data with nltk.pos_tag().
+  # Here we provide the pre-tagged output so you can practice working with tuples.
+  tagged_text = [
+      ('Jane', 'NNP'), ('Austen', 'NNP'), ('published', 'VBD'),
+      ('Pride', 'NNP'), ('and', 'CC'), ('Prejudice', 'NNP'),
+      ('in', 'IN'), ('1813', 'CD'), ('.', '.')
+  ]
 
-  text = "Jane Austen published Pride and Prejudice in 1813."
-  tokens = word_tokenize(text)
-
-  # 1. Use nltk.pos_tag(tokens) to get a list of (word, tag) tuples
-  # 2. Create an empty list called 'proper_nouns'
-  # 3. Loop through the tagged items and check if the tag is 'NNP'
-  # 4. If it is, append the word to your 'proper_nouns' list
-  # 5. Print the list
+  # 1. Create an empty list called 'proper_nouns'
+  # 2. Loop through tagged_text and check if the tag is 'NNP'
+  # 3. If it is, append the word to your 'proper_nouns' list
+  # 4. Print the list
 
   # Your code here
   `,
         expectedOutput: "['Jane', 'Austen', 'Pride', 'Prejudice']",
         hints: [
-          'Use: tagged_text = nltk.pos_tag(tokens)',
           'Your loop should look like: for word, tag in tagged_text:',
           'Remember that NNP must be in quotes: if tag == "NNP":',
+          'Use proper_nouns.append(word) inside the if block.',
         ],
-        solution: `import nltk
-  nltk.download('punkt_tab', quiet=True)
-  nltk.download('averaged_perceptron_tagger_eng', quiet=True)
-  from nltk.tokenize import word_tokenize
-
-  text = "Jane Austen published Pride and Prejudice in 1813."
-  tokens = word_tokenize(text)
-
-  # Get the tags
-  tagged = nltk.pos_tag(tokens)
+        solution: `# Pre-tagged data (as if from nltk.pos_tag)
+  tagged_text = [
+      ('Jane', 'NNP'), ('Austen', 'NNP'), ('published', 'VBD'),
+      ('Pride', 'NNP'), ('and', 'CC'), ('Prejudice', 'NNP'),
+      ('in', 'IN'), ('1813', 'CD'), ('.', '.')
+  ]
 
   # Filter for NNP (Proper Nouns)
   proper_nouns = []
-  for word, tag in tagged:
+  for word, tag in tagged_text:
       if tag == 'NNP':
           proper_nouns.append(word)
 
@@ -3528,7 +3531,31 @@ print(tokens)`,
         title: 'Creating the Corpus',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `from gensim import corpora
+        starterCode: `# In a local environment you would use: from gensim import corpora
+  # Here we implement the core Dictionary concept in pure Python.
+
+  class SimpleDictionary:
+      """Mimics gensim's corpora.Dictionary for learning purposes."""
+      def __init__(self, documents):
+          self.token2id = {}
+          idx = 0
+          for doc in documents:
+              for word in sorted(set(doc)):
+                  if word not in self.token2id:
+                      self.token2id[word] = idx
+                      idx += 1
+          self.id2token = {i: w for w, i in self.token2id.items()}
+
+      def doc2bow(self, document):
+          freq = {}
+          for word in document:
+              wid = self.token2id.get(word)
+              if wid is not None:
+                  freq[wid] = freq.get(wid, 0) + 1
+          return sorted(freq.items())
+
+      def __getitem__(self, key):
+          return self.id2token[key]
 
   # A tiny corpus of 3 preprocessed documents
   documents = [
@@ -3539,11 +3566,11 @@ print(tokens)`,
 
   # 1. Create a dictionary from the documents
   # This assigns an ID to every unique word
-  dictionary = 
+  dictionary =
 
   # 2. Convert the first document (documents[0]) into BoW format
   # Use the doc2bow() method on your dictionary
-  bow_doc = 
+  bow_doc =
 
   # Verify the numerical translation
   print(bow_doc)
@@ -3554,12 +3581,33 @@ print(tokens)`,
   `,
         expectedOutput: "[(0, 1), (1, 1), (2, 1)]\ncrown",
         hints: [
-          'Use corpora.Dictionary(documents) to create the map.',
+          'Use SimpleDictionary(documents) to create the map.',
           'The method is dictionary.doc2bow(documents[0]).',
-          'In Gensim, dictionary[0] will look up the string associated with the first ID created.',
-          'The expected output assumes "crown" was the first word processed by the dictionary.'
+          'dictionary[0] looks up the string associated with the first ID created.',
+          '"crown" comes first alphabetically, so it gets ID 0.'
         ],
-        solution: `from gensim import corpora
+        solution: `class SimpleDictionary:
+      """Mimics gensim's corpora.Dictionary for learning purposes."""
+      def __init__(self, documents):
+          self.token2id = {}
+          idx = 0
+          for doc in documents:
+              for word in sorted(set(doc)):
+                  if word not in self.token2id:
+                      self.token2id[word] = idx
+                      idx += 1
+          self.id2token = {i: w for w, i in self.token2id.items()}
+
+      def doc2bow(self, document):
+          freq = {}
+          for word in document:
+              wid = self.token2id.get(word)
+              if wid is not None:
+                  freq[wid] = freq.get(wid, 0) + 1
+          return sorted(freq.items())
+
+      def __getitem__(self, key):
+          return self.id2token[key]
 
   documents = [
       ["king", "throne", "crown"],
@@ -3567,10 +3615,7 @@ print(tokens)`,
       ["throne", "sword", "crown"]
   ]
 
-  # Create the Dictionary
-  dictionary = corpora.Dictionary(documents)
-
-  # Convert the first document to Bag of Words
+  dictionary = SimpleDictionary(documents)
   bow_doc = dictionary.doc2bow(documents[0])
 
   print(bow_doc)
@@ -4141,13 +4186,24 @@ print(tokens)`,
         title: 'Point Creation',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `from shapely.geometry import Point
+        starterCode: `# In a local environment you would use: from shapely.geometry import Point
+  # Here we provide a simple Point class that mimics Shapely's API.
+  import math
+
+  class Point:
+      def __init__(self, x, y):
+          self.x, self.y = x, y
+      @property
+      def wkt(self):
+          return f"POINT ({self.x:g} {self.y:g})"
+      def distance(self, other):
+          return math.sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
 
   # 1. Create a Point object for the Pyramids of Giza.
   # Longitude (x): 31.13
   # Latitude (y): 29.97
 
-  giza = 
+  giza =
 
   # Your code here
 
@@ -4159,9 +4215,17 @@ print(tokens)`,
           'Use the syntax: giza = Point(31.13, 29.97)',
           'Remember: (Longitude, Latitude) is the (X, Y) order GIS expects.'
         ],
-        solution: `from shapely.geometry import Point
+        solution: `import math
 
-  # Create the point using X (Lon) and Y (Lat)
+  class Point:
+      def __init__(self, x, y):
+          self.x, self.y = x, y
+      @property
+      def wkt(self):
+          return f"POINT ({self.x:g} {self.y:g})"
+      def distance(self, other):
+          return math.sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
+
   giza = Point(31.13, 29.97)
 
   print(giza.wkt)`,
@@ -4171,7 +4235,14 @@ print(tokens)`,
         title: 'Distance in Degrees',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `from shapely.geometry import Point
+        starterCode: `# In a local environment you would use: from shapely.geometry import Point
+  import math
+
+  class Point:
+      def __init__(self, x, y):
+          self.x, self.y = x, y
+      def distance(self, other):
+          return math.sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
 
   # Point 1 is at the origin
   p1 = Point(0, 0)
@@ -4189,12 +4260,17 @@ print(tokens)`,
           'Use the syntax: dist = p1.distance(p2)',
           'This is a "Euclidean" distance (Pythagorean theorem), not "Haversine" distance.'
         ],
-        solution: `from shapely.geometry import Point
+        solution: `import math
+
+  class Point:
+      def __init__(self, x, y):
+          self.x, self.y = x, y
+      def distance(self, other):
+          return math.sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
 
   p1 = Point(0, 0)
   p2 = Point(3, 4)
 
-  # Calculate the straight-line distance
   dist = p1.distance(p2)
 
   print(dist)`,
@@ -4287,11 +4363,34 @@ print(tokens)`,
         title: 'Loading a GeoDataFrame',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `import geopandas as gpd
+        starterCode: `# In a local environment you would use: import geopandas as gpd
+  # Here we provide a browser-compatible mock of the GeoDataFrame API.
   import pandas as pd
-  from shapely.geometry import Point
+  from types import SimpleNamespace
 
-  # Since we are in a sandbox, we will build a tiny 'world' from a dictionary
+  class Point:
+      def __init__(self, x, y):
+          self.x, self.y = x, y
+      def __repr__(self):
+          return f"POINT ({self.x:g} {self.y:g})"
+
+  class GeoDataFrame(pd.DataFrame):
+      _metadata = ['crs']
+      def __init__(self, data=None, geometry=None, crs=None, **kwargs):
+          super().__init__(data, **kwargs)
+          if geometry is not None:
+              self['geometry'] = list(geometry)
+          self.crs = crs
+      @property
+      def geometry(self):
+          return self['geometry']
+
+  def points_from_xy(x, y):
+      return [Point(xi, yi) for xi, yi in zip(x, y)]
+
+  gpd = SimpleNamespace(GeoDataFrame=GeoDataFrame, points_from_xy=points_from_xy)
+
+  # --- Your task starts here ---
   data = {
       'name': ['Egypt', 'France', 'China'],
       'pop': [100, 67, 1400],
@@ -4305,7 +4404,7 @@ print(tokens)`,
   # 2. Use gpd.points_from_xy(df.lon, df.lat) for the geometry
   # 3. Set the crs to "EPSG:4326"
 
-  world = 
+  world =
 
   # Verify
   print(type(world).__name__)
@@ -4316,8 +4415,30 @@ print(tokens)`,
           'The syntax is: gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")',
           'Make sure Lon (x) comes before Lat (y) in the points_from_xy function.'
         ],
-        solution: `import geopandas as gpd
-  import pandas as pd
+        solution: `import pandas as pd
+  from types import SimpleNamespace
+
+  class Point:
+      def __init__(self, x, y):
+          self.x, self.y = x, y
+      def __repr__(self):
+          return f"POINT ({self.x:g} {self.y:g})"
+
+  class GeoDataFrame(pd.DataFrame):
+      _metadata = ['crs']
+      def __init__(self, data=None, geometry=None, crs=None, **kwargs):
+          super().__init__(data, **kwargs)
+          if geometry is not None:
+              self['geometry'] = list(geometry)
+          self.crs = crs
+      @property
+      def geometry(self):
+          return self['geometry']
+
+  def points_from_xy(x, y):
+      return [Point(xi, yi) for xi, yi in zip(x, y)]
+
+  gpd = SimpleNamespace(GeoDataFrame=GeoDataFrame, points_from_xy=points_from_xy)
 
   data = {
       'name': ['Egypt', 'France', 'China'],
@@ -4327,10 +4448,9 @@ print(tokens)`,
   }
   df = pd.DataFrame(data)
 
-  # Convert to GeoDataFrame
   world = gpd.GeoDataFrame(
-      df, 
-      geometry=gpd.points_from_xy(df.lon, df.lat), 
+      df,
+      geometry=gpd.points_from_xy(df.lon, df.lat),
       crs="EPSG:4326"
   )
 
@@ -4342,10 +4462,30 @@ print(tokens)`,
         title: 'Filtering by Attribute',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `import geopandas as gpd
+        starterCode: `# In a local environment you would use: import geopandas as gpd
   import pandas as pd
+  from types import SimpleNamespace
 
-  # Creating our world GeoDataFrame
+  class Point:
+      def __init__(self, x, y):
+          self.x, self.y = x, y
+      def __repr__(self):
+          return f"POINT ({self.x:g} {self.y:g})"
+
+  class GeoDataFrame(pd.DataFrame):
+      _metadata = ['crs']
+      def __init__(self, data=None, geometry=None, crs=None, **kwargs):
+          super().__init__(data, **kwargs)
+          if geometry is not None:
+              self['geometry'] = list(geometry)
+          self.crs = crs
+
+  def points_from_xy(x, y):
+      return [Point(xi, yi) for xi, yi in zip(x, y)]
+
+  gpd = SimpleNamespace(GeoDataFrame=GeoDataFrame, points_from_xy=points_from_xy)
+
+  # --- Your task starts here ---
   data = {'name': ['Egypt', 'France', 'China'], 'lat': [26.8, 46.2, 35.8], 'lon': [30.8, 2.2, 104.1]}
   df = pd.DataFrame(data)
   world = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
@@ -4363,14 +4503,32 @@ print(tokens)`,
           'Use the square bracket notation: world[world["column"] == "Value"]',
           'This is the exact same syntax you used in the Pandas module!'
         ],
-        solution: `import geopandas as gpd
-  import pandas as pd
+        solution: `import pandas as pd
+  from types import SimpleNamespace
+
+  class Point:
+      def __init__(self, x, y):
+          self.x, self.y = x, y
+      def __repr__(self):
+          return f"POINT ({self.x:g} {self.y:g})"
+
+  class GeoDataFrame(pd.DataFrame):
+      _metadata = ['crs']
+      def __init__(self, data=None, geometry=None, crs=None, **kwargs):
+          super().__init__(data, **kwargs)
+          if geometry is not None:
+              self['geometry'] = list(geometry)
+          self.crs = crs
+
+  def points_from_xy(x, y):
+      return [Point(xi, yi) for xi, yi in zip(x, y)]
+
+  gpd = SimpleNamespace(GeoDataFrame=GeoDataFrame, points_from_xy=points_from_xy)
 
   data = {'name': ['Egypt', 'France', 'China'], 'lat': [26.8, 46.2, 35.8], 'lon': [30.8, 2.2, 104.1]}
   df = pd.DataFrame(data)
   world = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
 
-  # Filter for Egypt
   egypt = world[world['name'] == 'Egypt']
 
   print(egypt['name'].values[0])`,
@@ -4465,18 +4623,21 @@ print(tokens)`,
         title: 'The First Map',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `import geopandas as gpd
+        starterCode: `# In a local environment you would use: import geopandas as gpd
+  # Here we use Matplotlib directly to plot geographic points.
   import pandas as pd
+  import matplotlib
+  matplotlib.use('Agg')
+  import matplotlib.pyplot as plt
 
   # Creating a tiny dataset
   data = {'name': ['A', 'B'], 'pop': [10, 20], 'lat': [10, 20], 'lon': [10, 20]}
   df = pd.DataFrame(data)
-  world = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
 
-  # Goal: Generate a plot object
-  # 1. Call .plot() on the 'world' GeoDataFrame
-  # 2. Use the 'pop' column to color the points
-  # 3. Assign the result to a variable named 'ax'
+  # Goal: Generate a scatter plot of geographic points colored by population
+  # 1. Use plt.subplots() to create a figure and axes
+  # 2. Use ax.scatter() with df['lon'] (x) and df['lat'] (y), colored by df['pop']
+  # 3. Assign the axes to a variable named 'ax'
 
   # Your code here
 
@@ -4485,18 +4646,20 @@ print(tokens)`,
   `,
         expectedOutput: 'matplotlib.axes._axes',
         hints: [
-          'Use ax = world.plot(column="pop")',
-          'The variable ax will capture the Matplotlib Axes object created by GeoPandas.'
+          'Use: fig, ax = plt.subplots()',
+          'Then: ax.scatter(df["lon"], df["lat"], c=df["pop"])',
+          'The variable ax is already a Matplotlib Axes object.'
         ],
-        solution: `import geopandas as gpd
-  import pandas as pd
+        solution: `import pandas as pd
+  import matplotlib
+  matplotlib.use('Agg')
+  import matplotlib.pyplot as plt
 
   data = {'name': ['A', 'B'], 'pop': [10, 20], 'lat': [10, 20], 'lon': [10, 20]}
   df = pd.DataFrame(data)
-  world = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
 
-  # Create the plot
-  ax = world.plot(column='pop')
+  fig, ax = plt.subplots()
+  ax.scatter(df['lon'], df['lat'], c=df['pop'])
 
   print(type(ax).__module__)`,
       },
@@ -4505,19 +4668,21 @@ print(tokens)`,
         title: 'Calculating Area in Meters',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `import geopandas as gpd
+        starterCode: `# In a local environment, geopandas.to_crs() handles projection math automatically.
+  # Here we demonstrate the concept using pre-computed values.
   import pandas as pd
-  from shapely.geometry import Polygon
 
-  # A square polygon in degrees (EPSG:4326)
-  # Covering approx 1 degree of lat/lon
-  poly = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
-  gdf = gpd.GeoDataFrame({'id': [1]}, geometry=[poly], crs="EPSG:4326")
+  # A 1-degree square at the equator
+  # In EPSG:4326 (degrees), the "area" is just 1.0 square degrees — meaningless!
+  area_in_degrees = 1.0
 
-  # Goal: Calculate the area in square meters
-  # 1. Convert gdf to EPSG:3395 (World Mercator) using .to_crs()
-  # 2. Assign this to a new variable 'gdf_projected'
-  # 3. Calculate the area of the first row and store in 'area_val'
+  # After projecting to EPSG:3395 (World Mercator), 1 degree at the equator ~ 111,320 meters
+  # So a 1x1 degree square ~ 111320 * 111320 = ~12.4 billion square meters
+  meters_per_degree_at_equator = 111320
+
+  # Goal: Calculate the approximate area in square meters
+  # 1. Compute the projected area: meters_per_degree_at_equator ** 2
+  # 2. Store in 'area_val'
 
   # Your code here
 
@@ -4526,21 +4691,18 @@ print(tokens)`,
   `,
         expectedOutput: '1.24e+10',
         hints: [
-          'Use gdf_projected = gdf.to_crs("EPSG:3395")',
-          'Access area with gdf_projected.area.iloc[0]',
-          'Note: EPSG:4326 uses degrees, so .area is not useful until you project it!'
+          'The area of a 1-degree square in meters is: meters_per_degree_at_equator ** 2',
+          'This is the same math that gdf.to_crs("EPSG:3395").area does under the hood.',
+          '111320 ** 2 = 12,402,182,400 which formats to 1.24e+10'
         ],
-        solution: `import geopandas as gpd
-  from shapely.geometry import Polygon
+        solution: `import pandas as pd
 
-  poly = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
-  gdf = gpd.GeoDataFrame({'id': [1]}, geometry=[poly], crs="EPSG:4326")
+  # A 1-degree square at the equator
+  area_in_degrees = 1.0
+  meters_per_degree_at_equator = 111320
 
-  # Convert to a system that uses meters
-  gdf_projected = gdf.to_crs("EPSG:3395")
-
-  # Calculate area
-  area_val = gdf_projected.area.iloc[0]
+  # Calculate area in square meters
+  area_val = meters_per_degree_at_equator ** 2
 
   print(f"{area_val:.2e}")`,
       },
@@ -4626,8 +4788,26 @@ print(tokens)`,
         title: 'Center the Map',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `import folium
+        starterCode: `# In a local environment you would use: import folium
+  # Here we provide a mock that simulates Folium's API for learning.
+  from types import SimpleNamespace
 
+  class MockMarker:
+      def __init__(self, location=None, popup=None, tooltip=None):
+          self.location = location
+          self.popup = popup
+      def add_to(self, map_obj):
+          map_obj._children[f"marker_{len(map_obj._children)}"] = self
+
+  class MockMap:
+      def __init__(self, location=None, zoom_start=10, tiles="OpenStreetMap"):
+          self.location = location
+          self.options = {'zoom': zoom_start}
+          self._children = {'tiles': tiles}
+
+  folium = SimpleNamespace(Map=MockMap, Marker=MockMarker)
+
+  # --- Your task starts here ---
   # 1. Create a folium Map centered on [40.71, -74.00] (New York City)
   # 2. Set the 'zoom_start' to 10
   # 3. Assign the result to a variable named 'nyc_map'
@@ -4643,9 +4823,23 @@ print(tokens)`,
           'The syntax is: nyc_map = folium.Map(location=[lat, lon], zoom_start=10)',
           'Coordinates must be passed as a list: [40.71, -74.00].'
         ],
-        solution: `import folium
+        solution: `from types import SimpleNamespace
 
-  # Create map object
+  class MockMarker:
+      def __init__(self, location=None, popup=None, tooltip=None):
+          self.location = location
+          self.popup = popup
+      def add_to(self, map_obj):
+          map_obj._children[f"marker_{len(map_obj._children)}"] = self
+
+  class MockMap:
+      def __init__(self, location=None, zoom_start=10, tiles="OpenStreetMap"):
+          self.location = location
+          self.options = {'zoom': zoom_start}
+          self._children = {'tiles': tiles}
+
+  folium = SimpleNamespace(Map=MockMap, Marker=MockMarker)
+
   nyc_map = folium.Map(location=[40.71, -74.00], zoom_start=10)
 
   print(nyc_map.location)
@@ -4656,8 +4850,25 @@ print(tokens)`,
         title: 'Adding Multiple Markers',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `import folium
+        starterCode: `# In a local environment you would use: import folium
+  from types import SimpleNamespace
 
+  class MockMarker:
+      def __init__(self, location=None, popup=None, tooltip=None):
+          self.location = location
+          self.popup = popup
+      def add_to(self, map_obj):
+          map_obj._children[f"marker_{len(map_obj._children)}"] = self
+
+  class MockMap:
+      def __init__(self, location=None, zoom_start=10, tiles="OpenStreetMap"):
+          self.location = location
+          self.options = {'zoom': zoom_start}
+          self._children = {'tiles': tiles}
+
+  folium = SimpleNamespace(Map=MockMap, Marker=MockMarker)
+
+  # --- Your task starts here ---
   m = folium.Map(location=[45.0, 10.0], zoom_start=4)
 
   # A list of locations: [Latitude, Longitude, City Name]
@@ -4673,7 +4884,7 @@ print(tokens)`,
 
   # Your code here
 
-  # Verification: The map starts with 1 layer (tiles). 
+  # Verification: The map starts with 1 layer (tiles).
   # After adding 2 markers, it should have 3 children.
   print(len(m._children))
   `,
@@ -4683,7 +4894,22 @@ print(tokens)`,
           'Inside the loop, access index [0] for lat, [1] for lon, and [2] for name.',
           'Syntax: folium.Marker(location=[lat, lon], popup=name).add_to(m)'
         ],
-        solution: `import folium
+        solution: `from types import SimpleNamespace
+
+  class MockMarker:
+      def __init__(self, location=None, popup=None, tooltip=None):
+          self.location = location
+          self.popup = popup
+      def add_to(self, map_obj):
+          map_obj._children[f"marker_{len(map_obj._children)}"] = self
+
+  class MockMap:
+      def __init__(self, location=None, zoom_start=10, tiles="OpenStreetMap"):
+          self.location = location
+          self.options = {'zoom': zoom_start}
+          self._children = {'tiles': tiles}
+
+  folium = SimpleNamespace(Map=MockMap, Marker=MockMarker)
 
   m = folium.Map(location=[45.0, 10.0], zoom_start=4)
 
@@ -4692,14 +4918,12 @@ print(tokens)`,
       [41.90, 12.49, "Rome"]
   ]
 
-  # Loop and add markers
   for loc in locations:
       folium.Marker(
-          location=[loc[0], loc[1]], 
+          location=[loc[0], loc[1]],
           popup=loc[2]
       ).add_to(m)
 
-  # 1 Base Layer + 2 Markers = 3
   print(len(m._children))`,
       },
     ],
@@ -4934,21 +5158,24 @@ print(tokens)`,
         title: 'Image Resizing and Grayscale',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `import cv2
+        starterCode: `# In a local environment you would use: import cv2
+  # Here we use PIL (Pillow) and NumPy, which work in the browser.
+  from PIL import Image
   import numpy as np
 
-  # Create a dummy image: 100x100 pixels, all Blue
-  # OpenCV expects BGR, so Blue is [255, 0, 0]
+  # Create a dummy image: 100x100 pixels, all Blue (RGB)
   dummy_image = np.zeros((100, 100, 3), dtype=np.uint8)
-  dummy_image[:, :] = [255, 0, 0]
+  dummy_image[:, :] = [0, 0, 255]  # Blue in RGB
 
   # 1. Resize the image to be 50 pixels wide by 50 pixels high
+  # Convert to PIL Image, resize, then back to numpy array
   # Store in variable 'resized_img'
-  resized_img = 
+  resized_img =
 
   # 2. Convert the ORIGINAL 'dummy_image' to grayscale
+  # Convert to PIL, use .convert('L'), then back to numpy
   # Store in variable 'gray_img'
-  gray_img = 
+  gray_img =
 
   # Your code here
 
@@ -4957,20 +5184,21 @@ print(tokens)`,
   `,
         expectedOutput: 'Resized shape: (50, 50, 3)\nGrayscale shape: (100, 100)',
         hints: [
-          'Use cv2.resize(dummy_image, (50, 50))',
-          'Use cv2.cvtColor(dummy_image, cv2.COLOR_BGR2GRAY) for grayscale.'
+          'To resize: np.array(Image.fromarray(dummy_image).resize((50, 50)))',
+          'To grayscale: np.array(Image.fromarray(dummy_image).convert("L"))',
+          'PIL resize takes (width, height) but numpy shape is (height, width, channels).'
         ],
-        solution: `import cv2
+        solution: `from PIL import Image
   import numpy as np
 
   dummy_image = np.zeros((100, 100, 3), dtype=np.uint8)
-  dummy_image[:, :] = [255, 0, 0]
+  dummy_image[:, :] = [0, 0, 255]
 
-  # 1. Resize
-  resized_img = cv2.resize(dummy_image, (50, 50))
+  # 1. Resize using PIL
+  resized_img = np.array(Image.fromarray(dummy_image).resize((50, 50)))
 
-  # 2. Grayscale
-  gray_img = cv2.cvtColor(dummy_image, cv2.COLOR_BGR2GRAY)
+  # 2. Grayscale using PIL
+  gray_img = np.array(Image.fromarray(dummy_image).convert('L'))
 
   print(f"Resized shape: {resized_img.shape}")
   print(f"Grayscale shape: {gray_img.shape}")`,
@@ -5095,7 +5323,8 @@ print(tokens)`,
         title: 'Basic Grayscale Histogram',
         language: 'python',
         difficulty: 'intermediate',
-        starterCode: `import cv2
+        starterCode: `# In a local environment you would use: cv2.calcHist()
+  # Here we use NumPy's histogram function, which works in the browser.
   import numpy as np
 
   # Create a 50x50 grayscale gradient image
@@ -5104,13 +5333,12 @@ print(tokens)`,
       image[i, :] = np.linspace(0, 255, 50)
 
   # Goal: Calculate the histogram for this image
-  # 1. Use cv2.calcHist()
-  # 2. Use [image] as the source
-  # 3. Channel index is [0]
-  # 4. No mask (None)
-  # 5. Use [256] bins and the range [0, 256]
+  # 1. Use np.histogram() on image.ravel() (flattened to 1D)
+  # 2. Use bins=256 and range=(0, 256)
+  # 3. np.histogram returns (counts, bin_edges) — keep only the counts
+  # 4. Reshape the counts to (256, 1) to match the standard histogram format
 
-  hist = 
+  hist =
 
   # Your code here
 
@@ -5119,19 +5347,19 @@ print(tokens)`,
   `,
         expectedOutput: '(256, 1)',
         hints: [
-          'The syntax is: cv2.calcHist([image], [0], None, [256], [0, 256])',
-          'Make sure all parameters except for the mask (None) are enclosed in square brackets.',
-          'The output will be a NumPy array of 256 rows and 1 column.'
+          'First: counts, _ = np.histogram(image.ravel(), bins=256, range=(0, 256))',
+          'Then reshape: hist = counts.reshape(-1, 1)',
+          'image.ravel() flattens the 2D image into a 1D array of pixel values.'
         ],
-        solution: `import cv2
-  import numpy as np
+        solution: `import numpy as np
 
   image = np.zeros((50, 50), dtype=np.uint8)
   for i in range(50):
       image[i, :] = np.linspace(0, 255, 50)
 
-  # Calculate the histogram
-  hist = cv2.calcHist([image], [0], None, [256], [0, 256])
+  # Calculate the histogram using NumPy
+  counts, _ = np.histogram(image.ravel(), bins=256, range=(0, 256))
+  hist = counts.reshape(-1, 1)
 
   print(hist.shape)`,
       },
