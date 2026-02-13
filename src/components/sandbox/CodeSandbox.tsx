@@ -1,9 +1,10 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { ChallengeDefinition } from '../../types/index.ts';
 import { useProgressStore } from '../../stores/progressStore.ts';
-import { useNoteStore } from '../../stores/noteStore.ts'; 
+import { useNoteStore } from '../../stores/noteStore.ts';
 import { usePyodide } from '../../hooks/usePyodide.ts';
 import { useWebR } from '../../hooks/useWebR.ts';
+import { dedent } from '../../utils/dedent.ts';
 
 interface CodeSandboxProps {
   challenges: ChallengeDefinition[];
@@ -12,7 +13,7 @@ interface CodeSandboxProps {
 
 export function CodeSandbox({ challenges, lessonId }: CodeSandboxProps) {
   const [activeChallenge, setActiveChallenge] = useState(0);
-  const [code, setCode] = useState(challenges[0]?.starterCode || '');
+  const [code, setCode] = useState(dedent(challenges[0]?.starterCode || ''));
   const [output, setOutput] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const [hintsShown, setHintsShown] = useState(0);
@@ -36,7 +37,7 @@ export function CodeSandbox({ challenges, lessonId }: CodeSandboxProps) {
 
   const handleChallengeChange = (index: number) => {
     setActiveChallenge(index);
-    setCode(challenges[index].starterCode);
+    setCode(dedent(challenges[index].starterCode));
     setOutput('');
     setHintsShown(0);
     setIsPlotModalOpen(false);
@@ -107,7 +108,7 @@ export function CodeSandbox({ challenges, lessonId }: CodeSandboxProps) {
 useEffect(() => {
   // Reset all state when the lesson changes
   setActiveChallenge(0);
-  setCode(challenges[0]?.starterCode || '');
+  setCode(dedent(challenges[0]?.starterCode || ''));
   setOutput('');
   setHintsShown(0);
   setIsPlotModalOpen(false);
@@ -203,9 +204,9 @@ useEffect(() => {
     }
   }, [output, challenge, lessonId, hintsShown, updateChallengeProgress]);
 
-  const showSolution = () => setCode(challenge.solution);
+  const showSolution = () => setCode(dedent(challenge.solution));
   const resetCode = () => {
-    setCode(challenge.starterCode);
+    setCode(dedent(challenge.starterCode));
     setOutput('');
     setHintsShown(0);
     setIsPlotModalOpen(false);
