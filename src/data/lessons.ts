@@ -12714,7 +12714,7 @@ lines = []
 report = '\\n'.join(lines)
 print(report)
 `,
-        expectedOutput: '==================================================\nMETHODS REPORT\n==================================================\n\nProject: Mapping Colonial Correspondence Networks\nResearcher: Dr. Elena Vasquez\nInstitution: University of the Atlantic\nPeriod: 2023-06 to 2024-12\n\n--- Corpus Description ---\nSize: 2350 letters\nLanguages: English, Spanish, French\n\n--- Analytical Methods ---\n  1. network analysis\n  2. named entity recognition\n  3. topic modeling\n\n--- Tools and Versions ---\n  - Python 3.11\n  - spaCy 3.7\n  - NetworkX 3.2\n\n--- Output Formats ---\nData exported as: GraphML, CSV, JSON\n==================================================',
+        expectedOutput: '==================================================\nMETHODS REPORT\n==================================================\n\nProject: Mapping Colonial Correspondence Networks\nResearcher: Dr. J. Doe\nInstitution: University of Anytown\nPeriod: 2023-06 to 2024-12\n\n--- Corpus Description ---\nSize: 2350 letters\nLanguages: English, Spanish, French\n\n--- Analytical Methods ---\n  1. network analysis\n  2. named entity recognition\n  3. topic modeling\n\n--- Tools and Versions ---\n  - Python 3.11\n  - spaCy 3.7\n  - NetworkX 3.2\n\n--- Output Formats ---\nData exported as: GraphML, CSV, JSON\n==================================================',
         hints: [
           'Use `\'=\' * 50` to create a line of 50 equals signs for the header and footer.',
           'Add an empty string `\'\'` to the lines list to create blank lines between sections.',
