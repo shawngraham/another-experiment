@@ -73,7 +73,7 @@ with open("my_research_notes.txt", "w") as file:
 \`\`\`
 
 :::challenge
-Use the sandbox to create a structured project folder, then write a file to that folder. This mimics setting up a workspace for a new research project.
+Use the sandbox to create a structured project folder (get the **os** to **make** a **dir**ectory), then write a file to that folder. This mimics setting up a workspace for a new research project.
 :::
 `,
   challenges: [
