@@ -23,7 +23,7 @@ export function ProgressTracker() {
         </div>
         <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
           <p className="text-3xl font-bold text-indigo-600">{Math.round(successRate)}%</p>
-          <p className="text-sm text-gray-500 mt-1">Challenge Success Rate</p>
+          <p className="text-sm text-gray-500 mt-1">% Integration (your code checked)</p>
         </div>
         <div className="bg-white border border-gray-200 rounded-lg p-4 text-center">
           <p className="text-3xl font-bold text-indigo-600">{totalTime}</p>
