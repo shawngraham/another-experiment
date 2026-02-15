@@ -76,7 +76,7 @@ export function Dashboard() {
         </div>
 
         <div className="bg-white border border-gray-200 rounded-lg p-4">
-          <p className="text-sm text-gray-500">Field Notes</p>
+          <p className="text-sm text-gray-500">Your Notes & Observations</p>
           <p className="text-2xl font-bold text-gray-900">{notesCount}</p>
         </div>
         
