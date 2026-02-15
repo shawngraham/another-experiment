@@ -2,8 +2,8 @@ import { modules, getModuleById, getModulesByTrack } from '../data/modules.ts';
 import { lessons, getLessonById, getLessonsByModule } from '../data/lessons.ts';
 
 describe('modules data', () => {
-  it('has 14 modules', () => {
-    expect(modules).toHaveLength(14);
+  it('has 19 modules', () => {
+    expect(modules).toHaveLength(19);
   });
 
   it('all modules have required fields', () => {
@@ -28,9 +28,9 @@ describe('modules data', () => {
   });
 
   it('getModulesByTrack returns correct modules', () => {
-    const dhModules = getModulesByTrack('dh-methods');
+    const dhModules = getModulesByTrack('data-issues');
     expect(dhModules.length).toBeGreaterThan(0);
-    expect(dhModules.every((m) => m.track === 'dh-methods')).toBe(true);
+    expect(dhModules.every((m) => m.track === 'data-issues')).toBe(true);
   });
 });
 

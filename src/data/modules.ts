@@ -48,10 +48,10 @@ export const modules: ModuleDefinition[] = [
   {
     id: 'data-visualization',
     title: 'Data Visualization for DH',
-    description: 'Visualization principles, bar/line/scatter plots, customization, timelines, and geographic visualization.',
+    description: 'Visualization principles, bar/line/scatter plots, customization, timelines, physicalization, and geographic visualization.',
     estimatedHours: 7,
     prerequisites: ['python-basics'],
-    lessons: ['data-viz-01', 'data-viz-02', 'data-viz-03', 'data-viz-04', 'data-viz-05', 'data-viz-06'],
+    lessons: ['data-viz-01', 'data-viz-02', 'data-viz-03', 'data-viz-04', 'data-viz-05', 'data-viz-06','data-viz-07','data-viz-08','data-viz-09'],
     track: 'data-issues',
     disciplines: ['history', 'art-history', 'literature', 'archaeology', 'linguistics', 'music', 'anthropology', 'sociology'],
     keywords: ['matplotlib', 'visualization', 'charts', 'graphs', 'maps'],

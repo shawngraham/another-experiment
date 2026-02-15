@@ -23,6 +23,16 @@ export function AboutPage() {
         </p>
       </section>
 
+      <section>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Pyodide</h2>
+         <p className="text-gray-600 mb-8">
+      This site, at least in its first iteration, uses Pyodide to power the sandbox's use of Python (eventually, we might implement support for R). This means that not every Python package might want to use can be used here; in those cases, the exercise code is meant to demonstrate the general principle at play. <br></br><br></br>The left hand side of the screen will show sometimes what the code might look like when using the most appropriate package (eg, 'numpy-stl' for making 3d print files from data, in the 'Topographies of Data' lesson), and so you may wish to try a more powerful environment like Google Colab with those examples. Otherwise, the curious can try to import packages directly into the sandbox using: 
+<br></br><br></br>
+      <pre>import micropip<br></br>
+await micropip.install("name-of-package")</pre>
+<br></br> but this can't be guaranteed to work.
+</p></section>
+
       <section>  
         <h2 className="text-lg font-semibold text-gray-800 mb-4">How it works</h2>  
         <ul className="text-gray-600 mb-8">  
@@ -61,7 +71,7 @@ export function AboutPage() {
 
       <section>  
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Who built this?</h2>  
-        <p className="text-gray-600 mb-8">This project was supported through a Teaching Award from Carleton University. The project was conceived and designed by Shawn Graham, and implemented after a series of experiments with various flavours of 'literate programming' approaches. Some of it was hand-coded by Shawn, while other parts were developed in the context of his 2024/25 HIST4805a seminar on AI and/of History class. Some of the plumbing was created through a careful process of defining a specification and iterating with Claude Opus 4.6. The framework developed can be forked on Github and redeployed with new content, so feel free to do so for your own teaching purposes.</p>  
+        <p className="text-gray-600 mb-8">This project was supported through a Teaching Award from Carleton University. The project was conceived and designed by Shawn Graham, and implemented after a series of experiments with various flavours of 'literate programming' approaches. Some of it was hand-coded by Shawn, while other parts were developed in the context of his 2024/25 HIST4805a seminar on AI and/of History class. Some of the plumbing was created through a careful process of defining a specification and iterating with Claude Opus 4.6. The framework developed can be forked on <a href="https://github.com/XLabCU/"><u>Github</u></a> and redeployed with new content, so feel free to do so for your own teaching purposes.</p>  
       </section>  
     </div>  
     

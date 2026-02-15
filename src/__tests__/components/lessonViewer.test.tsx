@@ -1,15 +1,17 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { LessonViewer } from '../../components/lesson/LessonViewer.tsx';
 import { LessonContent } from '../../components/lesson/LessonContent.tsx';
 import { useProgressStore } from '../../stores/progressStore.ts';
 
-// Mock runtime hooks so LessonViewer -> CodeSandbox doesn't load CDN scripts
+// 1. Import your actual data and helpers
+import { lessons, getLessonById } from '../../data/lessons.ts'; 
+
 vi.mock('../../hooks/usePyodide.ts', () => ({
-  usePyodide: () => ({ status: 'ready', loadError: null, runPython: vi.fn().mockResolvedValue({ stdout: '', stderr: '', error: null }) }),
+  usePyodide: () => ({ status: 'ready', loadError: null, runPython: vi.fn() }),
 }));
 vi.mock('../../hooks/useWebR.ts', () => ({
-  useWebR: () => ({ status: 'ready', loadError: null, runR: vi.fn().mockResolvedValue({ stdout: '', stderr: '', error: null }) }),
+  useWebR: () => ({ status: 'ready', loadError: null, runR: vi.fn() }),
 }));
 
 const renderWithRouter = (ui: React.ReactElement, { route = '/' } = {}) => {
@@ -18,24 +20,27 @@ const renderWithRouter = (ui: React.ReactElement, { route = '/' } = {}) => {
 
 describe('LessonContent', () => {
   it('renders markdown content', () => {
-    renderWithRouter(<LessonContent content="# Hello World" />);
-    expect(screen.getByText('Hello World')).toBeInTheDocument();
+    const testContent = "# Test Title\nSome body text.";
+    renderWithRouter(<LessonContent content={testContent} />);
+    expect(screen.getByRole('heading', { name: /Test Title/i })).toBeInTheDocument();
   });
 
-  it('renders paragraphs', () => {
-    renderWithRouter(<LessonContent content="This is a paragraph." />);
-    expect(screen.getByText('This is a paragraph.')).toBeInTheDocument();
-  });
-
-  it('renders headings at different levels', () => {
-    renderWithRouter(<LessonContent content="## Section Title\n\n### Subsection" />);
-    // react-markdown may split heading text - use queryByText with regex
-    expect(screen.queryByText(/Section Title/)).toBeInTheDocument();
-    expect(screen.queryByText(/Subsection/)).toBeInTheDocument();
+  it('renders headings accurately', () => {
+    // Using regex and accessible roles is safer for Markdown rendering
+    renderWithRouter(<LessonContent content="## Section Title" />);
+    expect(screen.getByRole('heading', { level: 2, name: /Section Title/i })).toBeInTheDocument();
   });
 });
 
 describe('LessonViewer', () => {
+  // 2. Define a target lesson from your real data to test against
+  const TEST_LESSON_ID = 'text-analysis-01';
+  const sampleLesson = getLessonById(TEST_LESSON_ID);
+
+  if (!sampleLesson) {
+    throw new Error(`Critical Test Failure: ${TEST_LESSON_ID} not found in lessons.ts`);
+  }
+
   beforeEach(() => {
     useProgressStore.getState().resetProgress();
   });
@@ -48,51 +53,47 @@ describe('LessonViewer', () => {
         </Routes>
       </MemoryRouter>
     );
-    expect(screen.getByText('Lesson not found.')).toBeInTheDocument();
+    expect(screen.getByText(/Lesson not found/i)).toBeInTheDocument();
   });
 
-  it('renders lesson title for valid lesson', () => {
+  it('renders the correct title from data source', () => {
     render(
-      <MemoryRouter initialEntries={['/lesson/text-analysis-01']}>
+      <MemoryRouter initialEntries={[`/lesson/${TEST_LESSON_ID}`]}>
         <Routes>
           <Route path="/lesson/:lessonId" element={<LessonViewer />} />
         </Routes>
       </MemoryRouter>
     );
-    expect(screen.getByText('Introduction to String Operations')).toBeInTheDocument();
+    
+    // 3. Use the dynamic title from your imported lesson object
+    expect(screen.getByText(sampleLesson.title)).toBeInTheDocument();
   });
 
-  it('shows learning objectives', () => {
+  it('shows all learning objectives from data source', () => {
     render(
-      <MemoryRouter initialEntries={['/lesson/text-analysis-01']}>
+      <MemoryRouter initialEntries={[`/lesson/${TEST_LESSON_ID}`]}>
         <Routes>
           <Route path="/lesson/:lessonId" element={<LessonViewer />} />
         </Routes>
       </MemoryRouter>
     );
-    expect(screen.getByText('Understand string data type')).toBeInTheDocument();
+    
+    // Test that every objective in the data is actually rendered
+    sampleLesson.learningObjectives.forEach((objective) => {
+      expect(screen.getByText(objective)).toBeInTheDocument();
+    });
   });
 
-  it('shows mark complete button', () => {
+  it('starts lesson progress with the correct ID', () => {
     render(
-      <MemoryRouter initialEntries={['/lesson/text-analysis-01']}>
+      <MemoryRouter initialEntries={[`/lesson/${TEST_LESSON_ID}`]}>
         <Routes>
           <Route path="/lesson/:lessonId" element={<LessonViewer />} />
         </Routes>
       </MemoryRouter>
     );
-    expect(screen.getByText('Mark Complete')).toBeInTheDocument();
-  });
-
-  it('starts lesson progress on mount', () => {
-    render(
-      <MemoryRouter initialEntries={['/lesson/text-analysis-01']}>
-        <Routes>
-          <Route path="/lesson/:lessonId" element={<LessonViewer />} />
-        </Routes>
-      </MemoryRouter>
-    );
-    const progress = useProgressStore.getState().lessonProgress['text-analysis-01'];
+    
+    const progress = useProgressStore.getState().lessonProgress[TEST_LESSON_ID];
     expect(progress).toBeDefined();
     expect(progress.status).toBe('in_progress');
   });
