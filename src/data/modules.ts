@@ -8,7 +8,7 @@ export const modules: ModuleDefinition[] = [
     estimatedHours: 4,
     prerequisites: [],
     lessons: ['digital-literacy-01', 'digital-literacy-02', 'digital-literacy-03'],
-    track: 'digital-literacy',
+    track: 'foundations',
     disciplines: [],
     keywords: ['files', 'directories', 'data formats', 'encoding', 'version control'],
   },
@@ -19,7 +19,7 @@ export const modules: ModuleDefinition[] = [
     estimatedHours: 7,
     prerequisites: ['digital-literacy-foundations'],
     lessons: ['python-basics-01', 'python-basics-02', 'python-basics-03', 'python-basics-04', 'python-basics-05'],
-    track: 'coding-fundamentals',
+    track: 'foundations',
     disciplines: [],
     keywords: ['python', 'variables', 'functions', 'loops', 'files'],
   },
@@ -30,7 +30,7 @@ export const modules: ModuleDefinition[] = [
     estimatedHours: 9,
     prerequisites: ['python-basics'],
     lessons: ['text-analysis-01', 'text-analysis-02', 'text-analysis-03', 'text-analysis-04', 'text-analysis-05', 'text-analysis-06'],
-    track: 'dh-methods',
+    track: 'textual-scholarship',
     disciplines: ['literature', 'linguistics', 'history', 'philosophy', 'religious-studies', 'classics', 'anthropology'],
     keywords: ['text', 'nlp', 'regex', 'frequency', 'nltk'],
   },
@@ -74,7 +74,7 @@ export const modules: ModuleDefinition[] = [
     estimatedHours: 3,
     prerequisites: ['python-basics'],
     lessons: ['sonification-01', 'sonification-02', 'sonification-03'],
-    track: 'dh-methods',
+    track: 'creative-critical',
     disciplines: ['music', 'history', 'literature', 'archaeology', 'anthropology'],
     keywords: ['sonification', 'audio', 'midi', 'mapping', 'multimodal'],
   },
@@ -90,7 +90,7 @@ export const modules: ModuleDefinition[] = [
       'topic-modeling-03',
       'topic-modeling-04',
     ],
-    track: 'dh-methods',
+    track: 'textual-scholarship',
     disciplines: ['literature', 'history', 'sociology', 'archaeology', 'philosophy', 'religious-studies', 'classics', 'anthropology'],
     keywords: ['lda', 'topic modeling', 'gensim', 'distant reading', 'nlp', 'unsupervised learning'],
   },
@@ -108,7 +108,7 @@ export const modules: ModuleDefinition[] = [
     'network-analysis-05',  // Case Study: Correspondence networks or Character maps
     'network-analysis-06'
   ],
-  track: 'dh-methods',
+  track: 'spatial-relational',
   disciplines: ['history', 'sociology', 'literature', 'anthropology', 'philosophy', 'classics', 'art-history', 'music', 'religious-studies'],
   keywords: ['graphs', 'nodes', 'edges', 'networkx', 'relationships'],
 },
@@ -124,7 +124,7 @@ export const modules: ModuleDefinition[] = [
     'geospatial-03', // Plotting points on maps
     'geospatial-04', // Creating interactive maps with Folium
   ],
-  track: 'dh-methods',
+  track: 'spatial-relational',
   disciplines: ['history', 'archaeology', 'anthropology', 'classics', 'religious-studies'],
   keywords: ['gis', 'maps', 'geopandas', 'folium', 'coordinates', 'spatial'],
 },
@@ -140,7 +140,7 @@ export const modules: ModuleDefinition[] = [
     'image-analysis-03', // Color histograms and extraction
     'image-analysis-04', // Detecting visual similarity
   ],
-  track: 'dh-methods',
+  track: 'creative-critical',
   disciplines: ['art-history', 'media-studies', 'history', 'archaeology', 'classics', 'anthropology', 'religious-studies'],
   keywords: ['computer vision', 'images', 'pixels', 'color analysis', 'opencv'],
 },
@@ -156,7 +156,7 @@ export const modules: ModuleDefinition[] = [
     'sentiment-03', // Plotting emotional arcs in novels
     'sentiment-04', // Limitations and bias in sentiment tools
   ],
-  track: 'dh-methods',
+  track: 'textual-scholarship',
   disciplines: ['literature', 'linguistics', 'sociology', 'marketing', 'history', 'religious-studies'],
   keywords: ['sentiment', 'emotions', 'vader', 'textblob', 'valence'],
 },
@@ -167,7 +167,7 @@ export const modules: ModuleDefinition[] = [
   estimatedHours: 4,
   prerequisites: ['python-basics','network-analysis'],
   lessons: ['rel-mod-01', 'rel-mod-02', 'rel-mod-03', 'rel-mod-04', 'rel-mod-05'],
-  track: 'dh-methods',
+  track: 'spatial-relational',
   disciplines: ['linguistics', 'history', 'philosophy', 'classics', 'religious-studies'],
   keywords: ['embeddings', 'word2vec', 'knowledge-graphs', 'linked-data'],
 },
@@ -184,7 +184,7 @@ export const modules: ModuleDefinition[] = [
     'generative-04', // Erasure and Deformance: Algorithmic editing of existing corpora
     'generative-05', // Visualizing Poetry: Combining text generation with Matplotlib/Pillow
   ],
-  track: 'dh-methods',
+  track: 'creative-critical',
   disciplines: ['literature', 'media-studies', 'creative-writing', 'art-history', 'music', 'linguistics'],
   keywords: ['generative', 'markov chains', 'oulipo', 'creative coding', 'deformance', 'poetry'],
 },
@@ -201,13 +201,13 @@ export const modules: ModuleDefinition[] = [
     'critical-data-04', // Auditing a Word List: Bias in Language Tools
     'critical-data-05', // Writing a Data Biography
   ],
-  track: 'dh-methods',
+  track: 'foundations',
   disciplines: ['history', 'sociology', 'linguistics', 'literature', 'anthropology'],
   keywords: ['bias', 'classification', 'representation', 'data feminism', 'critical data studies', 'ethics'],
 },
 {
   id: 'oral-history',
-  title: 'Oral History and Audio Text Analysis',
+  title: 'Oral History and Transcribed Audio Text Analysis',
   description: 'Analyze oral history transcripts as structured data. Explore speaker turns, pauses, silences, conversational power dynamics, and keyword concordances in testimony.',
   estimatedHours: 4,
   prerequisites: ['python-basics', 'text-analysis-fundamentals'],
@@ -217,7 +217,7 @@ export const modules: ModuleDefinition[] = [
     'oral-history-03', // Turn-Taking and Power: Analyzing Conversation Structure
     'oral-history-04', // Concordance and Keywords in Oral Testimony
   ],
-  track: 'dh-methods',
+  track: 'textual-scholarship',
   disciplines: ['history', 'anthropology', 'sociology', 'linguistics', 'folklore'],
   keywords: ['oral history', 'transcripts', 'conversation analysis', 'kwic', 'concordance', 'silences'],
 },
@@ -233,7 +233,7 @@ export const modules: ModuleDefinition[] = [
     'if-03', // Graph of Stories: Mapping Narrative Structure
     'if-04', // Generating Worlds: Procedural Story Fragments
   ],
-  track: 'dh-methods',
+  track: 'creative-critical',
   disciplines: ['literature', 'creative-writing', 'media-studies', 'game-studies'],
   keywords: ['interactive fiction', 'hypertext', 'branching narrative', 'procedural generation', 'ergodic literature'],
 },
@@ -249,7 +249,7 @@ export const modules: ModuleDefinition[] = [
     'repro-03', // Checksums and Integrity: Proving Nothing Changed
     'repro-04', // The Methods Section: Generating Human-Readable Reports
   ],
-  track: 'dh-methods',
+  track: 'foundations',
   disciplines: ['history', 'literature', 'archaeology', 'linguistics'],
   keywords: ['reproducibility', 'documentation', 'checksums', 'methods', 'naming conventions', 'data integrity'],
 },
@@ -265,7 +265,7 @@ export const modules: ModuleDefinition[] = [
     'pipeline-03', // Stage 3: Comparing and Cross-Tabulating
     'pipeline-04', // Stage 4: Reporting Results
   ],
-  track: 'dh-methods',
+  track: 'foundations',
   disciplines: ['history', 'literature', 'sociology', 'media-studies'],
   keywords: ['pipeline', 'workflow', 'corpus analysis', 'distant reading', 'capstone', 'integration'],
 },

@@ -11,6 +11,11 @@ export function AboutPage() {
           DHPrimer: Tutorial Lab is a local-first, privacy-preserving learning environment for Digital Humanities methods. It provides interactive, browser-based lessons with live coding challenges, note-taking, and progress tracking—all stored entirely in your browser. No accounts, no servers, no data leaves your device.</p>  
       </section>  
   
+<section>  
+         <p className="text-gray-600 mb-8">  
+          And yes, it's worth your time to learn the basics, even in an age where computers can write their own code.</p>  
+      </section> 
+
       <section>
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Why?</h2>
          <p className="text-gray-600 mb-8">
