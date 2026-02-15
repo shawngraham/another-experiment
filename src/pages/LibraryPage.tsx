@@ -8,7 +8,7 @@ import { useProgressStore } from '../stores/progressStore.ts';
 const trackOrder = [
   'foundations',
   'textual-scholarship',
-  'data-science',
+  'data-issues',
   'spatial-relational',
   'creative-critical',
 ] as const;

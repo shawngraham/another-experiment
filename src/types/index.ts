@@ -32,7 +32,7 @@ export interface ModuleDefinition {
   estimatedHours: number;
   prerequisites: string[];
   lessons: string[];
-  track: 'digital-literacy' | 'coding-fundamentals' | 'dh-methods' | 'discipline-specific';
+  track: 'foundations' | 'textual-scholarship' | 'creative-critical' | 'data-issues' | 'spatial-relational';
   disciplines: string[];
   keywords: string[];
 }
