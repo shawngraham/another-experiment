@@ -2249,6 +2249,7 @@ print(tokens)`,
 
   \`\`\`python
   import matplotlib.pyplot as plt
+  plt.clf() # this clears the canvas
 
   # 1. Prepare Data (List A must match List B in length)
   decades = ["1810s", "1820s", "1830s"]
@@ -2263,8 +2264,15 @@ print(tokens)`,
   plt.title("Growth of the Gothic Novel")
 
   # 4. Display or Save
+  # remember, anything with a # in front of it is a comment,
+  # so in this example, you'd remove the # in front of plt.savefig
   plt.show() 
   # plt.savefig("gothic_trends.png", dpi=300) # dpi=300 ensures it's clear for print
+
+  # 5. Memory
+  # You'll notice in the code in the sandbox this line:
+  # plt.clf()
+  # That means 'clear figure' and it's good practice for us _in this sandbox_ to make sure that our canvas is clear and ready for the next plot. On your own computer you won't generally need this.
   \`\`\`
 
   ---
@@ -2303,11 +2311,18 @@ print(tokens)`,
         title: 'Prepare Data for a Plot',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `# 1. Create a list called 'labels' with these 3 titles: 
+        starterCode: `# load the library you'll use
+  import matplotlib.pyplot as plt
+
+  #intialize the plot canvas
+  plt.clf()
+  
+  # 1. Create a list called 'labels' with these 3 titles: 
   #    'Frankenstein', 'Dracula', 'Jane Eyre'
   # 2. Create a list called 'word_counts' with these 3 integers: 
   #    75000, 160000, 180000
   # 3. Print both lists to verify they match in order
+  # 4. Plot the data as a bar plot. 
 
   # Your code here
   `,
@@ -2316,11 +2331,17 @@ print(tokens)`,
           'Ensure the order of counts matches the order of the titles.',
           'Strings need quotes; integers do not.',
           'Use two separate print statements.',
+          'plot the barchart with the labels, data',
+          'Show your plot: plt.show()'
         ],
-        solution: `labels = ['Frankenstein', 'Dracula', 'Jane Eyre']
+        solution: `import matplotlib.pyplot as plt
+  plt.clf()
+  labels = ['Frankenstein', 'Dracula', 'Jane Eyre']
   word_counts = [75000, 160000, 180000]
   print(labels)
-  print(word_counts)`,
+  print(word_counts)
+  plt.bar(labels, word_counts)
+  plt.show()`,
       },
     ],
   },
@@ -2350,6 +2371,7 @@ print(tokens)`,
 
   \`\`\`python
   import matplotlib.pyplot as plt
+  plt.clf()
 
   # List all available styles: print(plt.style.available)
   plt.style.use('fivethirtyeight') 
@@ -2407,7 +2429,7 @@ print(tokens)`,
   :::
   `,
     challenges: [
-      {
+            {
         id: 'data-viz-03-c1',
         title: 'Generate a Summary for a Title',
         language: 'python',
@@ -2432,6 +2454,20 @@ print(tokens)`,
         solution: `data = {"Gothic": 15, "Romance": 22, "Adventure": 8}
   total = sum(data.values())
   print(f"Total: {total}")`,
+      },
+      {
+        id: 'data-viz-03-c2',
+        title: 'Style a Visualization',
+        language: 'python',
+        difficulty: 'intermediate',
+        "starterCode": "import matplotlib.pyplot as plt\n\nplt.clf()\n\ndata = {\"Gothic\": 15, \"Romance\": 22, \"Adventure\": 8}\ngenres = list(data.keys())\ncounts = list(data.values())\n\n# 1. Set the style to 'fivethirtyeight'\n# 2. Calculate the sum of counts for a dynamic title\n# 3. Create the bar chart and set the title to: \"Corpus (Total: X)\"\n# 4. Use plt.show()\n\n# Your code here\n",
+        "expectedOutput": "plt.show() called",
+        "hints": [
+          "Use plt.style.use('fivethirtyeight').",
+          "total = sum(counts) will give you the number for your title.",
+          "Use an f-string for the title: plt.title(f'Corpus (Total: {total})')"
+        ],
+        "solution": "import matplotlib.pyplot as plt\n\nplt.clf()\n\ndata = {\"Gothic\": 15, \"Romance\": 22, \"Adventure\": 8}\ngenres = list(data.keys())\ncounts = list(data.values())\n\nplt.style.use('fivethirtyeight')\ntotal = sum(counts)\n\nplt.bar(genres, counts)\nplt.title(f'Corpus (Total: {total})')\nplt.show()"
       },
     ],
   },
@@ -2535,6 +2571,20 @@ print(tokens)`,
   top_words = counts.most_common(2)
 
   print(top_words)`,
+      },
+            {
+        "id": "data-viz-04-c2",
+        "title": "Plotting Most Common Words",
+        "language": "python",
+        "difficulty": "intermediate",
+        "starterCode": "import matplotlib.pyplot as plt\nplt.clf()\nfrom collections import Counter\n\ntext = \"whale whale whale sea sea ship ship ship ship sea sea\"\ncounts = Counter(text.split())\ntop_words = counts.most_common(3)\n\n# 1. Use list comprehension to 'unzip' top_words into two lists:\n#    words (the strings) and freqs (the integers)\n# 2. Create a bar chart\n# 3. Add a Y-axis label: \"Frequency\"\n\n# Your code here\n",
+        "expectedOutput": "plt.show() called",
+        "hints": [
+          "words = [item[0] for item in top_words] extracts the labels.",
+          "freqs = [item[1] for item in top_words] extracts the counts.",
+          "Use plt.ylabel('Frequency') for the axis label."
+        ],
+        "solution": "import matplotlib.pyplot as plt\nplt.clf()\nfrom collections import Counter\n\ntext = \"whale whale whale sea sea ship ship ship ship sea sea\"\ncounts = Counter(text.split())\ntop_words = counts.most_common(3)\n\nwords = [item[0] for item in top_words]\nfreqs = [item[1] for item in top_words]\n\nplt.bar(words, freqs)\nplt.ylabel('Frequency')\nplt.title('Top Word Frequencies')\nplt.show()"
       },
     ],
   },
@@ -3679,8 +3729,39 @@ print(tokens)`,
       },
     ],
   },
+   {
+    "id": "data-viz-05",
+    "title": "The Capstone: Comparative Visualization",
+    "moduleId": "data-visualization",
+    "prerequisites": ["data-viz-04"],
+    "estimatedTimeMinutes": 45,
+    "difficulty": "intermediate",
+    "learningObjectives": [
+      "Execute a full DH visualization workflow",
+      "Compare two datasets side-by-side using subplots",
+      "Apply aesthetic and ethical principles to a final product"
+    ],
+    "keywords": ["subplots", "comparative-analysis", "capstone"],
+    "content": "# Final Project: Comparing Narratives\n\nIn this final step, we combine everything. We will compare the 'thematic weight' of two different text snippets using side-by-side subplots. This is the foundation of **Stylometry** and **Comparative Literature** in the digital age.\n\n### The Workflow:\n1. **Clean**: Lowercase the text so 'The' and 'the' are counted together.\n2. **Count**: Use `Counter` to find the most frequent terms.\n3. **Layout**: Use `plt.subplots(1, 2)` to create a comparative view.\n4. **Refine**: Add labels, styles, and titles to make the 'argument' clear.\n",
+    "challenges": [
+      {
+        "id": "data-viz-05-c1",
+        "title": "The Comparative Capstone",
+        "language": "python",
+        "difficulty": "advanced",
+        "starterCode": "import matplotlib.pyplot as plt\nplt.clf()\nfrom collections import Counter\n\n# Two snippets of DH 'capta'\ntext_a = \"ghostly mystery ghost mystery shadow ghost\"\ntext_b = \"reason logic logic evidence reason logic\"\n\n# Goal: Create a 1x2 subplot comparing the top 2 words of each text\n# 1. Process text_a and text_b (split and count top 2)\n# 2. Create fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))\n# 3. Plot text_a on ax1 and text_b on ax2\n# 4. Set titles for each: \"Gothic Terms\" and \"Scientific Terms\"\n\n# Your code here\n",
+        "expectedOutput": "plt.show() called",
+        "hints": [
+          "Remember to unzip the tuples for each text separately.",
+          "Use ax1.bar() instead of plt.bar() when working with subplots.",
+          "Use plt.tight_layout() before plt.show() to keep things tidy."
+        ],
+        "solution": "import matplotlib.pyplot as plt\nplt.clf()\nfrom collections import Counter\n\ntext_a = \"ghostly mystery ghost mystery shadow ghost\"\ntext_b = \"reason logic logic evidence reason logic\"\n\n# Process A\ncounts_a = Counter(text_a.split()).most_common(2)\nwords_a = [i[0] for i in counts_a]\nfreqs_a = [i[1] for i in counts_a]\n\n# Process B\ncounts_b = Counter(text_b.split()).most_common(2)\nwords_b = [i[0] for i in counts_b]\nfreqs_b = [i[1] for i in counts_b]\n\n# Plot\nfig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))\n\nax1.bar(words_a, freqs_a, color='purple')\nax1.set_title('Gothic Terms')\n\nax2.bar(words_b, freqs_b, color='green')\ax2.set_title('Scientific Terms')\n\nplt.tight_layout()\nplt.show()"
+      }
+    ]
+  },
   {
-    id: 'data-viz-05',
+    id: 'data-viz-06',
     title: 'Creating Timelines from Historical Data',
     moduleId: 'data-visualization',
     prerequisites: ['data-viz-02'],
@@ -3749,12 +3830,25 @@ print(tokens)`,
   **The Running Maximum**: To find the "longest gap," you initialize a variable at 0. As you loop through the gaps, you check: *"Is this current gap bigger than my record?"* If yes, you update your record. This is a fundamental pattern in data analysis.
   :::
 
+  ## 5. Visualizing the Timeline (The Stem Plot)
+  To turn our list of events into a "nice" plot, we use a **Stem Plot** approach. Instead of just putting dots on a line, we draw vertical "stems" of different heights. This staggers the text so the labels don't overlap.
+
+  Key Matplotlib functions for timelines:
+  - \`plt.axhline(0)\`: Draws the horizontal "clothesline."
+  - \`plt.text(x, y, label)\`: Places the event title at a specific year (x) and height (y).
+  - \`plt.vlines(x, 0, y)\`: Draws the vertical stem connecting the line to the text.
+
+  :::tip
+  To stagger labels automatically, you can use the "Modulo" operator (\`%\`). 
+  If you have a list of heights like \`[1, -1, 2, -2]\`, the code \`heights[i % 4]\` will cycle through those four heights repeatedly as you loop through your events.
+  :::
+
   :::challenge
-  In the first challenge, you will sort a list of literary milestones. In the second, you will identify the "Great Silence"—the longest gap between any two publications in the list.
+  In the first challenge, you will sort a list of literary milestones. In the second, you will identify the "Great Silence"—the longest gap between any two publications in the list. In the third, you'll plot a timeline.
   :::`,
     challenges: [
       {
-        id: 'data-viz-05-c1',
+        id: 'data-viz-06-c1',
         title: 'Build a Sorted Timeline',
         language: 'python',
         difficulty: 'intermediate',
@@ -3796,7 +3890,7 @@ print(tokens)`,
       print(f"{e['year']} - {e['event']}")`,
       },
       {
-        id: 'data-viz-05-c2',
+        id: 'data-viz-06-c2',
         title: 'Compute the Longest Gap',
         language: 'python',
         difficulty: 'intermediate',
@@ -3856,213 +3950,96 @@ print(tokens)`,
   # Step 5: Final report
   print(f"Longest gap: {max_gap} years ({start_year} to {end_year})")`,
       },
-    ],
-  },
-  {
-    id: 'data-viz-06',
-    title: 'Mapping Historical Data',
-    moduleId: 'data-visualization',
-    prerequisites: ['data-viz-02'],
-    estimatedTimeMinutes: 40,
-    difficulty: 'intermediate',
-    learningObjectives: [
-      'Represent geographic locations as coordinate data (latitude/longitude) in Python',
-      'Understand the Haversine formula for calculating distance on a sphere',
-      'Execute nested loops to compare spatial relationships between multiple points',
-      'Summarize geographic distributions using Counter objects'
-    ],
-    keywords: ['mapping', 'geographic', 'coordinates', 'spatial', 'geolocation', 'haversine'],
-    content: `# Mapping Historical Data
-
-  ## The Detective's Pin Board
-  Think of a **pin board** in a detective's office. Each pin marks a location—a crime scene, a witness's home, or a suspect's workplace. Strings connect the pins to show relationships and movement. 
-
-  In the Digital Humanities, we do this with thousands of historical events: the birthplaces of authors in a movement, the locations of every printing press in 18th-century Europe, or the stops along a trade route. **Geographic analysis** lets you find spatial patterns—like clusters of activity or vast "silences"—that are invisible in a simple table of names.
-
-  ---
-
-  ## 1. Coordinates as Data
-  Every location on Earth is described by two numbers: **Latitude** (North-South) and **Longitude** (East-West). In DH, we store these as "Decimal Degrees."
-
-  \`\`\`python
-  locations = [
-      {"place": "London", "lat": 51.5074, "lon": -0.1278},
-      {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
-  ]
-
-  # Accessing longitude:
-  print(locations[0]["lon"]) # Output: -0.1278
-  \`\`\`
-
-  :::definition
-  **Geocoding**: The process of converting place names (like "Bath, England") into coordinates (51.38, -2.36). Most historical datasets require this cleaning step before you can map them.
-  :::
-
-  ---
-
-  ## 2. Measuring Distance (The Haversine Formula)
-  Because the Earth is a sphere, we can't use a simple ruler to measure the distance between two points. We use the **Haversine formula**, which accounts for the curvature of the planet.
-
-  In Python, we use the \`math\` library to convert our degrees into **radians** before doing the calculation.
-
-  \`\`\`python
-  import math
-
-  def haversine(lat1, lon1, lat2, lon2):
-      R = 6371  # Earth's radius in kilometers
-      # ... (Math happens here) ...
-      return distance_in_km
-  \`\`\`
-
-  ---
-
-  ## 3. Comparing Every Pair (Nested Loops)
-  To find the "Closest Pair" in a list of cities, we have to compare every city to every other city. We use a **Nested Loop**:
-  - The **Outer Loop** picks the first city.
-  - The **Inner Loop** iterates through all the *remaining* cities.
-
-  \`\`\`python
-  for i in range(len(locations)):
-      for j in range(i + 1, len(locations)):
-          # Compare locations[i] and locations[j]
-  \`\`\`
-
-  ---
-
-  ## 4. Grouping by Region
-  Just as we group temporal data by decade, we group spatial data by country or city to see where "power centers" of culture lie. 
-
-  :::tip
-  **Spatial Ethics**: Remember that coordinates suggest a precision that historical records often lack. If a 17th-century letter is labeled "South of the River," placing a pin at a specific coordinate is a scholarly *interpretation*, not a neutral fact.
-  :::
-
-  :::challenge
-  In the first challenge, use nested loops to calculate the distances between four literary cities and find which two are closest. In the second, summarize the geography of a publishing dataset.
-  :::`,
-    challenges: [
       {
-        id: 'data-viz-06-c1',
-        title: 'Compute Distances Between Literary Locations',
-        language: 'python',
-        difficulty: 'intermediate',
-        starterCode: `import math
+  id: 'data-viz-06-c3',
+  title: 'Plotting the Timeline',
+  language: 'python',
+  difficulty: 'intermediate',
+  starterCode: `import matplotlib.pyplot as plt
 
-  def haversine(lat1, lon1, lat2, lon2):
-      R = 6371
-      dlat = math.radians(lat2 - lat1)
-      dlon = math.radians(lon2 - lon1)
-      a = (math.sin(dlat / 2) ** 2 +
-           math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
-           math.sin(dlon / 2) ** 2)
-      return round(R * 2 * math.asin(math.sqrt(a)))
+# 1. Clear the figure to start fresh
+plt.clf()
 
-  locations = [
-      {"place": "London", "lat": 51.5074, "lon": -0.1278},
-      {"place": "Bath", "lat": 51.3758, "lon": -2.3599},
-      {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
-      {"place": "Geneva", "lat": 46.2044, "lon": 6.1432},
-  ]
+events = [
+    {"year": 1813, "title": "Pride & Prejudice"},
+    {"year": 1818, "title": "Frankenstein"},
+    {"year": 1847, "title": "Jane Eyre"},
+    {"year": 1851, "title": "Moby-Dick"},
+    {"year": 1859, "title": "Two Cities"},
+    {"year": 1891, "title": "Tess"}
+]
 
-  # Goal: Compare every location to every location AFTER it in the list.
-  # 1. Print: "<Place A> to <Place B>: <dist> km"
-  # 2. Track the minimum distance found
-  # 3. Print: "Closest: <A> and <B> (<dist> km)"
+# A list of heights to stagger our labels
+levels = [1, -1, 1.5, -1.5]
 
-  # Your code here
-  `,
-        expectedOutput: 'London to Bath: 150 km\nLondon to Edinburgh: 534 km\nLondon to Geneva: 747 km\nBath to Edinburgh: 562 km\nBath to Geneva: 814 km\nEdinburgh to Geneva: 1082 km\nClosest: London and Bath (150 km)',
-        hints: [
-          'Use nested loops: for i in range(len(locations)) and for j in range(i + 1, len(locations)).',
-          'Set min_dist = float("inf") at the start so any first distance will be smaller than it.',
-          'Access the data using locations[i]["lat"], etc.'
-        ],
-        solution: `import math
+# Draw the baseline
+plt.axhline(0, color="black", linewidth=2)
 
-  def haversine(lat1, lon1, lat2, lon2):
-      R = 6371
-      dlat = math.radians(lat2 - lat1)
-      dlon = math.radians(lon2 - lon1)
-      a = (math.sin(dlat / 2) ** 2 +
-           math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
-           math.sin(dlon / 2) ** 2)
-      return round(R * 2 * math.asin(math.sqrt(a)))
+# 2. Complete the loop to draw stems and labels
+for i, e in enumerate(events):
+    year = e["year"]
+    title = e["title"]
+    
+    # Use the modulo operator (%) to cycle through the 'levels' list
+    # replace the ???
+    h = levels[???]
+    
+    # Draw a vertical line (stem) from the year on the axis (0) to height (h); replace the ???
+    plt.vlines(year, 0, ???, color="gray", linestyle="--")
+    
+    # Add the text label at the top/bottom of the stem
+    # Syntax: plt.text(x_position, y_position, string_to_print)
+    plt.text(year, h, ???, ha='center')
 
-  locations = [
-      {"place": "London", "lat": 51.5074, "lon": -0.1278},
-      {"place": "Bath", "lat": 51.3758, "lon": -2.3599},
-      {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
-      {"place": "Geneva", "lat": 46.2044, "lon": 6.1432},
-  ]
+# 3. Final cleanup
+plt.ylim(-2, 2)
+plt.title("Literary Milestones Timeline")
+plt.yticks([]) # Remove Y-axis numbers for a cleaner look
+plt.show()`,
+  expectedOutput: "plt.show() called",
+  hints: [
+    "To cycle through the levels using index 'i', use: i % len(levels)",
+    "For plt.vlines, the three required arguments here are the year, the start (0), and the end height (h).",
+    "In the plt.text function, the third argument should be the 'title' variable you extracted from the dictionary."
+  ],
+  solution: `import matplotlib.pyplot as plt
 
-  min_dist = float("inf")
-  closest_pair = ""
+plt.clf()
 
-  for i in range(len(locations)):
-      for j in range(i + 1, len(locations)):
-          loc1 = locations[i]
-          loc2 = locations[j]
-          d = haversine(loc1["lat"], loc1["lon"], loc2["lat"], loc2["lon"])
-          print(f"{loc1['place']} to {loc2['place']}: {d} km")
-          
-          if d < min_dist:
-              min_dist = d
-              closest_pair = f"{loc1['place']} and {loc2['place']}"
+events = [
+    {"year": 1813, "title": "Pride & Prejudice"},
+    {"year": 1818, "title": "Frankenstein"},
+    {"year": 1847, "title": "Jane Eyre"},
+    {"year": 1851, "title": "Moby-Dick"},
+    {"year": 1859, "title": "Two Cities"},
+    {"year": 1891, "title": "Tess"}
+]
 
-  print(f"Closest: {closest_pair} ({min_dist} km)")`,
-      },
-      {
-        id: 'data-viz-06-c2',
-        title: 'Count Locations by Region',
-        language: 'python',
-        difficulty: 'beginner',
-        starterCode: `from collections import Counter
+levels = [1, -1, 1.5, -1.5]
 
-  publishers = [
-      {"city": "London", "country": "England"},
-      {"city": "Edinburgh", "country": "Scotland"},
-      {"city": "London", "country": "England"},
-      {"city": "Paris", "country": "France"},
-      {"city": "London", "country": "England"},
-      {"city": "Dublin", "country": "Ireland"},
-      {"city": "Paris", "country": "France"},
-      {"city": "Edinburgh", "country": "Scotland"},
-  ]
+plt.axhline(0, color="black", linewidth=2)
 
-  # 1. Use a Counter to count publications per country
-  # 2. Print alphabetical results: "<country>: <count>"
-  # 3. Print the most common country
+for i, e in enumerate(events):
+    year = e["year"]
+    title = e["title"]
+    
+    # Calculate height by cycling through levels
+    h = levels[i % len(levels)]
+    
+    # Draw stem
+    plt.vlines(year, 0, h, color="gray", linestyle="--")
+    
+    # Draw point on the line
+    plt.scatter(year, 0, color="red", zorder=3)
+    
+    # Add label
+    plt.text(year, h, title, ha='center')
 
-  # Your code here
-  `,
-        expectedOutput: 'England: 3\nFrance: 2\nIreland: 1\nScotland: 2\nMost publications: England',
-        hints: [
-          'To get the country names for the Counter, use (p["country"] for p in publishers).',
-          'Use sorted(counts.items()) to handle the alphabetical requirement.',
-          'The most common country is counts.most_common(1)[0][0].'
-        ],
-        solution: `from collections import Counter
-
-  publishers = [
-      {"city": "London", "country": "England"},
-      {"city": "Edinburgh", "country": "Scotland"},
-      {"city": "London", "country": "England"},
-      {"city": "Paris", "country": "France"},
-      {"city": "London", "country": "England"},
-      {"city": "Dublin", "country": "Ireland"},
-      {"city": "Paris", "country": "France"},
-      {"city": "Edinburgh", "country": "Scotland"},
-  ]
-
-  # Count
-  counts = Counter(p["country"] for p in publishers)
-
-  # Sort and print
-  for country, count in sorted(counts.items()):
-      print(f"{country}: {count}")
-
-  # Print winner
-  print(f"Most publications: {counts.most_common(1)[0][0]}")`,
-      },
+plt.ylim(-2, 2)
+plt.title("Literary Milestones Timeline")
+plt.yticks([])
+plt.show()`
+},
     ],
   },
   {
@@ -4705,6 +4682,213 @@ print(tokens)`,
 
   # 1 Base Layer + 2 Markers = 3
   print(len(m._children))`,
+      },
+    ],
+  },
+   {
+    id: 'geospatial-05',
+    title: 'Mapping Historical Data',
+    moduleId: 'geospatial-analysis',
+    prerequisites: ['data-viz-02'],
+    estimatedTimeMinutes: 40,
+    difficulty: 'intermediate',
+    learningObjectives: [
+      'Represent geographic locations as coordinate data (latitude/longitude) in Python',
+      'Understand the Haversine formula for calculating distance on a sphere',
+      'Execute nested loops to compare spatial relationships between multiple points',
+      'Summarize geographic distributions using Counter objects'
+    ],
+    keywords: ['mapping', 'geographic', 'coordinates', 'spatial', 'geolocation', 'haversine'],
+    content: `# Mapping Historical Data
+
+  ## The Detective's Pin Board
+  Think of a **pin board** in a detective's office. Each pin marks a location—a crime scene, a witness's home, or a suspect's workplace. Strings connect the pins to show relationships and movement. 
+
+  In the Digital Humanities, we do this with thousands of historical events: the birthplaces of authors in a movement, the locations of every printing press in 18th-century Europe, or the stops along a trade route. **Geographic analysis** lets you find spatial patterns—like clusters of activity or vast "silences"—that are invisible in a simple table of names.
+
+  ---
+
+  ## 1. Coordinates as Data
+  Every location on Earth is described by two numbers: **Latitude** (North-South) and **Longitude** (East-West). In DH, we store these as "Decimal Degrees."
+
+  \`\`\`python
+  locations = [
+      {"place": "London", "lat": 51.5074, "lon": -0.1278},
+      {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
+  ]
+
+  # Accessing longitude:
+  print(locations[0]["lon"]) # Output: -0.1278
+  \`\`\`
+
+  :::definition
+  **Geocoding**: The process of converting place names (like "Bath, England") into coordinates (51.38, -2.36). Most historical datasets require this cleaning step before you can map them.
+  :::
+
+  ---
+
+  ## 2. Measuring Distance (The Haversine Formula)
+  Because the Earth is a sphere, we can't use a simple ruler to measure the distance between two points. We use the **Haversine formula**, which accounts for the curvature of the planet.
+
+  In Python, we use the \`math\` library to convert our degrees into **radians** before doing the calculation.
+
+  \`\`\`python
+  import math
+
+  def haversine(lat1, lon1, lat2, lon2):
+      R = 6371  # Earth's radius in kilometers
+      # ... (Math happens here) ...
+      return distance_in_km
+  \`\`\`
+
+  ---
+
+  ## 3. Comparing Every Pair (Nested Loops)
+  To find the "Closest Pair" in a list of cities, we have to compare every city to every other city. We use a **Nested Loop**:
+  - The **Outer Loop** picks the first city.
+  - The **Inner Loop** iterates through all the *remaining* cities.
+
+  \`\`\`python
+  for i in range(len(locations)):
+      for j in range(i + 1, len(locations)):
+          # Compare locations[i] and locations[j]
+  \`\`\`
+
+  ---
+
+  ## 4. Grouping by Region
+  Just as we group temporal data by decade, we group spatial data by country or city to see where "power centers" of culture lie. 
+
+  :::tip
+  **Spatial Ethics**: Remember that coordinates suggest a precision that historical records often lack. If a 17th-century letter is labeled "South of the River," placing a pin at a specific coordinate is a scholarly *interpretation*, not a neutral fact.
+  :::
+
+  :::challenge
+  In the first challenge, use nested loops to calculate the distances between four literary cities and find which two are closest. In the second, summarize the geography of a publishing dataset.
+  :::`,
+    challenges: [
+      {
+        id: 'geospatial-05-c1',
+        title: 'Compute Distances Between Literary Locations',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import math
+
+  def haversine(lat1, lon1, lat2, lon2):
+      R = 6371
+      dlat = math.radians(lat2 - lat1)
+      dlon = math.radians(lon2 - lon1)
+      a = (math.sin(dlat / 2) ** 2 +
+           math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
+           math.sin(dlon / 2) ** 2)
+      return round(R * 2 * math.asin(math.sqrt(a)))
+
+  locations = [
+      {"place": "London", "lat": 51.5074, "lon": -0.1278},
+      {"place": "Bath", "lat": 51.3758, "lon": -2.3599},
+      {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
+      {"place": "Geneva", "lat": 46.2044, "lon": 6.1432},
+  ]
+
+  # Goal: Compare every location to every location AFTER it in the list.
+  # 1. Print: "<Place A> to <Place B>: <dist> km"
+  # 2. Track the minimum distance found
+  # 3. Print: "Closest: <A> and <B> (<dist> km)"
+
+  # Your code here
+  `,
+        expectedOutput: 'London to Bath: 150 km\nLondon to Edinburgh: 534 km\nLondon to Geneva: 747 km\nBath to Edinburgh: 562 km\nBath to Geneva: 814 km\nEdinburgh to Geneva: 1082 km\nClosest: London and Bath (150 km)',
+        hints: [
+          'Use nested loops: for i in range(len(locations)) and for j in range(i + 1, len(locations)).',
+          'Set min_dist = float("inf") at the start so any first distance will be smaller than it.',
+          'Access the data using locations[i]["lat"], etc.'
+        ],
+        solution: `import math
+
+  def haversine(lat1, lon1, lat2, lon2):
+      R = 6371
+      dlat = math.radians(lat2 - lat1)
+      dlon = math.radians(lon2 - lon1)
+      a = (math.sin(dlat / 2) ** 2 +
+           math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *
+           math.sin(dlon / 2) ** 2)
+      return round(R * 2 * math.asin(math.sqrt(a)))
+
+  locations = [
+      {"place": "London", "lat": 51.5074, "lon": -0.1278},
+      {"place": "Bath", "lat": 51.3758, "lon": -2.3599},
+      {"place": "Edinburgh", "lat": 55.9533, "lon": -3.1883},
+      {"place": "Geneva", "lat": 46.2044, "lon": 6.1432},
+  ]
+
+  min_dist = float("inf")
+  closest_pair = ""
+
+  for i in range(len(locations)):
+      for j in range(i + 1, len(locations)):
+          loc1 = locations[i]
+          loc2 = locations[j]
+          d = haversine(loc1["lat"], loc1["lon"], loc2["lat"], loc2["lon"])
+          print(f"{loc1['place']} to {loc2['place']}: {d} km")
+          
+          if d < min_dist:
+              min_dist = d
+              closest_pair = f"{loc1['place']} and {loc2['place']}"
+
+  print(f"Closest: {closest_pair} ({min_dist} km)")`,
+      },
+      {
+        id: 'geospatial-05-c2',
+        title: 'Count Locations by Region',
+        language: 'python',
+        difficulty: 'beginner',
+        starterCode: `from collections import Counter
+
+  publishers = [
+      {"city": "London", "country": "England"},
+      {"city": "Edinburgh", "country": "Scotland"},
+      {"city": "London", "country": "England"},
+      {"city": "Paris", "country": "France"},
+      {"city": "London", "country": "England"},
+      {"city": "Dublin", "country": "Ireland"},
+      {"city": "Paris", "country": "France"},
+      {"city": "Edinburgh", "country": "Scotland"},
+  ]
+
+  # 1. Use a Counter to count publications per country
+  # 2. Print alphabetical results: "<country>: <count>"
+  # 3. Print the most common country
+
+  # Your code here
+  `,
+        expectedOutput: 'England: 3\nFrance: 2\nIreland: 1\nScotland: 2\nMost publications: England',
+        hints: [
+          'To get the country names for the Counter, use (p["country"] for p in publishers).',
+          'Use sorted(counts.items()) to handle the alphabetical requirement.',
+          'The most common country is counts.most_common(1)[0][0].'
+        ],
+        solution: `from collections import Counter
+
+  publishers = [
+      {"city": "London", "country": "England"},
+      {"city": "Edinburgh", "country": "Scotland"},
+      {"city": "London", "country": "England"},
+      {"city": "Paris", "country": "France"},
+      {"city": "London", "country": "England"},
+      {"city": "Dublin", "country": "Ireland"},
+      {"city": "Paris", "country": "France"},
+      {"city": "Edinburgh", "country": "Scotland"},
+  ]
+
+  # Count
+  counts = Counter(p["country"] for p in publishers)
+
+  # Sort and print
+  for country, count in sorted(counts.items()):
+      print(f"{country}: {count}")
+
+  # Print winner
+  print(f"Most publications: {counts.most_common(1)[0][0]}")`,
       },
     ],
   },

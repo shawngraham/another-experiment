@@ -123,6 +123,7 @@ export const modules: ModuleDefinition[] = [
     'geospatial-02', // Intro to GeoPandas
     'geospatial-03', // Plotting points on maps
     'geospatial-04', // Creating interactive maps with Folium
+    'geospatial-05', // Manipulating geodata
   ],
   track: 'spatial-relational',
   disciplines: ['history', 'archaeology', 'anthropology', 'classics', 'religious-studies'],
