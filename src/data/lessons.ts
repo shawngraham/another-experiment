@@ -185,7 +185,7 @@ The backbone of scholarly digital editions. Using the **TEI (Text Encoding Initi
 | **XML** | Hierarchical | Complex Encoding | Scholarly Digital Editions |
 
 :::try-it
-In the challenge at right, we use the \`csv\` module. Because we are working with a "string" of text rather than an actual file on your hard drive, we use \`io.StringIO\` to trick Python into treating that text like an open file.
+In the challenge in the sandbox, we use the \`csv\` module. Because we are working with a "string" of text rather than an actual file on your hard drive, we use \`io.StringIO\` to trick Python into treating that text like an open file.
 :::
 `,
   challenges: [
@@ -414,7 +414,7 @@ Sometimes you need to treat a number like a string (for example, to print it as 
 :::
 
 :::try-it
-In the challenge at right, remember that when you use \`print(type(variable_name))\`, Python will output the "class" of that variable (e.g., \`<class 'str'>\`).
+In the challenge in the sandbox, remember that when you use \`print(type(variable_name))\`, Python will output the "class" of that variable (e.g., \`<class 'str'>\`).
 :::
 `,
   challenges: [
@@ -634,7 +634,7 @@ for y in years:
 \`\`\`
 
 :::try-it
-Look at the challenge below. You will need to "nest" an \`if\` statement inside a \`for\` loop. Make sure your \`if\` is indented once, and your \`print\` is indented twice!
+Look at the challenge in the sandbox. You will need to "nest" an \`if\` statement inside a \`for\` loop. Make sure your \`if\` is indented once, and your \`print\` is indented twice!
 :::
 `,
   challenges: [
@@ -715,7 +715,7 @@ Think of a function like a specialized machine in a library:
 ---
 
 ## 3. A Handy DH Tool: \`.split()\`
-In the challenge at right, you need to count words. In Python, you can turn a long string of text into a **List of words** using the \`.split()\` method.
+In the challenge in the sandbox, you need to count words. In Python, you can turn a long string of text into a **List of words** using the \`.split()\` method.
 
 \`\`\`python
 sentence = "Digital Humanities is great"
@@ -838,7 +838,7 @@ As a DH researcher, you will often work with historical texts or data from inter
 :::
 
 :::try-it
-In the challenge at right, you will perform two steps. First, you will "Save" some data to a file. Then, in a second block, you will "Open" it back up to prove it was saved correctly.
+In the challenge in the sandbox, you will perform two steps. First, you will "Save" some data to a file. Then, in a second block, you will "Open" it back up to prove it was saved correctly.
 :::
 `,
   challenges: [
@@ -951,7 +951,7 @@ Think of method chaining like a factory assembly line. Each method takes the out
 :::
 
 :::challenge
-Text analysis usually begins with a "word count." In the challenge at right, use what you've learned about splitting strings to create a basic word counter.
+Text analysis usually begins with a "word count." In the challenge in the sandbox, use what you've learned about splitting strings to create a basic word counter.
 :::
 `,
   challenges: [
@@ -1054,7 +1054,7 @@ Historical documents often have "scannos" (OCR errors). Regex can find them!
 - **Action**: You can then use \`re.sub()\` to replace all those "l"s with "1"s across thousands of files.
 
 :::try-it
-Regex is a language of its own. In the challenge at right, combine the digit symbol (\`\\d\`) with the quantifier for "exactly four" (\`{4}\`) to extract dates from a string.
+Regex is a language of its own. In the challenge in the sandbox, combine the digit symbol (\`\\d\`) with the quantifier for "exactly four" (\`{4}\`) to extract dates from a string.
 :::
 `,
   challenges: [
@@ -1159,7 +1159,7 @@ print(years)`,
   :::
 
   :::challenge
-  In the challenge at right, you will analyze a famous line of Shakespeare. You need to turn the string into a list of words, then use \`Counter\` to rank them.
+  In the challenge in the sandbox, you will analyze a famous line of Shakespeare. You need to turn the string into a list of words, then use \`Counter\` to rank them.
   :::
   `,
     challenges: [
@@ -1268,7 +1268,7 @@ print(years)`,
   :::
 
   :::challenge
-  In the challenge at right, you will process a famous quote. You must normalize the text (lower case and no punctuation) before using \`set()\` to find the unique word count.
+  In the challenge in the sandbox, you will process a famous quote. You must normalize the text (lower case and no punctuation) before using \`set()\` to find the unique word count.
   :::
   `,
     challenges: [
@@ -1526,7 +1526,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  In the challenge at right, you will build a basic sentiment engine. You'll need to split a sentence into words, check each word against a provided lexicon, and keep a running total of the score.
+  In the challenge in the sandbox, you will build a basic sentiment engine. You'll need to split a sentence into words, check each word against a provided lexicon, and keep a running total of the score.
   :::
   `,
     challenges: [
@@ -1627,7 +1627,7 @@ print(tokens)`,
   ---
 
   ## 3. The \`io.StringIO\` Trick
-  In the sandbox challenge below, we don't have a physical file on a hard drive. Instead, we have a "string" of data. To use the \`csv\` module on a string, we use \`io.StringIO\`. 
+  In the sandbox challenge in the sandbox, we don't have a physical file on a hard drive. Instead, we have a "string" of data. To use the \`csv\` module on a string, we use \`io.StringIO\`. 
 
   Think of \`io.StringIO\` as a "virtual file" that lets Python treat a block of text as if it were a \`.csv\` file you just opened.
 
@@ -1759,7 +1759,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  In the challenge at right, you will practice creating a DataFrame from scratch. Remember that the **Keys** of your dictionary become the **Column Headers**, and the **Lists** become the **Rows**.
+  In the challenge in the sandbox, you will practice creating a DataFrame from scratch. Remember that the **Keys** of your dictionary become the **Column Headers**, and the **Lists** become the **Rows**.
   :::
   `,
     challenges: [
@@ -1868,7 +1868,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  In the challenge at right, you are given a list of dictionaries representing archival records. Use a list comprehension to filter for records where the year is greater than 1850.
+  In the challenge in the sandbox, you are given a list of dictionaries representing archival records. Use a list comprehension to filter for records where the year is greater than 1850.
   :::
   `,
     challenges: [
@@ -1980,7 +1980,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  In the challenge at right, you are given a list of tuples. Each tuple contains a **genre** and a **title**. Your goal is to manually count how many books belong to the 'Gothic' genre using the dictionary method.
+  In the challenge in the sandbox, you are given a list of tuples. Each tuple contains a **genre** and a **title**. Your goal is to manually count how many books belong to the 'Gothic' genre using the dictionary method.
   :::
   `,
     challenges: [
@@ -2094,7 +2094,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  In the challenge at right, look closely at the "chapters" key. It contains a list. To get to the second chapter, you must first index the list, then access the dictionary key inside it.
+  In the challenge in the sandbox, look closely at the "chapters" key. It contains a list. To get to the second chapter, you must first index the list, then access the dictionary key inside it.
   :::
   `,
     challenges: [
@@ -2294,7 +2294,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  Every plot starts with two matching lists: the **Labels** (X) and the **Values** (Y). In the challenge at right, prepare the data needed to compare the lengths of three famous DH texts.
+  Every plot starts with two matching lists: the **Labels** (X) and the **Values** (Y). In the challenge in the sandbox, prepare the data needed to compare the lengths of three famous DH texts.
   :::
   `,
     challenges: [
@@ -2403,7 +2403,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  In the challenge at right, you will practice generating a dynamic title. This is a vital skill for automated reporting, where your script might analyze a new folder of books every day.
+  In the challenge in the sandbox, you will practice generating a dynamic title. This is a vital skill for automated reporting, where your script might analyze a new folder of books every day.
   :::
   `,
     challenges: [
@@ -2497,7 +2497,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  Before you can create a chart, you must be able to extract the frequency data correctly. In the challenge at right, use the \`Counter\` object to find the most frequent words in a short string.
+  Before you can create a chart, you must be able to extract the frequency data correctly. In the challenge in the sandbox, use the \`Counter\` object to find the most frequent words in a short string.
   :::
   `,
     challenges: [
@@ -2609,7 +2609,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  While we usually use libraries to "strip" HTML, it is important to remember that HTML is ultimately just a string of text. In the challenge at right, use your string manipulation skills to extract the human-readable text from a raw HTML tag.
+  While we usually use libraries to "strip" HTML, it is important to remember that HTML is ultimately just a string of text. In the challenge in the sandbox, use your string manipulation skills to extract the human-readable text from a raw HTML tag.
   :::
   `,
     challenges: [
@@ -2705,7 +2705,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  In the challenge at right, you are given a string that represents a \`robots.txt\` file. Your goal is to find the line that starts with "Disallow" and extract the path.
+  In the challenge in the sandbox, you are given a string that represents a \`robots.txt\` file. Your goal is to find the line that starts with "Disallow" and extract the path.
   :::
   `,
     challenges: [
@@ -2813,7 +2813,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  In the challenge at right, you will simulate receiving data from an API. You will need to parse the JSON string and use a loop to extract specific book titles.
+  In the challenge in the sandbox, you will simulate receiving data from an API. You will need to parse the JSON string and use a loop to extract specific book titles.
   :::
   `,
     challenges: [
@@ -3289,7 +3289,7 @@ print(tokens)`,
   ---
 
   ## 3. The Problem of "The": Stopwords
-  In the challenge at right, you will find shared words between two sentences. You will notice that common words like "the" appear in both. In real topic modeling, these are called **Stopwords**. Because they appear in *every* document, they don't help the computer distinguish between topics. Most researchers remove them before running a model.
+  In the challenge in the sandbox, you will find shared words between two sentences. You will notice that common words like "the" appear in both. In real topic modeling, these are called **Stopwords**. Because they appear in *every* document, they don't help the computer distinguish between topics. Most researchers remove them before running a model.
 
   ---
 
@@ -3414,7 +3414,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  In the challenge at right, you will act as the "strainer." You must take a list of tokens and filter them by two criteria: they must not be in the stopword list, and they must be longer than 3 characters.
+  In the challenge in the sandbox, you will act as the "strainer." You must take a list of tokens and filter them by two criteria: they must not be in the stopword list, and they must be longer than 3 characters.
   :::`,
     challenges: [
       {
@@ -3638,7 +3638,7 @@ print(tokens)`,
   :::
 
   :::challenge
-  Gensim outputs topics as a single string of math. In the challenge at right, you will use Python's string tools to "snip out" the most important word (the first one) from a topic string.
+  Gensim outputs topics as a single string of math. In the challenge in the sandbox, you will use Python's string tools to "snip out" the most important word (the first one) from a topic string.
   :::`,
     challenges: [
       {
@@ -8502,7 +8502,7 @@ plt.show()
 
 ## Analogy
 
-Imagine you are a librarian in 1850 deciding how to organize a new collection of books. You must choose headings: does a book about enslaved people's songs belong under "Music," "Negro Life," or "Folklore"? Each choice makes certain questions easy to ask and others nearly invisible. A researcher browsing "Music" would find the book; one browsing "Labor History" would not. The shelf is not a neutral container -- it is an argument about what matters.
+Imagine you are a librarian deciding how to organize a new collection of books. You must choose headings: does a book about popular songs of the 1870s belong under "Music" or "Folklore"? Each choice makes certain questions easy to ask and others nearly invisible. A researcher browsing "Music" would find the book; one browsing "Labor History" would not. The shelf is not a neutral container -- it is an argument about what matters.
 
 Data works the same way. Every dataset begins with a choice about categories, and those categories determine what the data can and cannot tell us.
 
@@ -8604,8 +8604,6 @@ This is not merely a technical issue. When historical archives categorize people
 - **Library subject headings** that used "illegal aliens" instead of "undocumented immigrants" shaped how researchers found material about migration.
 - **Museum catalogs** that listed Indigenous artifacts under "Primitive Art" reflected colonial hierarchies.
 - **Genre labels** that separate "literature" from "genre fiction" encode value judgments about whose stories matter.
-
-As the scholar Geoffrey Bowker wrote: "Each category valorizes some point of view and silences another."
 
 ## Practice
 
@@ -8821,7 +8819,7 @@ When we build tools on top of biased archives -- training text models, generatin
 ## Practice
 
 :::try-it
-Take the archive dictionary from the challenge below and calculate the representation by decade. Which decade is most represented? Least represented? What historical factors might explain the gap?
+Take the archive dictionary from the challenge in the sandbox and calculate the representation by decade. Which decade is most represented? Least represented? What historical factors might explain the gap?
 :::
 
 ## Transfer
@@ -8832,8 +8830,6 @@ Think about a dataset or archive you work with:
 - Can you calculate the proportional representation for each group?
 - How does the archive's composition compare to the historical population it claims to represent?
 - What groups might be entirely absent -- not underrepresented, but invisible?
-
-The literary scholar Saidiya Hartman writes about "critical fabulation" -- the challenge of writing about people who left no records. Measuring representation is the quantitative counterpart to this work: it tells us the shape of the silence.
 
 :::challenge
 Given a dictionary of archive entries with demographic attributes, calculate the percentage representation for each group across two dimensions and identify the most significant gap.
@@ -9182,7 +9178,7 @@ Sentiment analysis does not measure some objective temperature of feeling. It me
 ## Practice
 
 :::try-it
-Take the sentiment lexicon from the challenge below and experiment: What happens if you add more neutral words (score 0) to the lexicon? Does the bias ratio go down? Does the actual bias in the flagged words change? This distinction between diluting a metric and actually fixing a problem is important in algorithmic fairness.
+Take the sentiment lexicon from the challenge in the sandbox and experiment: What happens if you add more neutral words (score 0) to the lexicon? Does the bias ratio go down? Does the actual bias in the flagged words change? This distinction between diluting a metric and actually fixing a problem is important in algorithmic fairness.
 :::
 
 ## Transfer
