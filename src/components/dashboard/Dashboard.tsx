@@ -9,23 +9,11 @@ import { getLessonsByModule } from '../../data/lessons.ts';
 export function Dashboard() {
   const navigate = useNavigate();
   const { profile } = useUserStore();
-  const { lessonProgress, getCompletedLessons, getSuccessRate } = useProgressStore();
+  const { lessonProgress, getCompletedLessons } = useProgressStore();
   const { getAllNotes } = useNoteStore();
 
   const completedLessons = getCompletedLessons();
-  const successRate = getSuccessRate();
   const notesCount = getAllNotes().length;
-
-  // Milestone logic: Mapping "Success Rate" to DH identities
-  const milestone = useMemo(() => {
-    const rate = Math.round(successRate);
-    if (completedLessons.length === 0) return { label: 'Apprentice', color: 'text-gray-500', bg: 'bg-gray-50' };
-    if (rate < 25) return { label: 'Explorer', color: 'text-blue-600', bg: 'bg-blue-50' };
-    if (rate < 50) return { label: 'Collaborator', color: 'text-indigo-600', bg: 'bg-indigo-50' };
-    if (rate < 75) return { label: 'Maker', color: 'text-purple-600', bg: 'bg-purple-50' };
-    if (rate < 100) return { label: 'Practitioner', color: 'text-pink-600', bg: 'bg-pink-50' };
-    return { label: 'Digital Humanist', color: 'text-orange-600', bg: 'bg-orange-50' };
-  }, [successRate, completedLessons]);
 
   const pathwayModules = useMemo(() => {
     if (!profile?.currentPathway.modules.length) return modules;
@@ -38,6 +26,24 @@ export function Dashboard() {
     (acc, m) => acc + (m?.lessons.length || 0),
     0
   );
+
+  // Lesson completion rate (0–100%) drives the DH identity milestone.
+  // Using lesson completion rather than challenge pass rate ensures the
+  // identity progression reflects actual curriculum progress.
+  const lessonCompletionRate = totalLessons > 0
+    ? (completedLessons.length / totalLessons) * 100
+    : 0;
+
+  // Milestone logic: map lesson completion % to DH identities
+  const milestone = useMemo(() => {
+    const rate = Math.round(lessonCompletionRate);
+    if (completedLessons.length === 0) return { label: 'Apprentice', color: 'text-gray-500', bg: 'bg-gray-50' };
+    if (rate < 25) return { label: 'Explorer', color: 'text-blue-600', bg: 'bg-blue-50' };
+    if (rate < 50) return { label: 'Collaborator', color: 'text-indigo-600', bg: 'bg-indigo-50' };
+    if (rate < 75) return { label: 'Maker', color: 'text-purple-600', bg: 'bg-purple-50' };
+    if (rate < 100) return { label: 'Practitioner', color: 'text-pink-600', bg: 'bg-pink-50' };
+    return { label: 'Digital Humanist', color: 'text-orange-600', bg: 'bg-orange-50' };
+  }, [lessonCompletionRate, completedLessons]);
 
   const nextLesson = useMemo(() => {
     for (const mod of pathwayModules) {
@@ -72,7 +78,7 @@ export function Dashboard() {
           <p className={`text-xl font-bold truncate ${milestone.color}`}>
             {milestone.label}
           </p>
-          <p className="text-xs text-gray-400 mt-1">{Math.round(successRate)}% Integration</p>
+          <p className="text-xs text-gray-400 mt-1">{Math.round(lessonCompletionRate)}% Integration</p>
         </div>
 
         <div className="bg-white border border-gray-200 rounded-lg p-4">
