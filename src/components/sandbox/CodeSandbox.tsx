@@ -221,7 +221,9 @@ useEffect(() => {
       : null;
 
   return (
+    
     <div className="flex flex-col h-full relative">
+    
       {/* Plot Modal */}
       {isPlotModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -317,7 +319,7 @@ useEffect(() => {
       </div>
 
       <div className="flex-1 flex flex-col min-h-0">
-        <div className="flex-1 basis-1/2 min-h-[180px]">
+        <div className="flex-1 basis-1/2 min-h-[200px]">
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
@@ -366,7 +368,7 @@ useEffect(() => {
           </button>
         </div>
 
-        <div className="flex-1 basis-1/2 min-h-[180px] overflow-y-auto bg-gray-900 p-4">
+        <div className="flex-1 basis-1/2 min-h-[200px] overflow-y-auto bg-gray-900 p-4">
           <pre className="font-mono text-sm text-gray-100 whitespace-pre-wrap">
             {output || 'Output will appear here...'}
           </pre>

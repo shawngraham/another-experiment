@@ -4434,48 +4434,56 @@ plt.show()`
   :::
 
   :::challenge
-  In the first challenge, generate a plot object. In the second, perform a CRS transformation to calculate the area of a region in meters.
+  In the first challenge, generate a plot object. In the second, perform a CRS transformation to calculate the area of a region in meters. In the third, we'll make a very small map of a very strange country!
   :::`,
     challenges: [
-      {
+       {
         id: 'geospatial-03-c1',
         title: 'The First Map',
         language: 'python',
         difficulty: 'beginner',
         starterCode: `import geopandas as gpd
-  import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
 
-  # Creating a tiny dataset
-  data = {'name': ['A', 'B'], 'pop': [10, 20], 'lat': [10, 20], 'lon': [10, 20]}
-  df = pd.DataFrame(data)
-  world = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
+# Clear any previous plots
+plt.clf()
 
-  # Goal: Generate a plot object
-  # 1. Call .plot() on the 'world' GeoDataFrame
-  # 2. Use the 'pop' column to color the points
-  # 3. Assign the result to a variable named 'ax'
+# Creating a tiny dataset of coordinates
+data = {'name': ['Site A', 'Site B', 'Site C'], 'finds': [12, 45, 22], 
+        'lat': [10, 20, 15], 'lon': [10, 20, 25]}
+df = pd.DataFrame(data)
+gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
 
-  # Your code here
+# Goal: Create a choropleth map of archaeological finds
+# 1. Call the .plot() method on 'gdf'
+# 2. Use the 'finds' column to color the points
+# 3. Add a legend by setting legend=True
+# 4. Use plt.show() to see your map
 
-  # Verify that an Axes object was created
-  print(type(ax).__module__)
-  `,
-        expectedOutput: 'matplotlib.axes._axes',
+# Your code here
+`,
+        expectedOutput: 'plt.show() called',
         hints: [
-          'Use ax = world.plot(column="pop")',
-          'The variable ax will capture the Matplotlib Axes object created by GeoPandas.'
+          'The basic syntax is gdf.plot(column="column_name", legend=True)',
+          'Make sure you use the column name "finds" (quotes required).',
+          'Always finish with plt.show() to render the image in the sandbox.'
         ],
         solution: `import geopandas as gpd
-  import pandas as pd
+import pandas as pd
+import matplotlib.pyplot as plt
 
-  data = {'name': ['A', 'B'], 'pop': [10, 20], 'lat': [10, 20], 'lon': [10, 20]}
-  df = pd.DataFrame(data)
-  world = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
+plt.clf()
 
-  # Create the plot
-  ax = world.plot(column='pop')
+data = {'name': ['Site A', 'Site B', 'Site C'], 'finds': [12, 45, 22], 
+        'lat': [10, 20, 15], 'lon': [10, 20, 25]}
+df = pd.DataFrame(data)
+gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.lon, df.lat), crs="EPSG:4326")
 
-  print(type(ax).__module__)`,
+# Plotting the data
+gdf.plot(column='finds', legend=True)
+plt.title("Archaeological Finds by Site")
+plt.show()`,
       },
       {
         id: 'geospatial-03-c2',
@@ -4483,211 +4491,248 @@ plt.show()`
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `import geopandas as gpd
-  import pandas as pd
-  from shapely.geometry import Polygon
+from shapely.geometry import Polygon
 
-  # A square polygon in degrees (EPSG:4326)
-  # Covering approx 1 degree of lat/lon
-  poly = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
-  gdf = gpd.GeoDataFrame({'id': [1]}, geometry=[poly], crs="EPSG:4326")
+# A square polygon in degrees (approx 1 degree lat/lon)
+poly = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
+gdf = gpd.GeoDataFrame({'id': [1]}, geometry=[poly], crs="EPSG:4326")
 
-  # Goal: Calculate the area in square meters
-  # 1. Convert gdf to EPSG:3395 (World Mercator) using .to_crs()
-  # 2. Assign this to a new variable 'gdf_projected'
-  # 3. Calculate the area of the first row and store in 'area_val'
+# Goal: Calculate the area in square meters
+# 1. Convert gdf to EPSG:3395 (World Mercator) using ???
+# 2. Access the .area property of the projected GeoDataFrame
+# 3. Store the result of the first row in 'area_val'
 
-  # Your code here
+# Your code here
+gdf_projected = gdf.???("EPSG:3395")
+area_val = gdf_projected.area.iloc[0]
 
-  # Scientific notation output
-  print(f"{area_val:.2e}")
-  `,
+print(f"{area_val:.2e}")
+`,
         expectedOutput: '1.24e+10',
         hints: [
-          'Use gdf_projected = gdf.to_crs("EPSG:3395")',
-          'Access area with gdf_projected.area.iloc[0]',
-          'Note: EPSG:4326 uses degrees, so .area is not useful until you project it!'
+          'The method to change coordinate systems is .to_crs()',
+          'Remember: EPSG:4326 uses degrees, which are useless for area calculations. EPSG:3395 uses meters.'
         ],
         solution: `import geopandas as gpd
-  from shapely.geometry import Polygon
+from shapely.geometry import Polygon
 
-  poly = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
-  gdf = gpd.GeoDataFrame({'id': [1]}, geometry=[poly], crs="EPSG:4326")
+poly = Polygon([(0, 0), (1, 0), (1, 1), (0, 1)])
+gdf = gpd.GeoDataFrame({'id': [1]}, geometry=[poly], crs="EPSG:4326")
 
-  # Convert to a system that uses meters
-  gdf_projected = gdf.to_crs("EPSG:3395")
+# Convert to a system that uses meters
+gdf_projected = gdf.to_crs("EPSG:3395")
 
-  # Calculate area
-  area_val = gdf_projected.area.iloc[0]
+# Calculate area
+area_val = gdf_projected.area.iloc[0]
 
-  print(f"{area_val:.2e}")`,
+print(f"{area_val:.2e}")`,
+      },
+      {
+        id: 'geospatial-03-c3',
+        title: 'Layering Points on Polygons',
+        language: 'python',
+        difficulty: 'intermediate',
+        starterCode: `import geopandas as gpd
+import matplotlib.pyplot as plt
+from shapely.geometry import Polygon, Point
+
+plt.clf()
+
+# Base layer: A "Country"
+country = gpd.GeoDataFrame({'name': ['DH Land']}, 
+                            geometry=[Polygon([(0,0), (10,0), (10,10), (0,10)])])
+
+# Top layer: A "City" 
+city = gpd.GeoDataFrame({'name': ['Code Town']}, 
+                         geometry=[Point(5, 5)])
+
+# Goal: Plot the city on top of the country
+# 1. Create the base axis (ax) by plotting 'country' with color='lightgrey'
+# 2. Plot 'city' on the same axis (ax=ax) with color='red'
+
+# Your code here
+ax = country.plot(???)
+city.plot(???, color='red')
+
+plt.title("City within Country")
+plt.show()
+`,
+        expectedOutput: 'plt.show() called',
+        hints: [
+          'In the first plot, just set the color.',
+          'In the second plot, you must pass ax=ax so it draws on top of the first map.',
+          'Final step is always plt.show()'
+        ],
+        solution: `import geopandas as gpd
+import matplotlib.pyplot as plt
+from shapely.geometry import Polygon, Point
+
+plt.clf()
+
+country = gpd.GeoDataFrame({'name': ['DH Land']}, 
+                            geometry=[Polygon([(0,0), (10,0), (10,10), (0,10)])])
+
+city = gpd.GeoDataFrame({'name': ['Code Town']}, 
+                         geometry=[Point(5, 5)])
+
+# Layering the plots
+ax = country.plot(color='lightgrey')
+city.plot(ax=ax, color='red')
+
+plt.title("City within Country")
+plt.show()`
       },
     ],
   },
   {
     id: 'geospatial-04',
-    title: 'Interactive Maps with Folium',
+    title: 'Interactive Maps: Logic and Data',
     moduleId: 'geospatial-analysis',
     prerequisites: ['geospatial-03'],
     estimatedTimeMinutes: 30,
     difficulty: 'beginner',
     learningObjectives: [
-      'Create an interactive "slippy" web map using Folium',
-      'Add markers, popups, and tooltips to represent archival data',
-      'Understand the difference between static (Matplotlib) and interactive (Leaflet/Folium) maps',
-      'Navigate the "Latitude/Longitude" vs "X/Y" coordinate order discrepancy'
+      'Understand the difference between static (Matplotlib) and interactive (Folium) mapping logic',
+      'Navigate the "Latitude/Longitude" vs "X/Y" coordinate order discrepancy',
+      'Programmatically add markers to a map object using loops',
+      'Validate map state using internal object attributes'
     ],
-    keywords: ['folium', 'interactive', 'leaflet', 'markers', 'web mapping', 'public history'],
-    content: `# Interactive Maps with Folium: The Digital Exhibit
+    keywords: ['folium', 'interactive', 'leaflet', 'markers', 'web mapping', 'coordinates'],
+    content: `# Interactive Maps: The Digital Exhibit
 
-  ## Analogy
-  A Matplotlib map is a **photograph**: it is static and captured at a specific scale. To see more detail, you would need to take a new "photo."
+  ## Why Folium?
+  If Matplotlib is for a **research paper**, Folium is for a **website**. Folium generates the HTML and JavaScript (via Leaflet.js) needed to create "slippy maps" that users can zoom and click.
 
-  A Folium map is a **window**: it is an interactive portal into your data. Users can drag, zoom, and click on "pins" to reveal deeper layers of information. This is often the final product you want to embed on a Digital Humanities project website or an online archive.
-
-  :::tip
-  Folium does not work in our sandbox. Folium produces Leaflet.js-based maps that need to be saved as .html files and opened in a browser. But, if you are working on your own computer with python installed you can add folium to your environment (with the \`pip install folium\` command) and run this code to generate the necessary html.
+  :::warning
+  **Sandbox Limitation**: Because Folium produces an interactive website, it won't "render" a picture in our sandbox like Matplotlib does. Instead, we will use the sandbox to practice the **data logic**—ensuring our coordinates are in the right order and our markers are correctly structured.
   :::
 
   ---
 
-  ## 1. Creating a "Slippy" Map
-  Folium is a Python wrapper for a JavaScript library called **Leaflet.js**. It creates "slippy maps"—maps made of tiny square tiles that load as you move around.
+  ## 1. The Great Coordinate Flip ⚠️
+  This is the most common error in Geospatial Python:
+  - **GeoPandas/Shapely**: Uses **(Longitude, Latitude)**. This is "Math" order (X, Y).
+  - **Folium/Leaflet**: Uses **[Latitude, Longitude]**. This is "Navigation" order.
 
-  \`\`\`python
-  import folium
-
-  # Center the map on London
-  # Note the order: [Latitude, Longitude]
-  m = folium.Map(location=[51.5074, -0.1278], zoom_start=12, tiles="OpenStreetMap")
-
-  # In a local environment, you would save this as an HTML file:
-  # m.save("index.html")
-  \`\`\`
+  If you pass GeoPandas coordinates directly into Folium without flipping them, your map of London will end up in the middle of the Indian Ocean.
 
   ---
 
-  ## 2. Adding Interaction: Markers and Popups
-  In DH, we use **Markers** to represent specific points of interest—the location of a historical event, the birthplace of an author, or the site of a demolished building.
-
-  - **Popup**: Text that appears when you **click** a marker.
-  - **Tooltip**: Text that appears when you **hover** over a marker.
+  ## 2. Popups and Tooltips
+  Interaction is the primary goal of Folium. 
+  - **Popup**: Appears when you **click**.
+  - **Tooltip**: Appears when you **hover**.
 
   \`\`\`python
   folium.Marker(
-      location=[51.5074, -0.1278],
-      popup="<b>London</b><br>Historical center of the British Empire.",
-      tooltip="Click for more info"
+      location=[51.5, -0.12], 
+      popup="The British Library",
+      tooltip="Click for details"
   ).add_to(m)
   \`\`\`
 
   ---
 
-  ## 3. The Great Coordinate Flip ⚠️
-  This is the most common error in Geospatial Python:
-  - **Shapely/GeoPandas** (Mathematical): Uses **(Longitude, Latitude)** or (X, Y).
-  - **Folium/Leaflet** (Navigational): Uses **[Latitude, Longitude]**.
+  ## 3. Programmatic Mapping
+  In DH, we rarely map one point at a time. We usually have a list of historical locations. We use a \`for\` loop to "batch" these onto our map object. 
 
-  If your points are appearing in the wrong hemisphere, you likely have your coordinates in the wrong order for the library you are using.
-
-  ---
-
-  ## 4. Public History and Storytelling
-  Interactive maps are the backbone of "Deep Mapping" projects. By allowing a user to zoom in from a national view to a street-level view, you enable them to move between **Distant Reading** (patterns) and **Close Reading** (specific stories in popups).
-
-  :::tip
-  **DH Use Case**: If you are sonifying a travel diary, you could create a loop that goes through every city visited and adds a Marker. In the popup, you could include the date of the visit and a link to the digitized page of the diary.
-  :::
+  To verify our work in a script, we can check the \`m._children\` attribute. Each time you add a marker, the number of "children" in the map object increases.
 
   :::challenge
-  In the first challenge, initialize a map centered on New York. In the second, use a loop to programmatically add multiple markers to a single map object.
+  In the following challenges, you will practice centering a map and, more importantly, "flipping" data from a list to fit the Latitude/Longitude requirements of Folium. Then we'll try some conditional styling.
   :::`,
     challenges: [
       {
         id: 'geospatial-04-c1',
-        title: 'Center the Map',
+        title: 'Center and Validate',
         language: 'python',
         difficulty: 'beginner',
-        starterCode: `import folium
+        starterCode: `# we'll install folium
+import micropip
+await micropip.install('folium')
 
-  # 1. Create a folium Map centered on [40.71, -74.00] (New York City)
-  # 2. Set the 'zoom_start' to 10
-  # 3. Assign the result to a variable named 'nyc_map'
+import folium
 
-  # Your code here
+# 1. Create a folium Map centered on New York City: [40.71, -74.00]
+# 2. Set the 'zoom_start' to 12
+# 3. Assign it to the variable 'm'
 
-  # These lines verify the map state
-  print(nyc_map.location)
-  print(nyc_map.options['zoom'])
-  `,
-        expectedOutput: '[40.71, -74.0]\n10',
+# Your code here
+
+# Verification logic
+print(f"Lat: {m.location[0]}, Lon: {m.location[1]}")
+print(f"Zoom: {m.options['zoom']}")
+`,
+        expectedOutput: 'Lat: 40.71, Lon: -74.0\nZoom: 12',
         hints: [
-          'The syntax is: nyc_map = folium.Map(location=[lat, lon], zoom_start=10)',
-          'Coordinates must be passed as a list: [40.71, -74.00].'
+          'The syntax is m = folium.Map(location=[lat, lon], zoom_start=Z)',
+          'Check your brackets! The location must be a list: [40.71, -74.00].'
         ],
-        solution: `import folium
+        solution: `# we'll install folium
+import micropip
+await micropip.install('folium')
 
-  # Create map object
-  nyc_map = folium.Map(location=[40.71, -74.00], zoom_start=10)
-
-  print(nyc_map.location)
-  print(nyc_map.options['zoom'])`,
+import folium
+m = folium.Map(location=[40.71, -74.00], zoom_start=12)
+print(f"Lat: {m.location[0]}, Lon: {m.location[1]}")
+print(f"Zoom: {m.options['zoom']}")`,
       },
       {
         id: 'geospatial-04-c2',
-        title: 'Adding Multiple Markers',
+        title: 'The Data Flip Challenge',
         language: 'python',
         difficulty: 'intermediate',
         starterCode: `import folium
 
-  m = folium.Map(location=[45.0, 10.0], zoom_start=4)
+m = folium.Map(location=[20.0, 0.0], zoom_start=2)
 
-  # A list of locations: [Latitude, Longitude, City Name]
-  locations = [
-      [48.85, 2.35, "Paris"],
-      [41.90, 12.49, "Rome"]
-  ]
+# This data is in (Longitude, Latitude) format—the "Math" order.
+# Folium needs [Latitude, Longitude]—the "Navigation" order.
+raw_data = [
+    {"name": "Dakar", "coords": (-17.44, 14.69)},
+    {"name": "Cairo", "coords": (31.23, 30.04)}
+]
 
-  # Goal: Loop through the 'locations' list and add a Marker for each city.
-  # 1. Access the latitude and longitude from the list
-  # 2. Use the city name for the 'popup'
-  # 3. Use .add_to(m) to attach it to the map
+# Goal: Loop through raw_data, flip the coordinates, and add markers.
+for place in raw_data:
+    lon = place["coords"][0]
+    lat = place["coords"][1]
+    
+    # 1. Create a Marker using the flipped order: [lat, lon]
+    # 2. Add it to the map 'm'
+    # Your code here
+    
 
-  # Your code here
-
-  # Verification: The map starts with 1 layer (tiles). 
-  # After adding 2 markers, it should have 3 children.
-  print(len(m._children))
-  `,
+# Verification: Map should have 1 base layer + 2 markers = 3 children
+print(len(m._children))
+`,
         expectedOutput: '3',
         hints: [
-          'Use: for loc in locations:',
-          'Inside the loop, access index [0] for lat, [1] for lon, and [2] for name.',
-          'Syntax: folium.Marker(location=[lat, lon], popup=name).add_to(m)'
+          'Inside the loop, use folium.Marker(location=[lat, lon]).add_to(m)',
+          'Make sure lat is index 1 and lon is index 0 from the original tuple.'
         ],
         solution: `import folium
 
-  m = folium.Map(location=[45.0, 10.0], zoom_start=4)
+m = folium.Map(location=[20.0, 0.0], zoom_start=2)
 
-  locations = [
-      [48.85, 2.35, "Paris"],
-      [41.90, 12.49, "Rome"]
-  ]
+raw_data = [
+    {"name": "Dakar", "coords": (-17.44, 14.69)},
+    {"name": "Cairo", "coords": (31.23, 30.04)}
+]
 
-  # Loop and add markers
-  for loc in locations:
-      folium.Marker(
-          location=[loc[0], loc[1]], 
-          popup=loc[2]
-      ).add_to(m)
+for place in raw_data:
+    lon = place["coords"][0]
+    lat = place["coords"][1]
+    # Flip to [lat, lon] for Folium
+    folium.Marker(location=[lat, lon], popup=place["name"]).add_to(m)
 
-  # 1 Base Layer + 2 Markers = 3
-  print(len(m._children))`,
+print(len(m._children))`,
       },
     ],
-  },
+},
    {
     id: 'geospatial-05',
-    title: 'Mapping Historical Data',
+    title: 'Calculating Map Data',
     moduleId: 'geospatial-analysis',
     prerequisites: ['data-viz-02'],
     estimatedTimeMinutes: 40,
@@ -11440,7 +11485,7 @@ print(counts.most_common(3))
 \`\`\`
 
 :::definition
-**Distant reading**: A term coined by Franco Moretti for computational methods that analyze large volumes of text by extracting quantitative features (word counts, patterns, trends) rather than reading individual texts closely.
+**Distant reading**: An umbrella term for computational methods that analyze large volumes of text by extracting quantitative features (word counts, patterns, trends) rather than reading individual texts closely.
 :::
 
 ### Stopword Removal
