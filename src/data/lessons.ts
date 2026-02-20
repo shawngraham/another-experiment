@@ -1887,7 +1887,7 @@ print(tokens)`,
   # Goal: Create a new list called 'filtered' that contains 
   # only the dictionaries where the 'year' is greater than 1850.
 
-  # Your code here:
+  # Your code here
   # 1. Use a list comprehension to filter the data
   # 2. Print the length of the filtered list
 
@@ -2674,7 +2674,7 @@ print(tokens)`,
   # Goal: Extract only the text "Digital Humanities" 
   # by removing the opening <h1> and closing </h1> tags.
 
-  # Your code here:
+  # Your code here
   # 1. Use .replace() to remove the opening tag
   # 2. Use .replace() to remove the closing tag (nb outside of this environment, you'd use an appropriate _parser_ to do this step.)
   # 3. Assign to a variable 'clean_text' and print it
@@ -3130,7 +3130,7 @@ print(tokens)`,
 
   durations = []
 
-  # Your code here: 
+  # Your code here
   # 1. Loop through the list using range and len()
   # 2. Subtract the current mention from the next mention
   # 3. Append the result to the 'durations' list
@@ -3484,7 +3484,7 @@ print(tokens)`,
 
   cleaned = []
 
-  # Your code here: 
+  # Your code here
   # Loop through 'tokens', check both conditions, and append to 'cleaned'
 
   print(cleaned)
@@ -6738,7 +6738,7 @@ tweets = [
 best_tweet = ""
 highest_score = -1.0
 
-# Your code here:
+# Your code here
 # 1. Loop through the tweets
 # 2. Get the compound score for each
 # 3. If it's higher than the current highest_score, update best_tweet and highest_score
@@ -9862,7 +9862,7 @@ Build a story dictionary representing an archive of letters. Navigate from the s
 # Navigate: start -> "Enter the archive" -> "Examine the east wing"
 # Print the text of each passage you visit (3 passages total)
 current = "start"
-# YOUR CODE HERE: print text, move through two choices, print text each time
+# Your code here: print text, move through two choices, print text each time
 `,
         expectedOutput: 'You stand before the Archive of Forgotten Letters.\nA grand hall stretches before you, lined with shelves of bundled correspondence.\nYou find letters exchanged between two poets, full of creative fire.',
         hints: [
@@ -10277,7 +10277,7 @@ Given a museum-navigation story dict, find all dead-end passages and calculate t
 # Find all dead-end passages (no choices) and sort them alphabetically
 # Calculate the average branching factor (total choices / total passages)
 
-# YOUR CODE HERE
+# Your code here
 `,
         expectedOutput: 'Dead ends: [\'hieroglyphs\', \'medieval\', \'pottery\', \'sarcophagus\']\nAverage branching factor: 0.86',
         hints: [
@@ -10498,7 +10498,7 @@ actions = ["flickers in the dim light", "hums with quiet energy", "is covered in
 template = "You enter {setting}. A {adj} {obj} {action}."
 
 # Generate and print 3 passage descriptions using random.choice
-# YOUR CODE HERE
+# Your code here
 `,
         expectedOutput: 'You enter a sunken cathedral. A whispering portrait hums with quiet energy.\n You enter a dusty archive. A mysterious portrait gathers dust on a pedestal.\n You enter a forgotten library. A whispering portrait stands slightly ajar.',
         hints: [
@@ -13067,7 +13067,7 @@ In the challenges in the code window, you will write a script to transform a lis
 daily_scores = [-0.5, 0.2, 0.8, -0.1]
 
 for score in daily_scores:
-    # Your code here:
+    # Your code here
     
 `,
         expectedOutput: 'Use Indigo yarn\nUse Amber yarn\nUse Amber yarn\nUse Indigo yarn',
@@ -13196,7 +13196,7 @@ x_position = 50
 
 for count in citations:
     radius = count * 10
-    # Your code here: 
+    # Your code here
     # Print the string: "Circle at x=X, radius=R" 
     # (Replace X with x_position and R with the radius)
     
@@ -13231,7 +13231,7 @@ metadata = [
 ]
 
 for item in metadata:
-    # Your code here:
+    # Your code here
     # If status is Critical, color is 'RED'
     # Print: "Year: [year], Color: [color]"
     
@@ -13381,7 +13381,7 @@ year = 1850
 mentions = 42
 width = 10
 
-# Your code here: 
+# Your code here
 # create a list named 'point_3d' using the variables above in order X, Y, Z
 # Then print it.
 
