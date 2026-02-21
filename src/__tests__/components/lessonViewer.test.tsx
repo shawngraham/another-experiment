@@ -65,8 +65,9 @@ describe('LessonViewer', () => {
       </MemoryRouter>
     );
     
-    // 3. Use the dynamic title from your imported lesson object
-    expect(screen.getByText(sampleLesson.title)).toBeInTheDocument();
+    // 3. Use the dynamic title from your imported lesson object.
+    // getByRole scopes to the <h1> heading, avoiding the duplicate in NotePanel.
+    expect(screen.getByRole('heading', { level: 1, name: sampleLesson.title })).toBeInTheDocument();
   });
 
   it('shows all learning objectives from data source', () => {
