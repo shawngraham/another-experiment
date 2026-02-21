@@ -6,19 +6,27 @@ How to add, modify, and maintain pedagogical content in the DHPrimer: Tutorial L
 
 ## Architecture Overview
 
-All curriculum content lives in two files:
+All curriculum content lives in these locations:
 
-| File | Contains | Consumed by |
+| Location | Contains | Consumed by |
 |---|---|---|
+| `src/data/lessons/*.md` | One markdown file per lesson (content + challenges) | Loaded by Vite at build time via `lessons-loader.ts` |
 | `src/data/modules.ts` | Module definitions (groupings of lessons) | Pathway generator, dashboard, export |
-| `src/data/lessons.ts` | Lesson definitions (content, challenges) | Lesson viewer, sandbox, export, progress tracker |
+| `src/data/lessons.ts` | Thin re-export shim — **do not edit directly** | All existing app code (unchanged API) |
 
 These are **static data** — they ship with the app and are not editable by learners. User-generated data (notes, progress, code snapshots) lives in Zustand stores backed by localStorage.
 
 ### How content flows through the system
 
 ```
-modules.ts / lessons.ts
+src/data/lessons/*.md   ← source of truth for all lesson content
+        │
+        │  (Vite's lessonMarkdownPlugin transforms each .md file
+        │   into a typed LessonDefinition at build/dev time)
+        │
+src/data/lessons-loader.ts   ← import.meta.glob aggregates all .md files
+        │
+src/data/lessons.ts          ← re-exports from lessons-loader (stable public API)
         │
         ├─► pathwayGenerator.ts   ← uses module IDs to build personalized pathways
         ├─► LessonViewer          ← renders lesson.content as Markdown
@@ -88,41 +96,15 @@ interface ChallengeDefinition {
 
 ## Adding a New Lesson
 
-You can write lessons in markdown files and use a script to convert them, or you can manually add lessons to the `lessons.ts` file.
+Each lesson is a single Markdown file in `src/data/lessons/`. Vite picks it up automatically — there is no compile step.
 
-### Using the script
+### Step 1: Create the lesson file
 
-`scripts/compile-lessons.mjs` — The compiler utility
+Create `src/data/lessons/<lesson-id>.md`. The filename must match the `id` in the frontmatter. Copy an existing lesson as a starting point, or use the structure below.
 
-A zero-dependency Node.js script that:
+**Full example — `src/data/lessons/text-analysis-05.md`:**
 
-+ Reads `.md` files from `lessons-in-development/`
-+ Parses YAML frontmatter for lesson metadata (id, title, moduleId, prerequisites, difficulty, etc.)
-+ Extracts the markdown body as the lesson content field
-+ Parses a `---challenges---` section for structured challenges (starter code, expected output, hints, solution)
-+ Validates all required fields, difficulty values, and language types
-+ Detects duplicate IDs (both within new files and against existing lessons.ts)
-+ Generates correctly escaped TypeScript matching the existing code style
-
-Three modes:
-|Command|	What it does|
-|---|---|
-|`npm run compile-lessons`|	Preview generated TypeScript (dry run)|
-|`npm run compile-lessons:write`|	Append directly to src/data/lessons.ts|
-|`npm run compile-lessons:validate`|	Validate files only, no output|
-
-There's also `--out <file>` to write to a separate file for review.
-
-`lessons-in-development/_template.md` — Format reference
-
-A complete template showing the expected markdown structure for authoring new lessons.
-
-`lessons-in-development/text-analysis-05.md` — Sample lesson
-
-A realistic NLP/NLTK lesson with two challenges, demonstrating the format in practice.
-Markdown format at a glance
-
-```markdown
+````markdown
 ---
 id: text-analysis-05
 title: Basic NLP with NLTK
@@ -133,96 +115,125 @@ estimatedTimeMinutes: 40
 difficulty: intermediate
 learningObjectives:
   - Tokenize text using NLTK
+  - Perform part-of-speech tagging
+  - Extract named entities from a passage
 keywords:
   - nltk
+  - tokenization
+  - pos tagging
+  - named entities
+  - nlp
 ---
 
-# Lesson content in markdown here...
-
----challenges---
-
-### Challenge: Tokenize a sentence
-- id: text-analysis-05-c1
-- language: python
-- difficulty: intermediate
-
-#### Starter Code
-```python
-# code here
-
-Expected Output
-
-`expected output`
-
-Hints
-
-    First hint
-    Second hint
-
-Solution
-
-# solution here
-
-```
-
-### Manually
-
-### Step 1: Define the lesson in `lessons.ts`
-
-Add a new object to the `lessons` array. Full example:
-
-```typescript
-{
-  id: 'text-analysis-05',
-  title: 'Basic NLP with NLTK',
-  moduleId: 'text-analysis-fundamentals',
-  prerequisites: ['text-analysis-04'],
-  estimatedTimeMinutes: 40,
-  difficulty: 'intermediate',
-  learningObjectives: [
-    'Tokenize text using NLTK',
-    'Perform part-of-speech tagging',
-    'Extract named entities from a passage',
-  ],
-  keywords: ['nltk', 'tokenization', 'pos tagging', 'named entities', 'nlp'],
-  content: `# Basic NLP with NLTK
+# Basic NLP with NLTK
 
 ## Analogy
 If string methods are like reading with a magnifying glass...
 
 ## Key Concepts
-...
 
-::: definition
+:::definition
 **Tokenization**: Splitting text into individual words or sentences.
 :::
 
-::: try-it
+:::try-it
 Run the tokenizer on a sentence of your own.
 :::
 
-::: challenge
+:::challenge
 Extract all proper nouns from a paragraph.
 :::
-`,
-  challenges: [
-    {
-      id: 'text-analysis-05-c1',
-      title: 'Tokenize a sentence',
-      language: 'python',
-      difficulty: 'intermediate',
-      starterCode: `import nltk\nnltk.download('punkt_tab', quiet=True)\n\ntext = "Mary Shelley wrote Frankenstein in 1818."\n\n# Tokenize into words\n# Your code here\n`,
-      expectedOutput: "['Mary', 'Shelley', 'wrote', 'Frankenstein', 'in', '1818', '.']",
-      hints: [
-        'Import word_tokenize from nltk.tokenize',
-        'Call word_tokenize(text) and print the result',
-      ],
-      solution: `import nltk\nnltk.download('punkt_tab', quiet=True)\nfrom nltk.tokenize import word_tokenize\n\ntext = "Mary Shelley wrote Frankenstein in 1818."\nprint(word_tokenize(text))`,
-    },
-    // ... more challenges
-  ],
-},
+
+---challenges---
+
+### Challenge: Tokenize a sentence
+
+- id: text-analysis-05-c1
+- language: python
+- difficulty: intermediate
+
+#### Starter Code
+
+```python
+import nltk
+nltk.download('punkt_tab', quiet=True)
+
+text = "Mary Shelley wrote Frankenstein in 1818."
+
+# Tokenize into words
+# Your code here
 ```
+
+#### Expected Output
+
+```
+['Mary', 'Shelley', 'wrote', 'Frankenstein', 'in', '1818', '.']
+```
+
+#### Hints
+
+1. Import word_tokenize from nltk.tokenize
+2. Call word_tokenize(text) and print the result
+
+#### Solution
+
+```python
+import nltk
+nltk.download('punkt_tab', quiet=True)
+from nltk.tokenize import word_tokenize
+
+text = "Mary Shelley wrote Frankenstein in 1818."
+print(word_tokenize(text))
+```
+````
+
+**Frontmatter field reference:**
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `id` | string | yes | kebab-case, unique across all lessons |
+| `title` | string | yes | Human-readable; quote in YAML if it contains a colon (e.g. `title: 'Data: A Primer'`) |
+| `moduleId` | string | yes | Must match an existing module's `id` |
+| `prerequisites` | list | no | Lesson IDs; use `[]` if none |
+| `estimatedTimeMinutes` | number | no | Defaults to `30` if omitted |
+| `difficulty` | string | yes | `beginner`, `intermediate`, or `advanced` |
+| `learningObjectives` | list | yes | 2–5 measurable outcomes |
+| `keywords` | list | no | For search and Obsidian export |
+
+**Challenges section format** (`---challenges---` separator, then one block per challenge):
+
+````markdown
+---challenges---
+
+### Challenge: <Title>
+
+- id: <lesson-id>-c1
+- language: python   # or: r
+- difficulty: beginner
+
+#### Starter Code
+
+```python
+# starter code here
+```
+
+#### Expected Output
+
+```
+exact stdout here
+```
+
+#### Hints
+
+1. First hint
+2. Second hint
+
+#### Solution
+
+```python
+# full solution here
+```
+````
 
 ### Step 2: Register the lesson in `modules.ts`
 
@@ -285,9 +296,9 @@ Add a new object to the `modules` array:
 }
 ```
 
-### Step 2: Create all lessons for the module in `lessons.ts`
+### Step 2: Create all lessons for the module
 
-Each lesson ID listed in the module's `lessons` array must exist in the `lessons` array.
+Create one `.md` file per lesson in `src/data/lessons/` following the format above. Each lesson ID listed in the module's `lessons` array must have a corresponding `.md` file.
 
 ### Step 3: Register in pathway generator
 
@@ -421,15 +432,15 @@ some_given_data = "provided value"
 
 ### Changing lesson content (safe)
 
-Updating the `content`, `learningObjectives`, `keywords`, `estimatedTimeMinutes`, or `difficulty` fields of an existing lesson is safe and requires no changes elsewhere.
+Open `src/data/lessons/<lesson-id>.md` and edit directly. Updating `content`, `learningObjectives`, `keywords`, `estimatedTimeMinutes`, or `difficulty` is safe and requires no changes elsewhere. Vite hot-reloads the change automatically during `npm run dev`.
 
 ### Changing a lesson ID (breaking)
 
 A lesson ID appears in up to 5 places:
 
-1. `lessons.ts` — the lesson object's `id` field
+1. `src/data/lessons/<old-id>.md` — rename the file to `<new-id>.md` and update the `id` field in the frontmatter
 2. `modules.ts` — the parent module's `lessons` array
-3. `lessons.ts` — other lessons' `prerequisites` arrays
+3. Other `.md` files' `prerequisites` frontmatter fields
 4. `data.test.ts` — any test that references the ID by name
 5. `pathwayGenerator.test.ts` — if tested explicitly
 
@@ -441,16 +452,16 @@ A module ID appears in:
 
 1. `modules.ts` — the module object's `id` field
 2. `modules.ts` — other modules' `prerequisites` arrays
-3. `lessons.ts` — every child lesson's `moduleId` field
+3. Every child lesson's `.md` file — the `moduleId` frontmatter field
 4. `pathwayGenerator.ts` — `DISCIPLINE_MODULE_MAP` and `INTEREST_MODULE_MAP`
 5. `pathwayGenerator.ts` — default-module fallback list
 6. `pathwayGenerator.test.ts` and `data.test.ts`
 
 ### Removing a lesson
 
-1. Remove the object from the `lessons` array.
-2. Remove the ID from the parent module's `lessons` array.
-3. Remove it from any other lesson's `prerequisites`.
+1. Delete `src/data/lessons/<lesson-id>.md`.
+2. Remove the ID from the parent module's `lessons` array in `modules.ts`.
+3. Remove it from any other lesson's `prerequisites` frontmatter.
 4. Check that no test references it by name.
 
 ### Reordering lessons within a module
@@ -466,6 +477,14 @@ Change the order in the module's `lessons` array. The UI presents them in array 
 ```bash
 npm test
 ```
+
+To validate lesson markdown files without running the full test suite (useful during content authoring):
+
+```bash
+npm run validate-lessons
+```
+
+This checks all `.md` files in `src/data/lessons/` for required fields, valid `difficulty` values, and duplicate IDs. It does not require a build step.
 
 ### What the tests validate (`src/__tests__/data.test.ts`)
 
@@ -524,24 +543,26 @@ Use one of the four defined tracks:
 
 ## Checklist: Adding a Lesson
 
-- [ ] Lesson object added to `lessons` array in `src/data/lessons.ts`
-- [ ] `id` is unique and follows naming convention
-- [ ] `moduleId` matches an existing module
-- [ ] `prerequisites` reference existing lesson IDs (or is empty `[]`)
-- [ ] `learningObjectives` has 2-5 items
-- [ ] `content` uses Markdown with ADEPT sections
-- [ ] `challenges` has 2-3 entries, each with starter code, expected output, 2-3 hints, and a solution
-- [ ] Lesson ID added to parent module's `lessons` array in `src/data/modules.ts`
+- [ ] File created at `src/data/lessons/<lesson-id>.md`
+- [ ] Filename matches the `id` field in the frontmatter
+- [ ] `id` is unique — run `npm run validate-lessons` to check
+- [ ] `moduleId` matches an existing module in `modules.ts`
+- [ ] `prerequisites` reference existing lesson IDs (or is `[]`)
+- [ ] `learningObjectives` has 2–5 items
+- [ ] Lesson body uses Markdown with ADEPT sections
+- [ ] `---challenges---` section has 2–3 challenges, each with starter code, expected output, 2–3 hints, and a solution
+- [ ] Lesson ID added to parent module's `lessons` array in `src/data/modules.ts` (in teaching order)
 - [ ] Module's `estimatedHours` updated if needed
+- [ ] `npm run validate-lessons` passes
 - [ ] `npm test` passes
-- [ ] Previewed in browser to verify Markdown rendering and challenge validation
+- [ ] Previewed in browser (`npm run dev`) to verify Markdown rendering and challenge validation
 
 ## Checklist: Adding a Module
 
 - [ ] All items from the lesson checklist, for every lesson in the module
 - [ ] Module object added to `modules` array in `src/data/modules.ts`
 - [ ] `id` is unique and kebab-case
-- [ ] `prerequisites` reference existing module IDs (or is empty `[]`)
+- [ ] `prerequisites` reference existing module IDs (or is `[]`)
 - [ ] Module count in `data.test.ts` updated
 - [ ] `pathwayGenerator.ts` updated: discipline map, interest map, defaults
 - [ ] `pathwayGenerator.test.ts` updated if new mappings were added
