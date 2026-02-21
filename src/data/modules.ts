@@ -255,6 +255,17 @@ export const modules: ModuleDefinition[] = [
   keywords: ['reproducibility', 'documentation', 'checksums', 'methods', 'naming conventions', 'data integrity'],
 },
 {
+  id: 'llm-foundations',
+  title: 'Understanding Large Language Models',
+  description: 'Explore the architecture and cultural implications of large language models. From vectors and embeddings to self-attention, recurrent networks, and RLHF alignment — and why LLMs are complex systems built on a vast statistical representation of human language.',
+  estimatedHours: 4,
+  prerequisites: ['text-analysis-fundamentals'],
+  lessons: ['llm-01', 'llm-02', 'llm-03', 'llm-04', 'llm-05'],
+  track: 'textual-scholarship',
+  disciplines: ['literature', 'history', 'sociology', 'philosophy', 'linguistics', 'media-studies', 'anthropology'],
+  keywords: ['llm', 'transformers', 'embeddings', 'attention', 'rlhf', 'alignment', 'language models', 'neural networks'],
+},
+{
   id: 'dh-pipeline',
   title: 'Putting It All Together: A DH Research Pipeline',
   description: 'A capstone module that walks through a complete DH research workflow — from loading and cleaning a historical newspaper corpus, to extracting features, comparing subsets, and reporting results.',
