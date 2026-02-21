@@ -50,6 +50,8 @@ text_b = "reason logic logic evidence reason logic"
 # 2. Create fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
 # 3. Plot text_a on ax1 and text_b on ax2
 # 4. Set titles for each: "Gothic Terms" and "Scientific Terms"
+# 5. Add a figure-level super-title: fig.suptitle('Corpus Comparison')
+# 6. Print the suptitle: print(fig.get_suptitle())
 
 # Your code here
 ```
@@ -57,14 +59,15 @@ text_b = "reason logic logic evidence reason logic"
 #### Expected Output
 
 ```
-plt.show() called
+Corpus Comparison
 ```
 
 #### Hints
 
 1. Remember to unzip the tuples for each text separately.
 2. Use ax1.bar() instead of plt.bar() when working with subplots.
-3. Use plt.tight_layout() before plt.show() to keep things tidy.
+3. fig.suptitle() sets a title for the whole figure, above both subplot titles — it is different from ax.set_title(), which labels a single panel.
+4. Use plt.tight_layout() before plt.show() to keep things tidy.
 
 #### Solution
 
@@ -92,8 +95,11 @@ fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
 ax1.bar(words_a, freqs_a, color='purple')
 ax1.set_title('Gothic Terms')
 
-ax2.bar(words_b, freqs_b, color='green')ax2.set_title('Scientific Terms')
+ax2.bar(words_b, freqs_b, color='green')
+ax2.set_title('Scientific Terms')
 
+fig.suptitle('Corpus Comparison')
+print(fig.get_suptitle())
 plt.tight_layout()
 plt.show()
 ```

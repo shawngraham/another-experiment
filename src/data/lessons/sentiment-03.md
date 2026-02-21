@@ -42,11 +42,18 @@ sentences = full_text.split('.')
 ```
 
 ### 2. The Sentiment Timeline
-We calculate the score for every chunk and store it in a list. This creates a **Time Series**.
+We run VADER on every chunk and store the compound score in a list. This creates a **Time Series**. Using the `vaderSentiment` library (from the previous lesson) the full pipeline looks like this:
 
 ```python
-# A list of compound scores
-timeline = [0.1, 0.2, -0.5, -0.6, 0.1, 0.8] 
+import micropip
+await micropip.install("vaderSentiment")
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+sia = SentimentIntensityAnalyzer()
+
+# Score every chunk and collect the compound values
+timeline = [sia.polarity_scores(chunk)['compound'] for chunk in chunks]
+# e.g. [0.1, 0.2, -0.5, -0.6, 0.1, 0.8]
 ```
 
 ### 3. Smoothing with Pandas

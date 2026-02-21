@@ -9,11 +9,11 @@ difficulty: beginner
 learningObjectives:
   - Explain the four heuristics VADER uses to modify sentiment scores
   - Interpret the "compound" score vs. the "pos/neu/neg" distribution
-  - Initialize and run the VADER analyzer using the NLTK library
+  - Initialize and run the VADER analyzer using the vaderSentiment library
   - Apply sentiment analysis to a collection of short-form texts
 keywords:
   - vader
-  - nltk
+  - vaderSentiment
   - compound score
   - social media
   - heuristics
@@ -36,14 +36,12 @@ Standard dictionaries fail on social media because humans don't write perfectly.
 
 ## Implementation in Python
 
-We use the **NLTK** (Natural Language Toolkit) library to access VADER.
+We use the **vaderSentiment** package, which can be installed directly in the browser via `micropip`. Its API is identical to the NLTK wrapper you may have seen elsewhere, so any code you write here will also work in a standard Python environment after `pip install vaderSentiment`.
 
 ```python
-import nltk
-from nltk.sentiment import SentimentIntensityAnalyzer
-
-# Essential: Download the VADER lexicon data
-nltk.download('vader_lexicon')
+import micropip
+await micropip.install("vaderSentiment")
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 # Initialize the analyzer
 sia = SentimentIntensityAnalyzer()
@@ -100,26 +98,11 @@ Analyze a list of "tweets" to find the most positive one.
 #### Starter Code
 
 ```python
-# To avoid dependency issues in the browser, we will mock the VADER functionality.
-# In a local environment, you would use: sia = SentimentIntensityAnalyzer()
+import micropip
+await micropip.install("vaderSentiment")
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-class MockVader:
-    def polarity_scores(self, text):
-        # This mock simulates VADER's logic for punctuation and intensity
-        score = 0.0
-        text_lower = text.lower()
-        if "love" in text_lower: score += 0.5
-        if "hate" in text_lower: score -= 0.5
-        if "coding" in text_lower: score += 0.2
-        
-        # Rule 1: Punctuation booster
-        if "!!!" in text: score *= 1.5 
-        # Rule 2: Capitalization booster
-        if text.isupper(): score *= 1.2
-        
-        return {"compound": round(score, 2)}
-
-sia = MockVader()
+sia = SentimentIntensityAnalyzer()
 
 tweets = [
     "I hate traffic",
@@ -160,18 +143,11 @@ I LOVE CODING!!!
 #### Solution
 
 ```python
-class MockVader:
-    def polarity_scores(self, text):
-        score = 0.0
-        text_lower = text.lower()
-        if "love" in text_lower: score += 0.5
-        if "hate" in text_lower: score -= 0.5
-        if "coding" in text_lower: score += 0.2
-        if "!!!" in text: score *= 1.5 
-        if text.isupper(): score *= 1.2
-        return {"compound": round(score, 2)}
+import micropip
+await micropip.install("vaderSentiment")
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-sia = MockVader()
+sia = SentimentIntensityAnalyzer()
 
 tweets = [
     "I hate traffic",
