@@ -136,15 +136,15 @@ transcript = [
 target_speaker = "Mr. Okafor"
 
 # Step 1: Filter transcript to only turns by target_speaker
-speaker_turns = ___
+speaker_turns = ___ # Your code here
 
 # Step 2: Count total words across all of target_speaker's turns
-total_words = ___
+total_words = ___ # Your code here
 
 # Step 3: Print the results (must match expected output exactly)
 print(f"Speaker: {target_speaker}")
-print(f"Number of turns: {___}")
-print(f"Total words: {___}")
+print(f"Number of turns: {___}") # Your code here
+print(f"Total words: {___}") # Your code here
 ```
 
 #### Expected Output

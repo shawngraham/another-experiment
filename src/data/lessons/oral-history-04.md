@@ -155,8 +155,8 @@ for turn in transcript:
     words = turn["text"].split()
     for i, word in enumerate(words):
         if word.lower() == keyword.lower():
-            left = " ".join(words[___:___])
-            right = " ".join(words[___:___])
+            left = " ".join(words[___:___]) #Your code here
+            right = " ".join(words[___:___]) #Your code here
             print(f"  [{turn['speaker']}] ...{left:>20} [{keyword}] {right}...")
 ```
 

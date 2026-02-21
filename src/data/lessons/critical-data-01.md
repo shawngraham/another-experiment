@@ -169,6 +169,8 @@ records = [
 ]
 
 # SCHEME A: Group into "Skilled" or "Unskilled"
+# Replace the underscores with your code
+
 scheme_a = {
     "carpenter": "Skilled",
     "domestic servant": ___,

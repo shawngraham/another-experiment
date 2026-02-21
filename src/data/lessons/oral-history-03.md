@@ -151,11 +151,12 @@ transcript = [
 speaker_time = {}
 speaker_turns = {}
 
+# 
 for turn in transcript:
     name = turn["speaker"]
     duration = round(turn["end"] - turn["start"], 1)
-    speaker_time[name] = round(___, 1)
-    speaker_turns[name] = ___
+    speaker_time[name] = round(___, 1) #Your code here
+    speaker_turns[name] = ___ #Your code here
 
 # Step 2: Calculate total speaking time
 total_time = round(sum(speaker_time.values()), 1)
@@ -163,11 +164,11 @@ total_time = round(sum(speaker_time.values()), 1)
 # Step 3: Print per-speaker stats
 print("Speaker analysis:")
 for name in speaker_time:
-    pct = round(___ / ___ * 100, 1)
+    pct = round(___ / ___ * 100, 1) #Your code here
     print(f"  {name}: {speaker_turns[name]} turns, {speaker_time[name]}s ({pct}%)")
 
 # Step 4: Find and print the dominant speaker
-dominant = max(___, key=___)
+dominant = max(___, key=___) #Your code here
 print(f"Dominant speaker: {dominant}")
 ```
 

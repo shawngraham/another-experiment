@@ -131,7 +131,7 @@ transcript = [
 # Step 1: Calculate the pause before each turn (starting from turn 1)
 pauses = []
 for i in range(1, len(transcript)):
-    gap = round(___ - ___, 1)
+    gap = round(___ - ___, 1) # Your code here
     pauses.append({"after_turn": i - 1, "before_turn": i, "duration": gap})
 
 # Step 2: Print all pauses
@@ -140,7 +140,7 @@ for p in pauses:
     print(f"  Between turn {p['after_turn']} and {p['before_turn']}: {p['duration']:.1f}s")
 
 # Step 3: Find and print the longest pause
-longest = max(___, key=___)
+longest = max(___, key=___) # Your code here
 print(f"Longest pause: {longest['duration']:.1f}s (before turn {longest['before_turn']})")
 ```
 

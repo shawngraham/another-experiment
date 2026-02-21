@@ -199,11 +199,11 @@ cleaned = []
 for article in corpus:
     clean = dict(article)
     # TODO: Normalize text to lowercase and remove punctuation using re.sub
-    clean["text"] = ___
+    clean["text"] = ___ 
     # TODO: Replace empty author with "Unknown"
-    clean["author"] = ___
+    clean["author"] = ___ 
     # TODO: Filter — only keep articles with 20 or more words
-    if ___:
+    if ___: 
         cleaned.append(clean)
 
 print(f"Articles after cleaning: {len(cleaned)}")
