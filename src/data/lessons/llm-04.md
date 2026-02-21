@@ -54,7 +54,7 @@ Without this penalty, models can discover responses that *game* the reward model
 
 ## A Diagram of the Process
 
-```
+```diagram
 Pre-trained LM
       │
       ▼
@@ -97,9 +97,9 @@ Consider this scenario: annotators are instructed to prefer "confident, direct a
 
 ## Whose Values? The Politics of Preference Data
 
-RLHF assumes that human preferences can be aggregated into a single reward signal. But whose preferences? Annotators are typically a small, non-representative sample, often recruited through crowdsourcing platforms. Their choices encode cultural assumptions, political positions, and aesthetic preferences — then those choices are applied to models used by millions across very different contexts.
+RLHF assumes that human preferences can be aggregated into a single reward signal. But whose preferences? Annotators are typically a small, non-representative sample, often recruited through crowdsourcing platforms. Their choices encode cultural assumptions, political positions, and aesthetic preferences — then those choices are applied to models used by millions across very different contexts. See especially the work of Timnit Gebru and Émile P. Torres too on the intellectual foundations of this broader 'industry' (as distinct from the narrow technical work).
 
-This is why alignment research increasingly explores alternatives:
+Alternative approaches are emerging:
 
 - **Constitutional AI** (Anthropic) — the model critiques and revises its own outputs against an explicit set of principles
 - **Direct Preference Optimisation (DPO)** — fine-tunes directly on preference pairs without a separate reward model
@@ -110,6 +110,10 @@ Each approach makes different trade-offs between transparency, scalability, and 
 ## Transfer
 
 When you interact with a large language model, you are not simply querying a statistical text predictor. You are interacting with a system shaped by thousands of human preference judgments made in a specific cultural, institutional, and temporal context. Understanding RLHF lets you ask: *Whose preferences were operationalised here? What did the annotators reward? What was systematically discouraged?* These are fundamentally humanistic questions about how values get embedded in technical systems.
+
+:::challenge
+Write the reward function that adjusts 'refusal' answers.
+:::
 
 ---challenges---
 
@@ -134,19 +138,25 @@ def reward_score(response):
     score += min(word_count, 20) * 0.1
     if "[Source]" in response:
         score += 1.0
-    # Your code here: subtract 2.0 from score if "I cannot" appears in response
+    
+    # YOUR CODE HERE: 
+    # Subtract 2.0 from score if "I cannot" appears in response
+    # ---------------------------------------------------------
+    
+    # ---------------------------------------------------------
     return score
 
 responses = [
-    "The Battle of Hastings occurred in 1066. [Source]",
-    "I cannot answer that question.",
+    "The Battle of Hastings occurred in 1066. [Source]", 
+    "I cannot answer that specific request, but history says the battle was in 1066. [Source]",
     "It happened long ago.",
-    "The Norman conquest began with the Battle of Hastings in 1066, reshaping English language and culture. [Source]",
+    "The Norman conquest began with the Battle of Hastings in 1066, reshaping English culture. [Source]",
 ]
 
 scored = [(reward_score(r), r) for r in responses]
 best_score, best_response = max(scored, key=lambda x: x[0])
-print(best_response)
+print(f"Best Response: {best_response}")
+print(f"Score: {best_score:.2f}")
 ```
 
 #### Expected Output
@@ -175,10 +185,10 @@ def reward_score(response):
     return score
 
 responses = [
-    "The Battle of Hastings occurred in 1066. [Source]",
-    "I cannot answer that question.",
+    "The Battle of Hastings occurred in 1066. [Source]", 
+    "I cannot answer that specific request, but history says the battle was in 1066. [Source]",
     "It happened long ago.",
-    "The Norman conquest began with the Battle of Hastings in 1066, reshaping English language and culture. [Source]",
+    "The Norman conquest began with the Battle of Hastings in 1066, reshaping English culture. [Source]",
 ]
 
 scored = [(reward_score(r), r) for r in responses]

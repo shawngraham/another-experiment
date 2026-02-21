@@ -116,11 +116,162 @@ LSTMs were the dominant sequence model from roughly 2014–2017 — powering mac
 
 Understanding RNNs and LSTMs explains *why* Transformers were such a breakthrough. The Transformer replaced sequential hidden-state recurrence with parallel self-attention, meaning an entire sequence could be processed simultaneously and each position could directly attend to any other position. This unlocked the ability to train on far more data and to scale to billions of parameters.
 
+:::challenge
+To make the concept of a Recurrent Neural Network (RNN) accessible, this challenge focuses on the **Hidden State**. In an RNN, the "Hidden State" is the model's memory. As the model reads a sequence of words, it updates this memory at every step. The current memory is always a combination of the **new input** and the **previous memory**. In the second challenge you will see some rather complex math. You are trying to complete the RNN step; it's ok to just reveal the code to see what's happening
+:::
+
 ---challenges---
 
-### Challenge: Complete the RNN Step
+### Challenge: The Memory Loop (Toy RNN)
 
 - id: llm-03-c1
+- language: python
+- difficulty: beginner
+
+#### Starter Code
+
+```python
+# A toy RNN updates its 'hidden_state' (memory) word by word.
+# We will model a sequence of words and track the "running sentiment."
+
+sequence = ["hopeful", "inspiring", "victory"]
+word_impact = {"hopeful": 0.5, "inspiring": 0.8, "victory": 1.2}
+
+# In an RNN, the hidden state usually starts at 0.0
+hidden_state = 0.0
+
+print("Initial Hidden State:", hidden_state)
+
+for word in sequence:
+    # Get the value for the current word
+    current_input = word_impact[word]
+    
+    # Your code here: Update the hidden_state.
+    # It should be the SUM of the previous hidden_state and the current_input.
+    hidden_state = 
+    
+    print(f"Read '{word}': New Hidden State is {hidden_state:.1f}")
+
+# Your code here: print the final value of the hidden state
+print("Final Memory Score:", )
+```
+
+#### Expected Output
+
+```
+Initial Hidden State: 0.0
+Read 'hopeful': New Hidden State is 0.5
+Read 'inspiring': New Hidden State is 1.3
+Read 'victory': New Hidden State is 2.5
+Final Memory Score: 2.5
+```
+
+#### Hints
+
+1. To update the state, you need to re-assign the variable: `hidden_state = hidden_state + current_input`.
+2. This loop simulates how an RNN "accumulates" information over time. By the time it reaches "victory," the hidden state contains the sum total of all previous words.
+3. In a real RNN, this math involves matrices and activation functions (like `tanh`), but the core logic—**New State = Old State + Input**—remains the same.
+
+#### Solution
+
+```python
+sequence = ["hopeful", "inspiring", "victory"]
+word_impact = {"hopeful": 0.5, "inspiring": 0.8, "victory": 1.2}
+
+hidden_state = 0.0
+
+print("Initial Hidden State:", hidden_state)
+
+for word in sequence:
+    current_input = word_impact[word]
+    
+    # Update the hidden_state by adding the current input to the previous state
+    hidden_state = hidden_state + current_input
+    
+    print(f"Read '{word}': New Hidden State is {hidden_state:.1f}")
+
+print("Final Memory Score:", hidden_state)
+```
+
+### Challenge: The Sustainable Memory
+
+- id: llm-04-c2
+- language: python
+- difficulty: beginner/intermediate
+
+#### Starter Code
+
+```python
+# A toy RNN needs two things to stay "stable":
+# 1. Weights: To decide how much of the old memory to keep.
+# 2. Squashing: To keep the memory from growing too large.
+
+sequence = [1.0, 2.0, 1.5] # New information at each step
+
+# Parameters (The "Weights" the model would normally learn)
+persistence = 0.5  # Keep 50% of the old memory
+input_weight = 0.8 # Focus on 80% of the new input
+
+hidden_state = 0.0
+
+def squash(value):
+    """A toy activation function that keeps values between -2.0 and 2.0"""
+    return max(-2.0, min(2.0, value))
+
+for val in sequence:
+    # Your code here: Update the hidden_state.
+    # 1. Multiply the old hidden_state by the 'persistence' factor.
+    # 2. Multiply the current 'val' by the 'input_weight'.
+    # 3. Add them together and pass the result into the squash() function.
+    
+    hidden_state = 
+    
+    print(f"Input: {val} -> Memory: {hidden_state:.2f}")
+
+print("Final Sustainable Memory:", hidden_state)
+```
+
+#### Expected Output
+
+```
+Input: 1.0 -> Memory: 0.80
+Input: 2.0 -> Memory: 2.00
+Input: 1.5 -> Memory: 2.00
+Final Sustainable Memory: 2.0
+```
+
+#### Hints
+
+1. **The Formula**: Your update should look like: `squash( (old_state * weight) + (new_input * weight) )`.
+2. **The "Squash"**: Without the `squash()` function, the memory would keep growing. In real AI, we use functions like `tanh` to do this automatically.
+3. **Persistence**: By multiplying the `hidden_state` by 0.5, the model "forgets" half of its past at every step. This prevents the memory from becoming "saturated" with old data.
+
+#### Solution
+
+```python
+sequence = [1.0, 2.0, 1.5]
+persistence = 0.5
+input_weight = 0.8
+hidden_state = 0.0
+
+def squash(value):
+    return max(-2.0, min(2.0, value))
+
+for val in sequence:
+    # Calculate weighted parts
+    weighted_memory = hidden_state * persistence
+    weighted_input = val * input_weight
+    
+    # Update and squash
+    hidden_state = squash(weighted_memory + weighted_input)
+    
+    print(f"Input: {val} -> Memory: {hidden_state:.2f}")
+
+print("Final Sustainable Memory:", hidden_state)
+```
+### Challenge: Complete the RNN Step
+
+- id: llm-03-c3
 - language: python
 - difficulty: advanced
 

@@ -106,9 +106,13 @@ A single attention operation captures one kind of relationship (perhaps subject-
 
 For literary scholars and historians, attention weights are interpretable artifacts. Researchers have visualised attention heads in BERT and found that some heads track pronouns back to their antecedents, others track syntactic governors. This makes attention a potential analytical tool for computational stylistics — though always with the caveat that correlation with linguistic structure does not equal causal explanation.
 
+:::challenge
+Compute the attention weights. In the challenge, the model is trying to decide which "archival fragment" (the **Keys**) best matches a specific "research question" (the **Query**).
+:::
+
 ---challenges---
 
-### Challenge: Compute Attention Weights
+### Challenge: Thematic Attention
 
 - id: llm-02-c1
 - language: python
@@ -120,42 +124,55 @@ For literary scholars and historians, attention weights are interpretable artifa
 import math
 
 def softmax(scores):
+    """Converts raw relevance scores into probabilities that sum to 1.0."""
     max_score = max(scores)
     exp_scores = [math.exp(s - max_score) for s in scores]
     total = sum(exp_scores)
     return [e / total for e in exp_scores]
 
+# Each vector represents [Religion, Politics, Science]
+# A value of 1.0 means that theme is strongly present.
+themes = ["Ecclesiastical History", "Parliamentary Records", "Lab Manual", "Royal Decree"]
+
 keys = [
-    [1.0, 0.0, 0.0],
-    [0.0, 1.0, 0.0],
-    [0.0, 0.0, 1.0],
-    [1.0, 1.0, 0.0],
+    [1.0, 0.0, 0.0], # Key 0: Heavily religious
+    [0.0, 1.0, 0.0], # Key 1: Heavily political
+    [0.0, 0.0, 1.0], # Key 2: Heavily scientific
+    [0.8, 0.7, 0.0], # Key 3: Mixture of Divine Right (Relig/Pol)
 ]
 
+# Our Query: We are looking for documents about "Faith and Theology"
 query = [1.0, 0.0, 0.0]
 d = len(query)
 
-# Your code here: compute raw_scores as a list.
-# For each key k in keys, the raw score = dot(query, k) / sqrt(d)
-# where dot product = sum of element-wise products.
-raw_scores = []  # replace this line with your computation
+# Your code here: compute raw_relevance_scores as a list.
+# For each 'k' in keys, the score is the 'alignment' with the query.
+# Formula: (Dot Product of query and k) / sqrt(d)
+# Note: Dot Product is the sum of (query[i] * k[i]) for all dimensions.
+raw_relevance_scores = [] 
 
-weights = softmax(raw_scores)
-best = weights.index(max(weights))
-print(best)
+# Convert raw scores to Attention Weights
+weights = softmax(raw_relevance_scores)
+
+# Find the index of the fragment the model "attends" to most
+best_index = weights.index(max(weights))
+
+print(f"The model attends most to: {themes[best_index]}")
+print(f"Attention Weight: {weights[best_index]:.2f}")
 ```
 
 #### Expected Output
 
 ```
-0
+The model attends most to: Ecclesiastical History
+Attention Weight: 0.44
 ```
 
 #### Hints
 
-1. Loop over each key in `keys` and compute `sum(query[i] * k[i] for i in range(d)) / math.sqrt(d)`.
-2. Collect those values into a list called `raw_scores`.
-3. The first key `[1.0, 0.0, 0.0]` perfectly aligns with the query, so it receives the highest weight and `best` will be index 0.
+1. **The Dot Product**: This measures how much two vectors "overlap." For each key, multiply `query[0]*key[0]`, `query[1]*key[1]`, etc., and add them up.
+2. **The Scaling Factor**: Divide your dot product by `math.sqrt(d)` (in this case, `math.sqrt(3)`). This is a standard Transformer trick to keep scores from getting too large.
+3. **Softmax Logic**: Notice that "Ecclesiastical History" (Key 0) and "Royal Decree" (Key 3) both contain religious themes. The Attention mechanism will distribute
 
 #### Solution
 
@@ -168,22 +185,29 @@ def softmax(scores):
     total = sum(exp_scores)
     return [e / total for e in exp_scores]
 
+themes = ["Ecclesiastical History", "Parliamentary Records", "Lab Manual", "Royal Decree"]
 keys = [
     [1.0, 0.0, 0.0],
     [0.0, 1.0, 0.0],
     [0.0, 0.0, 1.0],
-    [1.0, 1.0, 0.0],
+    [0.8, 0.7, 0.0],
 ]
 
 query = [1.0, 0.0, 0.0]
 d = len(query)
 
-raw_scores = [
-    sum(query[i] * k[i] for i in range(d)) / math.sqrt(d)
-    for k in keys
-]
+# Compute raw scores using a list comprehension or a loop
+raw_relevance_scores = []
+for k in keys:
+    # Calculate Dot Product
+    dot_product = sum(query[i] * k[i] for i in range(d))
+    # Scale by sqrt(d)
+    raw_relevance_scores.append(dot_product / math.sqrt(d))
 
-weights = softmax(raw_scores)
-best = weights.index(max(weights))
-print(best)
+weights = softmax(raw_relevance_scores)
+best_index = weights.index(max(weights))
+
+print(f"The model attends most to: {themes[best_index]}")
+print(f"Attention Weight for '{themes[best_index]}': {weights[best_index]:.2f}")
+print(f"Attention Weight for '{themes[3]}': {weights[3]:.2f}")
 ```

@@ -74,7 +74,7 @@ Add a fourth sentence to the `corpus` list — perhaps *"the dog chased the cat"
 
 When you send a message to an LLM-based application, the journey passes through many components:
 
-```
+```bash
 User Input
     │
     ▼
@@ -110,9 +110,9 @@ Each stage introduces its own assumptions, biases, and failure modes. The "AI" y
 
 ## Emergent Capabilities
 
-As models scale — more parameters, more training data, more compute — they exhibit **emergent capabilities**: abilities that appear suddenly at a scale threshold and were absent in smaller models. Multi-step arithmetic, low-resource language translation, and complex analogical reasoning have all shown this pattern.
+As models scale — more parameters, more training data, more compute — they seem to exhibit what are called **emergent capabilities**: abilities that appear suddenly at a scale threshold and were absent in smaller models. Multi-step arithmetic, low-resource language translation, and complex analogical reasoning have all shown this pattern.
 
-This emergence is not fully understood. It may reflect genuine qualitative changes in what a sufficiently rich statistical representation can do, or it may reflect limitations in how capability is measured at smaller scales. Either way, it means that the behaviour of very large models cannot be reliably predicted by studying smaller ones.
+This emergence is not fully understood. It may reflect genuine qualitative changes in what a sufficiently rich statistical representation can do, or it may reflect limitations in how capability is measured at smaller scales. Either way, it means that the behaviour of very large models cannot be reliably predicted by studying smaller ones. 
 
 ## The Cultural Dimension
 
@@ -122,21 +122,25 @@ LLMs are trained on human writing. Human writing is not a neutral sample of real
 - The time periods, geographies, and demographics with the largest published output
 - The editorial and platform choices of the organisations that assembled and filtered the data
 
-An LLM's "knowledge" is therefore not encyclopaedic — it is *situated*. It knows more about European history than Andean history, more about the 20th century than the 12th, more about published fiction than oral tradition. The silences in an LLM's knowledge are archives of who and what has been excluded from digitised text.
+An LLM's "knowledge" is therefore not encyclopaedic — it is *situated*. It knows more about European history than Andean history, more about the 20th century than the 12th, more about published fiction than oral tradition. It knows how to role play 'ai run amok' because our fiction is filled with stories that tell it. The silences (and the crashing cymbals!) in an LLM's knowledge are archives of who and what has been excluded (or included) from digitised text.
 
 ## LLMs as Humanistic Objects
 
 The lesson of this module is not simply technical. It is this:
 
-**A large language model is among the largest objects ever produced by the humanities.** It is a single mathematical structure that has ingested more text than any human could read in a thousand lifetimes. It has no intention, no consciousness, no interpretation. And yet — because it is built from human language, shaped by human preferences through RLHF, deployed through human-designed pipelines — it expresses, amplifies, and distorts human thought at unprecedented scale.
+**A large language model is among the largest objects ever produced by the humanities.** It is a single mathematical structure that has ingested more text than any human could read in a thousand lifetimes. **It is a model of culture**. It is an artefact. It has no intention, no consciousness, no interpretation. And yet — because it is built from human language, shaped by human preferences through RLHF, deployed through human-designed pipelines — it expresses, amplifies, and distorts human thought at unprecedented scale.
 
-The models are no longer just models. They have become complex sociotechnical systems — retrieval pipelines, safety classifiers, system prompts, fine-tuned personas — built on top of a fundamental digital object: a vast, compressed, and inevitably partial representation of the statistics of human language.
+The models are no longer just models. They have become complex sociotechnical systems, retrieval pipelines, safety classifiers, system prompts, fine-tuned personas, built on top of a fundamental digital object: a vast, compressed, and inevitably partial representation of the statistics of human language.
 
-To use these systems responsibly, and to critique them rigorously, we need both the technical literacy to understand how they work and the humanistic sensibility to ask *whose language*, *whose values*, and *whose silences* they encode. The questions your disciplines have always asked — about power, representation, interpretation, and meaning — are exactly the questions we need to bring to these systems.
+To use these systems responsibly, and to critique them rigorously, we need both the technical literacy to understand how they work and the humanistic sensibility to ask *whose language*, *whose values*, and *whose silences* they encode, and **where they are deployed**. The questions your disciplines have always asked, about power, representation, interpretation, and meaning, are exactly the questions we need to bring to these systems. The point of a system is what it does...
+
+:::challenge
+Implement a Weighted Probability function that combines two different "archives" (e.g., a "Mainstream Archive" and a "Marginalized Archive") to show how the "system" can tune which "culture" it amplifies.
+:::
 
 ---challenges---
 
-### Challenge: Bigram Probabilities
+### Challenge: The Weighted Archive
 
 - id: llm-05-c1
 - language: python
@@ -145,64 +149,70 @@ To use these systems responsibly, and to critique them rigorously, we need both 
 #### Starter Code
 
 ```python
-from collections import defaultdict
+# Archive A: Colonial records regarding land (focus on expansion)
+discovery_archive = {"expansion": 12, "territory": 8, "resource": 10}
 
-corpus = [
-    "to be or not to be",
-    "to be is to exist",
-    "not to be is to vanish",
-]
+# Archive B: Indigenous records regarding land (focus on heritage)
+stewardship_archive = {"kinship": 15, "territory": 11, "custodianship": 9}
 
-bigrams = defaultdict(lambda: defaultdict(int))
-for sentence in corpus:
-    words = sentence.split()
-    for i in range(len(words) - 1):
-        bigrams[words[i]][words[i + 1]] += 1
+# The system weight (0.0 to 1.0) for Archive B. 
+# A weight of 0.8 means the system heavily prioritizes the stewardship perspective.
+weight_b = 0.8
 
-def most_likely_next(word):
-    """Return the single most probable next word after `word`."""
-    counts = bigrams[word]
-    if not counts:
-        return None
-    # Your code here: return the word (key) with the highest count in `counts`
+all_words = set(discovery_archive.keys()) | set(stewardship_archive.keys())
+weighted_results = {}
 
-print(most_likely_next("to"))
+for word in all_words:
+    score_a = discovery_archive.get(word, 0)
+    score_b = stewardship_archive.get(word, 0)
+
+    # Your code here: Calculate the weighted score for this word
+    # Archive A should be multiplied by (1 - weight_b)
+    # Archive B should be multiplied by weight_b
+    weighted_score = 
+
+    weighted_results[word] = weighted_score
+
+# Your code here: Find the word with the highest score in the weighted_results dictionary
+top_concept = 
+
+print(f"Top Concept: {top_concept}")
+print(f"Score for 'territory': {weighted_results['territory']:.1f}")
 ```
 
 #### Expected Output
 
 ```
-be
+Top Concept: kinship
+Score for 'territory': 10.4
 ```
 
 #### Hints
-
-1. `counts` is a dictionary mapping `{next_word: frequency}`.
-2. `max(counts, key=counts.get)` returns the key associated with the largest value.
-3. Across all three sentences, "be" follows "to" most often (four times vs. once each for "exist" and "vanish").
+1. To balance the archives, multiply score_a by (1 - weight_b) and add it to score_b * weight_b.
+2. To find the key with the highest value in a dictionary, use max(weighted_results, key=weighted_results.get).
+3. Even though "territory" appears in both archives, at a weight of 0.8, the word "kinship" (which only appears in Archive B) becomes the statistically dominant concept in the system.
 
 #### Solution
 
 ```python
-from collections import defaultdict
+discovery_archive = {"expansion": 12, "territory": 8, "resource": 10}
+stewardship_archive = {"kinship": 15, "territory": 11, "custodianship": 9}
+weight_b = 0.8
 
-corpus = [
-    "to be or not to be",
-    "to be is to exist",
-    "not to be is to vanish",
-]
+all_words = set(discovery_archive.keys()) | set(stewardship_archive.keys())
+weighted_results = {}
 
-bigrams = defaultdict(lambda: defaultdict(int))
-for sentence in corpus:
-    words = sentence.split()
-    for i in range(len(words) - 1):
-        bigrams[words[i]][words[i + 1]] += 1
+for word in all_words:
+    score_a = discovery_archive.get(word, 0)
+    score_b = stewardship_archive.get(word, 0)
 
-def most_likely_next(word):
-    counts = bigrams[word]
-    if not counts:
-        return None
-    return max(counts, key=counts.get)
+    # Calculate the weighted score
+    weighted_score = (score_a * (1 - weight_b)) + (score_b * weight_b)
+    weighted_results[word] = weighted_score
 
-print(most_likely_next("to"))
+# Find the most likely word
+top_concept = max(weighted_results, key=weighted_results.get)
+
+print(f"Top Concept: {top_concept}")
+print(f"Score for 'territory': {weighted_results['territory']:.1f}")
 ```

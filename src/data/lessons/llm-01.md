@@ -42,7 +42,7 @@ Those numbers are not arbitrary. Systems like **Word2Vec** and **GloVe** learn t
 
 The core hypothesis — sometimes called the **distributional hypothesis** — is:
 
-> *"A word is known by the company it keeps."* — J.R. Firth (1957)
+> *"You shall know a word by the company it keeps."* — J.R. Firth (1957)
 
 If "monarch," "throne," "crown," and "reign" appear together frequently across millions of documents, their vectors cluster together in embedding space. The model never reads a definition; it infers meaning from co-occurrence.
 
@@ -52,6 +52,9 @@ One of the most striking properties of trained embeddings is that *relationships
 
 ```
 king − man + woman ≈ queen
+```
+.
+```
 Paris − France + Italy ≈ Rome
 ```
 
@@ -96,6 +99,10 @@ Modify the toy vectors above. Can you create vectors where "novel" and "poem" ar
 ## Transfer
 
 In digital humanities, embeddings let you ask *spatial* questions about language: Are discussions of "freedom" closer to "slavery" in antebellum Southern newspapers than in Northern ones? Is the meaning of "progress" the same in 1850 and 1950? Embeddings turn interpretive questions into measurable distances across a corpus.
+
+:::challenge
+Cosine Similarity is used **a lot**. Try to implement it!
+:::
 
 ---challenges---
 
