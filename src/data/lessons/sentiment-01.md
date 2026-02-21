@@ -52,9 +52,11 @@ This is the "Gold Standard" for transparency in DH. You know exactly *why* a tex
 
 **Popular Lexicons:**
 *   **AFINN:** A list of English words rated from -5 to +5.
-*   **VADER:** Specialized for social media; it understands emojis (😊), capitalization (GREAT!), and "boosters" (extremely good).
+*   **VADER:** Specialized for social media; it understands emojis (😊), capitalization (GREAT!), and "boosters" (extremely good). The `vaderSentiment` package is available directly in the browser — no NLTK required — and we will use it in the next lesson.
 
 #### Simple Python Implementation
+The exercise below shows the concept from scratch so you can see exactly what a lexicon does: each word is looked up and its score is added to a running total. VADER works the same way underneath, but with a much larger word list and extra rules for punctuation and context.
+
 Notice how we lowercase the text so it matches our dictionary.
 
 ```python
