@@ -81,7 +81,7 @@ Notice how the compound score jumps significantly just by adding caps and exclam
 
 *   **Public History:** Analyzing thousands of YouTube comments on a historical documentary to see how the public reacts to controversial topics.
 *   **Digital Ethnography:** Measuring the "toxicity" of different online gaming communities or forums over time.
-*   **Crisis Response:** Using real-time Twitter data to track the "mood" of a city during a natural disaster or protest.
+*   **Crisis Response:** Using real-time social media data to track the "mood" of a city during a natural disaster or protest.
 
 :::challenge
 Analyze a list of "tweets" to find the most positive one.

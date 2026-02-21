@@ -90,3 +90,7 @@ server {
 - react-markdown + remark-gfm
 - JSZip (Obsidian export)
 - Vitest + React Testing Library
+
+
+## decompile lessons.tsx
+`npx tsx scripts/decompile.mjs`

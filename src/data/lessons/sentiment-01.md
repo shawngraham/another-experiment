@@ -45,7 +45,7 @@ Some dictionaries also measure **Valence** (the intensity of the word). "Happy" 
 
 ### 2. The "Bag of Words" Model
 Both simple dictionary and early ML approaches often treat text as a **Bag of Words**. This means the computer ignores the order of words and just looks at their frequency. 
-*   *Problem:* "The dog bit the man" and "The man bit the dog" look identical to a Bag of Words model, even though the sentiment for the man is very different!
+*   *Problem:* "How am I? Not bad, good!" and "How am I? Not good, bad!" look identical to a Bag of Words model, even though one is a compliment and the other is a complaint.
 
 ### 3. The Dictionary (Lexicon) Approach
 This is the "Gold Standard" for transparency in DH. You know exactly *why* a text got a score because you can see the word list.
