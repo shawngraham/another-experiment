@@ -1,3 +1,5 @@
+# status: not yet implemented
+
 # Accessibility Improvement Plan
 
 ## Audit Summary

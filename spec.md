@@ -1,3 +1,5 @@
+# original; things have moved along since this
+
 # Digital Humanities Interactive Tutorial Environment
 ## Technical Specification Document
 
