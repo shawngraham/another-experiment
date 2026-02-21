@@ -89,7 +89,7 @@ Knowledge Graphs are powerful, but they are only as good as their data. If an ar
 When you build a graph, ask: *Who is missing a connection, and why?*
 
 :::challenge
-Represent a knowledge statement as a triplet and extract specific labels from a collection of facts.
+Discover what relation types exist in a knowledge graph, then extract and format all facts of a chosen type.
 :::
 
 ---challenges---
@@ -150,45 +150,68 @@ print(my_triple)
 #### Starter Code
 
 ```python
-# The archive is a list of lists (triples)
+# A small knowledge graph with mixed relation types
 archive = [
-    ["The_Hobbit", "written_by", "Tolkien"],
-    ["London", "located_in", "UK"],
-    ["Emma", "written_by", "Austen"]
+    ["Mary_Shelley",     "author_of",   "Frankenstein"],
+    ["Jane_Austen",      "author_of",   "Emma"],
+    ["Jane_Austen",      "born_in",     "Steventon"],
+    ["Charles_Dickens",  "author_of",   "Oliver_Twist"],
+    ["Steventon",        "located_in",  "England"],
+    ["Landport",         "located_in",  "England"],
+    ["Charles_Dickens",  "born_in",     "Landport"],
 ]
 
-for triple in archive:
-    # 1. Check if the relation (index 1) is equal to "written_by"
-    if triple[1] == "written_by":
-        # 2. Print the name of the book (index 0)
-        print()
+# Task 1: Collect every unique relation type that appears in the archive.
+# Add a relation to the list only if it isn't already there.
+relation_types = []
+
+# Your code here
+
+print("Relations found:", relation_types)
+
+# Task 2: For every "author_of" triple, print a sentence:
+# "<Head> wrote <Tail>"
+
+# Your code here
 ```
 
 #### Expected Output
 
 ```
-The_Hobbit
-Emma
+Relations found: ['author_of', 'born_in', 'located_in']
+Mary_Shelley wrote Frankenstein
+Jane_Austen wrote Emma
+Charles_Dickens wrote Oliver_Twist
 ```
 
 #### Hints
 
-1. `triple[1]` accesses the middle part of each list (the relationship).
-2. `triple[0]` accesses the first part of each list (the book name).
-3. Make sure your `print()` statement is indented inside the `if` block!
+1. Loop through `archive`. Inside the loop, `triple[1]` is the relation. Append it to `relation_types` only `if triple[1] not in relation_types`.
+2. For Task 2, loop through `archive` again and check `if triple[1] == "author_of":`.
+3. Use an f-string to format the sentence: `f"{triple[0]} wrote {triple[2]}"`.
 
 #### Solution
 
 ```python
 archive = [
-    ["The_Hobbit", "written_by", "Tolkien"],
-    ["London", "located_in", "UK"],
-    ["Emma", "written_by", "Austen"]
+    ["Mary_Shelley",     "author_of",   "Frankenstein"],
+    ["Jane_Austen",      "author_of",   "Emma"],
+    ["Jane_Austen",      "born_in",     "Steventon"],
+    ["Charles_Dickens",  "author_of",   "Oliver_Twist"],
+    ["Steventon",        "located_in",  "England"],
+    ["Landport",         "located_in",  "England"],
+    ["Charles_Dickens",  "born_in",     "Landport"],
 ]
 
+relation_types = []
 for triple in archive:
-    if triple[1] == "written_by":
-        # triple[0] refers to the head/subject
-        print(triple[0])
+    if triple[1] not in relation_types:
+        relation_types.append(triple[1])
+
+print("Relations found:", relation_types)
+
+for triple in archive:
+    if triple[1] == "author_of":
+        print(f"{triple[0]} wrote {triple[2]}")
 ```
 
