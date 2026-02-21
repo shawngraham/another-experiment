@@ -153,7 +153,8 @@ counts = list(data.values())
 # 1. Set the style to 'fivethirtyeight'
 # 2. Calculate the sum of counts for a dynamic title
 # 3. Create the bar chart and set the title to: "Corpus (Total: X)"
-# 4. Use plt.show()
+# 4. Print the plot title with: print(plt.gca().get_title())
+# 5. Call plt.show()
 
 # Your code here
 ```
@@ -161,7 +162,7 @@ counts = list(data.values())
 #### Expected Output
 
 ```
-plt.show() called
+Corpus (Total: 45)
 ```
 
 #### Hints
@@ -169,6 +170,7 @@ plt.show() called
 1. Use plt.style.use('fivethirtyeight').
 2. total = sum(counts) will give you the number for your title.
 3. Use an f-string for the title: plt.title(f'Corpus (Total: {total})')
+4. plt.gca() gets the current axes object; .get_title() returns the title string you just set.
 
 #### Solution
 
@@ -186,6 +188,7 @@ total = sum(counts)
 
 plt.bar(genres, counts)
 plt.title(f'Corpus (Total: {total})')
+print(plt.gca().get_title())
 plt.show()
 ```
 
