@@ -43,31 +43,53 @@ Output goes to the `dist/` directory.
 
 The build output is a static site (HTML + JS + CSS). No backend server is needed.
 
-### GitHub Pages
+> **Important — SPA routing:** This app uses client-side routing (React Router with the HTML5 History API). When a user refreshes the page, navigates directly to a URL like `/lesson/python-basics-01`, or uses the browser back/forward buttons after a hard navigation, the browser makes a real HTTP request to the server. The server must respond with `index.html` for every path instead of returning a 404. Each section below explains how to configure this.
 
-1. Build the project: `npm run build`
-2. Push the `dist/` folder to a `gh-pages` branch, or use a GitHub Action to automate it.
-
-### Netlify / Vercel / Cloudflare Pages
+### Netlify / Cloudflare Pages / Render
 
 1. Connect your repository.
 2. Set the build command to `npm run build`.
 3. Set the publish directory to `dist`.
 4. Deploy.
 
-### Self-hosting
+The `public/_redirects` file in this repository (`/* /index.html 200`) is automatically picked up by Netlify, Cloudflare Pages, and Render — no extra configuration needed.
 
-Serve the `dist/` directory with any static file server:
+### Vercel
 
-```bash
-# Using the built-in preview server
-npm run preview
+1. Connect your repository.
+2. Set the build command to `npm run build`.
+3. Set the output directory to `dist`.
+4. Add a `vercel.json` at the project root:
 
-# Or with any static server, e.g. Python
-cd dist && python3 -m http.server 8080
+```json
+{
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
 ```
 
-For SPA routing to work, configure your server to fall back to `index.html` for all routes. Example nginx config:
+### GitHub Pages
+
+GitHub Pages does not natively support SPA fallback routing. The recommended approach is to copy `index.html` as `404.html` in your build output so that GitHub Pages serves it for unknown paths:
+
+```bash
+npm run build
+cp dist/index.html dist/404.html
+```
+
+Then push the `dist/` folder to a `gh-pages` branch, or use a GitHub Action to automate this step.
+
+Note: if the app is served from a sub-path (e.g. `https://user.github.io/repo/`), set the `base` option in `vite.config.ts` to match:
+
+```ts
+export default defineConfig({
+  base: '/repo/',
+  // ...
+})
+```
+
+### Self-hosting (nginx)
+
+Serve the `dist/` directory with nginx, configured to fall back to `index.html` for all routes:
 
 ```nginx
 server {
@@ -80,6 +102,31 @@ server {
     }
 }
 ```
+
+### Self-hosting (Apache)
+
+Add an `.htaccess` file inside `dist/`:
+
+```apache
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+```
+
+### Local preview
+
+Use Vite's built-in preview server, which handles SPA routing automatically:
+
+```bash
+npm run preview
+```
+
+> **Note:** `python3 -m http.server` does **not** support SPA fallback routing and will return 404 on refresh or direct URL access. Use `npm run preview` instead.
 
 ## Tech Stack
 
