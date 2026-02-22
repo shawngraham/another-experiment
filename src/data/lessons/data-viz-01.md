@@ -60,6 +60,9 @@ keywords:
   When you start building charts in the next lesson, always ask yourself: *"If I deleted the title and labels, would a reader still know what this represents?"* If the answer is no, your design needs work.
   :::
   
+  :::challenge
+  In the code sandbox, set the variable appropriately and print the result.
+  :::
 
 ---challenges---
 
@@ -77,11 +80,11 @@ keywords:
 
   # Question 1: I want to see how the use of the word "democracy" 
   # changes year-by-year across the 19th century.
-  answer_1 = "???"
+  answer_1 = ___
 
   # Question 2: I want to compare the total number of letters 
   # written by 5 different historical figures.
-  answer_2 = "???"
+  answer_2 = ___
 
   # Goal: Set the variables correctly and print answer_2
   

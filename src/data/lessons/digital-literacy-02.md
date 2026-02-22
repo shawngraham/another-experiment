@@ -77,8 +77,12 @@ The backbone of scholarly digital editions. Using the **TEI (Text Encoding Initi
 | **JSON** | Nested | Web Data / Metadata | Storing API results |
 | **XML** | Hierarchical | Complex Encoding | Scholarly Digital Editions |
 
-:::try-it
-In the challenge in the sandbox, we use the `csv` module. Because we are working with a "string" of text rather than an actual file on your hard drive, we use `io.StringIO` to trick Python into treating that text like an open file.
+:::tip
+In the challenge in the sandbox, we use the `csv` module. Because we are working with a "string" of text rather than an actual file on your hard drive, we use `io.StringIO` to trick Python into treating that text like an open file, called 'virtual_file'. On your own computer, you wouldn't do that.
+:::
+
+:::challenge
+This challenge has you do the basic building block of much more complicated workflows: read in each row of data, then do something with that row.
 :::
 
 ---challenges---

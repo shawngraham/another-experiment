@@ -66,119 +66,195 @@ keywords:
   :::
 
   :::challenge
-  In the first challenge, create a 1x1 red pixel. In the second, practice "drilling down" into a 3x3 grid to find specific colors.
+  In the first challenge, you learn how to inspect the pixel grid. In the second, you read the colours across a kind of 'film strip'.
   :::
 
 ---challenges---
 
-### Challenge: Create a Red Pixel Array
+### Challenge: Build and Inspect a Pixel Grid
 
 - id: image-analysis-01-c1
 - language: python
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
 import numpy as np
 
-  # Goal: Create a 1x1 pixel image that is pure Red.
-  # 1. Use np.array()
-  # 2. The structure must be a 3D list: [[[R, G, B]]]
-  # 3. Set dtype=np.uint8
+# Step 1: Create a 3x3 black image using np.zeros().
+# It needs three dimensions: (Height, Width, Channels).
+# Use dtype=np.uint8 to keep values in the 0-255 range.
+image = # Your code here
 
-  red_pixel_image = 
+# Step 2: Print the shape of the array.
+# The output should confirm (Height, Width, Channels).
+print("Shape:", image.shape)
 
-  # Your code here
+# Step 3: Paint four pixels to make a 2x2 block of colour
+# in the top-left corner of the image.
+# Top-left (0,0)     = Red
+# Top-right (0,1)    = Green
+# Bottom-left (1,0)  = Blue
+# Bottom-right (1,1) = White
+# Leave all remaining pixels black.
 
-  print(red_pixel_image)
-  
+# Your code here — four assignment statements
+
+print(image)
 ```
 
 #### Expected Output
-
 ```
-[[[255   0   0]]]
+Shape: (3, 3, 3)
+[[[255   0   0]
+  [  0 255   0]
+  [  0   0   0]]
+
+ [[  0   0 255]
+  [255 255 255]
+  [  0   0   0]]
+
+ [[  0   0   0]
+  [  0   0   0]
+  [  0   0   0]]]
 ```
 
 #### Hints
 
-1. Pure red is [255, 0, 0].
-2. NumPy expects nested lists for dimensions: [[[ ... ]]].
-3. The shape should be (1, 1, 3).
+1. `np.zeros((height, width, channels), dtype=np.uint8)` creates an array filled with zeros — a black image.
+2. `image.shape` returns a tuple `(H, W, C)` — for a 3×3 RGB image that is `(3, 3, 3)`.
+3. Assign pixels with `image[row, col] = [R, G, B]`. Remember rows count from the top, columns from the left.
 
 #### Solution
-
 ```python
 import numpy as np
 
-  # A 1x1 image with 3 color channels
-  red_pixel_image = np.array([[[255, 0, 0]]], dtype=np.uint8)
+image = np.zeros((3, 3, 3), dtype=np.uint8)
 
-  print(red_pixel_image)
+print("Shape:", image.shape)
+
+image[0, 0] = [255,   0,   0]   # Red
+image[0, 1] = [  0, 255,   0]   # Green
+image[1, 0] = [  0,   0, 255]   # Blue
+image[1, 1] = [255, 255, 255]   # White
+
+print(image)
 ```
 
-### Challenge: Accessing Pixel Values
+### Challenge: Reading a Colour Palette
 
 - id: image-analysis-01-c2
 - language: python
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
 import numpy as np
 
-  # A 3x3 pixel "mini-archive"
-  image_array = np.array([
-      [[255, 0, 0], [0, 255, 0], [0, 0, 255]],      # Row 0: R, G, B
-      [[0, 0, 0], [255, 255, 255], [128, 128, 128]], # Row 1: Black, White, Gray
-      [[255, 255, 0], [0, 255, 255], [255, 0, 255]]  # Row 2: Yellow, Cyan, Magenta
-  ], dtype=np.uint8)
+# A 2x5 "filmstrip" — each column represents the dominant colour
+# of one scene from a short film. This is the kind of data
+# a Distant Viewing pipeline might extract automatically.
+filmstrip = np.array([
+    [[20, 10, 80], [180,  60,  20], [240, 230, 200], [10, 120, 40], [200, 30, 30]],
+    [[20, 10, 80], [180,  60,  20], [240, 230, 200], [10, 120, 40], [200, 30, 30]],
+], dtype=np.uint8)
 
-  # Goal: Extract the RGB values for White and Yellow
-  # 1. White is in Row 1, Column 1
-  # 2. Yellow is in Row 2, Column 0
+# Step 1: Confirm the shape. Print it and explain what each dimension means
+# by filling in the f-string below.
+h, w, c = filmstrip.shape
+print(f"Shape: {filmstrip.shape}")
+print(f"  {h} rows (duplicate for visibility), {w} scenes, {c} colour channels")
 
-  white_pixel = 
-  yellow_pixel = 
+# Step 2: Extract the RGB values for scene 0 (col 0) and scene 4 (col 4).
+# Print each with a human-readable colour description.
+scene_0 = # Your code here
+scene_4 = # Your code here
+print(f"\nScene 0 dominant colour: {scene_0}")
+print(f"Scene 4 dominant colour: {scene_4}")
 
-  # Your code here
+# Step 3: Identify the "coldest" and "warmest" scenes.
+# A scene is "warm" if its Red channel value is the highest of R, G, B.
+# A scene is "cold" if its Blue channel value is the highest.
+# Loop through all 5 columns (scene indices 0-4), check each pixel's
+# R and B values, and collect the warm and cold scene indices.
 
-  print(f"White: {white_pixel}")
-  print(f"Yellow: {yellow_pixel}")
-  
+warm_scenes = []
+cold_scenes = []
+
+for col in range(w):
+    pixel = filmstrip[0, col]   # use row 0 — both rows are identical
+    r, g, b = pixel[0], pixel[1], pixel[2]
+    # Your code here — append col to warm_scenes or cold_scenes
+
+print(f"\nWarm scenes (Red dominant): {warm_scenes}")
+print(f"Cold scenes (Blue dominant): {cold_scenes}")
+
+# Step 4: Compute the average Red, Green, and Blue value across all 5 scenes.
+# This gives the "overall colour palette" of the film — a core Distant Viewing metric.
+avg_r = int(np.mean(filmstrip[:, :, 0]))
+avg_g = # Your code here
+avg_b = # Your code here
+print(f"\nOverall palette — R: {avg_r}, G: {avg_g}, B: {avg_b}")
 ```
 
 #### Expected Output
-
 ```
-White: [255 255 255]
-Yellow: [255 255   0]
+Shape: (2, 5, 3)
+  2 rows (duplicate for visibility), 5 scenes, 3 colour channels
+
+Scene 0 dominant colour: [20 10 80]
+Scene 4 dominant colour: [200  30  30]
+
+Warm scenes (Red dominant): [1, 2, 4]
+Cold scenes (Blue dominant): [0]
+
+Overall palette — R: 130, G: 90, B: 74
 ```
 
 #### Hints
 
-1. Access the array using image_array[row, col].
-2. Remember that indexing starts at 0.
-3. White is at index [1, 1].
+1. Access a pixel with `filmstrip[row, col]` — use row 0 for all scene lookups since both rows are identical.
+2. For Step 3, `r, g, b = pixel[0], pixel[1], pixel[2]`. A warm scene has `r > g and r > b`; a cold scene has `b > r and b > g`.
+3. For Step 4, `np.mean(filmstrip[:, :, 0])` takes the mean of the entire Red channel (index 0 on the third axis). Repeat for channels 1 and 2, then wrap in `int()` to get a whole number.
+4. The overall palette tells you something about the film's visual mood — a high average Red suggests a warm, intense palette; a high average Blue suggests cool detachment. This is exactly what Distant Viewing researchers measure across entire films.
 
 #### Solution
-
 ```python
 import numpy as np
 
-  image_array = np.array([
-      [[255, 0, 0], [0, 255, 0], [0, 0, 255]],
-      [[0, 0, 0], [255, 255, 255], [128, 128, 128]],
-      [[255, 255, 0], [0, 255, 255], [255, 0, 255]]
-  ], dtype=np.uint8)
+filmstrip = np.array([
+    [[20, 10, 80], [180,  60,  20], [240, 230, 200], [10, 120, 40], [200, 30, 30]],
+    [[20, 10, 80], [180,  60,  20], [240, 230, 200], [10, 120, 40], [200, 30, 30]],
+], dtype=np.uint8)
 
-  # Select pixels by [row, column]
-  white_pixel = image_array[1, 1]
-  yellow_pixel = image_array[2, 0]
+# Step 1
+h, w, c = filmstrip.shape
+print(f"Shape: {filmstrip.shape}")
+print(f"  {h} rows (duplicate for visibility), {w} scenes, {c} colour channels")
 
-  print(f"White: {white_pixel}")
-  print(f"Yellow: {yellow_pixel}")
+# Step 2
+scene_0 = filmstrip[0, 0]
+scene_4 = filmstrip[0, 4]
+print(f"\nScene 0 dominant colour: {scene_0}")
+print(f"Scene 4 dominant colour: {scene_4}")
+
+# Step 3
+warm_scenes = []
+cold_scenes = []
+for col in range(w):
+    pixel = filmstrip[0, col]
+    r, g, b = pixel[0], pixel[1], pixel[2]
+    if r > g and r > b:
+        warm_scenes.append(col)
+    elif b > r and b > g:
+        cold_scenes.append(col)
+
+print(f"\nWarm scenes (Red dominant): {warm_scenes}")
+print(f"Cold scenes (Blue dominant): {cold_scenes}")
+
+# Step 4
+avg_r = int(np.mean(filmstrip[:, :, 0]))
+avg_g = int(np.mean(filmstrip[:, :, 1]))
+avg_b = int(np.mean(filmstrip[:, :, 2]))
+print(f"\nOverall palette — R: {avg_r}, G: {avg_g}, B: {avg_b}")
 ```
-

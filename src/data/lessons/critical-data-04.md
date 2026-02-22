@@ -110,7 +110,7 @@ Consider a text analysis project in your field:
 The scholar Ruha Benjamin coined the term "the New Jim Code" to describe how seemingly neutral technologies reproduce racial hierarchies. Auditing word lists is one concrete way to look inside the black box and see whose values are encoded there.
 
 :::challenge
-Cross-reference a sentiment lexicon with a set of culturally-coded terms. Report each flagged word, its score, and whether it is positive or negative. Then calculate the overall bias ratio and the proportion of flagged words that carry negative scores.
+Cross-reference a sentiment lexicon with a set of culturally-coded terms. Report each flagged word, its score, and whether it is positive or negative. Then calculate the overall bias ratio and the proportion of flagged words that carry negative scores. Think about what the directionality implies and make a note in your notebook.
 :::
 
 ---challenges---
@@ -144,6 +144,15 @@ flagged_terms = {"aggressive", "articulate", "exotic", "illegal",
 # 2. Print total words, flagged count, bias ratio, and
 #    how many flagged words have negative scores
 
+# 3. Print a breakdown of the flagged words by score direction.
+
+print()
+print("=== Score Direction of Flagged Words ===")
+flagged_negative = [w for w in flagged_in_lexicon if sentiment_lexicon[w] < 0]
+flagged_positive = [w for w in flagged_in_lexicon if sentiment_lexicon[w] > 0]
+print(f"  Flagged negative: {sorted(flagged_negative)}")
+print(f"  Flagged positive: {sorted(flagged_positive)}")
+
 # Your code here
 ```
 
@@ -164,6 +173,9 @@ Total words in lexicon: 15
 Flagged as culturally biased: 8
 Bias ratio: 8/15 (53.3%)
 Flagged words with negative scores: 6/8
+=== Score Direction of Flagged Words ===
+  Flagged negative: ['aggressive', 'illegal', 'primitive', 'sassy', 'savage', 'thug']
+  Flagged positive: ['articulate', 'exotic']
 ```
 
 #### Hints
@@ -201,5 +213,11 @@ print(f"Bias ratio: {len(flagged_in_lexicon)}/{len(sentiment_lexicon)} ({round(l
 
 neg_flagged = sum(1 for w in flagged_in_lexicon if sentiment_lexicon[w] < 0)
 print(f"Flagged words with negative scores: {neg_flagged}/{len(flagged_in_lexicon)}")
+
+print("=== Score Direction of Flagged Words ===")
+flagged_negative = [w for w in flagged_in_lexicon if sentiment_lexicon[w] < 0]
+flagged_positive = [w for w in flagged_in_lexicon if sentiment_lexicon[w] > 0]
+print(f"  Flagged negative: {sorted(flagged_negative)}")
+print(f"  Flagged positive: {sorted(flagged_positive)}")
 ```
 

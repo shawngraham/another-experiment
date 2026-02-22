@@ -124,21 +124,18 @@ The practice of writing data biographies connects to broader movements in data e
 - **Feminist Data Science**: Catherine D'Ignazio and Lauren Klein argue in *Data Feminism* that all data work should "make labor visible." A data biography documents the human labor behind every dataset.
 
 :::challenge
-Given raw metadata about a colonial newspaper corpus, construct a complete data biography as a Python dictionary. Fill in both the factual fields (drawn from the metadata) and the critical fields (requiring scholarly judgment about inclusion, exclusion, and ethics). Print a formatted report.
+Given raw metadata about a colonial newspaper corpus, construct a complete data biography as a Python dictionary. Fill in both the factual fields (drawn from the metadata) and the critical fields (requiring scholarly judgment about inclusion, exclusion, and ethics). *(There is no single correct output for the critical fields. What matters is that each is substantive, specific to the colonial context, and longer than a placeholder phrase.)*
 :::
 
----challenges---
-
-### Challenge: Construct a Data Biography
+### Challenge: Construct and Audit a Data Biography
 
 - id: critical-data-05-c1
 - language: python
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
-# Raw metadata provided with the dataset
+# Raw metadata provided with the dataset — minimal, as is typical in practice
 metadata = {
     "name": "Colonial Newspaper Corpus",
     "collected_by": "University of London Digital Lab",
@@ -149,48 +146,115 @@ metadata = {
     "regions": ["India", "West Africa", "Caribbean"],
 }
 
-# Build a data biography dictionary with these keys:
-#   title, who_created_it, time_period, original_source, language, size,
-#   geographic_scope, whose_voices_are_included,
-#   whose_voices_are_missing, known_limitations (list of 3),
-#   ethical_considerations
+# Step 1: Construct the factual section of the biography.
+# Pull directly from metadata where possible. For fields that require
+# a transformation, apply it:
+#   - "size" should read "4500 documents"
+#   - "geographic_scope" should be a comma-joined string of the regions list
+#   - "time_period" should note what the date_range EXCLUDES as well as covers:
+#     the corpus ends in 1870 — add a note that this predates the peak of
+#     the "New Imperialism" period (1870-1914), so that intensification
+#     is absent from the record.
 
-# Then print it as a formatted report (see expected output)
+biography = {
+    "title":            metadata["name"],
+    "who_created_it":   metadata["collected_by"],
+    "time_period":      "",  # Your code — add the exclusion note
+    "original_source":  metadata["source"],
+    "language":         metadata["language"],
+    "size":             "",  # Your code — format as "N documents"
+    "geographic_scope": "",  # Your code — join the regions list
+}
 
-# Your code here
+# Step 2: Fill in the critical fields.
+# These require scholarly judgment, not just metadata transcription.
+# Think carefully about the colonial context:
+#   whose_voices_are_included: who actually wrote English-language
+#     newspapers in colonial territories in 1800-1870?
+#   whose_voices_are_missing: who was excluded from colonial print culture?
+#   known_limitations: provide THREE — include at least one about
+#     language, one about editorial perspective, and one about survivorship.
+#   ethical_considerations: go beyond "it reflects colonialism" —
+#     name a specific harm that could result from using this corpus
+#     in a text analysis project without critical framing.
+
+biography["whose_voices_are_included"] = ""   # Your judgment
+biography["whose_voices_are_missing"]  = ""   # Your judgment
+biography["known_limitations"]         = []   # Your list of 3
+biography["ethical_considerations"]    = ""   # Your specific harm
+
+# Step 3: Print the formatted biography.
+print("=== DATA BIOGRAPHY ===")
+print(f"Title: {biography['title']}")
+print(f"Created by: {biography['who_created_it']}")
+print(f"Time period: {biography['time_period']}")
+print(f"Source: {biography['original_source']}")
+print(f"Language: {biography['language']}")
+print(f"Size: {biography['size']}")
+print(f"Geographic scope: {biography['geographic_scope']}")
+print(f"\nVoices included: {biography['whose_voices_are_included']}")
+print(f"Voices missing: {biography['whose_voices_are_missing']}")
+print("\nKnown limitations:")
+for item in biography["known_limitations"]:
+    print(f"  - {item}")
+print(f"\nEthical consideration: {biography['ethical_considerations']}")
+
+print()
+
+# Step 4: Audit your own biography.
+# A data biography is itself a document — it can also conceal things.
+# Count how many of the critical fields in your biography are still vague
+# (i.e. fewer than 8 words — a sign of a placeholder rather than real analysis).
+
+critical_fields = [
+    biography["whose_voices_are_included"],
+    biography["whose_voices_are_missing"],
+    biography["ethical_considerations"],
+]
+
+vague = sum(1 for field in critical_fields if len(field.split()) < 8)
+print(f"Critical fields with fewer than 8 words (potentially vague): {vague}/3")
+
+if vague > 0:
+    print("Warning: short critical fields may indicate underdeveloped analysis.")
+else:
+    print("Critical fields appear substantive — good.")
 ```
 
 #### Expected Output
-
 ```
 === DATA BIOGRAPHY ===
 Title: Colonial Newspaper Corpus
 Created by: University of London Digital Lab
-Time period: 1800-1870
+Time period: 1800-1870 (note: excludes the intensification of New Imperialism after 1870)
 Source: British Library Archives
 Language: English
 Size: 4500 documents
 Geographic scope: India, West Africa, Caribbean
 
-Voices included: Colonial administrators, British merchants, missionaries
-Voices missing: Colonized peoples, indigenous language speakers, women
+Voices included: British colonial administrators, merchants, and missionaries who controlled print institutions
+Voices missing: Colonized populations, indigenous-language speakers, women of all backgrounds, oral traditions
 
 Known limitations:
-  - Only English-language publications included
-  - Newspapers reflect colonial editorial perspectives
-  - Survival bias: many publications were lost or destroyed
+  - Only English-language publications included; vernacular press entirely absent
+  - All content reflects editorial perspectives of colonial publishing institutions
+  - Survival bias: newspapers critical of colonial rule were less likely to be preserved
 
-Ethical note: Data reflects and reproduces colonial power structures
+Ethical consideration: Sentiment or topic models trained on this corpus will learn to associate colonized regions with the concerns and framings of colonial administrators, potentially reproducing those framings in scholarship about those communities
+
+Critical fields with fewer than 8 words (potentially vague): 0/3
+Critical fields appear substantive — good.
 ```
 
 #### Hints
 
-1. Pull factual fields directly from the metadata dict: `biography["title"] = metadata["name"]`. For size, format it as `f"{metadata['num_documents']} documents"`. For geographic scope, use `", ".join(metadata["regions"])`.
-2. The critical fields require your own scholarly judgment. For `whose_voices_are_included`, think about who wrote and published English-language newspapers in colonial territories. For `whose_voices_are_missing`, think about who was excluded from colonial print culture.
-3. `known_limitations` should be a list of three strings. Print them with a loop: `for item in biography["known_limitations"]: print(f"  - {item}")`.
+1. For `time_period`, concatenate the date range with a note: `metadata["date_range"] + " (note: ...)"`.
+2. For `size`, use an f-string: `f"{metadata['num_documents']} documents"`. For `geographic_scope`, use `", ".join(metadata["regions"])`.
+3. For `whose_voices_are_included`, think about who owned and operated printing presses in British colonial territories in the early 19th century — not just who could theoretically contribute, but who controlled the institutions.
+4. For `ethical_considerations`, be specific: name a *type of analysis* (sentiment, topic modeling, named entity recognition) and describe what the bias would produce in practice, not just in principle.
+5. Step 4's word-count check is deliberately simple — it can't judge quality, only flag obvious placeholders. Note this limitation in your notebook: what would a better automated quality check look like?
 
 #### Solution
-
 ```python
 metadata = {
     "name": "Colonial Newspaper Corpus",
@@ -203,22 +267,33 @@ metadata = {
 }
 
 biography = {
-    "title": metadata["name"],
-    "who_created_it": metadata["collected_by"],
-    "time_period": metadata["date_range"],
-    "original_source": metadata["source"],
-    "language": metadata["language"],
-    "size": f"{metadata['num_documents']} documents",
+    "title":            metadata["name"],
+    "who_created_it":   metadata["collected_by"],
+    "time_period":      metadata["date_range"] + " (note: excludes the intensification of New Imperialism after 1870)",
+    "original_source":  metadata["source"],
+    "language":         metadata["language"],
+    "size":             f"{metadata['num_documents']} documents",
     "geographic_scope": ", ".join(metadata["regions"]),
-    "whose_voices_are_included": "Colonial administrators, British merchants, missionaries",
-    "whose_voices_are_missing": "Colonized peoples, indigenous language speakers, women",
-    "known_limitations": [
-        "Only English-language publications included",
-        "Newspapers reflect colonial editorial perspectives",
-        "Survival bias: many publications were lost or destroyed",
-    ],
-    "ethical_considerations": "Data reflects and reproduces colonial power structures",
 }
+
+biography["whose_voices_are_included"] = (
+    "British colonial administrators, merchants, and missionaries "
+    "who controlled print institutions"
+)
+biography["whose_voices_are_missing"] = (
+    "Colonized populations, indigenous-language speakers, women of "
+    "all backgrounds, oral traditions"
+)
+biography["known_limitations"] = [
+    "Only English-language publications included; vernacular press entirely absent",
+    "All content reflects editorial perspectives of colonial publishing institutions",
+    "Survival bias: newspapers critical of colonial rule were less likely to be preserved",
+]
+biography["ethical_considerations"] = (
+    "Sentiment or topic models trained on this corpus will learn to associate "
+    "colonized regions with the concerns and framings of colonial administrators, "
+    "potentially reproducing those framings in scholarship about those communities"
+)
 
 print("=== DATA BIOGRAPHY ===")
 print(f"Title: {biography['title']}")
@@ -230,9 +305,24 @@ print(f"Size: {biography['size']}")
 print(f"Geographic scope: {biography['geographic_scope']}")
 print(f"\nVoices included: {biography['whose_voices_are_included']}")
 print(f"Voices missing: {biography['whose_voices_are_missing']}")
-print(f"\nKnown limitations:")
-for limitation in biography["known_limitations"]:
-    print(f"  - {limitation}")
-print(f"\nEthical note: {biography['ethical_considerations']}")
+print("\nKnown limitations:")
+for item in biography["known_limitations"]:
+    print(f"  - {item}")
+print(f"\nEthical consideration: {biography['ethical_considerations']}")
+
+print()
+
+critical_fields = [
+    biography["whose_voices_are_included"],
+    biography["whose_voices_are_missing"],
+    biography["ethical_considerations"],
+]
+
+vague = sum(1 for field in critical_fields if len(field.split()) < 8)
+print(f"Critical fields with fewer than 8 words (potentially vague): {vague}/3")
+if vague > 0:
+    print("Warning: short critical fields may indicate underdeveloped analysis.")
+else:
+    print("Critical fields appear substantive — good.")
 ```
 

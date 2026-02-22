@@ -70,7 +70,7 @@ Historical documents often have "scannos" (OCR errors). Regex can find them!
 - **Matches**: "l818" or "l831" (where the scanner mistook the "1" for an "l").
 - **Action**: You can then use `re.sub()` to replace all those "l"s with "1"s across thousands of files.
 
-:::try-it
+:::challenge
 Regex is a language of its own. In the challenge in the sandbox, combine the digit symbol (`\d`) with the quantifier for "exactly four" (`{4}`) to extract dates from a string.
 :::
 

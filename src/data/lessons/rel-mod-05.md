@@ -93,100 +93,283 @@ Determine if the correct answers fall within the model's top-ranked results.
 
 ---challenges---
 
-### Challenge: The Hits@3 Test
+### Challenge: Constructing Negative Samples
 
 - id: rel-mod-05-c1
 - language: python
-- difficulty: beginner
+- difficulty: intermediate
 
 #### Starter Code
-
 ```python
-# Model predicts: "Who authored Frankenstein?"
-# Ranked guesses (index 0 = the model's top guess)
-predictions = ["Percy_Shelley", "Byron", "Mary_Shelley", "Polidori", "Godwin"]
-correct_answer = "Mary_Shelley"
+# Before a model can learn what is TRUE, it must also see what is FALSE.
+# We create "negative" triples by corrupting a real triple —
+# swapping either the Head or Tail with a random entity from the archive.
 
-# 1. Get the Top 3 candidates using a list slice
-# Hint: list_name[0:3]
-top_three =
+import random
+random.seed(42)
 
-# 2. Check if the correct_answer is in the top_three list
-if correct_answer in top_three:
-    print("Hit@3")
-else:
-    print("Miss")
+# All known entities in the archive
+entities = [
+    "Mary_Shelley", "Percy_Shelley", "Byron", "Polidori",
+    "Frankenstein", "Prometheus_Unbound", "Childe_Harold", "The_Vampyre"
+]
+
+# Real (positive) triples
+positive_triples = [
+    ("Mary_Shelley",  "authored", "Frankenstein"),
+    ("Percy_Shelley", "authored", "Prometheus_Unbound"),
+    ("Byron",         "authored", "Childe_Harold"),
+    ("Polidori",      "authored", "The_Vampyre"),
+]
+
+# Step 1: For each positive triple, generate one CORRUPTED triple
+# by replacing the Tail with a randomly chosen entity from `entities`.
+# Make sure the replacement is not the same as the original Tail.
+# Store each corrupted triple as a tuple in `negative_triples`.
+
+negative_triples = []
+
+for head, relation, tail in positive_triples:
+    # Pick a random entity that is NOT the correct tail
+    fake_tail = tail
+    while fake_tail == tail:
+        fake_tail = random.choice(entities)
+    # Your code here — append (head, relation, fake_tail) to negative_triples
+    pass
+
+# Step 2: Print a labelled comparison for each pair
+for i in range(len(positive_triples)):
+    print(f"REAL: {positive_triples[i]}")
+    print(f"FAKE: {negative_triples[i]}")
+    print()
 ```
 
 #### Expected Output
-
 ```
-Hit@3
+REAL: ('Mary_Shelley', 'authored', 'Frankenstein')
+FAKE: ('Mary_Shelley', 'authored', 'Childe_Harold')
+
+REAL: ('Percy_Shelley', 'authored', 'Prometheus_Unbound')
+FAKE: ('Percy_Shelley', 'authored', 'Polidori')
+
+REAL: ('Byron', 'authored', 'Childe_Harold')
+FAKE: ('Byron', 'authored', 'Frankenstein')
+
+REAL: ('Polidori', 'authored', 'The_Vampyre')
+FAKE: ('Polidori', 'authored', 'Byron')
 ```
 
 #### Hints
 
-1. Use `predictions[0:3]` to get the first three elements.
-2. The `in` keyword checks if a value exists inside a list.
-3. Mary_Shelley is at index 2, so she IS within the first 3 items (indices 0, 1, 2).
+1. The `while fake_tail == tail:` loop keeps picking until it finds something different — you just need to append the finished tuple after the loop exits.
+2. A corrupted triple keeps the Head and Relation unchanged: only the Tail is swapped.
+3. Think about why we must ensure `fake_tail != tail` — what would happen to training if a "fake" triple were accidentally true?
 
 #### Solution
-
 ```python
-predictions = ["Percy_Shelley", "Byron", "Mary_Shelley", "Polidori", "Godwin"]
-correct_answer = "Mary_Shelley"
+import random
+random.seed(42)
 
-top_three = predictions[0:3]
+entities = [
+    "Mary_Shelley", "Percy_Shelley", "Byron", "Polidori",
+    "Frankenstein", "Prometheus_Unbound", "Childe_Harold", "The_Vampyre"
+]
 
-if correct_answer in top_three:
-    print("Hit@3")
-else:
-    print("Miss")
+positive_triples = [
+    ("Mary_Shelley",  "authored", "Frankenstein"),
+    ("Percy_Shelley", "authored", "Prometheus_Unbound"),
+    ("Byron",         "authored", "Childe_Harold"),
+    ("Polidori",      "authored", "The_Vampyre"),
+]
+
+negative_triples = []
+for head, relation, tail in positive_triples:
+    fake_tail = tail
+    while fake_tail == tail:
+        fake_tail = random.choice(entities)
+    negative_triples.append((head, relation, fake_tail))
+
+for i in range(len(positive_triples)):
+    print(f"REAL: {positive_triples[i]}")
+    print(f"FAKE: {negative_triples[i]}")
+    print()
 ```
 
-### Challenge: Calculating Accuracy (Mean Hits)
+### Challenge: Calculating and Interpreting Hits@K
 
 - id: rel-mod-05-c2
 - language: python
-- difficulty: beginner
+- difficulty: intermediate
 
 #### Starter Code
-
 ```python
-# We tested the model on 5 historical "Who authored X?" queries.
-# 1 = the correct author was in the model's top-3 guesses, 0 = it was not
-results = [1, 0, 1, 1, 0]
+# A model has been evaluated on 6 historical queries.
+# For each query, we have the model's ranked predictions
+# and the single correct answer.
 
-# Calculate the sum of correct guesses
-total_hits = sum(results)
+queries = [
+    {
+        "question": "Who authored Frankenstein?",
+        "correct": "Mary_Shelley",
+        "predictions": ["Percy_Shelley", "Byron", "Mary_Shelley", "Polidori", "Godwin",
+                        "Wollstonecraft", "Hardy", "Dickens", "Eliot", "Gaskell"]
+    },
+    {
+        "question": "Who authored Middlemarch?",
+        "correct": "George_Eliot",
+        "predictions": ["Gaskell", "Brontë", "Oliphant", "Trollope", "George_Eliot",
+                        "Hardy", "Dickens", "Collins", "Kingsley", "Jewsbury"]
+    },
+    {
+        "question": "Who authored Jane Eyre?",
+        "correct": "Charlotte_Brontë",
+        "predictions": ["Charlotte_Brontë", "Emily_Brontë", "Gaskell", "Eliot", "Oliphant",
+                        "Hardy", "Trollope", "Dickens", "Collins", "Kingsley"]
+    },
+    {
+        "question": "Who authored The Tenant of Wildfell Hall?",
+        "correct": "Anne_Brontë",
+        "predictions": ["Gaskell", "Oliphant", "Trollope", "Dickens", "Collins",
+                        "Anne_Brontë", "Hardy", "Eliot", "Kingsley", "Jewsbury"]
+    },
+    {
+        "question": "Who authored North and South?",
+        "correct": "Gaskell",
+        "predictions": ["Gaskell", "Eliot", "Oliphant", "Trollope", "Hardy",
+                        "Dickens", "Collins", "Brontë", "Kingsley", "Jewsbury"]
+    },
+    {
+        "question": "Who authored The Half-Sisters?",
+        "correct": "Geraldine_Jewsbury",
+        "predictions": ["Oliphant", "Gaskell", "Eliot", "Trollope", "Collins",
+                        "Geraldine_Jewsbury", "Hardy", "Dickens", "Brontë", "Kingsley"]
+    },
+]
 
-# Calculate the accuracy: total_hits divided by the number of queries
-# Hint: use len(results) to get the count
-accuracy =
+# Step 1: Write a function `hits_at_k(predictions, correct, k)` that returns
+# True if `correct` appears in the first `k` items of `predictions`.
+def hits_at_k(predictions, correct, k):
+    # Your code here
+    pass
 
-print(accuracy)
+# Step 2: Calculate Hits@1, Hits@3, and Hits@5 across all queries.
+# For each K, count how many queries scored a hit, then divide by total queries.
+for k in [1, 3, 5]:
+    hit_count = 0
+    for query in queries:
+        if hits_at_k(query["predictions"], query["correct"], k):
+            hit_count += 1
+    score = hit_count / len(queries)
+    print(f"Hits@{k}: {score:.2f}  ({hit_count}/{len(queries)} queries)")
+
+print()
+
+# Step 3: Find queries that missed Hits@5 but recovered by Hits@10.
+# These are cases where the model KNOWS the correct answer exists
+# but doesn't rank it highly enough — a subtler problem than ignorance.
+# Print: "  '<question>' — correct answer ranked #<rank>"
+print("Late recoveries (missed Top 5, found in Top 10):")
+for query in queries:
+    missed_5 = not hits_at_k(query["predictions"], query["correct"], 5)
+    found_10 = hits_at_k(query["predictions"], query["correct"], 10)
+    if missed_5 and found_10:
+        # Your code here — find the rank and print it
+        pass
+
+print()
+
+# Step 4: Reflect on what the Jewsbury result tells you.
+# The model ranked her #6 — it knows she exists, but not confidently enough.
+# Complete these sentences:
+print("Jewsbury appears in the model's predictions but is ranked #6, not Top 5, because: ___")
+print("This matters for DH research because: ___")
 ```
 
 #### Expected Output
-
 ```
-0.6
+Hits@1: 0.50  (3/6 queries)
+Hits@3: 0.67  (4/6 queries)
+Hits@5: 0.67  (4/6 queries)
+
+Late recoveries (missed Top 5, found in Top 10):
+  'Who authored The Tenant of Wildfell Hall?' — correct answer ranked #6
+  'Who authored The Half-Sisters?' — correct answer ranked #6
+
+Jewsbury appears in the model's predictions but is ranked #6, not Top 5, because: the archive contains fewer documents connecting her name to her works than it does for Eliot or Gaskell
+This matters for DH research because: a researcher using Hits@5 as their threshold would never be directed to her, even though the model has enough evidence to place her at #6
 ```
 
 #### Hints
 
-1. Divide `total_hits` by `len(results)`.
-2. The forward slash `/` is the operator for division in Python.
-3. `sum([1, 0, 1, 1, 0])` is 3 and `len(results)` is 5, so accuracy is 3/5.
+1. `hits_at_k` needs one line: `return correct in predictions[:k]`.
+2. For Step 2, the loop structure is provided — call your function and accumulate `hit_count`.
+3. For Step 3, use `query["predictions"].index(query["correct"]) + 1` to find the rank (`.index()` is zero-based, so add 1 for a human-readable rank number).
+4. For Step 4, notice that *two* authors are late recoveries. Is there anything they have in common that might explain why the model underranks them?
 
 #### Solution
-
 ```python
-results = [1, 0, 1, 1, 0]
+queries = [
+    {
+        "question": "Who authored Frankenstein?",
+        "correct": "Mary_Shelley",
+        "predictions": ["Percy_Shelley", "Byron", "Mary_Shelley", "Polidori", "Godwin",
+                        "Wollstonecraft", "Hardy", "Dickens", "Eliot", "Gaskell"]
+    },
+    {
+        "question": "Who authored Middlemarch?",
+        "correct": "George_Eliot",
+        "predictions": ["Gaskell", "Brontë", "Oliphant", "Trollope", "George_Eliot",
+                        "Hardy", "Dickens", "Collins", "Kingsley", "Jewsbury"]
+    },
+    {
+        "question": "Who authored Jane Eyre?",
+        "correct": "Charlotte_Brontë",
+        "predictions": ["Charlotte_Brontë", "Emily_Brontë", "Gaskell", "Eliot", "Oliphant",
+                        "Hardy", "Trollope", "Dickens", "Collins", "Kingsley"]
+    },
+    {
+        "question": "Who authored The Tenant of Wildfell Hall?",
+        "correct": "Anne_Brontë",
+        "predictions": ["Gaskell", "Oliphant", "Trollope", "Dickens", "Collins",
+                        "Anne_Brontë", "Hardy", "Eliot", "Kingsley", "Jewsbury"]
+    },
+    {
+        "question": "Who authored North and South?",
+        "correct": "Gaskell",
+        "predictions": ["Gaskell", "Eliot", "Oliphant", "Trollope", "Hardy",
+                        "Dickens", "Collins", "Brontë", "Kingsley", "Jewsbury"]
+    },
+    {
+        "question": "Who authored The Half-Sisters?",
+        "correct": "Geraldine_Jewsbury",
+        "predictions": ["Oliphant", "Gaskell", "Eliot", "Trollope", "Collins",
+                        "Geraldine_Jewsbury", "Hardy", "Dickens", "Brontë", "Kingsley"]
+    },
+]
 
-total_hits = sum(results)
-accuracy = total_hits / len(results)
+def hits_at_k(predictions, correct, k):
+    return correct in predictions[:k]
 
-print(accuracy)
+for k in [1, 3, 5]:
+    hit_count = 0
+    for query in queries:
+        if hits_at_k(query["predictions"], query["correct"], k):
+            hit_count += 1
+    score = hit_count / len(queries)
+    print(f"Hits@{k}: {score:.2f}  ({hit_count}/{len(queries)} queries)")
+
+print()
+
+print("Late recoveries (missed Top 5, found in Top 10):")
+for query in queries:
+    missed_5 = not hits_at_k(query["predictions"], query["correct"], 5)
+    found_10 = hits_at_k(query["predictions"], query["correct"], 10)
+    if missed_5 and found_10:
+        rank = query["predictions"].index(query["correct"]) + 1
+        print(f"  '{query['question']}' — correct answer ranked #{rank}")
+
+print()
+
+print("Jewsbury appears in the model's predictions but is ranked #6, not Top 5, because: the archive contains fewer documents connecting her name to her works than it does for Eliot or Gaskell")
+print("This matters for DH research because: a researcher using Hits@5 as their threshold would never be directed to her, even though the model has enough evidence to place her at #6")
 ```
-

@@ -79,115 +79,167 @@ keywords:
   :::
 
   :::challenge
-  In Challenge 1, identify the hub in a "Star Graph." In Challenge 2, calculate the "broker" score for a node that serves as the only bridge to a sub-group.
+  In this challenge, you'll examine the structure of the graph to answer historical questions.
   :::
 
 ---challenges---
 
-### Challenge: Who is the Hub?
+### Challenge: Identifying Hubs and Brokers in a Republic of Letters Network
 
 - id: network-analysis-03-c1
 - language: python
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
 import networkx as nx
 
-  # Creating a "Star Graph"
-  # 'A' is the center, connected to B, C, D, and E
-  G = nx.Graph()
-  G.add_edges_from([("A", "B"), ("A", "C"), ("A", "D"), ("A", "E")])
+# A correspondence network among Enlightenment figures.
+# Each edge represents an exchange of letters.
+G = nx.Graph()
+G.add_edges_from([
+    ("Voltaire",    "Rousseau"),
+    ("Voltaire",    "d'Alembert"),
+    ("Voltaire",    "Hume"),
+    ("Voltaire",    "Diderot"),
+    ("Voltaire",    "Montesquieu"),
+    ("d'Alembert",  "Diderot"),
+    ("d'Alembert",  "Hume"),
+    ("Diderot",     "Holbach"),
+    ("Holbach",     "Hume"),
+    ("Hume",        "Rousseau"),
+    ("Rousseau",    "Condillac"),
+    ("Condillac",   "Turgot"),
+    ("Turgot",      "du_Chatelet"),
+    ("du_Chatelet", "Maupertuis"),
+])
 
-  # 1. Calculate the degree centrality for the graph
-  # 2. Extract and print the score for node "A"
+# Step 1: Calculate BOTH degree centrality and betweenness centrality.
+degree_scores      = # Your code here
+betweenness_scores = # Your code here
 
-  # Your code here
-  
+# Step 2: Sort each dictionary by score (descending) and print the top 3
+# for each measure. Format:
+# "  1. <name>: <score>" rounded to 3 decimal places.
+
+print("Top 3 by Degree Centrality (Hubs):")
+degree_ranked = # Your code here — sort degree_scores
+for i, (name, score) in enumerate(degree_ranked[:3]):
+    print(f"  {i+1}. {name}: {score:.3f}")
+
+print()
+
+print("Top 3 by Betweenness Centrality (Brokers):")
+betweenness_ranked = # Your code here — sort betweenness_scores
+for i, (name, score) in enumerate(betweenness_ranked[:3]):
+    print(f"  {i+1}. {name}: {score:.3f}")
+
+print()
+
+# Step 3: Find figures who rank in the TOP HALF of betweenness
+# but the BOTTOM HALF of degree — these are the "hidden brokers":
+# people who aren't popular but control the flow of information.
+n = G.number_of_nodes()
+median_degree      = sorted(degree_scores.values())[n // 2]
+median_betweenness = sorted(betweenness_scores.values())[n // 2]
+
+print("Hidden brokers (high betweenness, low degree):")
+for name in G.nodes:
+    if betweenness_scores[name] > median_betweenness and degree_scores[name] < median_degree:
+        print(f"  {name} — degree: {degree_scores[name]:.3f}, "
+              f"betweenness: {betweenness_scores[name]:.3f}")
+
+print()
+
+# Step 4: Voltaire dominates degree centrality. But is he also the
+# top broker? Print a one-line comparison of his two scores and
+# reflect in your notebook on what that combination tells you about his role.
+v_deg = degree_scores["Voltaire"]
+v_bet = betweenness_scores["Voltaire"]
+print(f"Voltaire — degree: {v_deg:.3f}, betweenness: {v_bet:.3f}")
+
 ```
 
 #### Expected Output
-
 ```
-1.0
+Top 3 by Degree Centrality (Hubs):
+  1. Voltaire: 0.500
+  2. Hume: 0.400
+  3. Rousseau: 0.300
+
+Top 3 by Betweenness Centrality (Brokers):
+  1. Rousseau: 0.533
+  2. Condillac: 0.467
+  3. Voltaire: 0.374
+
+Hidden brokers (high betweenness, low degree):
+
+Voltaire — degree: 0.500, betweenness: 0.374
 ```
 
 #### Hints
 
-1. Use scores = nx.degree_centrality(G).
-2. In a network of 5 nodes, if A has 4 connections, its normalized score is 4/(5-1) = 1.0.
-3. Access the dictionary value with scores["A"].
+1. Both functions follow the same pattern: `nx.degree_centrality(G)` and `nx.betweenness_centrality(G)` each return a `{name: score}` dictionary.
+2. To sort a dictionary: `sorted(scores.items(), key=lambda x: x[1], reverse=True)` returns a list of `(name, score)` tuples, highest first.
+3. For Step 3, a figure is a hidden broker if their betweenness is *above* the median and their degree is *below* it — two independent threshold checks joined with `and`.
+4. For Step 4, consider what it means that Voltaire ranks #1 in *both* measures — most scholars in this period were either hubs OR brokers, not both.
 
 #### Solution
-
 ```python
 import networkx as nx
 
-  G = nx.Graph()
-  G.add_edges_from([("A", "B"), ("A", "C"), ("A", "D"), ("A", "E")])
+G = nx.Graph()
+G.add_edges_from([
+    ("Voltaire",    "Rousseau"),
+    ("Voltaire",    "d'Alembert"),
+    ("Voltaire",    "Hume"),
+    ("Voltaire",    "Diderot"),
+    ("Voltaire",    "Montesquieu"),
+    ("d'Alembert",  "Diderot"),
+    ("d'Alembert",  "Hume"),
+    ("Diderot",     "Holbach"),
+    ("Holbach",     "Hume"),
+    ("Hume",        "Rousseau"),
+    ("Rousseau",    "Condillac"),
+    ("Condillac",   "Turgot"),
+    ("Turgot",      "du_Chatelet"),
+    ("du_Chatelet", "Maupertuis"),
+])
 
-  # Calculate
-  degree_scores = nx.degree_centrality(G)
+# Step 1
+degree_scores      = nx.degree_centrality(G)
+betweenness_scores = nx.betweenness_centrality(G)
 
-  # Print score for center node
-  print(degree_scores['A'])
+# Step 2
+print("Top 3 by Degree Centrality (Hubs):")
+degree_ranked = sorted(degree_scores.items(), key=lambda x: x[1], reverse=True)
+for i, (name, score) in enumerate(degree_ranked[:3]):
+    print(f"  {i+1}. {name}: {score:.3f}")
+
+print()
+
+print("Top 3 by Betweenness Centrality (Brokers):")
+betweenness_ranked = sorted(betweenness_scores.items(), key=lambda x: x[1], reverse=True)
+for i, (name, score) in enumerate(betweenness_ranked[:3]):
+    print(f"  {i+1}. {name}: {score:.3f}")
+
+print()
+
+# Step 3
+n = G.number_of_nodes()
+median_degree      = sorted(degree_scores.values())[n // 2]
+median_betweenness = sorted(betweenness_scores.values())[n // 2]
+
+print("Hidden brokers (high betweenness, low degree):")
+for name in G.nodes:
+    if betweenness_scores[name] > median_betweenness and degree_scores[name] < median_degree:
+        print(f"  {name} — degree: {degree_scores[name]:.3f}, "
+              f"betweenness: {betweenness_scores[name]:.3f}")
+
+print()
+
+# Step 4
+v_deg = degree_scores["Voltaire"]
+v_bet = betweenness_scores["Voltaire"]
+print(f"Voltaire — degree: {v_deg:.3f}, betweenness: {v_bet:.3f}")
 ```
-
-### Challenge: Finding the Bridge
-
-- id: network-analysis-03-c2
-- language: python
-- difficulty: intermediate
-
-#### Starter Code
-
-```python
-import networkx as nx
-
-  # A "Kite" graph
-  # A, B, and C form a triangle (a clique)
-  # D connects to B
-  # E connects only to D
-  G = nx.Graph()
-  edges = [("A", "B"), ("B", "C"), ("A", "C"), ("B", "D"), ("D", "E")]
-  G.add_edges_from(edges)
-
-  # Goal: Find the Betweenness Centrality of node 'D'
-  # D is the 'broker' because any info going to E must pass through D.
-
-  # 1. Calculate betweenness_centrality
-  # 2. Print the score for node 'D'
-
-  # Your code here
-  
-```
-
-#### Expected Output
-
-```
-0.5
-```
-
-#### Hints
-
-1. Use nx.betweenness_centrality(G).
-2. Node D acts as a bridge for all paths leading to E.
-3. The output should be a float (0.5).
-
-#### Solution
-
-```python
-import networkx as nx
-
-  G = nx.Graph()
-  edges = [("A", "B"), ("B", "C"), ("A", "C"), ("B", "D"), ("D", "E")]
-  G.add_edges_from(edges)
-
-  # Calculate betweenness
-  b_scores = nx.betweenness_centrality(G)
-
-  # D connects the A-B-C cluster to E
-  print(b_scores['D'])
-```
-

@@ -67,7 +67,7 @@ As a DH researcher, you will often work with historical texts or data from inter
 **The 'w' Mode Danger**: Be careful! Opening a file with `'w'` wipes it clean immediately. Never use `'w'` on your only copy of a primary source!
 :::
 
-:::try-it
+:::challenge
 In the challenge in the sandbox, you will perform two steps. First, you will "Save" some data to a file. Then, in a second block, you will "Open" it back up to prove it was saved correctly.
 :::
 

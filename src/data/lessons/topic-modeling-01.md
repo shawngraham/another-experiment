@@ -67,64 +67,109 @@ keywords:
   **Topics vs. Categories**: A category is a label *you* give a book (like "Fiction"). A topic is a cluster of words the *computer* finds (like "ship, sea, whale, captain"). It is up to the researcher to interpret what those clusters mean.
   :::
 
-  :::challenge
-  To build topics, the computer looks for "overlap." Identify the shared words between these two documents. These shared words represent the "latent" connection the computer uses to group texts together.
+:::challenge
+  You have three short documents from a historical corpus. Your task is to simulate the first step of topic modeling: building word frequency profiles, removing stopwords, and identifying the words with the strongest cross-document presence. The word that scores highest is the model's best candidate for a shared latent topic.
   :::
 
 ---challenges---
 
-### Challenge: Finding Topic Overlap
+### Challenge: Simulating Topic Discovery
 
 - id: topic-modeling-01-c1
 - language: python
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
-# Two sentences representing two different documents
-  doc_a = "the storm clouds moved over the dark mountain"
-  doc_b = "the rain fell on the mountain and the dark forest"
+# A small corpus: three documents from a historical archive
+corpus = [
+    "the soldiers marched through the camp and the officers gave orders to march at dawn",
+    "the officer wrote a letter from camp describing the long march to the northern ridge",
+    "a letter arrived from the front the soldiers had reached camp after a night march",
+]
 
-  # Goal: Create a set of words that appear in BOTH documents.
-  # These shared words are the "glue" LDA uses to build topics.
+# Words so common they carry no meaning for topic discovery
+stopwords = {"the", "a", "and", "to", "at", "from", "had", "after", "through", "gave"}
 
-  # 1. Turn each document into a set of words
-  words_a = set(doc_a.split())
-  words_b = set(doc_b.split())
+# Step 1: Build a Bag of Words for each document.
+# Create a list called `bags`. For each document in the corpus:
+#   - Split it into words
+#   - Build a dictionary of {word: count} pairs, EXCLUDING any stopwords
+#   - Append that dictionary to `bags`
+bags = []
+# Your code here
 
-  # 2. Use the set intersection operator (&) to find words in both
-  shared_words = set() # Replace this with your intersection code
+# Step 2: Count how many documents each word appears in (its "document frequency").
+# Create a dictionary called `doc_freq`.
+# Loop through each bag; for each unique word in that bag,
+# increment its count in doc_freq by 1.
+doc_freq = {}
+# Your code here
 
-  # 3. Print the sorted list of shared words
-  print(sorted(list(shared_words)))
-  
+# Step 3: Find words that appear in ALL THREE documents (doc_freq == 3).
+# Store them in a list called `topic_words`, sorted alphabetically.
+topic_words = []
+# Your code here
+
+print("Candidate topic words:", topic_words)
+
+# Step 4: Of those topic words, which has the highest TOTAL count across all documents?
+# Sum each topic word's count across all three bags and print the word
+# and its total in the format: "Strongest signal: <word> (<total> occurrences)"
+# Your code here
 ```
 
 #### Expected Output
-
 ```
-['dark', 'mountain', 'the']
+Candidate topic words: ['camp', 'letter', 'march', 'soldiers']
+Strongest signal: march (4 occurrences)
 ```
 
 #### Hints
 
-1. The intersection operator is the ampersand: words_a & words_b.
-2. Notice that "the" is included; in a real project, we would remove this as a "stopword".
-3. Make sure to assign the result of the intersection to the variable shared_words.
+1. For Step 1, a nested loop works well: `for doc in corpus:` then `for word in doc.split():`. Check `if word not in stopwords` before adding to the bag dictionary. Use `bag.get(word, 0) + 1` to increment safely.
+2. For Step 2, loop `for bag in bags:` and then `for word in bag:` — iterating a dictionary gives you its unique keys, so each word is counted once per document automatically.
+3. For Step 3, a list comprehension is clean: `[word for word, count in doc_freq.items() if count == 3]`.
+4. For Step 4, loop through `topic_words`, sum `bag.get(word, 0)` across all bags, and track the highest total.
 
 #### Solution
-
 ```python
-doc_a = "the storm clouds moved over the dark mountain"
-  doc_b = "the rain fell on the mountain and the dark forest"
+corpus = [
+    "the soldiers marched through the camp and the officers gave orders to march at dawn",
+    "the officer wrote a letter from camp describing the long march to the northern ridge",
+    "a letter arrived from the front the soldiers had reached camp after a night march",
+]
 
-  words_a = set(doc_a.split())
-  words_b = set(doc_b.split())
+stopwords = {"the", "a", "and", "to", "at", "from", "had", "after", "through", "gave"}
 
-  # Use & to find common items in both sets
-  shared_words = words_a & words_b
+# Step 1: Build Bags of Words
+bags = []
+for doc in corpus:
+    bag = {}
+    for word in doc.split():
+        if word not in stopwords:
+            bag[word] = bag.get(word, 0) + 1
+    bags.append(bag)
 
-  print(sorted(list(shared_words)))
+# Step 2: Document frequency count
+doc_freq = {}
+for bag in bags:
+    for word in bag:
+        doc_freq[word] = doc_freq.get(word, 0) + 1
+
+# Step 3: Words present in all three documents
+topic_words = sorted([word for word, count in doc_freq.items() if count == 3])
+print("Candidate topic words:", topic_words)
+
+# Step 4: Strongest signal by total count
+best_word = ""
+best_total = 0
+for word in topic_words:
+    total = sum(bag.get(word, 0) for bag in bags)
+    if total > best_total:
+        best_total = total
+        best_word = word
+
+print(f"Strongest signal: {best_word} ({best_total} occurrences)")
 ```
 

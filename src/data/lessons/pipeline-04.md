@@ -102,7 +102,7 @@ Try changing `25` to `10` or `40`. What happens to the visual proportions?
 
 ## Transfer
 
-Reporting is where the humanities reclaim the pipeline. The numbers you computed in Stages 2 and 3 are inert until you interpret them. Why does "across" appear in every article? Perhaps because 19th-century journalism framed events spatially — things happened "across" the nation, "across" the city. That interpretation cannot be automated. But the report that presents the evidence *for* that interpretation can and should be generated from the same code that produced the numbers — ensuring that no transcription error creeps in between analysis and argument.
+Reporting is where the humanities reclaim the pipeline. The numbers you computed in Stages 2 and 3 are inert until you interpret them. Why does "across" appear in every article? Perhaps because 19th-century journalism framed events spatially where things happened "across" the nation, "across" the city. That interpretation cannot be automated. But the report that presents the evidence *for* that interpretation can and should be generated from the same code that produced the numbers ensuring that no transcription error creeps in between analysis and argument.
 
 :::challenge
 Given pre-computed results from a newspaper corpus analysis, generate a formatted research summary report that includes article counts, top keywords, a section breakdown with an ASCII bar chart, and a methods note.

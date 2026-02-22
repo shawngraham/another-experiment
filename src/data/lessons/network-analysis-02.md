@@ -86,129 +86,148 @@ keywords:
   :::
 
   :::challenge
-  In the first challenge, build a small city-state alliance network manually. In the second, practice bulk-loading an "edge list" into a graph object.
+  What kind of graph models the data correctly?
   :::
 
 ---challenges---
 
-### Challenge: Building the Alliance
+### Challenge: Build and Query a Correspondence Network
 
 - id: network-analysis-02-c1
 - language: python
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
 import networkx as nx
 
-  # 1. Create an empty Graph object named 'alliances'
-  alliances = 
+# Archive data: letters exchanged among Enlightenment figures.
+# Each tuple is (Sender, Recipient, number_of_letters).
+correspondence = [
+    ("Voltaire",  "Rousseau",   3),
+    ("Rousseau",  "Hume",       2),
+    ("Hume",      "Voltaire",   1),
+    ("Voltaire",  "Hume",       1),
+    ("Hume",      "Rousseau",   1),
+    ("d'Alembert","Voltaire",   4),
+    ("Voltaire",  "d'Alembert", 5),
+    ("d'Alembert","Rousseau",   1),
+    ("Rousseau",  "d'Alembert", 1),
+]
 
-  # 2. Add three nodes: "Rome", "Athens", "Sparta" (use a list)
+# Step 1: Should this network be a Graph or a DiGraph?
+# "Voltaire wrote to Rousseau" is NOT the same as
+# "Rousseau wrote to Voltaire" — direction matters here.
+# Initialize the correct graph type as `G`.
+G = # Your code here
 
-  # 3. Add an edge between "Rome" and "Athens"
-  # 4. Add an edge between "Athens" and "Sparta"
+# Step 2: Bulk-load the correspondence data into G.
+# Each tuple has THREE values: (sender, recipient, weight).
+# NetworkX's add_edges_from() accepts tuples of
+# (node_a, node_b, {attribute_dict}) — but it also accepts
+# plain (node_a, node_b) tuples if you strip the weight first.
+#
+# Loop through correspondence and add each edge WITH its weight:
+#   G.add_edge(sender, recipient, weight=count)
+for sender, recipient, count in correspondence:
+    # Your code here
+    pass
 
-  # Your code here
+print(f"Nodes: {G.number_of_nodes()}")   # Expected: 4
+print(f"Edges: {G.number_of_edges()}")   # Expected: 9
 
-  # Verify the network size
-  print(f"Nodes: {alliances.number_of_nodes()}")
-  print(f"Edges: {alliances.number_of_edges()}")
-  
+# Step 3: Query the network to answer research questions.
+
+# 3a: How many letters did Voltaire send in total?
+# In a DiGraph, G.out_edges(node, data=True) returns all edges
+# leaving that node, with their attributes.
+voltaire_sent = sum(data["weight"] for _, _, data in G.out_edges("Voltaire", data=True))
+print(f"Letters sent by Voltaire: {voltaire_sent}")   # Expected: 9
+
+# 3b: Did Rousseau EVER write back to Voltaire?
+# Check whether the directed edge (Rousseau -> Voltaire) exists.
+wrote_back = # Your code here — one line using G.has_edge()
+print(f"Rousseau wrote back to Voltaire: {wrote_back}")   # Expected: False
+
+# 3c: Find the most prolific sender overall.
+# Loop through all nodes, sum their outgoing edge weights,
+# and track who sent the most letters.
+most_prolific = ""
+most_letters  = 0
+for node in G.nodes:
+    total = sum(data["weight"] for _, _, data in G.out_edges(node, data=True))
+    if total > most_letters:
+        most_letters  = total
+        most_prolific = node
+
+print(f"Most prolific sender: {most_prolific} ({most_letters} letters)")   # Expected: d'Alembert (... wait — check your totals)
+
+# Step 4: Reflect on the modeling choice you made in Step 1.
+# If you had used an undirected Graph instead, what would
+# G.has_edge("Rousseau", "Voltaire") have returned, and why
+# would that have been misleading for this research question?
+# Make a note in your research notebook.
 ```
 
 #### Expected Output
-
 ```
-Nodes: 3
-Edges: 2
+Nodes: 4
+Edges: 9
+Letters sent by Voltaire: 9
+Rousseau wrote back to Voltaire: False
+Most prolific sender: Voltaire (9 letters)
 ```
 
 #### Hints
 
-1. Use nx.Graph() to initialize.
-2. Use .add_nodes_from(["Rome", "Athens", "Sparta"]) to add multiple nodes at once.
-3. Adding an edge is done with .add_edge("City1", "City2").
+1. Because direction matters (sender ≠ recipient), use `nx.DiGraph()`.
+2. For Step 2, `G.add_edge(sender, recipient, weight=count)` stores the letter count as an edge attribute you can retrieve later.
+3. For Step 3b, `G.has_edge("Rousseau", "Voltaire")` checks for that exact directed edge — in a DiGraph, `has_edge(A, B)` and `has_edge(B, A)` are independent questions.
+4. For Step 3c, `G.out_edges(node, data=True)` yields `(source, target, attribute_dict)` triples — unpack as `_, _, data` and access `data["weight"]`.
 
 #### Solution
-
 ```python
 import networkx as nx
 
-  alliances = nx.Graph()
+correspondence = [
+    ("Voltaire",   "Rousseau",   3),
+    ("Rousseau",   "Hume",       2),
+    ("Hume",       "Voltaire",   1),
+    ("Voltaire",   "Hume",       1),
+    ("Hume",       "Rousseau",   1),
+    ("d'Alembert", "Voltaire",   4),
+    ("Voltaire",   "d'Alembert", 5),
+    ("d'Alembert", "Rousseau",   1),
+    ("Rousseau",   "d'Alembert", 1),
+]
 
-  # Add nodes
-  alliances.add_nodes_from(["Rome", "Athens", "Sparta"])
+# Step 1: DiGraph — direction matters
+G = nx.DiGraph()
 
-  # Add edges
-  alliances.add_edge("Rome", "Athens")
-  alliances.add_edge("Athens", "Sparta")
+# Step 2: Bulk load with weights
+for sender, recipient, count in correspondence:
+    G.add_edge(sender, recipient, weight=count)
 
-  print(f"Nodes: {alliances.number_of_nodes()}")
-  print(f"Edges: {alliances.number_of_edges()}")
-```
+print(f"Nodes: {G.number_of_nodes()}")
+print(f"Edges: {G.number_of_edges()}")
 
-### Challenge: Bulk-Loading an Edge List
+# Step 3a
+voltaire_sent = sum(data["weight"] for _, _, data in G.out_edges("Voltaire", data=True))
+print(f"Letters sent by Voltaire: {voltaire_sent}")
 
-- id: network-analysis-02-c2
-- language: python
-- difficulty: intermediate
+# Step 3b
+wrote_back = G.has_edge("Rousseau", "Voltaire")
+print(f"Rousseau wrote back to Voltaire: {wrote_back}")
 
-#### Starter Code
+# Step 3c
+most_prolific = ""
+most_letters  = 0
+for node in G.nodes:
+    total = sum(data["weight"] for _, _, data in G.out_edges(node, data=True))
+    if total > most_letters:
+        most_letters  = total
+        most_prolific = node
 
-```python
-import networkx as nx
-
-  # A raw list of archival data: (Sender, Receiver)
-  correspondence = [
-      ("Ada", "Charles"),
-      ("Charles", "Mary"),
-      ("Ada", "Mary"),
-      ("Mary", "Charles")
-  ]
-
-  # Goal: Create a Directed Graph (DiGraph) and load all edges at once.
-  # 1. Initialize nx.DiGraph() as 'G'
-  # 2. Use the bulk method to add 'correspondence'
-  # 3. Print the number of edges
-
-  # Your code here
-
-  print(f"Total Edges: {G.number_of_edges()}")
-  
-```
-
-#### Expected Output
-
-```
-Total Edges: 4
-```
-
-#### Hints
-
-1. Since the order of sender/receiver matters, use nx.DiGraph().
-2. The bulk method is G.add_edges_from(correspondence).
-3. Check G.number_of_edges() for the final count.
-
-#### Solution
-
-```python
-import networkx as nx
-
-  correspondence = [
-      ("Ada", "Charles"),
-      ("Charles", "Mary"),
-      ("Ada", "Mary"),
-      ("Mary", "Charles")
-  ]
-
-  # Initialize directed graph
-  G = nx.DiGraph()
-
-  # Bulk load
-  G.add_edges_from(correspondence)
-
-  print(f"Total Edges: {G.number_of_edges()}")
+print(f"Most prolific sender: {most_prolific} ({most_letters} letters)")
 ```
 

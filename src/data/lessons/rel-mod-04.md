@@ -95,124 +95,202 @@ Calculate prediction errors and identify the most likely candidate from a list.
 
 ---challenges---
 
-### Challenge: Calculating the Prediction Error
+### Challenge: Scoring a Set of Candidates
 
 - id: rel-mod-04-c1
 - language: python
-- difficulty: beginner
+- difficulty: intermediate
 
 #### Starter Code
-
 ```python
-# Where the math says we should land
-predicted_point = [10, 20]
+# The model is trying to answer: "Mary_Shelley authored ???"
+# Head + Relation gives us a predicted coordinate.
+# We then score every candidate by how far they sit from that prediction.
 
-# Where the actual entity "Jane_Austen" is
-actual_point = [12, 19]
+# Coordinates: [Critical_Acclaim, Popular_Reach]
+mary_shelley = [7, 6]
+authored     = [2, 4]   # Relation vector from rel-mod-03
 
-# 1. Find the distance for the X coordinate
-dist_x = abs(predicted_point[0] - actual_point[0])
+# Step 1: Calculate the predicted coordinate using TransE (Head + Relation).
+# predicted = mary_shelley + authored, element-wise
+predicted = []
+# Your code here
 
-# 2. Find the distance for the Y coordinate
-# Hint: use abs() and subtract the index 1 values
-dist_y = 
+print(f"Predicted location: {predicted}")   # Expected: [9, 10]
 
-# 3. Add them together to get the total "Error Score"
-total_error = 
+# Step 2: Score each candidate using Manhattan Distance.
+# Score = abs(predicted[0] - candidate[0]) + abs(predicted[1] - candidate[1])
+# A lower score means a more plausible match.
 
-print(total_error)
+candidates = {
+    "Frankenstein":       [9, 10],
+    "The_Last_Man":       [6,  7],
+    "Valperga":           [5,  6],
+    "Mathilda":           [8,  9],
+}
+
+scores = {}
+for title, coords in candidates.items():
+    # Calculate the Manhattan Distance between predicted and coords
+    # Store the result in scores[title]
+    # Your code here
+    pass
+
+print("Scores:", scores)
+# Expected: {'Frankenstein': 0, 'The_Last_Man': 6, 'Valperga': 8, 'Mathilda': 2}
 ```
 
 #### Expected Output
-
 ```
-3
+Predicted location: [9, 10]
+Scores: {'Frankenstein': 0, 'The_Last_Man': 6, 'Valperga': 8, 'Mathilda': 2}
 ```
 
 #### Hints
 
-1. `dist_y` is the absolute difference between `predicted_point[1]` and `actual_point[1]`.
-2. `abs(a - b)` ensures the distance is always a positive number.
-3. Add `dist_x` and `dist_y` together to get the final result.
+1. For Step 1, add element-wise: `predicted = [mary_shelley[0] + authored[0], mary_shelley[1] + authored[1]]`.
+2. For Step 2, the distance formula is `abs(predicted[0] - coords[0]) + abs(predicted[1] - coords[1])`. Assign the result to `scores[title]`.
+3. A score of 0 means the prediction landed exactly on the candidate — a perfect match.
 
 #### Solution
-
 ```python
-predicted_point = [10, 20]
-actual_point = [12, 19]
+mary_shelley = [7, 6]
+authored     = [2, 4]
 
-dist_x = abs(predicted_point[0] - actual_point[0])
-dist_y = abs(predicted_point[1] - actual_point[1])
+predicted = [mary_shelley[0] + authored[0], mary_shelley[1] + authored[1]]
+print(f"Predicted location: {predicted}")
 
-total_error = dist_x + dist_y
-print(total_error)
+candidates = {
+    "Frankenstein":   [9, 10],
+    "The_Last_Man":   [6,  7],
+    "Valperga":       [5,  6],
+    "Mathilda":       [8,  9],
+}
+
+scores = {}
+for title, coords in candidates.items():
+    scores[title] = abs(predicted[0] - coords[0]) + abs(predicted[1] - coords[1])
+
+print("Scores:", scores)
 ```
 
-### Challenge: Identifying the Top Candidate
+### Challenge: Ranking and Confronting Bias
 
 - id: rel-mod-04-c2
 - language: python
-- difficulty: beginner
+- difficulty: intermediate
 
 #### Starter Code
-
 ```python
-# The model predicts: "Who influenced Mary_Wollstonecraft?"
-# Each candidate has a distance score (lower = more likely)
-results = [
-    ["Voltaire", 15],
-    ["Rousseau", 2],
-    ["Hume", 8]
-]
+# The model is asked: "Who wrote a celebrated work in this archive?"
+# It calculates scores for every known entity and returns a ranked list.
+# Your job is to produce that ranking — then audit it.
 
-# We want to find the entity with the minimum score
-best_entity = ""
-lowest_score = 100 # A high starting number
+scores = {
+    "Frankenstein":              0,
+    "The_Last_Man":              6,
+    "Valperga":                  8,
+    "Mathilda":                  2,
+}
 
-for candidate in results:
-    name = candidate[0]
-    score = candidate[1]
+# Step 1: Sort the scores dictionary by value (ascending — lowest score first)
+# to produce a ranked list of (title, score) pairs.
+# Store the result in `ranked`.
+ranked = []
+# Your code here
 
-    # Check if the current score is lower than our 'lowest_score'
-    if score < lowest_score:
-        # Update lowest_score and best_entity
-        # Your code here
-        pass
+print("Ranked predictions:")
+for i, (title, score) in enumerate(ranked):
+    print(f"  {i+1}. {title} (score: {score})")
 
-print(best_entity)
+# Expected ranking:
+# 1. Frankenstein (score: 0)
+# 2. Mathilda (score: 2)
+# 3. The_Last_Man (score: 6)
+# 4. Valperga (score: 8)
+
+# ------------------------------------------------------------------
+# Step 2: Now consider a second query on a different archive.
+# This archive was built only from published, widely-reviewed works.
+# The model is asked: "Who was a Doctor in 19th-century London?"
+
+doctor_scores = {
+    "John_Snow":         1,
+    "James_Barry":       3,   # Barry was a military surgeon — but recorded
+                               # officially as male throughout his career
+    "Elizabeth_Blackwell": 18, # First woman on the UK medical register — but
+                               # barely represented in this archive
+    "Joseph_Lister":     2,
+}
+
+# Sort and print the ranking for this query
+ranked_doctors = []
+# Your code here
+
+print("\nRanked doctor predictions:")
+for i, (name, score) in enumerate(ranked_doctors):
+    print(f"  {i+1}. {name} (score: {score})")
+
+# Step 3: Reflect.
+# Elizabeth Blackwell ranks last despite being historically significant.
+# What does this tell you about the relationship between score and truth?
+# Complete this sentence:
+print("\nA low ranking does not mean: ___")
+print("It may instead mean: ___")
 ```
 
 #### Expected Output
-
 ```
-Rousseau
+Ranked predictions:
+  1. Frankenstein (score: 0)
+  2. Mathilda (score: 2)
+  3. The_Last_Man (score: 6)
+  4. Valperga (score: 8)
+
+Ranked doctor predictions:
+  1. John_Snow (score: 1)
+  2. Joseph_Lister (score: 2)
+  3. James_Barry (score: 3)
+  4. Elizabeth_Blackwell (score: 18)
+
+A low ranking does not mean: the entity is unimportant or historically absent
+It may instead mean: the archive underrepresented that person, so the model has little evidence to place them accurately
 ```
 
 #### Hints
 
-1. Inside the `if` block, you need to set `lowest_score = score`.
-2. You also need to set `best_entity = name` so the program remembers which candidate was closest.
+1. Use `sorted(scores.items(), key=lambda x: x[1])` to sort by score. This returns a list of `(title, score)` tuples in ascending order.
+2. The same pattern works for `doctor_scores` — just change the dictionary name.
+3. For Step 3, think about *why* Elizabeth Blackwell's score is so high. Is it because she was a bad doctor — or because the archive didn't record her?
 
 #### Solution
-
 ```python
-results = [
-    ["Voltaire", 15],
-    ["Rousseau", 2],
-    ["Hume", 8]
-]
+scores = {
+    "Frankenstein":  0,
+    "The_Last_Man":  6,
+    "Valperga":      8,
+    "Mathilda":      2,
+}
 
-best_entity = ""
-lowest_score = 100
+ranked = sorted(scores.items(), key=lambda x: x[1])
 
-for candidate in results:
-    name = candidate[0]
-    score = candidate[1]
+print("Ranked predictions:")
+for i, (title, score) in enumerate(ranked):
+    print(f"  {i+1}. {title} (score: {score})")
 
-    if score < lowest_score:
-        lowest_score = score
-        best_entity = name
+doctor_scores = {
+    "John_Snow":           1,
+    "James_Barry":         3,
+    "Elizabeth_Blackwell": 18,
+    "Joseph_Lister":       2,
+}
 
-print(best_entity)
+ranked_doctors = sorted(doctor_scores.items(), key=lambda x: x[1])
+
+print("\nRanked doctor predictions:")
+for i, (name, score) in enumerate(ranked_doctors):
+    print(f"  {i+1}. {name} (score: {score})")
+
+print("\nA low ranking does not mean: the entity is unimportant or historically absent")
+print("It may instead mean: the archive underrepresented that person, so the model has little evidence to place them accurately")
 ```
-

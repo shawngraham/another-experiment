@@ -73,134 +73,243 @@ keywords:
   :::
 
   :::challenge
-  In Challenge 1, calculate a histogram for a grayscale gradient. In Challenge 2, calculate the average color of a four-color "quilt" image.
+  In the challenges in the sandbox, you will build and interpret colour histograms for synthetic "archival" images, then use average colour extraction to compare the visual palettes of two simulated film stills — the kind of comparison a Distant Viewing project might run across thousands of frames.
   :::
 
 ---challenges---
 
-### Challenge: Basic Grayscale Histogram
+### Challenge: Reading a Histogram as a Visual Fingerprint
 
 - id: image-analysis-03-c1
 - language: python
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
 import cv2
-  import numpy as np
+import numpy as np
 
-  # Create a 50x50 grayscale gradient image
-  image = np.zeros((50, 50), dtype=np.uint8)
-  for i in range(50):
-      image[i, :] = np.linspace(0, 255, 50)
+# Three synthetic grayscale images, each with a distinct tonal character.
+# In a real DH project these might be scanned photographs from different decades.
 
-  # Goal: Calculate the histogram for this image
-  # 1. Use cv2.calcHist()
-  # 2. Use [image] as the source
-  # 3. Channel index is [0]
-  # 4. No mask (None)
-  # 5. Use [256] bins and the range [0, 256]
+# Image A: Low-key (mostly dark — peaks on the LEFT of histogram)
+img_a = np.zeros((50, 50), dtype=np.uint8)
+img_a[:, :] = 40
 
-  hist = 
+# Image B: High-key (mostly bright — peaks on the RIGHT of histogram)
+img_b = np.zeros((50, 50), dtype=np.uint8)
+img_b[:, :] = 220
 
-  # Your code here
+# Image C: High-contrast (half dark, half bright — peaks at BOTH ends)
+img_c = np.zeros((50, 50), dtype=np.uint8)
+img_c[:25, :] = 30
+img_c[25:, :] = 225
 
-  # Verify the shape of the histogram array
-  print(hist.shape)
-  
+images = {"A (low-key)": img_a, "B (high-key)": img_b, "C (high-contrast)": img_c}
+
+# Step 1: For each image, calculate its grayscale histogram using cv2.calcHist().
+# Then find the intensity bin (0-255) where the histogram peaks.
+# Print the peak bin for each image.
+print("=== Histogram Peak Bins ===")
+for name, img in images.items():
+    hist = cv2.calcHist([img], [0], None, [256], [0, 256])
+    peak_bin = # Your code — find the index of the maximum value in hist
+    print(f"  {name}: peak at intensity {peak_bin}")
+
+print()
+
+# Step 2: Verify the total pixel count encoded in each histogram.
+# The sum of all histogram bins should equal the total number of pixels.
+# Print True/False for each image.
+print("=== Histogram Completeness Check ===")
+for name, img in images.items():
+    hist = cv2.calcHist([img], [0], None, [256], [0, 256])
+    total_pixels = img.shape[0] * img.shape[1]
+    hist_sum     = int(hist.sum())
+    print(f"  {name}: pixels={total_pixels}, hist_sum={hist_sum}, match={total_pixels == hist_sum}")
+
+print()
+
+# Step 3: Interpret the fingerprints.
+# Make a note in your notebook where you consider what Image A peaking at a particular intensity might mean, and what Image C's bi-modal peaks might imply.
+# Based on the peak bins from Step 1, complete these sentences.
+# (You can calculate or reason through the answers — no lookup needed.)
 ```
 
 #### Expected Output
-
 ```
-(256, 1)
+=== Histogram Peak Bins ===
+  A (low-key): peak at intensity 40
+  B (high-key): peak at intensity 220
+  C (high-contrast): peak at intensity 225
+
+=== Histogram Completeness Check ===
+  A (low-key): pixels=2500, hist_sum=2500, match=True
+  B (high-key): pixels=2500, hist_sum=2500, match=True
+  C (high-contrast): pixels=2500, hist_sum=2500, match=True
 ```
 
 #### Hints
 
-1. The syntax is: cv2.calcHist([image], [0], None, [256], [0, 256])
-2. Make sure all parameters except for the mask (None) are enclosed in square brackets.
-3. The output will be a NumPy array of 256 rows and 1 column.
+1. `cv2.calcHist([img], [0], None, [256], [0, 256])` returns a `(256, 1)` array. Each index is an intensity bin (0–255) and the value is the pixel count at that intensity.
+2. To find the peak bin, use `int(np.argmax(hist))` — `argmax` returns the index of the highest value, which here equals the intensity level.
+3. For Step 2, `hist.sum()` totals all pixel counts across all 256 bins. For a 50×50 image that should equal 2500 — a useful sanity check in real archival work.
+4. For Step 3, look at the peak bin number and think about what that intensity value *looks like* visually (0=black, 128=mid-grey, 255=white). Image C's single reported peak is at 225 because that bin has slightly more pixels than the dark bin — but the histogram has two meaningful peaks.
 
 #### Solution
-
 ```python
 import cv2
-  import numpy as np
+import numpy as np
 
-  image = np.zeros((50, 50), dtype=np.uint8)
-  for i in range(50):
-      image[i, :] = np.linspace(0, 255, 50)
+img_a = np.zeros((50, 50), dtype=np.uint8)
+img_a[:, :] = 40
 
-  # Calculate the histogram
-  hist = cv2.calcHist([image], [0], None, [256], [0, 256])
+img_b = np.zeros((50, 50), dtype=np.uint8)
+img_b[:, :] = 220
 
-  print(hist.shape)
+img_c = np.zeros((50, 50), dtype=np.uint8)
+img_c[:25, :] = 30
+img_c[25:, :] = 225
+
+images = {"A (low-key)": img_a, "B (high-key)": img_b, "C (high-contrast)": img_c}
+
+print("=== Histogram Peak Bins ===")
+for name, img in images.items():
+    hist     = cv2.calcHist([img], [0], None, [256], [0, 256])
+    peak_bin = int(np.argmax(hist))
+    print(f"  {name}: peak at intensity {peak_bin}")
+
+print()
+
+print("=== Histogram Completeness Check ===")
+for name, img in images.items():
+    hist         = cv2.calcHist([img], [0], None, [256], [0, 256])
+    total_pixels = img.shape[0] * img.shape[1]
+    hist_sum     = int(hist.sum())
+    print(f"  {name}: pixels={total_pixels}, hist_sum={hist_sum}, match={total_pixels == hist_sum}")
 ```
 
-### Challenge: Extracting the Average Color
+### Challenge: Comparing Palettes Across a Film Corpus
 
 - id: image-analysis-03-c2
 - language: python
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
 import numpy as np
 
-  # Creating a 100x100 image with 4 equal blocks of color
-  # Each block is 50x50 pixels
-  img = np.zeros((100, 100, 3), dtype=np.uint8)
+# Two simulated film stills from different directors.
+# Each is a 100x100 RGB image built from coloured blocks,
+# representing the dominant colours in different regions of the frame.
 
-  img[0:50, 0:50] = [255, 0, 0]      # Top-left: Red
-  img[0:50, 50:100] = [0, 255, 0]    # Top-right: Green
-  img[50:100, 0:50] = [255, 255, 0]  # Bottom-left: Yellow
-  img[50:100, 50:100] = [0, 0, 0]    # Bottom-right: Black
+# Director A: warm palette — golden light, earthy tones
+still_a = np.zeros((100, 100, 3), dtype=np.uint8)
+still_a[0:50,  0:50]  = [220, 160,  60]   # amber top-left
+still_a[0:50,  50:100] = [180, 100,  40]   # burnt orange top-right
+still_a[50:100, 0:50]  = [200, 140,  80]   # tan bottom-left
+still_a[50:100, 50:100] = [240, 180, 100]  # gold bottom-right
 
-  # Goal: Find the average R, G, B values for the whole image
-  # 1. Convert img to float64 for accurate math
-  # 2. Use np.mean(..., axis=(0, 1)) to average across Height/Width
-  # 3. Convert back to uint8 using .astype(np.uint8)
+# Director B: cool palette — blue shadows, pale light
+still_b = np.zeros((100, 100, 3), dtype=np.uint8)
+still_b[0:50,  0:50]  = [ 80, 110, 180]   # steel blue top-left
+still_b[0:50,  50:100] = [100, 130, 200]   # periwinkle top-right
+still_b[50:100, 0:50]  = [ 60,  90, 160]   # dark blue bottom-left
+still_b[50:100, 50:100] = [120, 150, 210]  # pale blue bottom-right
 
-  # Your code here
+# Step 1: Calculate the average RGB colour for each still.
+# Use np.mean(img.astype(np.float64), axis=(0, 1)).astype(np.uint8)
+avg_a = # Your code here
+avg_b = # Your code here
 
-  print(avg_color_uint8)
-  
+print("=== Average Palette ===")
+print(f"  Director A: R={avg_a[0]}, G={avg_a[1]}, B={avg_a[2]}")
+print(f"  Director B: R={avg_b[0]}, G={avg_b[1]}, B={avg_b[2]}")
+print()
+
+# Step 2: Determine which director uses more RED on average,
+# which uses more BLUE, and calculate the difference for each channel.
+print("=== Channel Comparison ===")
+for channel, label in enumerate(["Red", "Green", "Blue"]):
+    diff = int(avg_a[channel]) - int(avg_b[channel])
+    dominant = "Director A" if diff > 0 else "Director B"
+    print(f"  {label}: A={avg_a[channel]}, B={avg_b[channel]}, "
+          f"difference={abs(diff)}, higher={dominant}")
+print()
+
+# Step 3: Calculate a single "warmth score" for each still.
+# Warmth = average Red - average Blue (higher = warmer).
+warmth_a = int(avg_a[0]) - int(avg_a[2])
+warmth_b = # Your code here
+print(f"=== Warmth Score (R - B) ===")
+print(f"  Director A: {warmth_a}")
+print(f"  Director B: {warmth_b}")
+print(f"  Warmer palette: {'Director A' if warmth_a > warmth_b else 'Director B'}")
+print()
+
+# Step 4: Interpret the findings as a Distant Viewing researcher would, and add your thoughts to your notebook. What does the warmth gap between directors imply? What is a limitation of using average colour as a palette metric?
 ```
 
 #### Expected Output
-
 ```
-[127 127   0]
+=== Average Palette ===
+  Director A: R=210, G=145, B=70
+  Director B: R=90, G=120, B=187
+
+=== Channel Comparison ===
+  Red:   A=210, B=90,  difference=120, higher=Director A
+  Green: A=145, B=120, difference=25,  higher=Director A
+  Blue:  A=70,  B=187, difference=117, higher=Director B
+
+=== Warmth Score (R - B) ===
+  Director A: 140
+  Director B: -97
+  Warmer palette: Director A
 ```
 
 #### Hints
 
-1. To average the image, use: np.mean(img_float, axis=(0, 1))
-2. Math: Red is (255+0+255+0)/4 = 127.5. Green is (0+255+255+0)/4 = 127.5.
-3. Casting 127.5 to uint8 will truncate it to 127.
-4. The Blue channel will be 0 across the entire image.
+1. `np.mean(img.astype(np.float64), axis=(0, 1))` averages over the Height (axis 0) and Width (axis 1) dimensions simultaneously, leaving a 3-element array of channel means. Chain `.astype(np.uint8)` to get whole numbers.
+2. For Step 2, use `int()` when computing `diff` to avoid NumPy integer overflow — subtracting two `uint8` values can wrap around if the result would be negative.
+3. For Step 4, the first reflection connects the numbers to film history or visual culture; the second should identify a technical limitation that points back to why histograms (Challenge 1) are more informative than averages alone.
 
 #### Solution
-
 ```python
 import numpy as np
 
-  img = np.zeros((100, 100, 3), dtype=np.uint8)
-  img[0:50, 0:50] = [255, 0, 0]
-  img[0:50, 50:100] = [0, 255, 0]
-  img[50:100, 0:50] = [255, 255, 0]
-  img[50:100, 50:100] = [0, 0, 0]
+still_a = np.zeros((100, 100, 3), dtype=np.uint8)
+still_a[0:50,  0:50]   = [220, 160,  60]
+still_a[0:50,  50:100] = [180, 100,  40]
+still_a[50:100, 0:50]  = [200, 140,  80]
+still_a[50:100, 50:100]= [240, 180, 100]
 
-  # Convert and calculate mean
-  img_float = img.astype(np.float64)
-  avg_color = np.mean(img_float, axis=(0, 1))
+still_b = np.zeros((100, 100, 3), dtype=np.uint8)
+still_b[0:50,  0:50]   = [ 80, 110, 180]
+still_b[0:50,  50:100] = [100, 130, 200]
+still_b[50:100, 0:50]  = [ 60,  90, 160]
+still_b[50:100, 50:100]= [120, 150, 210]
 
-  # Final result in standard color format
-  avg_color_uint8 = avg_color.astype(np.uint8)
+avg_a = np.mean(still_a.astype(np.float64), axis=(0, 1)).astype(np.uint8)
+avg_b = np.mean(still_b.astype(np.float64), axis=(0, 1)).astype(np.uint8)
 
-  print(avg_color_uint8)
+print("=== Average Palette ===")
+print(f"  Director A: R={avg_a[0]}, G={avg_a[1]}, B={avg_a[2]}")
+print(f"  Director B: R={avg_b[0]}, G={avg_b[1]}, B={avg_b[2]}")
+print()
+
+print("=== Channel Comparison ===")
+for channel, label in enumerate(["Red", "Green", "Blue"]):
+    diff     = int(avg_a[channel]) - int(avg_b[channel])
+    dominant = "Director A" if diff > 0 else "Director B"
+    print(f"  {label}: A={avg_a[channel]}, B={avg_b[channel]}, "
+          f"difference={abs(diff)}, higher={dominant}")
+print()
+
+warmth_a = int(avg_a[0]) - int(avg_a[2])
+warmth_b = int(avg_b[0]) - int(avg_b[2])
+print("=== Warmth Score (R - B) ===")
+print(f"  Director A: {warmth_a}")
+print(f"  Director B: {warmth_b}")
+print(f"  Warmer palette: {'Director A' if warmth_a > warmth_b else 'Director B'}")
+print()
 ```
-

@@ -127,7 +127,7 @@ What words dominate? Does this match your intuition about what these sentences a
 
 Distant reading does not replace close reading — it redirects your attention. When you count words across a thousand newspaper articles and discover that "strike" spikes in 1877, that is not an interpretation. It is an observation that invites interpretation: *Why* does the word spike? What events coincide? Whose voices are using it? The count tells you where to look; the reading tells you what it means.
 
-In your own research, feature extraction is the bridge between raw data and argument. The choices you make here — which words to count, which to exclude, how to group them — shape what patterns you can find. Document those choices.
+In your own research, feature extraction is the bridge between raw data and argument. The choices you make here, which words to count, which to exclude, how to group them, shape what patterns you can find. Document those choices.
 
 :::challenge
 Given a cleaned newspaper corpus, compute the 5 most frequent words across all articles after removing a provided stopword list. Print each word and its count.

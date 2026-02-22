@@ -3,7 +3,7 @@ import { lessons, getLessonById, getLessonsByModule } from '../data/lessons.ts';
 
 describe('modules data', () => {
   it('has 19 modules', () => {
-    expect(modules).toHaveLength(19);
+    expect(modules).toHaveLength(20);
   });
 
   it('all modules have required fields', () => {

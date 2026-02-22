@@ -65,7 +65,7 @@ Imagine you are tracking how many characters speak in each chapter of a novel. I
 Physicalization is often used in "Data Activism." For example, the *Tempestry Project* uses knitted banners to show climate change over decades. How might a physical object—like a heavy, long scarf representing 100 years of census data—communicate "scale" differently than a small bar chart on a laptop screen?
 
 :::challenge
-In the challenges in the code window, you will write a script to transform a list of "Sentiment Scores" from a diary into a sequence of knitting instructions.
+In the challenges in the code sandbox, you will write a script to transform a list of "Sentiment Scores" from a diary into a sequence of knitting instructions.
 :::
 
 ---challenges---

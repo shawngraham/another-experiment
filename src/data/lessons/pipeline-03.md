@@ -140,7 +140,7 @@ Which section has longer articles? What might that tell you about editorial conv
 
 ## Transfer
 
-Comparative analysis is where DH research develops its argumentative edge. Counting words in one section tells you what that section contains; comparing two sections tells you what makes them *different*. If "Commerce" articles average 25 words and "Politics" articles average 40, that difference is a finding — perhaps reflecting editorial norms about how much space each topic deserved.
+Comparative analysis is where DH research develops its argumentative edge. Counting words in one section tells you what that section contains; comparing two sections tells you what makes them *different*. If "Commerce" articles average 25 words and "Politics" articles average 40, that difference is a finding and perhaps reflects editorial norms about how much space each topic deserved.
 
 In your own research, think about what metadata you have: dates, authors, genres, locations. Each one is a potential axis for comparison. The method is always the same: split, measure, compare, interpret.
 

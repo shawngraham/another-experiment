@@ -117,7 +117,7 @@ LSTMs were the dominant sequence model from roughly 2014–2017 — powering mac
 Understanding RNNs and LSTMs explains *why* Transformers were such a breakthrough. The Transformer replaced sequential hidden-state recurrence with parallel self-attention, meaning an entire sequence could be processed simultaneously and each position could directly attend to any other position. This unlocked the ability to train on far more data and to scale to billions of parameters.
 
 :::challenge
-To make the concept of a Recurrent Neural Network (RNN) accessible, this challenge focuses on the **Hidden State**. In an RNN, the "Hidden State" is the model's memory. As the model reads a sequence of words, it updates this memory at every step. The current memory is always a combination of the **new input** and the **previous memory**. In the second challenge you will see some rather complex math. You are trying to complete the RNN step; it's ok to just reveal the code to see what's happening
+To make the concept of a Recurrent Neural Network (RNN) accessible, this challenge focuses on the **Hidden State**. In an RNN, the "Hidden State" is the model's memory. As the model reads a sequence of words, it updates this memory at every step. The current memory is always a combination of the **new input** and the **previous memory**. In the second challenge you will see some rather complex math. You are trying to complete the RNN step; it's ok to just reveal the code to see what's happening.
 :::
 
 ---challenges---

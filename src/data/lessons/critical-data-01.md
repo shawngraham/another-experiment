@@ -147,8 +147,6 @@ These questions are the foundation of critical data studies. They do not require
 Given a list of historical occupation labels, write code that groups them into two different categorization schemes and prints the counts for each, showing how the grouping changes what we "see."
 :::
 
----challenges---
-
 ### Challenge: Re-Categorizing Historical Occupations
 
 - id: critical-data-01-challenge
@@ -156,7 +154,6 @@ Given a list of historical occupation labels, write code that groups them into t
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
 from collections import Counter
 
@@ -168,68 +165,126 @@ records = [
     "carpenter", "laundress", "domestic servant", "teacher"
 ]
 
-# SCHEME A: Group into "Skilled" or "Unskilled"
-# Replace the underscores with your code
-
+# SCHEME A: Economic sector — "Skilled" or "Unskilled"
+# Assign each occupation to one of the two categories.
+# There is no single correct answer: think about what assumptions
+# the label "Unskilled" carries, and who historically applied it.
 scheme_a = {
-    "carpenter": "Skilled",
-    "domestic servant": ___,
-    "field laborer": ___,
-    "laundress": ___,
-    "midwife": ___,
-    "preacher": ___,
-    "teacher": ___
+    "carpenter":        "Skilled",
+    "domestic servant": "",   # Your assignment
+    "field laborer":    "",   # Your assignment
+    "laundress":        "",   # Your assignment
+    "midwife":          "",   # Your assignment — is this skilled or unskilled?
+    "preacher":         "",   # Your assignment
+    "teacher":          "",   # Your assignment
 }
 
-# SCHEME B: Group into "Indoor" or "Outdoor"
+# SCHEME B: Work location — "Indoor" or "Outdoor"
 scheme_b = {
-    "carpenter": ___,
+    "carpenter":        "",   # Your assignment
     "domestic servant": "Indoor",
-    "field laborer": ___,
-    "laundress": ___,
-    "midwife": ___,
-    "preacher": ___,
-    "teacher": ___
+    "field laborer":    "",   # Your assignment
+    "laundress":        "",   # Your assignment — think carefully
+    "midwife":          "",   # Your assignment
+    "preacher":         "",   # Your assignment
+    "teacher":          "",   # Your assignment
 }
 
 # Apply scheme_a and count
 grouped_a = [scheme_a[r] for r in records]
-counts_a = Counter(grouped_a)
+counts_a  = Counter(grouped_a)
 print("=== Scheme A: Skilled vs. Unskilled ===")
 for cat in sorted(counts_a):
     print(f"  {cat}: {counts_a[cat]}")
 
+print()
+
 # Apply scheme_b and count
 grouped_b = [scheme_b[r] for r in records]
-counts_b = Counter(grouped_b)
+counts_b  = Counter(grouped_b)
 print("=== Scheme B: Indoor vs. Outdoor ===")
 for cat in sorted(counts_b):
     print(f"  {cat}: {counts_b[cat]}")
+
+print()
+
+# SCHEME C: Design your own.
+# Create a third two-category grouping that reveals a different pattern.
+# Examples: "Paid by household" vs. "Paid by client"; "Gendered Female" vs.
+# "Gendered Male" (as the 1870 census implicitly coded them); "Religious" vs.
+# "Secular"; or any other axis you find historically interesting.
+# Name your categories meaningfully.
+
+scheme_c = {
+    "carpenter":        "",
+    "domestic servant": "",
+    "field laborer":    "",
+    "laundress":        "",
+    "midwife":          "",
+    "preacher":         "",
+    "teacher":          "",
+}
+
+scheme_c_name = "=== Scheme C: ___ vs. ___ ==="  # Fill in your category names
+
+grouped_c = [scheme_c[r] for r in records]
+counts_c  = Counter(grouped_c)
+print(scheme_c_name)
+for cat in sorted(counts_c):
+    print(f"  {cat}: {counts_c[cat]}")
+
+print()
+
+# REFLECTION: Answer these two questions in the strings below.
+# 1. Which single occupation was hardest to place, and why?
+# 2. What does your Scheme C make visible that Schemes A and B do not?
+print("Hardest occupation to categorize and why:")
+print("  ___")
+print()
+print("What Scheme C reveals that A and B do not:")
+print("  ___")
 ```
 
 #### Expected Output
 
+There is no single correct expected output for this challenge — your category assignments are your argument. The output should show two non-zero counts for each scheme summing to 14, and your Scheme C should produce a distribution different from both A and B. What matters is that your assignments are internally consistent and that your reflection explains the contested choices you made.
+
+A sample consistent output (one of many valid answers):
 ```
 === Scheme A: Skilled vs. Unskilled ===
   Skilled: 6
   Unskilled: 8
+
 === Scheme B: Indoor vs. Outdoor ===
   Indoor: 8
   Outdoor: 6
+
+=== Scheme C: Waged Labour vs. Fee / Stipend ===
+  Fee / Stipend: 5
+  Waged Labour: 9
+
+Hardest occupation to categorize and why:
+  midwife — contemporary observers labeled it unskilled domestic work,
+  but it required substantial knowledge; the label reflected class
+  bias more than the actual demands of the role
+
+What Scheme C reveals that A and B do not:
+  the distinction between workers paid by an employer (wage dependence)
+  and those paid per service or by a church (relative autonomy), which
+  cuts across both the skilled/unskilled and indoor/outdoor lines
 ```
 
 #### Hints
 
-1. For Scheme A, think about which occupations require specialized training or expertise (Skilled) versus general labor (Unskilled). Carpenter, midwife, preacher, and teacher are skilled (3+1+1+1 = 6); domestic servant, field laborer, and laundress are unskilled (3+3+2 = 8).
-2. For Scheme B, think about where the work primarily takes place. Domestic servant, laundress, midwife, preacher, and teacher work indoors; carpenter and field laborer work outdoors.
-3. Count the raw records to check your math: carpenter appears 3 times, domestic servant 3 times, field laborer 3 times, laundress 2 times, midwife 1 time, preacher 1 time, teacher 1 time (14 total).
+1. The records list has 14 entries total. Count each occupation: carpenter ×3, domestic servant ×3, field laborer ×3, laundress ×2, midwife ×1, preacher ×1, teacher ×1. Use these counts to check that your scheme sums to 14.
+2. For Scheme B, laundress is genuinely ambiguous — laundering could be done in a client's home, in the laundress's own home, or outdoors at a water source. Your assignment is a choice, not a fact.
+3. For Scheme C, look at the lesson's prose for inspiration — the gendered labor example, the colonial artifact example, and the library subject headings example all suggest possible axes.
+4. The reflection is the most important part of the challenge. A one-sentence answer that just names the occupation without explaining the power dynamic embedded in the label misses the point.
 
 #### Solution
-
 ```python
 from collections import Counter
 
-# Occupation records from an 1870 census sample
 records = [
     "carpenter", "domestic servant", "field laborer",
     "laundress", "carpenter", "midwife", "field laborer",
@@ -237,40 +292,71 @@ records = [
     "carpenter", "laundress", "domestic servant", "teacher"
 ]
 
-# SCHEME A: Group into "Skilled" or "Unskilled"
+# SCHEME A: Skilled vs. Unskilled
+# Note: "midwife" classified as Skilled here — a contested but defensible choice
 scheme_a = {
-    "carpenter": "Skilled",
+    "carpenter":        "Skilled",
     "domestic servant": "Unskilled",
-    "field laborer": "Unskilled",
-    "laundress": "Unskilled",
-    "midwife": "Skilled",
-    "preacher": "Skilled",
-    "teacher": "Skilled"
+    "field laborer":    "Unskilled",
+    "laundress":        "Unskilled",
+    "midwife":          "Skilled",
+    "preacher":         "Skilled",
+    "teacher":          "Skilled",
 }
 
-# SCHEME B: Group into "Indoor" or "Outdoor"
+# SCHEME B: Indoor vs. Outdoor
+# Note: "laundress" classified as Indoor — another contested choice
 scheme_b = {
-    "carpenter": "Outdoor",
+    "carpenter":        "Outdoor",
     "domestic servant": "Indoor",
-    "field laborer": "Outdoor",
-    "laundress": "Indoor",
-    "midwife": "Indoor",
-    "preacher": "Indoor",
-    "teacher": "Indoor"
+    "field laborer":    "Outdoor",
+    "laundress":        "Indoor",
+    "midwife":          "Indoor",
+    "preacher":         "Indoor",
+    "teacher":          "Indoor",
 }
 
-# Apply scheme_a and count
+# SCHEME C: Waged Labour vs. Fee / Stipend
+scheme_c = {
+    "carpenter":        "Fee / Stipend",
+    "domestic servant": "Waged Labour",
+    "field laborer":    "Waged Labour",
+    "laundress":        "Fee / Stipend",
+    "midwife":          "Fee / Stipend",
+    "preacher":         "Fee / Stipend",
+    "teacher":          "Fee / Stipend",
+}
+
+scheme_c_name = "=== Scheme C: Waged Labour vs. Fee / Stipend ==="
+
 grouped_a = [scheme_a[r] for r in records]
-counts_a = Counter(grouped_a)
+counts_a  = Counter(grouped_a)
 print("=== Scheme A: Skilled vs. Unskilled ===")
 for cat in sorted(counts_a):
     print(f"  {cat}: {counts_a[cat]}")
+print()
 
-# Apply scheme_b and count
 grouped_b = [scheme_b[r] for r in records]
-counts_b = Counter(grouped_b)
+counts_b  = Counter(grouped_b)
 print("=== Scheme B: Indoor vs. Outdoor ===")
 for cat in sorted(counts_b):
     print(f"  {cat}: {counts_b[cat]}")
-```
+print()
 
+grouped_c = [scheme_c[r] for r in records]
+counts_c  = Counter(grouped_c)
+print(scheme_c_name)
+for cat in sorted(counts_c):
+    print(f"  {cat}: {counts_c[cat]}")
+print()
+
+print("Hardest occupation to categorize and why:")
+print("  midwife — contemporary observers labeled it unskilled domestic work,")
+print("  but it required substantial knowledge; the label reflected class")
+print("  bias more than the actual demands of the role")
+print()
+print("What Scheme C reveals that A and B do not:")
+print("  the distinction between workers paid by an employer (wage dependence)")
+print("  and those paid per service or by a church (relative autonomy), which")
+print("  cuts across both the skilled/unskilled and indoor/outdoor lines")
+```

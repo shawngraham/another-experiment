@@ -65,6 +65,7 @@ In the sandbox, we place two types of historical text on a 2D map of **[Formalit
 
 :::try-it
 Calculate the distance between a royal proclamation and a love letter using both features.
+:::
 
 ```python
 # Coordinates: [Formality, Sentiment]
@@ -75,7 +76,6 @@ love_letter = [2, 9]
 dist = abs(royal_proclamation[0] - love_letter[0]) + abs(royal_proclamation[1] - love_letter[1])
 print(f"The distance is: {dist}")
 ```
-:::
 
 ## Transfer: Changing Contexts
 
@@ -83,63 +83,95 @@ How might "Word Vectors" change based on the archive you use?
 
 If you trained a model on **18th-century medical journals**, the word "Treatment" would be geographically very close to "Leeches" and "Bloodletting." In a **21st-century** model, "Treatment" would move far away from "Leeches" and closer to "Antibiotics" or "Therapy."
 
+:::challenge
+You have five historical documents scored on two features: **Formality** and **Sentiment**. Using Manhattan Distance, find which document is most similar to the diary entry then reflect on what their shared coordinates tell you about the kind of language they share.
+:::
+
 ---challenges---
 
-### Challenge: Which Text Is More Similar?
+### Challenge: Finding the Nearest Neighbour
 
 - id: rel-mod-01-c1
 - language: python
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
 # Coordinates: [Formality, Sentiment]
-# Three types of historical text scored on two features
+# Five historical documents scored on two features
+documents = {
+    "legal_contract":   [9, 1],
+    "personal_letter":  [3, 7],
+    "royal_proclamation": [8, 2],
+    "newspaper_report": [6, 4],
+    "diary_entry_2":    [2, 9],
+}
+
+# The document we want to compare everything against
 diary_entry = [2, 8]
-legal_contract = [9, 1]
-personal_letter = [3, 7]
 
-# 1. Calculate total distance from diary_entry to legal_contract
-# (done for you as an example)
-dist_contract = abs(diary_entry[0] - legal_contract[0]) + abs(diary_entry[1] - legal_contract[1])
+# Step 1: Write a function that takes two coordinate lists [f, s]
+# and returns the Manhattan Distance: the sum of absolute differences
+# across both dimensions.
+def manhattan(a, b):
+    # Your code here
+    pass
 
-# 2. Calculate total distance from diary_entry to personal_letter
-# Follow the same pattern for BOTH dimensions
-dist_letter =
+# Step 2: Loop through the documents dictionary.
+# Calculate the distance from diary_entry to each document.
+# Track which document has the smallest distance and what that distance is.
+closest_name = ""
+closest_dist = float("inf")  # Start with infinity so any real distance beats it
 
-# 3. Print the name of whichever text type is closer to the diary
-if dist_letter < dist_contract:
-    print("letter")
-else:
-    print("contract")
+for name, coords in documents.items():
+    dist = manhattan(diary_entry, coords)
+    # Your code here — update closest_name and closest_dist if dist is smaller
+
+print(f"Most similar to the diary: {closest_name} (distance: {closest_dist})")
+
+# Step 3: Reflect on the distributional hypothesis.
+# Look at the coordinates of the closest document and the diary entry.
+# Print a one-line observation: what shared feature makes them close?
+# Complete this string:
+print("They share similar coordinates because: ___")
 ```
 
 #### Expected Output
-
 ```
-letter
+Most similar to the diary: diary_entry_2 (distance: 1)
+They share similar coordinates because: both score low on formality and high on sentiment
 ```
 
 #### Hints
 
-1. Follow the pattern: `abs(list_a[0] - list_b[0]) + abs(list_a[1] - list_b[1])`.
-2. Replace the two lists with `diary_entry` and `personal_letter`.
-3. A diary entry is informal and emotional — which other text type shares those features?
+1. `manhattan(a, b)` should return `abs(a[0] - b[0]) + abs(a[1] - b[1])` — the same formula from the try-it block, now wrapped so you can reuse it.
+2. Inside your loop: `if dist < closest_dist:` then update both `closest_dist` and `closest_name`.
+3. For Step 3, look at the winning document's coordinates and compare them to `diary_entry = [2, 8]` — what do the two numbers represent?
 
 #### Solution
-
 ```python
+documents = {
+    "legal_contract":     [9, 1],
+    "personal_letter":    [3, 7],
+    "royal_proclamation": [8, 2],
+    "newspaper_report":   [6, 4],
+    "diary_entry_2":      [2, 9],
+}
+
 diary_entry = [2, 8]
-legal_contract = [9, 1]
-personal_letter = [3, 7]
 
-dist_contract = abs(diary_entry[0] - legal_contract[0]) + abs(diary_entry[1] - legal_contract[1])
-dist_letter = abs(diary_entry[0] - personal_letter[0]) + abs(diary_entry[1] - personal_letter[1])
+def manhattan(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-if dist_letter < dist_contract:
-    print("letter")
-else:
-    print("contract")
+closest_name = ""
+closest_dist = float("inf")
+
+for name, coords in documents.items():
+    dist = manhattan(diary_entry, coords)
+    if dist < closest_dist:
+        closest_dist = dist
+        closest_name = name
+
+print(f"Most similar to the diary: {closest_name} (distance: {closest_dist})")
+print("They share similar coordinates because: both score low on formality and high on sentiment")
 ```
-

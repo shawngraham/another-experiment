@@ -71,7 +71,7 @@ Physicalizing data in wood or metal moves it from a "temporary" screen to a "per
 How does the *durability* of wood change the "story" of a dataset compared to a digital chart that can be deleted in one click?
 
 :::challenge
-In the challenges in the code window, you will generate the code for a "Data Bookmark" that maps the frequency of a keyword across different chapters.
+In the challenges in the code sandbox, you will generate the code for a "Data Bookmark" that maps the frequency of a keyword across different chapters.
 :::
 
 ---challenges---

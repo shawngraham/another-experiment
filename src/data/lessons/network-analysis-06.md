@@ -75,143 +75,318 @@ keywords:
   :::
 
   :::challenge
-  In Challenge 1, you will build a correspondence network from a raw dataset. In Challenge 2, you will learn to attach "Distance" as an attribute to your edges.
+  In Challenge 1, you will build a correspondence network from a raw dataset. In Challenge 2, you will learn to attach some edge attribute data.
   :::
 
 ---challenges---
 
-### Challenge: The Import Pipeline
+### Challenge: The Import Pipeline and the Dirty Data Problem
 
 - id: network-analysis-06-c1
 - language: python
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
 import pandas as pd
-  import networkx as nx
+import networkx as nx
 
-  # Imagine this data was loaded from 'bloomsbury_group.csv'
-  raw_data = {
-      'Sender': ['Virginia Woolf', 'Vita Sackville-West', 'T.S. Eliot'],
-      'Recipient': ['Vita Sackville-West', 'Virginia Woolf', 'Ezra Pound']
-  }
+# Raw transcription data from an archive of Bloomsbury Group letters.
+# A research assistant transcribed these, introducing inconsistencies.
+raw_data = {
+    "Sender": [
+        "Virginia Woolf",
+        "Vita Sackville-West",
+        "V. Woolf",           # Inconsistent — same person as row 1
+        "T.S. Eliot",
+        "Virginia Woolf",
+        "Lytton Strachey",
+        "T. S. Eliot",        # Inconsistent — same person as row 4
+        "Lytton Strachey",
+    ],
+    "Recipient": [
+        "Vita Sackville-West",
+        "Virginia Woolf",
+        "Lytton Strachey",
+        "Ezra Pound",
+        "T.S. Eliot",
+        "Virginia Woolf",
+        "Virginia Woolf",
+        "T.S. Eliot",
+    ],
+    "Letters": [12, 15, 3, 8, 5, 9, 4, 6],
+}
 
-  # Goal: Create a Graph 'G' from this data
-  # 1. Convert 'raw_data' into a Pandas DataFrame named 'df'
-  # 2. Use nx.from_pandas_edgelist() to create the graph
-  # 3. Specify 'Sender' as the source and 'Recipient' as the target
+df = pd.DataFrame(raw_data)
 
-  # Your code here
+# Step 1: Diagnose the problem.
+# Print the number of unique values in the Sender column BEFORE cleaning.
+# You should see 5 unique senders — but two are duplicates with different spellings.
+print("Unique senders before cleaning:", df["Sender"].nunique())
+print(sorted(df["Sender"].unique()))
+print()
 
-  # Verify the edges
-  print(list(G.edges))
-  
+# Step 2: Clean the data.
+# Apply a correction dictionary to standardise the inconsistent names.
+# Use df["Sender"].replace() to fix them.
+corrections = {
+    "V. Woolf":    "Virginia Woolf",
+    "T. S. Eliot": "T.S. Eliot",
+}
+df["Sender"] = df["Sender"].replace(corrections)
+
+print("Unique senders after cleaning:", df["Sender"].nunique())
+print()
+
+# Step 3: Build the graph.
+# Use nx.from_pandas_edgelist() with edge_attr="Letters".
+# Use create_using=nx.DiGraph() since Sender → Recipient has direction.
+G = nx.from_pandas_edgelist(
+    df,
+    source="Sender",
+    target="Recipient",
+    edge_attr="Letters",
+    create_using=# Your code here
+)
+
+print(f"Nodes: {G.number_of_nodes()}")
+print(f"Edges: {G.number_of_edges()}")
+print()
+
+# Step 4: Demonstrate the cost of skipping Step 2.
+# Build a second graph from the UNCLEANED data and compare node counts.
+raw_df = pd.DataFrame(raw_data)
+G_dirty = nx.from_pandas_edgelist(
+    raw_df, source="Sender", target="Recipient",
+    edge_attr="Letters", create_using=nx.DiGraph()
+)
+print(f"Dirty graph nodes: {G_dirty.number_of_nodes()} "
+      f"(clean: {G.number_of_nodes()})")
+print(f"Ghost nodes created by inconsistent names: "
+      f"{G_dirty.number_of_nodes() - G.number_of_nodes()}")
 ```
 
 #### Expected Output
-
 ```
-[('Virginia Woolf', 'Vita Sackville-West'), ('Vita Sackville-West', 'Virginia Woolf'), ('T.S. Eliot', 'Ezra Pound')]
+Unique senders before cleaning: 5
+['Lytton Strachey', 'T. S. Eliot', 'T.S. Eliot', 'V. Woolf', 'Vita Sackville-West', 'Virginia Woolf']
+
+Unique senders after cleaning: 4
+
+Nodes: 6
+Edges: 8
+
+Dirty graph nodes: 8 (clean: 6)
+Ghost nodes created by inconsistent names: 2
 ```
 
 #### Hints
 
-1. Use df = pd.DataFrame(raw_data) to start.
-2. The function is G = nx.from_pandas_edgelist(df, source="...", target="...")
-3. Ensure your strings match the dictionary keys exactly.
+1. `df["Sender"].nunique()` counts distinct values; `df["Sender"].unique()` lists them — useful for spotting inconsistencies.
+2. `df["Sender"].replace(corrections)` takes a dictionary and swaps each key for its value. Assign the result back: `df["Sender"] = df["Sender"].replace(corrections)`.
+3. `create_using=nx.DiGraph()` tells `from_pandas_edgelist` to build a directed graph — without it you get an undirected `Graph` by default.
+4. Step 4's comparison is the payoff: without cleaning, `"V. Woolf"` and `"Virginia Woolf"` become two separate nodes with no edges between them, silently corrupting every centrality score.
 
 #### Solution
-
 ```python
 import pandas as pd
-  import networkx as nx
+import networkx as nx
 
-  raw_data = {
-      'Sender': ['Virginia Woolf', 'Vita Sackville-West', 'T.S. Eliot'],
-      'Recipient': ['Vita Sackville-West', 'Virginia Woolf', 'Ezra Pound']
-  }
+raw_data = {
+    "Sender": [
+        "Virginia Woolf", "Vita Sackville-West", "V. Woolf",
+        "T.S. Eliot", "Virginia Woolf", "Lytton Strachey",
+        "T. S. Eliot", "Lytton Strachey",
+    ],
+    "Recipient": [
+        "Vita Sackville-West", "Virginia Woolf", "Lytton Strachey",
+        "Ezra Pound", "T.S. Eliot", "Virginia Woolf",
+        "Virginia Woolf", "T.S. Eliot",
+    ],
+    "Letters": [12, 15, 3, 8, 5, 9, 4, 6],
+}
 
-  # 1. Create DataFrame
-  df = pd.DataFrame(raw_data)
+df = pd.DataFrame(raw_data)
 
-  # 2. Create Graph
-  G = nx.from_pandas_edgelist(df, source='Sender', target='Recipient')
+print("Unique senders before cleaning:", df["Sender"].nunique())
+print(sorted(df["Sender"].unique()))
+print()
 
-  print(list(G.edges))
+corrections = {"V. Woolf": "Virginia Woolf", "T. S. Eliot": "T.S. Eliot"}
+df["Sender"] = df["Sender"].replace(corrections)
+
+print("Unique senders after cleaning:", df["Sender"].nunique())
+print()
+
+G = nx.from_pandas_edgelist(
+    df, source="Sender", target="Recipient",
+    edge_attr="Letters", create_using=nx.DiGraph()
+)
+
+print(f"Nodes: {G.number_of_nodes()}")
+print(f"Edges: {G.number_of_edges()}")
+print()
+
+raw_df = pd.DataFrame(raw_data)
+G_dirty = nx.from_pandas_edgelist(
+    raw_df, source="Sender", target="Recipient",
+    edge_attr="Letters", create_using=nx.DiGraph()
+)
+print(f"Dirty graph nodes: {G_dirty.number_of_nodes()} (clean: {G.number_of_nodes()})")
+print(f"Ghost nodes created by inconsistent names: "
+      f"{G_dirty.number_of_nodes() - G.number_of_nodes()}")
 ```
 
-### Challenge: Attaching Edge Attributes
+### Challenge: Using Edge Attributes for Research
 
 - id: network-analysis-06-c2
 - language: python
-- difficulty: advanced
+- difficulty: intermediate
 
 #### Starter Code
-
 ```python
 import pandas as pd
-  import networkx as nx
+import networkx as nx
 
-  # Data: Historical travel routes and their distances
-  travel_data = {
-      'City_A': ['Paris', 'Berlin', 'London'],
-      'City_B': ['Berlin', 'Warsaw', 'Paris'],
-      'Distance': [878, 517, 344]
-  }
+# Extended Bloomsbury correspondence data with two metadata columns:
+# Letters = total letters exchanged, Years = span of the correspondence
+raw_data = {
+    "Sender": [
+        "Virginia Woolf", "Vita Sackville-West", "Virginia Woolf",
+        "T.S. Eliot", "Lytton Strachey", "Lytton Strachey",
+        "Virginia Woolf", "T.S. Eliot",
+    ],
+    "Recipient": [
+        "Vita Sackville-West", "Virginia Woolf", "Lytton Strachey",
+        "Ezra Pound", "Virginia Woolf", "T.S. Eliot",
+        "T.S. Eliot", "Virginia Woolf",
+    ],
+    "Letters": [12, 15, 9, 8, 9, 6, 5, 4],
+    "Years":   [10, 10, 8, 6, 8, 5, 4, 4],
+}
 
-  df = pd.DataFrame(travel_data)
+df = pd.DataFrame(raw_data)
 
-  # Goal: Create a graph G that includes 'Distance' as an edge attribute
-  # 1. Use nx.from_pandas_edgelist
-  # 2. Set edge_attr='Distance'
-  # 3. Print the Distance value for the edge between 'Paris' and 'Berlin'
+# Step 1: Build a DiGraph with BOTH metadata columns attached as edge attributes.
+# Pass a list to edge_attr to load multiple columns at once.
+G = nx.from_pandas_edgelist(
+    df,
+    source="Sender",
+    target="Recipient",
+    edge_attr=# Your code here — pass a list of both column names
+    create_using=nx.DiGraph()
+)
 
-  # Your code here
+# Step 2: Access edge attributes directly.
+# Print the Letters and Years for the Woolf → Sackville-West edge.
+edge = G["Virginia Woolf"]["Vita Sackville-West"]
+print(f"Woolf → Sackville-West: {edge['Letters']} letters over {edge['Years']} years")
 
-  # Verification check
-  if G.has_edge('Paris', 'Berlin'):
-      print(G['Paris']['Berlin']['Distance'])
-  
+print()
+
+# Step 3: Find the most sustained correspondence — the edge with the highest
+# "Years" attribute. Loop through G.edges(data=True), which yields
+# (sender, recipient, attribute_dict) triples.
+longest_sender    = ""
+longest_recipient = ""
+longest_years     = 0
+
+for sender, recipient, attrs in G.edges(data=True):
+    # Your code here
+    pass
+
+print(f"Longest correspondence: {longest_sender} → {longest_recipient} "
+      f"({longest_years} years)")
+
+print()
+
+# Step 4: Calculate letters-per-year for every edge as a measure of intensity,
+# and print the top 2 most intensive correspondences.
+intensity = {}
+for sender, recipient, attrs in G.edges(data=True):
+    key   = f"{sender} → {recipient}"
+    ratio = attrs["Letters"] / attrs["Years"]
+    intensity[key] = round(ratio, 2)
+
+top_2 = sorted(intensity.items(), key=lambda x: x[1], reverse=True)[:2]
+print("Top 2 most intensive correspondences (letters/year):")
+for pair, ratio in top_2:
+    print(f"  {pair}: {ratio}")
 ```
 
 #### Expected Output
-
 ```
-878
+Woolf → Sackville-West: 12 letters over 10 years
+
+Longest correspondence: Virginia Woolf → Vita Sackville-West (10 years)
+
+Top 2 most intensive correspondences (letters/year):
+  Vita Sackville-West → Virginia Woolf: 1.5
+  Virginia Woolf → Vita Sackville-West: 1.2
 ```
 
 #### Hints
 
-1. The edge_attr parameter allows you to pass a column name or a list of names.
-2. To access edge data, use G[node1][node2][attribute_name].
-3. Make sure you created the graph with the Distance column attached!
+1. To attach multiple columns, pass a list: `edge_attr=["Letters", "Years"]`.
+2. `G.edges(data=True)` yields `(u, v, dict)` triples — unpack as `for sender, recipient, attrs in ...` and access attributes with `attrs["Letters"]` etc.
+3. For Step 3, the same `if value > current_best:` pattern from network-analysis-04 applies here, now checking `attrs["Years"]`.
+4. Step 4's letters-per-year ratio is a genuine humanities metric — a correspondence with 15 letters over 10 years is less intensive than one with 8 letters over 4 years, even though the raw count is lower.
 
 #### Solution
-
 ```python
 import pandas as pd
-  import networkx as nx
+import networkx as nx
 
-  travel_data = {
-      'City_A': ['Paris', 'Berlin', 'London'],
-      'City_B': ['Berlin', 'Warsaw', 'Paris'],
-      'Distance': [878, 517, 344]
-  }
+raw_data = {
+    "Sender": [
+        "Virginia Woolf", "Vita Sackville-West", "Virginia Woolf",
+        "T.S. Eliot", "Lytton Strachey", "Lytton Strachey",
+        "Virginia Woolf", "T.S. Eliot",
+    ],
+    "Recipient": [
+        "Vita Sackville-West", "Virginia Woolf", "Lytton Strachey",
+        "Ezra Pound", "Virginia Woolf", "T.S. Eliot",
+        "T.S. Eliot", "Virginia Woolf",
+    ],
+    "Letters": [12, 15, 9, 8, 9, 6, 5, 4],
+    "Years":   [10, 10, 8, 6, 8, 5, 4, 4],
+}
 
-  df = pd.DataFrame(travel_data)
+df = pd.DataFrame(raw_data)
 
-  # Create the graph with 'Distance' as metadata on the edges
-  G = nx.from_pandas_edgelist(
-      df, 
-      source='City_A', 
-      target='City_B', 
-      edge_attr='Distance'
-  )
+# Step 1
+G = nx.from_pandas_edgelist(
+    df, source="Sender", target="Recipient",
+    edge_attr=["Letters", "Years"],
+    create_using=nx.DiGraph()
+)
 
-  # Print attribute
-  if G.has_edge('Paris', 'Berlin'):
-      print(G['Paris']['Berlin']['Distance'])
+# Step 2
+edge = G["Virginia Woolf"]["Vita Sackville-West"]
+print(f"Woolf → Sackville-West: {edge['Letters']} letters over {edge['Years']} years")
+print()
+
+# Step 3
+longest_sender = longest_recipient = ""
+longest_years  = 0
+for sender, recipient, attrs in G.edges(data=True):
+    if attrs["Years"] > longest_years:
+        longest_years     = attrs["Years"]
+        longest_sender    = sender
+        longest_recipient = recipient
+
+print(f"Longest correspondence: {longest_sender} → {longest_recipient} "
+      f"({longest_years} years)")
+print()
+
+# Step 4
+intensity = {}
+for sender, recipient, attrs in G.edges(data=True):
+    key            = f"{sender} → {recipient}"
+    intensity[key] = round(attrs["Letters"] / attrs["Years"], 2)
+
+top_2 = sorted(intensity.items(), key=lambda x: x[1], reverse=True)[:2]
+print("Top 2 most intensive correspondences (letters/year):")
+for pair, ratio in top_2:
+    print(f"  {pair}: {ratio}")
 ```
-

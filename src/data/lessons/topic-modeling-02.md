@@ -71,65 +71,116 @@ keywords:
   :::
 
   :::challenge
-  In the challenge in the sandbox, you will act as the "strainer." You must take a list of tokens and filter them by two criteria: they must not be in the stopword list, and they must be longer than 3 characters.
+  A passage from a 19th-century legal report has been tokenised for you. Your job is to act as the cleaning pipeline: lowercase, lemmatize using a provided dictionary, then filter out stopwords (standard and domain-specific) and short tokens. The resulting cleaned list is what you would feed into an LDA model.
   :::
 
 ---challenges---
 
-### Challenge: Cleaning the Recipe
+### Challenge: Build the Cleaning Pipeline
 
 - id: topic-modeling-02-c1
 - language: python
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
-# A list of words from a document
-  tokens = ["it", "was", "a", "scary", "and", "dark", "night", "in", "the", "forest"]
+import string
 
-  # Our stopword list
-  stopwords = ["it", "was", "a", "and", "in", "the"]
+# Raw tokens from a 19th-century legal report
+tokens = [
+    "The", "witnesses", "were", "examined", "by", "the", "Court",
+    "concerning", "the", "alleged", "offences", "committed", "by",
+    "the", "accused", "parties", "The", "witness", "testified",
+    "that", "he", "had", "seen", "the", "accused", "running",
+    "Courts", "rarely", "dismiss", "such", "testimony"
+]
 
-  # Goal: Create a new list called 'cleaned' containing only words that:
-  # 1. Are NOT in the stopwords list
-  # 2. Are longer than 3 characters (len > 3)
+# A small lemma lookup: maps inflected forms to their dictionary root
+lemma_lookup = {
+    "witnesses":  "witness",
+    "offences":   "offence",
+    "parties":    "party",
+    "committed":  "commit",
+    "examined":   "examine",
+    "testified":  "testify",
+    "alleged":    "allege",
+    "running":    "run",
+    "courts":     "court",
+    "rarely":     "rare",
+}
 
-  cleaned = []
+# Standard stopwords
+stopwords = {"the", "a", "an", "by", "was", "were", "that", "he", "had", "such"}
 
-  # Your code here
-  # Loop through 'tokens', check both conditions, and append to 'cleaned'
+# Domain-specific stopwords: these appear in every legal document
+# and carry no distinctive topic information for THIS corpus
+domain_stopwords = {"court", "witness", "accused"}
 
-  print(cleaned)
-  
+# --- Your pipeline ---
+
+# Step 1: Lowercase every token
+# Step 2: Replace any token found in lemma_lookup with its lemma
+# Step 3: Remove tokens that are in stopwords OR domain_stopwords
+# Step 4: Remove tokens with 3 or fewer characters
+
+# Build the cleaned list step by step and print it
+cleaned = []
+# Your code here
+
+print(cleaned)
 ```
 
 #### Expected Output
-
 ```
-['scary', 'dark', 'night', 'forest']
+['examine', 'concern', 'allege', 'offence', 'commit', 'party', 'testify', 'run', 'testimony']
 ```
 
 #### Hints
 
-1. Use: for word in tokens:
-2. You can check membership using: if word not in stopwords:
-3. Combine conditions with "and": if (condition1) and (condition2):
-4. Use cleaned.append(word) to save the good words.
+1. Do Steps 1 and 2 together in a first pass: `word = token.lower()`, then `word = lemma_lookup.get(word, word)` — this replaces the word if it's in the lookup, or keeps it unchanged if not.
+2. Combine the two stopword sets with `|` before your loop: `all_stopwords = stopwords | domain_stopwords`. Then one check covers both.
+3. Apply the length filter with `len(word) > 3`.
+4. Only `append` if the word passes both the stopword check and the length check.
 
 #### Solution
-
 ```python
-tokens = ["it", "was", "a", "scary", "and", "dark", "night", "in", "the", "forest"]
-  stopwords = ["it", "was", "a", "and", "in", "the"]
+import string
 
-  cleaned = []
+tokens = [
+    "The", "witnesses", "were", "examined", "by", "the", "Court",
+    "concerning", "the", "alleged", "offences", "committed", "by",
+    "the", "accused", "parties", "The", "witness", "testified",
+    "that", "he", "had", "seen", "the", "accused", "running",
+    "Courts", "rarely", "dismiss", "such", "testimony"
+]
 
-  for word in tokens:
-      # Filter by stopword list AND length
-      if word not in stopwords and len(word) > 3:
-          cleaned.append(word)
+lemma_lookup = {
+    "witnesses":  "witness",
+    "offences":   "offence",
+    "parties":    "party",
+    "committed":  "commit",
+    "examined":   "examine",
+    "testified":  "testify",
+    "alleged":    "allege",
+    "running":    "run",
+    "courts":     "court",
+    "rarely":     "rare",
+}
 
-  print(cleaned)
+stopwords = {"the", "a", "an", "by", "was", "were", "that", "he", "had", "such"}
+domain_stopwords = {"court", "witness", "accused"}
+all_stopwords = stopwords | domain_stopwords
+
+cleaned = []
+for token in tokens:
+    # Step 1: lowercase
+    word = token.lower()
+    # Step 2: lemmatize via lookup
+    word = lemma_lookup.get(word, word)
+    # Steps 3 & 4: filter
+    if word not in all_stopwords and len(word) > 3:
+        cleaned.append(word)
+
+print(cleaned)
 ```
 

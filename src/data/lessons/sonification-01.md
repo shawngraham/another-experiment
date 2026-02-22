@@ -64,24 +64,53 @@ keywords:
   ---
 
   ## 4. Exporting your "Digital Score"
-  To hear your results, you must save your list of numbers as a `.mid` file. We use the `midiutil` library to generate instructions for a computer's virtual instrument.
-
+  To hear your results, you must save your list of numbers as a `.mid` file. We use the `mido` library, the standard Python package for working with MIDI data. In `mido`, a MIDI file is built from **tracks** containing **messages** — small instructions like "play this note" and "stop this note".
   ```python
-  from midiutil import MIDIFile
+  # If you try this code here in the sandbox, you need these
+  # two lines in order to install mido into the sandbox.
+  import micropip
+  await micropip.install("mido")
 
-  # Create a MIDI object with one track
-  MyMIDI = MIDIFile(1) 
-  MyMIDI.addTempo(track=0, time=0, tempo=120)
+  import mido
+  from mido import MidiFile, MidiTrack, Message, MetaMessage, bpm2tempo
+
+  # Create a MIDI file and an empty track
+  mid = MidiFile(ticks_per_beat=480)
+  track = MidiTrack()
+  mid.tracks.append(track)
+
+  # Set the tempo (120 BPM)
+  track.append(MetaMessage("set_tempo", tempo=bpm2tempo(120), time=0))
 
   # Add the notes we mapped (pitch) to the track
-  for i, pitch in enumerate(notes):
-      # track, channel, pitch, time, duration, volume
-      MyMIDI.addNote(0, 0, pitch, i, 1, 100)
+  # Each note needs an 'on' message followed by an 'off' message.
+  # 'time' is the number of ticks *since the previous message*.
+  for pitch in notes:
+      track.append(Message("note_on",  channel=0, note=pitch, velocity=100, time=0))
+      track.append(Message("note_off", channel=0, note=pitch, velocity=0,   time=480))
 
-  # Save the file using 'wb' (Write Binary) mode
-  with open("data_sonification.mid", "wb") as output_file:
-      MyMIDI.writeFile(output_file)
+  # Save the file
+  mid.save("data_sonification.mid")
+
+  # Again, if you're doing this in the sandbox, we have to
+  # get a bit creative to get the file out to your own
+  # computer. This next bit of code, when run, triggers this environment to download your file:
+  import js, base64
+
+  b64 = base64.b64encode(midi_bytes).decode()
+  data_url = f"data:audio/midi;base64,{b64}"
+
+  link = js.document.createElement("a")
+  link.href = data_url
+  link.download = "data_sonification.mid"
+  js.document.body.appendChild(link)
+  link.click()
+  js.document.body.removeChild(link)
+
+  # but of course, you wouldn't need it if you are working with python installed on your actual computer rather than this website!
   ```
+
+  There are two things to notice here. First, `mido` uses **delta time** — the `time` value on each message is not an absolute timestamp but the number of ticks *since the last message*. A `note_on` with `time=0` means "immediately after the previous event." A `note_off` with `time=480` means "hold this note for 480 ticks", which at 480 ticks per beat equals exactly one beat. Second, `bpm2tempo()` is a convenience function that converts a human-readable BPM value into the microseconds-per-beat unit that MIDI files actually store internally.
 
   :::tip
   **Why Sonify?** 
@@ -158,5 +187,3 @@ chapter_counts = [1200, 4500, 3200, 800, 5000]
 
   notes = [sonify(c) for c in chapter_counts]
   print(notes)
-```
-

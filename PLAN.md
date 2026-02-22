@@ -1,3 +1,5 @@
+# status: accomplished
+
 # Plan: Refactor lessons.ts Using import.meta.glob
 
 ## Assessment

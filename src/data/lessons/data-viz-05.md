@@ -26,6 +26,10 @@ In this final step, we combine everything. We will compare the 'thematic weight'
 3. **Layout**: Use `plt.subplots(1, 2)` to create a comparative view.
 4. **Refine**: Add labels, styles, and titles to make the 'argument' clear.
 
+:::challenge
+In the code sandbox, use what you've learned so far to do a complete analytical/visualization sequence.
+:::
+
 ---challenges---
 
 ### Challenge: The Comparative Capstone

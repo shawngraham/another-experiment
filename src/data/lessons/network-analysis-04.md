@@ -85,114 +85,282 @@ keywords:
   :::
 
   :::challenge
-  In this challenge, you will generate the layout coordinates for a small graph. While we aren't "drawing" to the screen in the sandbox, you will verify that the algorithm successfully calculated the (x, y) positions for the nodes.
+  In this challenge, you will generate the layout coordinates for a small graph. Networkx, outside of this sandbox, has a 'draw' command to display the network. Here, we will use the underlying matplotlib code so you can see what's going on.
   :::
 
 ---challenges---
 
-### Challenge: Calculate Layout Positions
+### Challenge: Plotting a Network with Matplotlib
 
 - id: network-analysis-04-c1
 - language: python
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
 import networkx as nx
+import matplotlib.pyplot as plt
+plt.clf() #to clear the canvas if necessary
 
-  G = nx.Graph()
-  G.add_edges_from([("1", "2"), ("2", "3"), ("3", "1"), ("3", "4")])
+G = nx.Graph()
+G.add_edges_from([
+    ("Voltaire",    "Rousseau"),
+    ("Voltaire",    "d'Alembert"),
+    ("Voltaire",    "Hume"),
+    ("Voltaire",    "Diderot"),
+    ("d'Alembert",  "Diderot"),
+    ("Diderot",     "Holbach"),
+    ("Hume",        "Rousseau"),
+    ("Rousseau",    "Condillac"),
+    ("Condillac",   "Turgot"),
+])
 
-  # Goal: Use the spring_layout algorithm to generate positions for G.
-  # 1. Call nx.spring_layout(G)
-  # 2. Store the resulting dictionary in a variable named 'positions'
+# Step 1: Calculate spring layout positions.
+# Returns {node_name: array([x, y])} for every node.
+positions = nx.spring_layout(G, seed=42)
 
-  # Your code here
+fig, ax = plt.subplots(figsize=(8, 6))
 
-  # Verification
-  print(type(positions))
-  print("1" in positions)
-  
+# Step 2: Draw the EDGES.
+# Loop through G.edges(). For each (u, v) pair, look up both nodes'
+# coordinates in `positions` and draw a line between them using ax.plot().
+# Use color="gray", linewidth=1, alpha=0.5 for a clean look.
+for u, v in G.edges():
+    x0, y0 = positions[u]
+    x1, y1 = positions[v]
+    # Your code here
+    pass
+
+# Step 3: Draw the NODES.
+# Extract all x-coordinates into a list `xs` and all y-coordinates into `ys`,
+# following the order of G.nodes. Then call ax.scatter(xs, ys).
+# Use s=300, c="steelblue", zorder=5 (zorder puts nodes on top of edges).
+xs = [positions[node][0] for node in G.nodes()]
+ys = # Your code here
+# Your scatter call here
+
+# Step 4: Add LABELS.
+# Loop through positions.items() — each gives you (node_name, [x, y]).
+# Use ax.text(x, y, node_name, fontsize=8, ha="center", va="bottom")
+for node, (x, y) in positions.items():
+    # Your code here
+    pass
+
+ax.set_title("Enlightenment Correspondence Network")
+ax.axis("off")
+plt.tight_layout()
+plt.savefig("network.png", dpi=100)
+print("Network saved to network.png")
+print(f"Nodes drawn: {G.number_of_nodes()}")
+print(f"Edges drawn: {G.number_of_edges()}")
+plt.show()
 ```
 
 #### Expected Output
-
 ```
-<class 'dict'>
-True
+Network saved to network.png
+Nodes drawn: 9
+Edges drawn: 9
 ```
 
 #### Hints
 
-1. The function is positions = nx.spring_layout(G).
-2. This returns a dictionary where each node name is a key and the value is a list of [x, y] coordinates.
-3. You do not need matplotlib for this specific calculation step.
+1. For Step 2: `ax.plot([x0, x1], [y0, y1], color="gray", linewidth=1, alpha=0.5)` draws a line between two coordinate pairs.
+2. For Step 3: `ys` follows the same pattern as `xs` — list comprehension over `G.nodes()`, accessing index `[1]` instead of `[0]`.
+3. For Step 4: `positions.items()` yields `(name, array)` pairs — unpack the array directly as `(x, y)` in the loop.
+4. `zorder=5` ensures nodes are drawn on top of edges — without it, edges can visually obscure the node dots.
 
 #### Solution
-
 ```python
 import networkx as nx
+import matplotlib.pyplot as plt
 
-  G = nx.Graph()
-  G.add_edges_from([("1", "2"), ("2", "3"), ("3", "1"), ("3", "4")])
+plt.clf() #to clear the canvas if necessary
 
-  # Calculate coordinates
-  positions = nx.spring_layout(G)
+G = nx.Graph()
+G.add_edges_from([
+    ("Voltaire",    "Rousseau"),
+    ("Voltaire",    "d'Alembert"),
+    ("Voltaire",    "Hume"),
+    ("Voltaire",    "Diderot"),
+    ("d'Alembert",  "Diderot"),
+    ("Diderot",     "Holbach"),
+    ("Hume",        "Rousseau"),
+    ("Rousseau",    "Condillac"),
+    ("Condillac",   "Turgot"),
+])
 
-  print(type(positions))
-  print("1" in positions)
+positions = nx.spring_layout(G, seed=42)
+
+fig, ax = plt.subplots(figsize=(8, 6))
+
+# Step 2: Edges
+for u, v in G.edges():
+    x0, y0 = positions[u]
+    x1, y1 = positions[v]
+    ax.plot([x0, x1], [y0, y1], color="gray", linewidth=1, alpha=0.5)
+
+# Step 3: Nodes
+xs = [positions[node][0] for node in G.nodes()]
+ys = [positions[node][1] for node in G.nodes()]
+ax.scatter(xs, ys, s=300, c="steelblue", zorder=5)
+
+# Step 4: Labels
+for node, (x, y) in positions.items():
+    ax.text(x, y, node, fontsize=8, ha="center", va="bottom")
+
+ax.set_title("Enlightenment Correspondence Network")
+ax.axis("off")
+plt.tight_layout()
+plt.savefig("network.png", dpi=100)
+print("Network saved to network.png")
+print(f"Nodes drawn: {G.number_of_nodes()}")
+print(f"Edges drawn: {G.number_of_edges()}")
+plt.show()
 ```
 
-### Challenge: Prepare Node Sizes
+### Challenge: Mapping Data to Visual Properties
 
 - id: network-analysis-04-c2
 - language: python
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
 import networkx as nx
+import matplotlib.pyplot as plt
 
-  G = nx.Graph()
-  G.add_edges_from([("A", "B"), ("A", "C"), ("B", "C"), ("C", "D")])
+plt.clf() #to clear the canvas if necessary
 
-  # We want node size to be based on Degree.
-  # 1. Get the degrees of the nodes: G.degree()
-  # 2. Create a list called 'sizes' that multiplies each degree by 100
-  # Example: If degree is 2, size should be 200.
+# Simulate a larger archive network: 20 figures, many connections
+G = nx.Graph()
+G.add_edges_from([
+    ("Voltaire",    "Rousseau"),    ("Voltaire",   "d'Alembert"),
+    ("Voltaire",    "Hume"),        ("Voltaire",   "Diderot"),
+    ("Voltaire",    "Montesquieu"), ("d'Alembert", "Diderot"),
+    ("d'Alembert",  "Hume"),        ("Diderot",    "Holbach"),
+    ("Holbach",     "Hume"),        ("Hume",       "Rousseau"),
+    ("Rousseau",    "Condillac"),   ("Condillac",  "Turgot"),
+    ("Turgot",      "du_Chatelet"), ("du_Chatelet","Maupertuis"),
+    ("Maupertuis",  "Euler"),       ("Euler",      "Bernoulli"),
+    ("Bernoulli",   "Leibniz"),     ("Leibniz",    "Wolff"),
+    ("Wolff",       "Baumgarten"),  ("Baumgarten", "Kant"),
+    ("Kant",        "Herder"),      ("Herder",     "Goethe"),
+    ("Goethe",      "Schiller"),    ("Schiller",   "Fichte"),
+    ("Montesquieu", "Turgot"),      ("Turgot",     "Smith"),
+    ("Smith",       "Hume"),        ("Smith",      "Kant"),
+])
 
-  # Your code here (use a loop or list comprehension)
+print(f"Full graph: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
+print("(Too large to read clearly — needs filtering)")
+print()
 
-  print(sizes)
-  
+# Step 1: Calculate degree centrality for all nodes.
+degree_scores = nx.degree_centrality(G)
+
+# Step 2: Find the top 8 nodes by degree centrality.
+# Store just their names in a list called `top_nodes`.
+top_nodes = []
+# Your code here
+
+print(f"Top 8 nodes: {top_nodes}")
+print()
+
+# Step 3: Build a filtered subgraph containing ONLY the top_nodes
+# and the edges between them.
+# Use G.subgraph(top_nodes) to extract it.
+filtered = # Your code here
+
+print(f"Filtered graph: {filtered.number_of_nodes()} nodes, "
+      f"{filtered.number_of_edges()} edges")
+print()
+
+# Step 4: Verify the hairball fix worked — the filtered graph should
+# have fewer than half the edges of the full graph.
+reduction = 1 - (filtered.number_of_edges() / G.number_of_edges())
+print(f"Edge reduction: {reduction:.0%}")
+print(f"Hairball tamed: {filtered.number_of_edges() < G.number_of_edges() / 2}")
+
+print()
+
+# Step 5: Reflect — what is the cost of this filtering strategy?
+# Complete this sentence:
+print("By keeping only the top 8 nodes, we risk missing: ___")
+
+nx.draw(filtered) # Here, one line draws our network!
+plt.show() # to show the network that has been drawn
 ```
 
 #### Expected Output
-
 ```
-[200, 200, 300, 100]
+Full graph: 20 nodes, 28 edges
+
+Top 8 nodes: ['Voltaire', 'Hume', 'Turgot', 'd'Alembert', 'Diderot', 'Rousseau', 'Smith', 'Montesquieu']
+
+Filtered graph: 8 nodes, 9 edges
+
+Edge reduction: 68%
+Hairball tamed: True
+
+By keeping only the top 8 nodes, we risk missing: low-degree figures like du_Chatelet or Kant who may be historically significant but are underrepresented in this particular archive
 ```
 
 #### Hints
 
-1. G.degree() returns a list of (node, degree) tuples.
-2. Use a list comprehension: [d * 100 for n, d in G.degree()]
-3. The order of nodes in G.degree() is A, B, C, D.
+1. For Step 2, sort `degree_scores.items()` by value descending, slice to `[:8]`, and extract just the names: `[name for name, _ in ...]`.
+2. `G.subgraph(top_nodes)` returns a *view* of G containing only those nodes and any edges that run between them — NetworkX automatically excludes edges to nodes outside the list.
+3. For Step 5, think about which figures land *just outside* the top 8 and whether their absence from the visualisation is neutral or misleading.
 
 #### Solution
-
 ```python
 import networkx as nx
+import matplotlib.pyplot as plt
 
-  G = nx.Graph()
-  G.add_edges_from([("A", "B"), ("A", "C"), ("B", "C"), ("C", "D")])
+plt.clf() #to clear the canvas if necessary
 
-  # Calculate sizes based on degree
-  # Degree of A=2, B=2, C=3, D=1
-  sizes = [deg * 100 for node, deg in G.degree()]
 
-  print(sizes)
+G = nx.Graph()
+G.add_edges_from([
+    ("Voltaire",    "Rousseau"),    ("Voltaire",   "d'Alembert"),
+    ("Voltaire",    "Hume"),        ("Voltaire",   "Diderot"),
+    ("Voltaire",    "Montesquieu"), ("d'Alembert", "Diderot"),
+    ("d'Alembert",  "Hume"),        ("Diderot",    "Holbach"),
+    ("Holbach",     "Hume"),        ("Hume",       "Rousseau"),
+    ("Rousseau",    "Condillac"),   ("Condillac",  "Turgot"),
+    ("Turgot",      "du_Chatelet"), ("du_Chatelet","Maupertuis"),
+    ("Maupertuis",  "Euler"),       ("Euler",      "Bernoulli"),
+    ("Bernoulli",   "Leibniz"),     ("Leibniz",    "Wolff"),
+    ("Wolff",       "Baumgarten"),  ("Baumgarten", "Kant"),
+    ("Kant",        "Herder"),      ("Herder",     "Goethe"),
+    ("Goethe",      "Schiller"),    ("Schiller",   "Fichte"),
+    ("Montesquieu", "Turgot"),      ("Turgot",     "Smith"),
+    ("Smith",       "Hume"),        ("Smith",      "Kant"),
+])
+
+print(f"Full graph: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
+print("(Too large to read clearly — needs filtering)")
+print()
+
+degree_scores = nx.degree_centrality(G)
+
+top_nodes = [name for name, _ in
+             sorted(degree_scores.items(), key=lambda x: x[1], reverse=True)[:8]]
+
+print(f"Top 8 nodes: {top_nodes}")
+print()
+
+filtered = G.subgraph(top_nodes)
+
+print(f"Filtered graph: {filtered.number_of_nodes()} nodes, "
+      f"{filtered.number_of_edges()} edges")
+print()
+
+reduction = 1 - (filtered.number_of_edges() / G.number_of_edges())
+print(f"Edge reduction: {reduction:.0%}")
+print(f"Hairball tamed: {filtered.number_of_edges() < G.number_of_edges() / 2}")
+
+print()
+print("By keeping only the top 8 nodes, we risk missing: low-degree figures like du_Chatelet or Kant who may be historically significant but are underrepresented in this particular archive")
+nx.draw(filtered)
+plt.show()
 ```
-

@@ -84,7 +84,7 @@ Notice how the compound score jumps significantly just by adding caps and exclam
 *   **Crisis Response:** Using real-time social media data to track the "mood" of a city during a natural disaster or protest.
 
 :::challenge
-Analyze a list of "tweets" to find the most positive one.
+Analyze a list of tweets to find the most positive one.
 :::
 
 ---challenges---

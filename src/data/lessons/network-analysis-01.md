@@ -86,57 +86,142 @@ keywords:
 
 ---challenges---
 
-### Challenge: Define an Edge List
+### Challenge: Building a Weighted Correspondence Network
 
 - id: network-analysis-01-c1
 - language: python
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
-# We want to model a Directed relationship: Letter Writing.
-  # 1. Ada writes to Charles.
-  # 2. Charles writes to Mary.
-  # 3. Mary writes to Ada.
+# A historian has transcribed the following letters from an archive.
+# Each entry is (Sender, Recipient). Some pairs wrote to each other repeatedly.
 
-  # Goal: Create a list of tuples named 'letter_network' 
-  # Format: (Sender, Recipient)
+raw_letters = [
+    ("Voltaire",   "Rousseau"),
+    ("Rousseau",   "Hume"),
+    ("Voltaire",   "Rousseau"),
+    ("Hume",       "Voltaire"),
+    ("Rousseau",   "Hume"),
+    ("Voltaire",   "Hume"),
+    ("Hume",       "Rousseau"),
+    ("Voltaire",   "Rousseau"),
+]
 
-  letter_network = []
+# Step 1: Build a DIRECTED edge list with weights.
+# Loop through raw_letters. For each (sender, recipient) pair,
+# count how many times that exact directed edge appears.
+# Store results in a dictionary: edge_weights[(sender, recipient)] = count
 
-  # Your code here: add the three tuples to the list
+edge_weights = {}
+for sender, recipient in raw_letters:
+    # Your code here
+    pass
 
-  # Verification loop
-  for edge in letter_network:
-      print(edge)
-  
+print("Weighted directed edges:")
+for edge, weight in edge_weights.items():
+    print(f"  {edge[0]} -> {edge[1]}: {weight}")
+
+print()
+
+# Step 2: Identify the most active correspondent — the sender who wrote
+# the most letters in total across all their edges.
+# Store the result as (name, total_letters_sent).
+sender_totals = {}
+for (sender, recipient), weight in edge_weights.items():
+    # Your code here
+    pass
+
+top_sender = max(sender_totals, key=lambda x: sender_totals[x])
+print(f"Most active sender: {top_sender} ({sender_totals[top_sender]} letters)")
+
+print()
+
+# Step 3: Directed vs. Undirected — reflect on the data.
+# Check whether any pair wrote to EACH OTHER (i.e. both (A->B) and (B->A) exist).
+# Print: "<A> and <B> exchanged letters" for each mutual pair.
+# Avoid printing the same pair twice.
+print("Mutual correspondences:")
+reported = []
+for (sender, recipient) in edge_weights:
+    reverse = (recipient, sender)
+    if reverse in edge_weights and (recipient, sender) not in reported:
+        print(f"  {sender} and {recipient} exchanged letters")
+        reported.append((sender, recipient))
+
+print()
+
+# Step 4: Reflect on modeling choices.
+# If you modeled this as an UNDIRECTED graph instead, what information would you lose?
+# Make a note in your research notebook.
 ```
 
 #### Expected Output
-
 ```
-('Ada', 'Charles')
-('Charles', 'Mary')
-('Mary', 'Ada')
+Weighted directed edges:
+  Voltaire -> Rousseau: 3
+  Rousseau -> Hume: 2
+  Hume -> Voltaire: 1
+  Voltaire -> Hume: 1
+  Hume -> Rousseau: 1
+
+Most active sender: Voltaire (4 letters)
+
+Mutual correspondences:
+  Rousseau and Hume exchanged letters
+  Hume and Voltaire exchanged letters
 ```
 
 #### Hints
 
-1. A tuple uses parentheses: ("Name1", "Name2").
-2. Add three tuples to your list: letter_network = [(...), (...), (...)]
-3. In directed graphs, the order inside the tuple matters (Source -> Target).
+1. For Step 1, use `edge_weights[edge] = edge_weights.get(edge, 0) + 1` where `edge = (sender, recipient)`.
+2. For Step 2, loop through `edge_weights.items()`. For each `(sender, recipient)` key, add its weight to `sender_totals[sender]` using the same `.get()` pattern.
+3. For Step 3, check `if (recipient, sender) in edge_weights` — this tells you the reverse edge exists. The `reported` list prevents printing "A and B" and then "B and A".
+4. For Step 4, look at the Voltaire → Rousseau edge. Rousseau never wrote back. Would an undirected graph show you that asymmetry?
 
 #### Solution
-
 ```python
-letter_network = [
-      ("Ada", "Charles"),
-      ("Charles", "Mary"),
-      ("Mary", "Ada")
-  ]
+raw_letters = [
+    ("Voltaire",   "Rousseau"),
+    ("Rousseau",   "Hume"),
+    ("Voltaire",   "Rousseau"),
+    ("Hume",       "Voltaire"),
+    ("Rousseau",   "Hume"),
+    ("Voltaire",   "Hume"),
+    ("Hume",       "Rousseau"),
+    ("Voltaire",   "Rousseau"),
+]
 
-  for edge in letter_network:
-      print(edge)
+# Step 1
+edge_weights = {}
+for sender, recipient in raw_letters:
+    edge = (sender, recipient)
+    edge_weights[edge] = edge_weights.get(edge, 0) + 1
+
+print("Weighted directed edges:")
+for edge, weight in edge_weights.items():
+    print(f"  {edge[0]} -> {edge[1]}: {weight}")
+
+print()
+
+# Step 2
+sender_totals = {}
+for (sender, recipient), weight in edge_weights.items():
+    sender_totals[sender] = sender_totals.get(sender, 0) + weight
+
+top_sender = max(sender_totals, key=lambda x: sender_totals[x])
+print(f"Most active sender: {top_sender} ({sender_totals[top_sender]} letters)")
+
+print()
+
+# Step 3
+print("Mutual correspondences:")
+reported = []
+for (sender, recipient) in edge_weights:
+    reverse = (recipient, sender)
+    if reverse in edge_weights and (recipient, sender) not in reported:
+        print(f"  {sender} and {recipient} exchanged letters")
+        reported.append((sender, recipient))
+
+print()
 ```
-

@@ -72,61 +72,127 @@ keywords:
   **From String to Data**: When an API sends data, it arrives as a long string. In Python, we use `json.loads()` to turn that string into a list or dictionary we can actually work with. In the `requests` library, `response.json()` does this step for you automatically!
   :::
 
-  :::challenge
-  In the challenge in the sandbox, you will simulate receiving data from an API. You will need to parse the JSON string and use a loop to extract specific book titles.
+:::challenge
+  A simulated response from the Digital Public Library of America API is provided below. It mirrors the structure of a real DPLA response: a wrapper object containing metadata
+  and a nested list of records. Check the status code before proceeding, then navigate the nested structure to print the title and provider name for each item.
   :::
-  
 
 ---challenges---
 
-### Challenge: Parse API Response Data
+### Challenge: Navigate a Nested API Response
 
 - id: web-data-03-c1
 - language: python
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
 import json
 
-  # A simulated string received from a library API
-  api_response = '[{"title": "Frankenstein", "year": 1818}, {"title": "Jane Eyre", "year": 1847}]'
+# A simulated DPLA-style API response (this is what real APIs actually look like)
+raw_response = """{
+    "status_code": 200,
+    "count": 3,
+    "results": [
+        {
+            "title": "Narrative of the Life of Frederick Douglass",
+            "date": "1845",
+            "provider": {
+                "name": "Boston Public Library",
+                "state": "Massachusetts"
+            }
+        },
+        {
+            "title": "Incidents in the Life of a Slave Girl",
+            "date": "1861",
+            "provider": {
+                "name": "Library of Congress",
+                "state": "Washington D.C."
+            }
+        },
+        {
+            "title": "Twelve Years a Slave",
+            "date": "1853",
+            "provider": {
+                "name": "New York Public Library",
+                "state": "New York"
+            }
+        }
+    ]
+}"""
 
-  # Goal: 
-  # 1. Use json.loads() to convert 'api_response' into a Python list
-  # 2. Loop through the list
-  # 3. Print only the "title" of each book
+# Step 1: Use json.loads() to convert raw_response into a Python dictionary.
 
-  # Your code here
-  
+# Step 2: Check the "status_code" key. Only proceed if it equals 200.
+#         If not, print "Request failed." and stop.
+
+# Step 3: Loop through the list found at the "results" key.
+#         For each record, print the title and the provider's name
+#         in the format: "Title — Provider"
+#         Note: "provider" is itself a nested dictionary.
+
+# Your code here
 ```
 
 #### Expected Output
-
 ```
-Frankenstein
-Jane Eyre
+Request successful. 3 records found.
+Narrative of the Life of Frederick Douglass — Boston Public Library
+Incidents in the Life of a Slave Girl — Library of Congress
+Twelve Years a Slave — New York Public Library
 ```
 
 #### Hints
 
-1. books = json.loads(api_response) will create a list of dictionaries.
-2. In your loop, each item is a dictionary. Access the title using item["title"].
-3. Make sure to import the json module (already in starter code).
+1. After `json.loads()`, your data is a dictionary. Access the status code with `data["status_code"]`.
+2. The list of records is at `data["results"]` — loop through that.
+3. Each record's provider is itself a dictionary. To get the provider name you need to go two levels deep: `record["provider"]["name"]`.
+4. Print the record count before your loop using `data["count"]`.
 
 #### Solution
-
 ```python
 import json
 
-  api_response = '[{"title": "Frankenstein", "year": 1818}, {"title": "Jane Eyre", "year": 1847}]'
+raw_response = """{
+    "status_code": 200,
+    "count": 3,
+    "results": [
+        {
+            "title": "Narrative of the Life of Frederick Douglass",
+            "date": "1845",
+            "provider": {
+                "name": "Boston Public Library",
+                "state": "Massachusetts"
+            }
+        },
+        {
+            "title": "Incidents in the Life of a Slave Girl",
+            "date": "1861",
+            "provider": {
+                "name": "Library of Congress",
+                "state": "Washington D.C."
+            }
+        },
+        {
+            "title": "Twelve Years a Slave",
+            "date": "1853",
+            "provider": {
+                "name": "New York Public Library",
+                "state": "New York"
+            }
+        }
+    ]
+}"""
 
-  # Parse the string into a list of dictionaries
-  books = json.loads(api_response)
+data = json.loads(raw_response)
 
-  # Loop and extract
-  for book in books:
-      print(book["title"])
+if data["status_code"] != 200:
+    print("Request failed.")
+else:
+    print(f"Request successful. {data['count']} records found.")
+    for record in data["results"]:
+        title = record["title"]
+        provider = record["provider"]["name"]
+        print(f"{title} — {provider}")
 ```
 

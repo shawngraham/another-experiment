@@ -86,64 +86,72 @@ keywords:
   When reading a CSV, remember that everything starts as a **string**. If you want to do math on a year or a price, you must convert it using `int()` or `float()`!
   :::
   
+  :::challenge
+  A researcher has given you a prosopographical dataset of Romantic-era authors as a CSV string. Your task is to filter it and print only the **name and city** of authors who published their first work **after 1815**.
+  :::
 
 ---challenges---
 
-### Challenge: Parse CSV data
+### Challenge: Filter a Prosopographical Dataset
 
 - id: structured-data-01-c1
 - language: python
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
 import csv
-  import io
+import io
 
-  # A researcher gives you this string of data
-  csv_data = "name,year\nAusten,1813\nShelley,1818\nStoker,1897"
+csv_data = """name,year,city
+Austen,1811,Steventon
+Byron,1812,London
+Shelley,1818,Bath
+Keats,1817,London
+Scott,1814,Edinburgh
+Clare,1820,Helpston"""
 
-  # Goal: Use csv.reader to print each row as a list
-  # 1. Create a "virtual file" using io.StringIO(csv_data)
-  # 2. Pass that virtual file to csv.reader()
-  # 3. Loop through the reader and print each row
+# Goal: Print the name and city of every author whose year > 1815
+# 1. Wrap csv_data in io.StringIO() to create a virtual file
+# 2. Pass it to csv.DictReader() so you can access columns by name
+# 3. Loop through the rows
+# 4. Convert row["year"] to an int before comparing
+# 5. Print row["name"] and row["city"] for matching rows
 
-  # Your code here
-  
+# Your code here
 ```
 
 #### Expected Output
-
 ```
-['name', 'year']
-['Austen', '1813']
-['Shelley', '1818']
-['Stoker', '1897']
+Shelley, Bath
+Keats, London
+Clare, Helpston
 ```
 
 #### Hints
 
-1. The syntax is: reader = csv.reader(io.StringIO(csv_data))
-2. Use "for row in reader:" to iterate through the rows.
-3. Each "row" will be a list of strings.
+1. The syntax is: `reader = csv.DictReader(io.StringIO(csv_data))`
+2. Each `row` is a dictionary — use `row["year"]`, `row["name"]`, `row["city"]`.
+3. Year values are strings by default — use `int(row["year"])` before comparing with `> 1815`.
+4. You can print two values together with `print(row["name"] + ", " + row["city"])`.
 
 #### Solution
-
 ```python
 import csv
-  import io
+import io
 
-  csv_data = "name,year\nAusten,1813\nShelley,1818\nStoker,1897"
+csv_data = """name,year,city
+Austen,1811,Steventon
+Byron,1812,London
+Shelley,1818,Bath
+Keats,1817,London
+Scott,1814,Edinburgh
+Clare,1820,Helpston"""
 
-  # Create virtual file
-  virtual_file = io.StringIO(csv_data)
+reader = csv.DictReader(io.StringIO(csv_data))
 
-  # Create the reader
-  reader = csv.reader(virtual_file)
-
-  # Loop and print
-  for row in reader:
-      print(row)
+for row in reader:
+    if int(row["year"]) > 1815:
+        print(row["name"] + ", " + row["city"])
 ```
 

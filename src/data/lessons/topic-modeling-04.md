@@ -64,61 +64,163 @@ keywords:
   **Human-in-the-loop**: This is the DH philosophy that the machine's output is only the *start* of the research. Your labels and interpretations are what turn "data" into "scholarship."
   :::
 
-  :::challenge
-  Gensim outputs topics as a single string of math. In the challenge in the sandbox, you will use Python's string tools to "snip out" the most important word (the first one) from a topic string.
+:::challenge
+  Below is a simulated LDA model output represented as plain Python dictionaries, exactly the kind of data structure Gensim produces internally. Your job is to act as the "Scholar as Interpreter": read the weights, track document-topic proportions, flag junk topics, and apply human labels to what the machine found.
   :::
 
 ---challenges---
 
-### Challenge: Identifying the Top Term
+### Challenge: Interpret a Topic Model
 
 - id: topic-modeling-04-c1
 - language: python
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
-# A simulated output from lda.show_topics()
-  # It is a list containing a tuple: (Topic_ID, Word_Weights_String)
-  model_output = [(0, '0.045*"whale" + 0.030*"sea" + 0.025*"ship"')]
+# Simulated LDA output: 4 topics, each as a list of (word, weight) pairs
+# sorted from highest to lowest weight
+topics = {
+    0: [("whale", 0.045), ("sea", 0.030), ("ship", 0.025), ("harpoon", 0.021), ("ocean", 0.018)],
+    1: [("said", 0.062), ("went", 0.058), ("came", 0.047), ("told", 0.039), ("back", 0.031)],
+    2: [("parliament", 0.041), ("vote", 0.038), ("law", 0.029), ("election", 0.027), ("crown", 0.019)],
+    3: [("prayer", 0.050), ("sin", 0.044), ("soul", 0.033), ("grace", 0.028), ("faith", 0.022)],
+}
 
-  # The weights string is at index 1 of the first tuple
-  topic_string = model_output[0][1]
+# Simulated document-topic proportions: each document's percentage per topic
+# Rows = documents, columns = topic IDs 0-3
+documents = {
+    "Moby Dick Ch.1":      {0: 0.82, 1: 0.04, 2: 0.03, 3: 0.11},
+    "Moby Dick Ch.9":      {0: 0.41, 1: 0.05, 2: 0.02, 3: 0.52},
+    "Parliament Report":   {0: 0.03, 1: 0.06, 2: 0.88, 3: 0.03},
+    "Parish Register":     {0: 0.05, 1: 0.08, 2: 0.12, 3: 0.75},
+    "Admiralty Minutes":   {0: 0.55, 1: 0.05, 2: 0.35, 3: 0.05},
+}
 
-  # Goal: Extract the word "whale" from the string.
-  # 1. Use .split() to break the string at the double-quote characters (")
-  # 2. Select the correct index from the resulting list
-  # 3. Assign it to 'top_word' and print it
+# ------------------------------------------------------------------
+# Step 1: Print the top 3 words for each topic.
+# Format: "Topic <id>: word1, word2, word3"
+# Your code here
 
-  # Your code here
-  
+
+# ------------------------------------------------------------------
+# Step 2: Identify junk topics.
+# A topic is "junk" if its top word has a weight below 0.05 AND
+# all its top-5 words are common function/structural words.
+# We define structural words as:
+junk_words = {"said", "went", "came", "told", "back", "got", "looked", "asked", "made"}
+
+# Print: "Junk topic detected: Topic <id>" for any topic that qualifies.
+# A topic qualifies if MORE THAN HALF of its top 5 words are in junk_words.
+# Your code here
+
+
+# ------------------------------------------------------------------
+# Step 3: Assign human labels to the non-junk topics.
+# Fill in this dictionary with a short interpretive label for each topic
+# based on its top words. Topic 1 should be labelled "JUNK".
+labels = {
+    0: "",   # Your label here
+    1: "JUNK",
+    2: "",   # Your label here
+    3: "",   # Your label here
+}
+
+# ------------------------------------------------------------------
+# Step 4: Find the dominant topic for each document (highest proportion)
+# and print it with its human label.
+# Format: "<document title>: <label> ({proportion:.0%})"
+# Your code here
+
+
+# ------------------------------------------------------------------
+# Step 5 (Close reading signpost): Print the title of any document
+# where Topic 3 (whichever label you gave it) exceeds 40%.
+# These are the documents a scholar should close-read for that theme.
+print("\nDocuments to close-read for theme:", labels[3])
+# Your code here
 ```
 
 #### Expected Output
-
 ```
-whale
+Topic 0: whale, sea, ship
+Topic 1: said, went, came
+Topic 2: parliament, vote, law
+Topic 3: prayer, sin, soul
+
+Junk topic detected: Topic 1
+
+Moby Dick Ch.1: Whaling Industry (82%)
+Moby Dick Ch.9: Whaling Industry (41%)
+Parliament Report: Political Governance (88%)
+Parish Register: Religion & Faith (75%)
+Admiralty Minutes: Whaling Industry (55%)
+
+Documents to close-read for theme: Religion & Faith
+Moby Dick Ch.9 (52%)
+Parish Register (75%)
 ```
 
 #### Hints
 
-1. If you split "Hello "World"!" by the quote, you get ["Hello ", "World", "!"]
-2. Use: parts = topic_string.split('"')
-3. The word "whale" will be the second item in that list (index 1).
+1. For Step 1, `topics[tid]` gives you a list of `(word, weight)` tuples. Slice `[:3]` for the top 3, then join just the words with `", ".join(word for word, _ in ...)`.
+2. For Step 2, check each topic: `sum(1 for word, _ in topics[tid][:5] if word in junk_words)`. If that count is greater than 2 (more than half of 5), it's junk.
+3. For Step 4, use `max(proportions.items(), key=lambda x: x[1])` to find the `(topic_id, proportion)` pair with the highest value.
+4. For Step 5, loop through `documents.items()` and check `proportions[3] > 0.40`.
 
 #### Solution
-
 ```python
-model_output = [(0, '0.045*"whale" + 0.030*"sea" + 0.025*"ship"')]
-  topic_string = model_output[0][1]
+topics = {
+    0: [("whale", 0.045), ("sea", 0.030), ("ship", 0.025), ("harpoon", 0.021), ("ocean", 0.018)],
+    1: [("said", 0.062), ("went", 0.058), ("came", 0.047), ("told", 0.039), ("back", 0.031)],
+    2: [("parliament", 0.041), ("vote", 0.038), ("law", 0.029), ("election", 0.027), ("crown", 0.019)],
+    3: [("prayer", 0.050), ("sin", 0.044), ("soul", 0.033), ("grace", 0.028), ("faith", 0.022)],
+}
 
-  # Split the string by the double-quote marks
-  parts = topic_string.split('"')
+documents = {
+    "Moby Dick Ch.1":      {0: 0.82, 1: 0.04, 2: 0.03, 3: 0.11},
+    "Moby Dick Ch.9":      {0: 0.41, 1: 0.05, 2: 0.02, 3: 0.52},
+    "Parliament Report":   {0: 0.03, 1: 0.06, 2: 0.88, 3: 0.03},
+    "Parish Register":     {0: 0.05, 1: 0.08, 2: 0.12, 3: 0.75},
+    "Admiralty Minutes":   {0: 0.55, 1: 0.05, 2: 0.35, 3: 0.05},
+}
 
-  # The word sits between the first and second quote marks
-  top_word = parts[1]
+junk_words = {"said", "went", "came", "told", "back", "got", "looked", "asked", "made"}
 
-  print(top_word)
+# Step 1: Top 3 words per topic
+for tid, word_weights in topics.items():
+    top = ", ".join(word for word, _ in word_weights[:3])
+    print(f"Topic {tid}: {top}")
+
+print()
+
+# Step 2: Junk topic detection
+for tid, word_weights in topics.items():
+    junk_count = sum(1 for word, _ in word_weights[:5] if word in junk_words)
+    if junk_count > 2:
+        print(f"Junk topic detected: Topic {tid}")
+
+print()
+
+# Step 3: Human labels
+labels = {
+    0: "Whaling Industry",
+    1: "JUNK",
+    2: "Political Governance",
+    3: "Religion & Faith",
+}
+
+# Step 4: Dominant topic per document
+for title, proportions in documents.items():
+    top_id, top_prop = max(proportions.items(), key=lambda x: x[1])
+    print(f"{title}: {labels[top_id]} ({top_prop:.0%})")
+
+print()
+
+# Step 5: Close-reading signpost for Topic 3
+print("Documents to close-read for theme:", labels[3])
+for title, proportions in documents.items():
+    if proportions[3] > 0.40:
+        print(f"{title} ({proportions[3]:.0%})")
 ```
 

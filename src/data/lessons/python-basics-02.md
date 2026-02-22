@@ -80,6 +80,10 @@ print(book_data["author"]) # Output: Shelley
 Try creating a list of four years. Use `print(years[0])` to see the first year and `print(years[3])` to see the last one. What happens if you try to print `years[4]`?
 :::
 
+:::challenge
+Understand the difference between lists and dictionaries, and that you use different methods to access the data they contain.
+:::
+
 ---challenges---
 
 ### Challenge: Work with collections

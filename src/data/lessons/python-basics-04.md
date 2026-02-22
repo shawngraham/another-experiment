@@ -79,6 +79,10 @@ print(len(words)) # Output: 4
 Functions must be defined *before* they are called. In your code, always put your `def` blocks at the top of the file.
 :::
 
+:::challenge
+Build a function that you could re-use to estimate the amount of time it might take to read a document.
+:::
+
 ---challenges---
 
 ### Challenge: Write a Reading Time Function

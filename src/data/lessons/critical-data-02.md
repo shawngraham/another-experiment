@@ -108,8 +108,6 @@ Think about a dataset or archive you work with:
 Given a dictionary of archive entries with demographic attributes, calculate the percentage representation for each group across two dimensions and identify the most significant gap.
 :::
 
----challenges---
-
 ### Challenge: Measure the Gaps in an Archive
 
 - id: critical-data-02-c1
@@ -117,73 +115,147 @@ Given a dictionary of archive entries with demographic attributes, calculate the
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
 # Archive of literary manuscripts with metadata
 archive = {
-    "entry_1": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
-    "entry_2": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
-    "entry_3": {"author_gender": "female", "region": "South", "decade": "1930s"},
-    "entry_4": {"author_gender": "male", "region": "Midwest", "decade": "1920s"},
-    "entry_5": {"author_gender": "male", "region": "Northeast", "decade": "1940s"},
-    "entry_6": {"author_gender": "female", "region": "Northeast", "decade": "1930s"},
-    "entry_7": {"author_gender": "male", "region": "South", "decade": "1920s"},
-    "entry_8": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
-    "entry_9": {"author_gender": "male", "region": "West", "decade": "1940s"},
-    "entry_10": {"author_gender": "male", "region": "Northeast", "decade": "1930s"},
+    "entry_1":  {"author_gender": "male",   "region": "Northeast", "decade": "1920s"},
+    "entry_2":  {"author_gender": "male",   "region": "Northeast", "decade": "1920s"},
+    "entry_3":  {"author_gender": "female", "region": "South",     "decade": "1930s"},
+    "entry_4":  {"author_gender": "male",   "region": "Midwest",   "decade": "1920s"},
+    "entry_5":  {"author_gender": "male",   "region": "Northeast", "decade": "1940s"},
+    "entry_6":  {"author_gender": "female", "region": "Northeast", "decade": "1930s"},
+    "entry_7":  {"author_gender": "male",   "region": "South",     "decade": "1920s"},
+    "entry_8":  {"author_gender": "male",   "region": "Northeast", "decade": "1920s"},
+    "entry_9":  {"author_gender": "male",   "region": "West",      "decade": "1940s"},
+    "entry_10": {"author_gender": "male",   "region": "Northeast", "decade": "1930s"},
 }
 
 total = len(archive)
 
-# 1. Count and print representation by gender (sorted alphabetically)
+# Step 1: Count and print representation by gender (sorted alphabetically).
 # Format: "  gender: count/total (pct%)"
+gender_counts = {}
+for entry in archive.values():
+    g = entry["author_gender"]
+    # Your code here
 
-# 2. Count and print representation by region (sorted alphabetically)
-# Format: "  region: count/total (pct%)"
+print("=== Representation by Gender ===")
+for gender in sorted(gender_counts):
+    count = gender_counts[gender]
+    pct   = round(count / total * 100, 1)
+    print(f"  {gender}: {count}/{total} ({pct}%)")
 
-# 3. Identify and print the most and least represented regions
+print()
+
+# Step 2: Count and print representation by region (sorted alphabetically).
+# Then print the most and least represented regions.
+region_counts = {}
+for entry in archive.values():
+    # Your code here
+    pass
+
+print("=== Representation by Region ===")
+for region in sorted(region_counts):
+    count = region_counts[region]
+    pct   = round(count / total * 100, 1)
+    print(f"  {region}: {count}/{total} ({pct}%)")
+
+max_region = max(region_counts, key=region_counts.get)
+min_region = min(region_counts, key=region_counts.get)
+print(f"  → Most represented: {max_region} ({region_counts[max_region]} entries)")
+print(f"  → Least represented: {min_region} ({region_counts[min_region]} entries)")
+
+print()
+
+# Step 3: Count and print representation by decade (sorted chronologically).
+# Which decade has the most entries? Which has the fewest?
+decade_counts = {}
+for entry in archive.values():
+    # Your code here
+    pass
+
+print("=== Representation by Decade ===")
+for decade in sorted(decade_counts):
+    count = decade_counts[decade]
+    pct   = round(count / total * 100, 1)
+    print(f"  {decade}: {count}/{total} ({pct}%)")
+
+max_decade = max(decade_counts, key=decade_counts.get)
+min_decade = min(decade_counts, key=decade_counts.get)
+print(f"  → Most represented: {max_decade} ({decade_counts[max_decade]} entries)")
+print(f"  → Least represented: {min_decade} ({decade_counts[min_decade]} entries)")
+
+print()
+
+# Step 4: Reflect on TWO of the gaps you found.
+# For each, suggest a historical reason why the gap might exist —
+# not a technical reason (the data wasn't entered), but a structural one
+# (who had access to publishing, whose work was preserved, whose was funded).
+# Complete the strings below.
+print("=== Interpretation ===")
+print("The gender gap (80% male) may reflect:")
+print("  ___")
+print()
+print("The decade gap (1920s dominant) may reflect:")
+print("  ___")
 ```
 
 #### Expected Output
-
 ```
 === Representation by Gender ===
   female: 2/10 (20.0%)
   male: 8/10 (80.0%)
+
 === Representation by Region ===
   Midwest: 1/10 (10.0%)
   Northeast: 6/10 (60.0%)
   South: 2/10 (20.0%)
   West: 1/10 (10.0%)
-=== Gap ===
-  Most represented region: Northeast (6 entries)
-  Least represented region: Midwest (1 entries)
+  → Most represented: Northeast (6 entries)
+  → Least represented: Midwest (1 entries)
+
+=== Representation by Decade ===
+  1920s: 5/10 (50.0%)
+  1930s: 3/10 (30.0%)
+  1940s: 2/10 (20.0%)
+  → Most represented: 1920s (5 entries)
+  → Least represented: 1940s (2 entries)
+
+=== Interpretation ===
+The gender gap (80% male) may reflect:
+  institutional barriers to women's publishing in this period, combined
+  with archive collection policies that prioritized "canonical" authors
+  who were overwhelmingly male
+
+The decade gap (1920s dominant) may reflect:
+  the Depression and wartime disrupting both literary production and
+  the funding of archive collection efforts in the 1930s and 1940s
 ```
 
 #### Hints
 
-1. Use `dict.get(key, 0)` to safely count occurrences. Loop through `archive.values()` to access each entry's attributes.
-2. Use `sorted()` on the counts dictionary to print groups in alphabetical order. Calculate percentage with `round(count / total * 100, 1)`.
-3. Use `max(region_counts, key=region_counts.get)` to find the most represented region and `min(...)` for the least.
+1. The counting pattern is the same for all three steps: loop through `archive.values()`, access the relevant key, and use `dict.get(key, 0) + 1` to increment safely.
+2. `max(counts_dict, key=counts_dict.get)` returns the key with the highest value; `min(...)` returns the lowest. These work the same way for region and decade.
+3. For Step 4, the lesson's prose gives you direct starting points: think about literacy and publishing access, institutional preservation decisions, and funding priorities — not about the data entry process.
 
 #### Solution
-
 ```python
 archive = {
-    "entry_1": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
-    "entry_2": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
-    "entry_3": {"author_gender": "female", "region": "South", "decade": "1930s"},
-    "entry_4": {"author_gender": "male", "region": "Midwest", "decade": "1920s"},
-    "entry_5": {"author_gender": "male", "region": "Northeast", "decade": "1940s"},
-    "entry_6": {"author_gender": "female", "region": "Northeast", "decade": "1930s"},
-    "entry_7": {"author_gender": "male", "region": "South", "decade": "1920s"},
-    "entry_8": {"author_gender": "male", "region": "Northeast", "decade": "1920s"},
-    "entry_9": {"author_gender": "male", "region": "West", "decade": "1940s"},
-    "entry_10": {"author_gender": "male", "region": "Northeast", "decade": "1930s"},
+    "entry_1":  {"author_gender": "male",   "region": "Northeast", "decade": "1920s"},
+    "entry_2":  {"author_gender": "male",   "region": "Northeast", "decade": "1920s"},
+    "entry_3":  {"author_gender": "female", "region": "South",     "decade": "1930s"},
+    "entry_4":  {"author_gender": "male",   "region": "Midwest",   "decade": "1920s"},
+    "entry_5":  {"author_gender": "male",   "region": "Northeast", "decade": "1940s"},
+    "entry_6":  {"author_gender": "female", "region": "Northeast", "decade": "1930s"},
+    "entry_7":  {"author_gender": "male",   "region": "South",     "decade": "1920s"},
+    "entry_8":  {"author_gender": "male",   "region": "Northeast", "decade": "1920s"},
+    "entry_9":  {"author_gender": "male",   "region": "West",      "decade": "1940s"},
+    "entry_10": {"author_gender": "male",   "region": "Northeast", "decade": "1930s"},
 }
 
 total = len(archive)
 
+# Step 1: Gender
 gender_counts = {}
 for entry in archive.values():
     g = entry["author_gender"]
@@ -192,9 +264,11 @@ for entry in archive.values():
 print("=== Representation by Gender ===")
 for gender in sorted(gender_counts):
     count = gender_counts[gender]
-    pct = round(count / total * 100, 1)
+    pct   = round(count / total * 100, 1)
     print(f"  {gender}: {count}/{total} ({pct}%)")
+print()
 
+# Step 2: Region
 region_counts = {}
 for entry in archive.values():
     r = entry["region"]
@@ -203,13 +277,41 @@ for entry in archive.values():
 print("=== Representation by Region ===")
 for region in sorted(region_counts):
     count = region_counts[region]
-    pct = round(count / total * 100, 1)
+    pct   = round(count / total * 100, 1)
     print(f"  {region}: {count}/{total} ({pct}%)")
 
 max_region = max(region_counts, key=region_counts.get)
 min_region = min(region_counts, key=region_counts.get)
-print("=== Gap ===")
-print(f"  Most represented region: {max_region} ({region_counts[max_region]} entries)")
-print(f"  Least represented region: {min_region} ({region_counts[min_region]} entries)")
-```
+print(f"  → Most represented: {max_region} ({region_counts[max_region]} entries)")
+print(f"  → Least represented: {min_region} ({region_counts[min_region]} entries)")
+print()
 
+# Step 3: Decade
+decade_counts = {}
+for entry in archive.values():
+    d = entry["decade"]
+    decade_counts[d] = decade_counts.get(d, 0) + 1
+
+print("=== Representation by Decade ===")
+for decade in sorted(decade_counts):
+    count = decade_counts[decade]
+    pct   = round(count / total * 100, 1)
+    print(f"  {decade}: {count}/{total} ({pct}%)")
+
+max_decade = max(decade_counts, key=decade_counts.get)
+min_decade = min(decade_counts, key=decade_counts.get)
+print(f"  → Most represented: {max_decade} ({decade_counts[max_decade]} entries)")
+print(f"  → Least represented: {min_decade} ({decade_counts[min_decade]} entries)")
+print()
+
+# Step 4: Interpretation
+print("=== Interpretation ===")
+print("The gender gap (80% male) may reflect:")
+print("  institutional barriers to women's publishing in this period, combined")
+print("  with archive collection policies that prioritized 'canonical' authors")
+print("  who were overwhelmingly male")
+print()
+print("The decade gap (1920s dominant) may reflect:")
+print("  the Depression and wartime disrupting both literary production and")
+print("  the funding of archive collection efforts in the 1930s and 1940s")
+```

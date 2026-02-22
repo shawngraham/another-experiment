@@ -89,129 +89,125 @@ Knowledge Graphs are powerful, but they are only as good as their data. If an ar
 When you build a graph, ask: *Who is missing a connection, and why?*
 
 :::challenge
-Discover what relation types exist in a knowledge graph, then extract and format all facts of a chosen type.
+Examine the knowledge graph for its silences.
 :::
 
 ---challenges---
 
-### Challenge: Building a Triple
+### Challenge: Querying and Auditing a Knowledge Graph
 
 - id: rel-mod-02-c1
 - language: python
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
-# A Triple must have a Head, Relation, and Tail.
-# Complete the triple: 'Mary_Shelley' is the 'author_of' 'Frankenstein'.
-
-head = "Mary_Shelley"
-relation = "" # What connects the author to the work?
-tail = "" # What did they write?
-
-# Combine them into a list called 'my_triple'
-# Hint: use [head, relation, tail]
-my_triple = []
-
-print(my_triple)
-```
-
-#### Expected Output
-
-```
-['Mary_Shelley', 'author_of', 'Frankenstein']
-```
-
-#### Hints
-
-1. The relation describes what connects the head to the tail: `"author_of"`.
-2. The tail is the object — the literary work: `"Frankenstein"`.
-3. Inside the square brackets for `my_triple`, list the variables separated by commas: `head, relation, tail`.
-
-#### Solution
-
-```python
-head = "Mary_Shelley"
-relation = "author_of"
-tail = "Frankenstein"
-
-my_triple = [head, relation, tail]
-
-print(my_triple)
-```
-
-### Challenge: Relation Extraction
-
-- id: rel-mod-02-c2
-- language: python
-- difficulty: beginner
-
-#### Starter Code
-
-```python
-# A small knowledge graph with mixed relation types
+# A knowledge graph of 19th-century literary figures and locations
 archive = [
-    ["Mary_Shelley",     "author_of",   "Frankenstein"],
-    ["Jane_Austen",      "author_of",   "Emma"],
-    ["Jane_Austen",      "born_in",     "Steventon"],
-    ["Charles_Dickens",  "author_of",   "Oliver_Twist"],
-    ["Steventon",        "located_in",  "England"],
-    ["Landport",         "located_in",  "England"],
-    ["Charles_Dickens",  "born_in",     "Landport"],
+    ["Mary_Shelley",     "author_of",    "Frankenstein"],
+    ["Jane_Austen",      "author_of",    "Emma"],
+    ["Jane_Austen",      "born_in",      "Steventon"],
+    ["Charles_Dickens",  "author_of",    "Oliver_Twist"],
+    ["Charles_Dickens",  "born_in",      "Landport"],
+    ["George_Eliot",     "author_of",    "Middlemarch"],
+    ["Steventon",        "located_in",   "England"],
+    ["Landport",         "located_in",   "England"],
 ]
 
-# Task 1: Collect every unique relation type that appears in the archive.
-# Add a relation to the list only if it isn't already there.
+# Step 1: Collect every unique relation type in the graph.
+# Loop through archive; append triple[1] only if not already in the list.
 relation_types = []
-
 # Your code here
 
-print("Relations found:", relation_types)
+print("Relation types:", relation_types)
 
-# Task 2: For every "author_of" triple, print a sentence:
-# "<Head> wrote <Tail>"
+# Step 2: For every "author_of" triple, print: "<author> wrote <work>"
+# Your code here
 
+print()
+
+# Step 3: Find all entities that appear ONLY as a Head or Tail in "author_of"
+# triples and NEVER as a Head in a "born_in" triple.
+# These are "isolated nodes" — entities the graph knows something about
+# but whose biographical context is missing.
+#
+# a. Collect all entities that appear as Head in a "born_in" triple
+has_birthplace = []
+# Your code here
+
+# b. Collect all entities that appear as Head in an "author_of" triple
+is_author = []
+# Your code here
+
+# c. An isolated node is an author with no birthplace recorded.
+# Print: "Missing birthplace: <name>" for each one.
+print("Archive gaps:")
 # Your code here
 ```
 
 #### Expected Output
-
 ```
-Relations found: ['author_of', 'born_in', 'located_in']
+Relation types: ['author_of', 'born_in', 'located_in']
 Mary_Shelley wrote Frankenstein
 Jane_Austen wrote Emma
 Charles_Dickens wrote Oliver_Twist
+George_Eliot wrote Middlemarch
+
+Archive gaps:
+Missing birthplace: Mary_Shelley
+Missing birthplace: George_Eliot
 ```
 
 #### Hints
 
-1. Loop through `archive`. Inside the loop, `triple[1]` is the relation. Append it to `relation_types` only `if triple[1] not in relation_types`.
-2. For Task 2, loop through `archive` again and check `if triple[1] == "author_of":`.
-3. Use an f-string to format the sentence: `f"{triple[0]} wrote {triple[2]}"`.
+1. For Step 1, use `if triple[1] not in relation_types:` before appending.
+2. For Step 3a and 3b, the pattern is the same as Step 1 — loop through `archive`, check `triple[1]`, and append `triple[0]` to the right list if it isn't already there.
+3. For Step 3c, loop through `is_author` and check `if name not in has_birthplace:`.
+4. Think about what it means for a scholar that Mary Shelley appears in this graph only as "someone who wrote something." What can't you ask the graph about her?
 
 #### Solution
-
 ```python
 archive = [
-    ["Mary_Shelley",     "author_of",   "Frankenstein"],
-    ["Jane_Austen",      "author_of",   "Emma"],
-    ["Jane_Austen",      "born_in",     "Steventon"],
-    ["Charles_Dickens",  "author_of",   "Oliver_Twist"],
-    ["Steventon",        "located_in",  "England"],
-    ["Landport",         "located_in",  "England"],
-    ["Charles_Dickens",  "born_in",     "Landport"],
+    ["Mary_Shelley",     "author_of",    "Frankenstein"],
+    ["Jane_Austen",      "author_of",    "Emma"],
+    ["Jane_Austen",      "born_in",      "Steventon"],
+    ["Charles_Dickens",  "author_of",    "Oliver_Twist"],
+    ["Charles_Dickens",  "born_in",      "Landport"],
+    ["George_Eliot",     "author_of",    "Middlemarch"],
+    ["Steventon",        "located_in",   "England"],
+    ["Landport",         "located_in",   "England"],
 ]
 
+# Step 1
 relation_types = []
 for triple in archive:
     if triple[1] not in relation_types:
         relation_types.append(triple[1])
+print("Relation types:", relation_types)
 
-print("Relations found:", relation_types)
-
+# Step 2
 for triple in archive:
     if triple[1] == "author_of":
         print(f"{triple[0]} wrote {triple[2]}")
+
+print()
+
+# Step 3a
+has_birthplace = []
+for triple in archive:
+    if triple[1] == "born_in" and triple[0] not in has_birthplace:
+        has_birthplace.append(triple[0])
+
+# Step 3b
+is_author = []
+for triple in archive:
+    if triple[1] == "author_of" and triple[0] not in is_author:
+        is_author.append(triple[0])
+
+# Step 3c
+print("Archive gaps:")
+for name in is_author:
+    if name not in has_birthplace:
+        print(f"Missing birthplace: {name}")
 ```
 

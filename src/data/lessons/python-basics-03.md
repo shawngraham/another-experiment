@@ -90,6 +90,10 @@ for y in years:
 Look at the challenge in the sandbox. You will need to "nest" an `if` statement inside a `for` loop. Make sure your `if` is indented once, and your `print` is indented twice!
 :::
 
+:::challenge
+Build a list, iterate through it and stop when the condition is met.
+:::
+
 ---challenges---
 
 ### Challenge: Loop and Filter Word Counts

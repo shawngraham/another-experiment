@@ -80,8 +80,12 @@ Sometimes you need to treat a number like a string (for example, to print it as 
 - ❌ `2_word_count = 500` (Cannot start with a number)
 :::
 
-:::try-it
+:::tip
 In the challenge in the sandbox, remember that when you use `print(type(variable_name))`, Python will output the "class" of that variable (e.g., `<class 'str'>`).
+:::
+
+:::challenge
+Create some variables and assign some values to those variables; what kind of variables are you creating?
 :::
 
 ---challenges---

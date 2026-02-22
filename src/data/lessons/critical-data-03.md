@@ -123,63 +123,92 @@ Simulate 5 rounds of biased selection where a majority group receives a 15% weig
 - difficulty: intermediate
 
 #### Starter Code
-
 ```python
 import random
 
 random.seed(27)
 
 # Initial pool: 55% Group A, 45% Group B (1000 items for stable percentages)
-pool = ["A"] * 550 + ["B"] * 450
+pool  = ["A"] * 550 + ["B"] * 450
 total = len(pool)
 
 print("=== Feedback Loop Simulation ===")
-# Print initial state
 a_count = pool.count("A")
 b_count = pool.count("B")
 print(f"Round 0: A={a_count/total*100:.0f}%, B={b_count/total*100:.0f}%")
 
-# Simulate 5 rounds
+# Step 1: Simulate 5 rounds of biased selection.
 # Each round:
-#   1. Count current A and B
-#   2. Give the majority group a 15% weight bonus
-#   3. Use random.choices() to create a new pool of 1000
-#   4. Print the new percentages
+#   1. Count current A and B in the pool.
+#   2. Give whichever group is in the majority a 15% weight bonus.
+#   3. Use random.choices() to create a new pool of 1000 items.
+#   4. Print the new percentages.
+# Assign the new pool back to `pool` so each round feeds the next.
 
-# Your code here
+for round_num in range(1, 6):
+    # Your code here
+    pass
 
-# Print the final result
+initial_gap = 55 - 45
+final_gap   = round(abs(a_count - b_count) / total * 100)
+print("=== Result ===")
+print(f"Initial gap: {initial_gap} percentage points")
+print(f"Final gap:   {final_gap} percentage points")
+
+print()
+
+# Step 2: Run the same simulation with a SMALLER bias weight of 1.05 (5% bonus).
+# Reset the pool and seed, then repeat the 5-round loop.
+# Print the final gap for the 5% scenario so you can compare.
+
+random.seed(27)
+pool = ["A"] * 550 + ["B"] * 450
+
+for round_num in range(1, 6):
+    # Your code here — same structure, but use 1.05 instead of 1.15
+    pass
+
+gap_5pct = round(abs(a_count - b_count) / total * 100)
+print(f"Final gap with 5% bias:  {gap_5pct} percentage points")
+print(f"Final gap with 15% bias: {final_gap} percentage points")
+print()
+
+# Step 3: Reflect on what the comparison tells you once the simulation is run, and consider making a note that addresses these questions:
+# A 5% weight bonus sounds modest. Does the final gap support that intuition?
+# Then connect the simulation to ONE real-world example from the lesson's prose.
+
 ```
 
 #### Expected Output
-
 ```
 === Feedback Loop Simulation ===
 Round 0: A=55%, B=45%
-Round 1: A=57%, B=43%
-Round 2: A=60%, B=40%
-Round 3: A=63%, B=37%
-Round 4: A=66%, B=34%
-Round 5: A=71%, B=29%
+Round 1: A=55%, B=45%
+Round 2: A=58%, B=42%
+Round 3: A=62%, B=38%
+Round 4: A=62%, B=38%
+Round 5: A=66%, B=34%
 === Result ===
 Initial gap: 10 percentage points
-Final gap:   42 percentage points
+Final gap:   32 percentage points
+
+Final gap with 5% bias:  10 percentage points
+Final gap with 15% bias: 32 percentage points
 ```
 
 #### Hints
 
-1. Inside each round, first count A and B with `pool.count("A")`. Then set weights: the majority group gets its count multiplied by 1.15, while the minority group keeps its raw count.
-2. Use `random.choices(["A", "B"], weights=[weight_a, weight_b], k=1000)` to generate the new pool. Assign this back to `pool` so the next round uses the updated distribution.
-3. After the loop, calculate the final gap as `abs(a_count - b_count) // 10` to convert from counts out of 1000 to percentage points.
+1. Inside each round, `pool.count("A")` gives the current count. Then: `weight_a = a_count * 1.15 if a_count >= b_count else a_count` and the reverse for B. Pass both weights to `random.choices(["A", "B"], weights=[weight_a, weight_b], k=1000)` and assign the result back to `pool`.
+2. For Step 2, the structure is identical — only change `1.15` to `1.05`. Reset both `random.seed(27)` and `pool` before the second loop so the two simulations start from the same conditions.
+3. For Step 3, the lesson gives three concrete examples (predictive policing, search autocomplete, canon formation via digitization). Pick the one that best fits the A/B majority-reinforcement model and explain the feedback mechanism specifically, not just the outcome.
 
 #### Solution
-
 ```python
 import random
 
 random.seed(27)
 
-pool = ["A"] * 550 + ["B"] * 450
+pool  = ["A"] * 550 + ["B"] * 450
 total = len(pool)
 
 print("=== Feedback Loop Simulation ===")
@@ -188,17 +217,37 @@ b_count = pool.count("B")
 print(f"Round 0: A={a_count/total*100:.0f}%, B={b_count/total*100:.0f}%")
 
 for round_num in range(1, 6):
-    a_count = pool.count("A")
-    b_count = pool.count("B")
+    a_count  = pool.count("A")
+    b_count  = pool.count("B")
     weight_a = a_count * 1.15 if a_count >= b_count else a_count
-    weight_b = b_count * 1.15 if b_count > a_count else b_count
-    pool = random.choices(["A", "B"], weights=[weight_a, weight_b], k=1000)
-    a_count = pool.count("A")
-    b_count = pool.count("B")
+    weight_b = b_count * 1.15 if b_count > a_count  else b_count
+    pool     = random.choices(["A", "B"], weights=[weight_a, weight_b], k=1000)
+    a_count  = pool.count("A")
+    b_count  = pool.count("B")
     print(f"Round {round_num}: A={a_count/total*100:.0f}%, B={b_count/total*100:.0f}%")
 
+initial_gap = 55 - 45
+final_gap   = round(abs(a_count - b_count) / total * 100)
 print("=== Result ===")
-print(f"Initial gap: 10 percentage points")
-print(f"Final gap:   {abs(a_count - b_count) // 10} percentage points")
-```
+print(f"Initial gap: {initial_gap} percentage points")
+print(f"Final gap:   {final_gap} percentage points")
+print()
 
+# Step 2: 5% bias
+random.seed(27)
+pool = ["A"] * 550 + ["B"] * 450
+
+for round_num in range(1, 6):
+    a_count  = pool.count("A")
+    b_count  = pool.count("B")
+    weight_a = a_count * 1.05 if a_count >= b_count else a_count
+    weight_b = b_count * 1.05 if b_count > a_count  else b_count
+    pool     = random.choices(["A", "B"], weights=[weight_a, weight_b], k=1000)
+    a_count  = pool.count("A")
+    b_count  = pool.count("B")
+
+gap_5pct = round(abs(a_count - b_count) / total * 100)
+print(f"Final gap with 5% bias:  {gap_5pct} percentage points")
+print(f"Final gap with 15% bias: {final_gap} percentage points")
+print()
+```

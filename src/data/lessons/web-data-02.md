@@ -22,7 +22,7 @@ keywords:
 # The Ethical Scraper: Citizenship in the Digital Archive
 
   ## Just because you can, doesn't mean you should.
-  Web scraping is a powerful tool, but in Digital Humanities, we often work with the websites of libraries, small museums, and university archives. Unlike Google or Amazon, these sites may run on limited budgets and small servers. If you send 10,000 requests per second, you could accidentally perform a "Denial of Service" (DoS) attack, crashing the very archive you are trying to study.
+  Web scraping is a powerful tool, but in Digital Humanities, we often work with the websites of libraries, small museums, and university archives. Unlike Google or Amazon, these sites may run on limited budgets and small servers. If you send 10,000 requests per second, you could accidentally perform a "Denial of Service" (DoS) attack, crashing the very archive you are trying to study. And AI companies have created much damage through aggressive web-scraping. 
 
   ---
 
@@ -62,66 +62,111 @@ keywords:
   ## 4. Copyright and "Data Sovereignty"
   - **Public vs. Private**: Just because data is visible doesn't mean it's "Public Domain." 
   - **Fair Use**: In many regions, scraping for non-commercial scholarly research is "Fair Use," but re-publishing that data (e.g., putting the full text of a copyrighted novel on your own site) is a violation.
-  - **Indigenous Data**: Be extra cautious with archives of Indigenous materials. Stop, and consider materials like [The First Nations Principles of OCAP [link]](https://fnigc.ca/ocap-training/) first.
+  - **Indigenous Data**: Be extra cautious with archives of Indigenous materials. Do you have permission? Are you in good relationship? Are you a member of a particular Nation or community? Stop, and before going any further consider guidance like [The First Nations Principles of OCAP [link]](https://fnigc.ca/ocap-training/).
 
   :::tip
   **The Golden Rule of Scraping**: Always look for a "Download Data" button or an API (Application Programming Interface) first. Scraping should be your last resort!
   :::
 
   :::challenge
-  In the challenge in the sandbox, you are given a string that represents a `robots.txt` file. Your goal is to find the line that starts with "Disallow" and extract the path.
+  Your research script wants to scrape several pages from a small archive. A snippet of the archive's `robots.txt` is provided. Parse it to find which paths are off-limits, then write a polite scraper that skips disallowed pages and waits between every request it does make.
   :::
-  
 
 ---challenges---
 
-### Challenge: Parse a robots.txt Rule
+### Challenge: Write a Polite Scraper
 
 - id: web-data-02-c1
 - language: python
 - difficulty: beginner
 
 #### Starter Code
-
 ```python
-# A snippet from a robots.txt file
-  robots_txt = "User-agent: *\nDisallow: /private/\nAllow: /public/"
+import time
 
-  # Goal: Extract and print ONLY the path that is disallowed.
-  # 1. Split the string into a list of lines using .split("\n")
-  # 2. Loop through the lines
-  # 3. If a line starts with "Disallow", extract the part after the ": "
-  # 4. Print that path
+robots_txt = """User-agent: *
+Disallow: /private-collections/
+Disallow: /admin/
+Allow: /catalog/
+Allow: /exhibits/"""
 
-  # Your code here
-  
+# Pages your research script wants to visit
+pages_to_scrape = [
+    "/catalog/manuscripts",
+    "/exhibits/1920s",
+    "/private-collections/letters",
+    "/admin/index",
+    "/catalog/photographs",
+]
+
+# A mock function simulating a real page fetch
+def fetch_page(path):
+    return f"<html>Content of {path}</html>"
+
+# Step 1: Parse robots_txt to build a list of disallowed paths.
+#         Loop through the lines; collect the path from any line
+#         that starts with "Disallow".
+disallowed = []
+# Your code here
+
+# Step 2: Loop through pages_to_scrape. For each page:
+#         a. Check whether it STARTS WITH any path in disallowed.
+#            If so, print a "Skipping" message and move on.
+#         b. Otherwise, call fetch_page(), print a "Scraped" confirmation.
+#         c. Wait 1 second before the next iteration using time.sleep(1).
+# Your code here
 ```
 
 #### Expected Output
-
 ```
-/private/
+Scraped /catalog/manuscripts
+Scraped /exhibits/1920s
+Skipping /private-collections/letters — disallowed by robots.txt
+Skipping /admin/index — disallowed by robots.txt
+Scraped /catalog/photographs
 ```
 
 #### Hints
 
-1. Use lines = robots_txt.split("\n") to get each rule.
-2. Inside your loop, use line.startswith("Disallow") to find the right row.
-3. To get the path, you can split the line by ": " and take the second item [1].
+1. Split `robots_txt` into lines with `.splitlines()`. For each line that starts with `"Disallow"`, split on `": "` and take index `[1]` to get the path.
+2. To check whether a page is forbidden, use `any(page.startswith(path) for path in disallowed)`.
+3. `time.sleep(1)` pauses execution for one second — put it at the end of your loop so it runs after every page, whether scraped or skipped.
 
 #### Solution
-
 ```python
-robots_txt = "User-agent: *\nDisallow: /private/\nAllow: /public/"
+import time
 
-  # Split the rules
-  lines = robots_txt.split("\n")
+robots_txt = """User-agent: *
+Disallow: /private-collections/
+Disallow: /admin/
+Allow: /catalog/
+Allow: /exhibits/"""
 
-  for line in lines:
-      if line.startswith("Disallow"):
-          # Split "Disallow: /private/" into ["Disallow", "/private/"]
-          parts = line.split(": ")
-          path = parts[1]
-          print(path)
+pages_to_scrape = [
+    "/catalog/manuscripts",
+    "/exhibits/1920s",
+    "/private-collections/letters",
+    "/admin/index",
+    "/catalog/photographs",
+]
+
+def fetch_page(path):
+    return f"<html>Content of {path}</html>"
+
+# Step 1: Build the disallowed list from robots.txt
+disallowed = []
+for line in robots_txt.splitlines():
+    if line.startswith("Disallow"):
+        path = line.split(": ")[1]
+        disallowed.append(path)
+
+# Step 2: Politely scrape only what is allowed
+for page in pages_to_scrape:
+    if any(page.startswith(path) for path in disallowed):
+        print(f"Skipping {page} — disallowed by robots.txt")
+    else:
+        fetch_page(page)
+        print(f"Scraped {page}")
+    time.sleep(1)
 ```
 

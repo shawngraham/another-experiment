@@ -75,7 +75,7 @@ Look at a simple line graph. If you were to close your eyes and run your hand ov
 When we turn data into a "landscape," we are engaging in **Haptic Data Visualization**. This is particularly important for accessibility (making data legible for the visually impaired) and for "Data Publics." A 3D sculpture in a museum invites people to walk around it, viewing the data from angles the original researcher might have missed.
 
 :::challenge
-In the challenges in the code window, you will calculate the 3D coordinates (X, Y, Z) for a data-driven "mountain range."
+In the challenges in the code sandbox, you will calculate the 3D coordinates (X, Y, Z) for a data-driven "mountain range."
 :::
 
 ---challenges---

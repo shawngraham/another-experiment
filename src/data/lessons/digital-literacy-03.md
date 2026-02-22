@@ -71,8 +71,12 @@ with open("manuscript.txt", "r", encoding="utf-8") as f:
     text = f.read()
 ```
 
-:::try-it
+:::tip
 If you ever see `Ã©`, your computer is reading **UTF-8** data as if it were **Latin-1**. To fix it, you need to ensure the "map" you use to read matches the "map" used to save.
+:::
+
+:::challenge
+Encode and then decode a string of text to see how accents and emojis are rendered  - or not! You could go further by passing the text through other encoding standards to see how things differ.
 :::
 
 ---challenges---
