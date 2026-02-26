@@ -32,7 +32,7 @@ export interface ModuleDefinition {
   estimatedHours: number;
   prerequisites: string[];
   lessons: string[];
-  track: 'foundations' | 'textual-scholarship' | 'creative-critical' | 'data-issues' | 'spatial-relational';
+  track: 'foundations' | 'textual-scholarship' | 'creative-critical' | 'data-issues' | 'spatial-relational' | 'orientation';
   disciplines: string[];
   keywords: string[];
 }
@@ -116,6 +116,6 @@ export interface ExportSettings {
 export interface Pathway {
   id: string;
   modules: string[];
-  estimatedHours: tbd number;
+  estimatedHours: number;
   recommendedLanguage: 'python' | 'r';
 }

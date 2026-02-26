@@ -8,11 +8,10 @@ export const modules: ModuleDefinition[] = [
     estimatedHours: .10,
     prerequisites: [],
     lessons: ['orientation-01'],
-    track: ['foundations','python-basics'],
+    track: 'foundations',
     disciplines: [],
     keywords: ['files', 'directories', 'data formats', 'encoding', 'version control'],
   },
-
   {
     id: 'digital-literacy-foundations',
     title: 'Digital Literacy Foundations',
