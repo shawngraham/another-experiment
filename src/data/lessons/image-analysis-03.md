@@ -4,7 +4,7 @@ title: Color Histograms and Extraction
 moduleId: image-analysis
 prerequisites:
   - image-analysis-02
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Calculate color histograms to analyze the distribution of light and color

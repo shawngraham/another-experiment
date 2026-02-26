@@ -2,10 +2,22 @@ import type { ModuleDefinition } from '../types/index.ts';
 
 export const modules: ModuleDefinition[] = [
   {
+    id: 'orientation',
+    title: 'Orientation',
+    description: 'Welcome! A quick introduction to the interface and concepts powering this platform.',
+    estimatedHours: .10,
+    prerequisites: [],
+    lessons: ['orientation-01'],
+    track: ['foundations','python-basics'],
+    disciplines: [],
+    keywords: ['files', 'directories', 'data formats', 'encoding', 'version control'],
+  },
+
+  {
     id: 'digital-literacy-foundations',
     title: 'Digital Literacy Foundations',
     description: 'Understanding files, data formats, plain text vs binary, character encoding, and version control concepts.',
-    estimatedHours: 4,
+    estimatedHours: 1,
     prerequisites: [],
     lessons: ['digital-literacy-01', 'digital-literacy-02', 'digital-literacy-03'],
     track: 'foundations',
@@ -16,7 +28,7 @@ export const modules: ModuleDefinition[] = [
     id: 'python-basics',
     title: 'Python Basics for Humanists',
     description: 'Variables, data types, control flow, functions, file I/O, and working with libraries.',
-    estimatedHours: 7,
+    estimatedHours: 1,
     prerequisites: ['digital-literacy-foundations'],
     lessons: ['python-basics-01', 'python-basics-02', 'python-basics-03', 'python-basics-04', 'python-basics-05'],
     track: 'foundations',
@@ -27,7 +39,7 @@ export const modules: ModuleDefinition[] = [
     id: 'text-analysis-fundamentals',
     title: 'Text Analysis Fundamentals',
     description: 'String operations, regular expressions, word frequency, text cleaning, NLP basics with NLTK.',
-    estimatedHours: 9,
+    estimatedHours: 1,
     prerequisites: ['python-basics'],
     lessons: ['text-analysis-01', 'text-analysis-02', 'text-analysis-03', 'text-analysis-04', 'text-analysis-05', 'text-analysis-06'],
     track: 'textual-scholarship',
@@ -38,7 +50,7 @@ export const modules: ModuleDefinition[] = [
     id: 'structured-data',
     title: 'Working with Structured Data',
     description: 'CSV files, Pandas basics, filtering, sorting, grouping, merging datasets, and metadata.',
-    estimatedHours: 7,
+    estimatedHours: 1,
     prerequisites: ['python-basics'],
     lessons: ['structured-data-01', 'structured-data-02', 'structured-data-03', 'structured-data-04','structured-data-05', 'structured-data-06'],
     track: 'data-issues',
@@ -49,7 +61,7 @@ export const modules: ModuleDefinition[] = [
     id: 'data-visualization',
     title: 'Data Visualization for DH',
     description: 'Visualization principles, bar/line/scatter plots, customization, timelines, physicalization, and geographic visualization.',
-    estimatedHours: 7,
+    estimatedHours: 1,
     prerequisites: ['python-basics'],
     lessons: ['data-viz-01', 'data-viz-02', 'data-viz-03', 'data-viz-04', 'data-viz-05', 'data-viz-06','data-viz-07','data-viz-08','data-viz-09'],
     track: 'data-issues',
@@ -60,7 +72,7 @@ export const modules: ModuleDefinition[] = [
     id: 'web-data-collection',
     title: 'Web Data Collection',
     description: 'HTML structure, web scraping ethics, BeautifulSoup, APIs and JSON, rate limiting.',
-    estimatedHours: 5,
+    estimatedHours: 1,
     prerequisites: ['python-basics'],
     lessons: ['web-data-01', 'web-data-02', 'web-data-03', 'web-data-04'],
     track: 'data-issues',
@@ -71,7 +83,7 @@ export const modules: ModuleDefinition[] = [
     id: 'data-sonification',
     title: 'Data Sonification for DH',
     description: 'Translating data into sound: parameter mapping, rhythmic sequences, and multimodal audio representations of humanities datasets.',
-    estimatedHours: 3,
+    estimatedHours: 1,
     prerequisites: ['python-basics'],
     lessons: ['sonification-01', 'sonification-02', 'sonification-03'],
     track: 'creative-critical',
@@ -82,7 +94,7 @@ export const modules: ModuleDefinition[] = [
     id: 'topic-modeling',
     title: 'Topic Modeling with LDA',
     description: 'Explore the conceptual foundations of Latent Dirichlet Allocation (LDA), text preprocessing for modeling, training models with Gensim, and interpreting document-topic distributions.',
-    estimatedHours: 5,
+    estimatedHours: 1,
     prerequisites: ['text-analysis-fundamentals'],
     lessons: [
       'topic-modeling-01',
@@ -98,7 +110,7 @@ export const modules: ModuleDefinition[] = [
   id: 'network-analysis',
   title: 'Network Analysis for Humanists',
   description: 'Modeling relationships using nodes and edges. Learn to build, visualize, and analyze networks using NetworkX.',
-  estimatedHours: 6,
+  estimatedHours: 1,
   prerequisites: ['python-basics', 'structured-data'],
   lessons: [
     'network-analysis-01', // Intro to Graph Theory terms
@@ -116,7 +128,7 @@ export const modules: ModuleDefinition[] = [
   id: 'geospatial-analysis',
   title: 'Mapping and Geospatial Data',
   description: 'Introduction to GIS concepts for python. plotting coordinates, working with Shapefiles/GeoJSON, and creating interactive maps.',
-  estimatedHours: 6,
+  estimatedHours: 1,
   prerequisites: ['python-basics', 'structured-data'],
   lessons: [
     'geospatial-01', // Coordinate systems and Projections
@@ -133,7 +145,7 @@ export const modules: ModuleDefinition[] = [
   id: 'image-analysis',
   title: 'Computer Vision for Humanities',
   description: 'Programmatic analysis of image collections. Color extraction, similarity detection, and metadata generation from visual data.',
-  estimatedHours: 5,
+  estimatedHours: 1,
   prerequisites: ['python-basics'],
   lessons: [
     'image-analysis-01', // pixels as data (numpy arrays)
@@ -149,7 +161,7 @@ export const modules: ModuleDefinition[] = [
   id: 'sentiment-analysis',
   title: 'Sentiment and Emotion Analysis',
   description: 'Computational approaches to detecting emotional valence in text. Using lexicons and ML classifiers to track narrative arcs.',
-  estimatedHours: 4,
+  estimatedHours: 1,
   prerequisites: ['text-analysis-fundamentals'],
   lessons: [
     'sentiment-01', // Theory: Dictionary vs ML approaches
@@ -165,7 +177,7 @@ export const modules: ModuleDefinition[] = [
   id: 'relational-models',
   title: 'Relational Models & Cultural Mapping',
   description: 'Explore how DH researchers move from text to "space." Learn about Word Vectors, Knowledge Graphs, and how to represent historical relationships as mathematical triples.',
-  estimatedHours: 4,
+  estimatedHours: 1,
   prerequisites: ['python-basics','network-analysis'],
   lessons: ['rel-mod-01', 'rel-mod-02', 'rel-mod-03', 'rel-mod-04', 'rel-mod-05'],
   track: 'spatial-relational',
@@ -176,7 +188,7 @@ export const modules: ModuleDefinition[] = [
   id: 'generative-poetics',
   title: 'Generative Poetics and Creative Coding',
   description: 'Using algorithms to generate literature and art. Explore Markov chains, context-free grammars, and the Oulipo movement as a foundation for computational creativity.',
-  estimatedHours: 5,
+  estimatedHours: 1,
   prerequisites: ['python-basics', 'text-analysis-fundamentals'],
   lessons: [
     'generative-01', // The Oulipo and Constraint-based Writing
@@ -193,7 +205,7 @@ export const modules: ModuleDefinition[] = [
   id: 'critical-data',
   title: 'Algorithmic Bias and Critical Data Studies',
   description: 'Examine how classification systems, missing data, feedback loops, and language tools encode bias. Learn to audit datasets, measure representation, and write data biographies.',
-  estimatedHours: 5,
+  estimatedHours: 1,
   prerequisites: ['python-basics', 'text-analysis-fundamentals'],
   lessons: [
     'critical-data-01', // Counting What Counts: How Categories Shape Data
@@ -210,7 +222,7 @@ export const modules: ModuleDefinition[] = [
   id: 'oral-history',
   title: 'Oral History and Transcribed Audio Text Analysis',
   description: 'Analyze oral history transcripts as structured data. Explore speaker turns, pauses, silences, conversational power dynamics, and keyword concordances in testimony.',
-  estimatedHours: 4,
+  estimatedHours: 1,
   prerequisites: ['python-basics', 'text-analysis-fundamentals'],
   lessons: [
     'oral-history-01', // The Shape of Speech: Understanding Transcripts as Data
@@ -226,7 +238,7 @@ export const modules: ModuleDefinition[] = [
   id: 'interactive-fiction',
   title: 'Interactive Fiction and Hypertext Narratives',
   description: 'Build branching narratives using Python dictionaries and control flow. Explore hypertext theory, state tracking, narrative graph analysis, and procedural story generation.',
-  estimatedHours: 4,
+  estimatedHours: 1,
   prerequisites: ['python-basics'],
   lessons: [
     'if-01', // The Forking Path: Stories as Dictionaries
@@ -242,7 +254,7 @@ export const modules: ModuleDefinition[] = [
   id: 'reproducibility',
   title: 'Reproducibility and Documentation',
   description: 'Learn to document your DH research workflow for transparency and reproducibility. Build processing logs, validate naming conventions, verify data integrity with checksums, and generate methods reports.',
-  estimatedHours: 3,
+  estimatedHours: 1,
   prerequisites: ['python-basics'],
   lessons: [
     'repro-01', // The Lab Notebook: Why Documentation Matters
@@ -258,7 +270,7 @@ export const modules: ModuleDefinition[] = [
   id: 'llm-foundations',
   title: 'Understanding Large Language Models',
   description: 'Explore the architecture and cultural implications of large language models. From vectors and embeddings to self-attention, recurrent networks, and RLHF alignment — and why LLMs are complex systems built on a vast statistical representation of human language.',
-  estimatedHours: 4,
+  estimatedHours: 1,
   prerequisites: ['text-analysis-fundamentals'],
   lessons: ['llm-01', 'llm-02', 'llm-03', 'llm-04', 'llm-05'],
   track: 'textual-scholarship',
@@ -269,7 +281,7 @@ export const modules: ModuleDefinition[] = [
   id: 'dh-pipeline',
   title: 'Putting It All Together: A DH Research Pipeline',
   description: 'A capstone module that walks through a complete DH research workflow — from loading and cleaning a historical newspaper corpus, to extracting features, comparing subsets, and reporting results.',
-  estimatedHours: 4,
+  estimatedHours: 1,
   prerequisites: ['python-basics', 'text-analysis-fundamentals', 'structured-data', 'data-visualization'],
   lessons: [
     'pipeline-01', // Stage 1: Loading and Cleaning Your Corpus

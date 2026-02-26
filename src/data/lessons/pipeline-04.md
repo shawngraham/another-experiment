@@ -4,7 +4,7 @@ title: 'Stage 4: Reporting Results'
 moduleId: dh-pipeline
 prerequisites:
   - pipeline-03
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Generate a structured text-based research summary from computed results

@@ -4,7 +4,7 @@ title: Writing a Data Biography
 moduleId: critical-data
 prerequisites:
   - critical-data-04
-estimatedTimeMinutes: 50
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Explain the purpose and components of a data biography (inspired by "Datasheets for Datasets")

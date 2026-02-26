@@ -4,7 +4,7 @@ title: Cutting Through Data: Laser Cutting and Plotting
 moduleId: data-visualization
 prerequisites:
   - data-viz-07
-estimatedTimeMinutes: 50
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Distinguish between Raster and Vector graphics for physical fabrication

@@ -4,7 +4,7 @@ title: Multimodal Mapping (Pitch and Volume)
 moduleId: data-sonification
 prerequisites:
   - sonification-02
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Map multiple data variables to different sound parameters simultaneously

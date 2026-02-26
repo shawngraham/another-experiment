@@ -4,7 +4,7 @@ title: Preprocessing for Topic Models
 moduleId: topic-modeling
 prerequisites:
   - topic-modeling-01
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Identify and remove "noise" words using custom stopword lists

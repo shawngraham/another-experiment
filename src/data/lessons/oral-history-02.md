@@ -4,7 +4,7 @@ title: 'Silence and Pause: What Gaps Tell Us'
 moduleId: oral-history
 prerequisites:
   - oral-history-01
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Explain why pauses and silences carry interpretive meaning in oral history interviews

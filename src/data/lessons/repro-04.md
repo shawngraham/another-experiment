@@ -4,7 +4,7 @@ title: 'The Methods Section: Generating Human-Readable Reports'
 moduleId: reproducibility
 prerequisites:
   - repro-03
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Explain the purpose of a methods section in DH research documentation

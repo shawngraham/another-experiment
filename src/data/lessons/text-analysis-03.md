@@ -4,7 +4,7 @@ title: Word Frequency Analysis
 moduleId: text-analysis-fundamentals
 prerequisites:
   - text-analysis-01
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Count frequencies efficiently using the collections.Counter object

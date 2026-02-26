@@ -1,9 +1,10 @@
+
 ---
 id: digital-literacy-01
 title: Understanding Files and Directories
 moduleId: digital-literacy-foundations
 prerequisites: []
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Understand file system structure and hierarchy

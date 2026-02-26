@@ -4,7 +4,7 @@ title: 'Recursive Structures: Context-Free Grammars'
 moduleId: generative-poetics
 prerequisites:
   - python-basics
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - 'Understand the "Symbol: Replacement" logic of grammars'

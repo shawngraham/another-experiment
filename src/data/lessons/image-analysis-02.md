@@ -5,7 +5,7 @@ moduleId: image-analysis
 prerequisites:
   - image-analysis-01
   - python-basics-04
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Navigate the BGR vs RGB color channel discrepancy

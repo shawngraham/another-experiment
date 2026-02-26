@@ -4,7 +4,7 @@ title: Web Scraping Ethics and Best Practices
 moduleId: web-data-collection
 prerequisites:
   - web-data-01
-estimatedTimeMinutes: 25
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Locate and interpret a robots.txt file

@@ -4,7 +4,7 @@ title: 'Stage 3: Comparing and Cross-Tabulating'
 moduleId: dh-pipeline
 prerequisites:
   - pipeline-02
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Split a corpus into subsets based on metadata fields

@@ -4,7 +4,7 @@ title: 'The Capstone: Comparative Visualization'
 moduleId: data-visualization
 prerequisites:
   - data-viz-04
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Execute a full DH visualization workflow

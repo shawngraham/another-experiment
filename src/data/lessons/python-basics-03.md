@@ -4,7 +4,7 @@ title: Control Flow
 moduleId: python-basics
 prerequisites:
   - python-basics-02
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Write conditional logic (if/else) using comparison operators

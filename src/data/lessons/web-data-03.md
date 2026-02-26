@@ -4,7 +4,7 @@ title: APIs and JSON Data
 moduleId: web-data-collection
 prerequisites:
   - web-data-02
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Explain the difference between Scraping and using an API

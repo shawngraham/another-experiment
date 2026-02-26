@@ -5,7 +5,7 @@ moduleId: sentiment-analysis
 prerequisites:
   - sentiment-02
   - data-visualization-02
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Segment long-form text into narrative chunks for longitudinal analysis

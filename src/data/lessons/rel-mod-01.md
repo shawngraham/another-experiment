@@ -4,7 +4,7 @@ title: The Geometry of Language
 moduleId: relational-models
 prerequisites:
   - python-basics
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Explain the distributional hypothesis ("words are known by the company they keep")

@@ -4,7 +4,7 @@ title: 'Words as Coordinates: Vectors and Embeddings'
 moduleId: llm-foundations
 prerequisites:
   - text-analysis-fundamentals
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: advanced
 learningObjectives:
   - Explain what a vector is and why words can be represented as vectors

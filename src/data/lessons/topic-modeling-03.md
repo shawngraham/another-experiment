@@ -4,7 +4,7 @@ title: Training an LDA Model
 moduleId: topic-modeling
 prerequisites:
   - topic-modeling-02
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Convert preprocessed text into a numerical Document-Term Matrix

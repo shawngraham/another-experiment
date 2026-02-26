@@ -4,7 +4,7 @@ title: 'Naming Things: Conventions that Save Your Future Self'
 moduleId: reproducibility
 prerequisites:
   - repro-01
-estimatedTimeMinutes: 25
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Describe why consistent file naming conventions matter for reproducibility

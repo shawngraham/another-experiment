@@ -4,7 +4,7 @@ title: Basic NLP with NLTK
 moduleId: text-analysis-fundamentals
 prerequisites:
   - text-analysis-04
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Understand the difference between simple string splitting and linguistic tokenization

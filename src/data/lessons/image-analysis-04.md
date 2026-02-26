@@ -4,7 +4,7 @@ title: Detecting Visual Similarity
 moduleId: image-analysis
 prerequisites:
   - image-analysis-03
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: advanced
 learningObjectives:
   - Understand how images are represented as numerical "feature vectors"

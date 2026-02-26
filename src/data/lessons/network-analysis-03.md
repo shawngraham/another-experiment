@@ -4,7 +4,7 @@ title: Centrality Measures
 moduleId: network-analysis
 prerequisites:
   - network-analysis-02
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Explain the difference between Degree and Betweenness centrality

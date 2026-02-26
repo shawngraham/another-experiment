@@ -4,7 +4,7 @@ title: 'The Art of Paying Attention: Transformers and Self-Attention'
 moduleId: llm-foundations
 prerequisites:
   - llm-01
-estimatedTimeMinutes: 50
+estimatedTimeMinutes: 10
 difficulty: advanced
 learningObjectives:
   - Describe the Query, Key, Value framework for attention

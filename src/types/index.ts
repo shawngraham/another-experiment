@@ -11,7 +11,7 @@ export interface UserProfile {
 
   preferences: {
     preferredLanguage: 'python' | 'r';
-    lessonDuration: 15 | 30 | 60;
+    lessonDuration: 5 | 5 | 5;
     dailyGoalMinutes: number;
   };
 
@@ -116,6 +116,6 @@ export interface ExportSettings {
 export interface Pathway {
   id: string;
   modules: string[];
-  estimatedHours: number;
+  estimatedHours: tbd number;
   recommendedLanguage: 'python' | 'r';
 }

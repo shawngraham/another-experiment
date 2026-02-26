@@ -4,7 +4,7 @@ title: Basic Plots with Matplotlib
 moduleId: data-visualization
 prerequisites:
   - data-viz-01
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Create bar and line charts using Matplotlib
@@ -30,15 +30,6 @@ keywords:
   To create a visualization, we follow a specific order of operations. We usually import the library under the alias `plt`.
 
   ```python
-  import matplotlib.pyplot as plt
-  plt.clf() # this clears the canvas
-
-  # 1. Prepare Data (List A must match List B in length)
-  decades = ["1810s", "1820s", "1830s"]
-  counts = [5, 12, 18]
-
-  # 2. Choose the Chart Type
-  plt.bar(decades, counts, color='skyblue')
 
   # 3. Add Scholarly Metadata (Labels)
   plt.xlabel("Decade of Publication")

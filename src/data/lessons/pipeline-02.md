@@ -4,7 +4,7 @@ title: 'Stage 2: Extracting Features and Counting Patterns'
 moduleId: dh-pipeline
 prerequisites:
   - pipeline-01
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Build word frequency distributions from a cleaned corpus using collections.Counter

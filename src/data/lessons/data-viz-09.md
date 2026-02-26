@@ -4,7 +4,7 @@ title: 'Topographies of Information: 3D Data Sculptures'
 moduleId: data-visualization
 prerequisites:
   - data-viz-08
-estimatedTimeMinutes: 60
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Understand the STL file format and the Z-axis as a data variable

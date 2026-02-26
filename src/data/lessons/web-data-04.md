@@ -4,7 +4,7 @@ title: Working with Digital Archives
 moduleId: web-data-collection
 prerequisites:
   - web-data-03
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Navigate and parse structured data from cultural heritage APIs (JSON)

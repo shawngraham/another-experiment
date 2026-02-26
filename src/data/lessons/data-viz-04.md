@@ -4,7 +4,7 @@ title: Visualizing Textual Patterns
 moduleId: data-visualization
 prerequisites:
   - data-viz-03
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Map text analysis output (Counter objects) to Matplotlib charts

@@ -4,7 +4,7 @@ title: 'Stitching Data: Physicalization and Knitting'
 moduleId: data-visualization
 prerequisites:
   - data-viz-01
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Define data physicalization and its role in the humanities

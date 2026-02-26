@@ -4,7 +4,7 @@ title: Introduction to Network Concepts
 moduleId: network-analysis
 prerequisites:
   - structured-data-05
-estimatedTimeMinutes: 20
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Define nodes and edges in the context of humanities data

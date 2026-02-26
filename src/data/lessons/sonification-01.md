@@ -4,7 +4,7 @@ title: The Basics of Data Mapping for Sound
 moduleId: data-sonification
 prerequisites:
   - python-basics-04
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Understand the concept of parameter mapping sonification in DH

@@ -4,7 +4,7 @@ title: 'Beyond the Model: LLMs as Complex Systems'
 moduleId: llm-foundations
 prerequisites:
   - llm-04
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: advanced
 learningObjectives:
   - Describe an LLM as a probability distribution over token sequences

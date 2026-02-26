@@ -4,7 +4,7 @@ title: JSON and Nested Structures
 moduleId: structured-data
 prerequisites:
   - python-basics-02
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Understand the hierarchical nature of JSON data

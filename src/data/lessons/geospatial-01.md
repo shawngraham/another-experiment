@@ -4,7 +4,7 @@ title: Coordinates and Projections
 moduleId: geospatial-analysis
 prerequisites:
   - structured-data-05
-estimatedTimeMinutes: 20
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Explain the difference between geographic (Lat/Lon) and projected coordinate systems

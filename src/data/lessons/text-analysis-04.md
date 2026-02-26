@@ -4,7 +4,7 @@ title: Text Cleaning and Normalization
 moduleId: text-analysis-fundamentals
 prerequisites:
   - text-analysis-02
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Remove punctuation using robust Regex patterns

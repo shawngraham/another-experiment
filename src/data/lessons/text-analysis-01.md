@@ -4,7 +4,7 @@ title: Introduction to String Operations
 moduleId: text-analysis-fundamentals
 prerequisites:
   - python-basics-05
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Perform case normalization to ensure data consistency

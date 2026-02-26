@@ -4,7 +4,7 @@ title: Linking Facts with Knowledge Graph Embedding Models
 moduleId: relational-models
 prerequisites:
   - rel-mod-01
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Define the structure of a "Triple" (Head-Relation-Tail)

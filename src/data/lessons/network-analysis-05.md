@@ -4,7 +4,7 @@ title: 'Case Study: Character Networks'
 moduleId: network-analysis
 prerequisites:
   - network-analysis-03
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Process raw interaction lists into a NetworkX Graph object

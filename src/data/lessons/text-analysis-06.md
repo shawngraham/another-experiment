@@ -4,7 +4,7 @@ title: Sentiment Analysis
 moduleId: text-analysis-fundamentals
 prerequisites:
   - text-analysis-05
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Understand rule-based sentiment scoring using lexicons

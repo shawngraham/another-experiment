@@ -4,7 +4,7 @@ title: Concordance and Keywords in Oral Testimony
 moduleId: oral-history
 prerequisites:
   - oral-history-03
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Explain what a KWIC concordance is and why it is valuable for oral history analysis

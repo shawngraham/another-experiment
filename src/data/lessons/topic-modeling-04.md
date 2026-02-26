@@ -4,7 +4,7 @@ title: Interpreting and Navigating Topics
 moduleId: topic-modeling
 prerequisites:
   - topic-modeling-03
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Read and interpret word-topic distributions (Weights)

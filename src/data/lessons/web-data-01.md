@@ -4,7 +4,7 @@ title: Understanding HTML Structure
 moduleId: web-data-collection
 prerequisites:
   - python-basics-05
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Identify HTML tags, attributes, and text content

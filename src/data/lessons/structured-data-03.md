@@ -4,7 +4,7 @@ title: Filtering and Sorting Data
 moduleId: structured-data
 prerequisites:
   - structured-data-02
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Perform boolean indexing to filter datasets

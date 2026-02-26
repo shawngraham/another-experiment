@@ -4,7 +4,7 @@ title: Creating Timelines from Historical Data
 moduleId: data-visualization
 prerequisites:
   - data-viz-02
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Represent historical events as structured dictionary objects

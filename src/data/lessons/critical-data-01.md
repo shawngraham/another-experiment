@@ -4,7 +4,7 @@ title: 'Counting What Counts: How Categories Shape Data'
 moduleId: critical-data
 prerequisites:
   - python-basics
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Explain how classification systems are human-made choices rather than neutral reflections of reality

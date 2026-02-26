@@ -4,7 +4,7 @@ title: 'Interactive Maps: Logic and Data'
 moduleId: geospatial-analysis
 prerequisites:
   - geospatial-03
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Understand the difference between static (Matplotlib) and interactive (Folium) mapping logic

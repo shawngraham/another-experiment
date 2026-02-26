@@ -4,7 +4,7 @@ title: Lists and Dictionaries
 moduleId: python-basics
 prerequisites:
   - python-basics-01
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Store collections of data in Lists

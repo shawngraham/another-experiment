@@ -4,7 +4,7 @@ title: 'Stochastic Text: Building Markov Chain Generators'
 moduleId: generative-poetics
 prerequisites:
   - generative-01
-estimatedTimeMinutes: 60
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Define "stochastic" and "state" in text generation

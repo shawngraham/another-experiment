@@ -4,7 +4,7 @@ title: 'Auditing a Word List: Bias in Language Tools'
 moduleId: critical-data
 prerequisites:
   - critical-data-03
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Explain how sentiment lexicons and word lists encode cultural biases

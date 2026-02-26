@@ -4,7 +4,7 @@ title: Character Encoding and Plain Text
 moduleId: digital-literacy-foundations
 prerequisites:
   - digital-literacy-02
-estimatedTimeMinutes: 25
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Explain how computers represent characters as numbers

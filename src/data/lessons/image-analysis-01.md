@@ -4,7 +4,7 @@ title: Pixels as Data
 moduleId: image-analysis
 prerequisites:
   - python-basics-05
-estimatedTimeMinutes: 25
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Understand that digital images are structured grids of pixels

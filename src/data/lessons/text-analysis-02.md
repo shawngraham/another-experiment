@@ -4,7 +4,7 @@ title: Regular Expressions for Text Matching
 moduleId: text-analysis-fundamentals
 prerequisites:
   - text-analysis-01
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Build complex search patterns with Regex

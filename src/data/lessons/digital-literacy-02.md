@@ -4,7 +4,7 @@ title: 'Data Formats: TXT, CSV, JSON, XML'
 moduleId: digital-literacy-foundations
 prerequisites:
   - digital-literacy-01
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Distinguish between structured and unstructured data

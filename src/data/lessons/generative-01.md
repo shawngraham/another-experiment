@@ -4,7 +4,7 @@ title: The Oulipo and Constraint-based Writing
 moduleId: generative-poetics
 prerequisites:
   - python-basics
-estimatedTimeMinutes: 45
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Explain the Oulipian concept of "constrained writing"

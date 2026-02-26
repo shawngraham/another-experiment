@@ -4,7 +4,7 @@ title: 'Teaching Values: Reinforcement Learning from Human Feedback'
 moduleId: llm-foundations
 prerequisites:
   - llm-03
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: advanced
 learningObjectives:
   - Explain the three stages of RLHF — supervised fine-tuning, reward modelling, RL optimisation

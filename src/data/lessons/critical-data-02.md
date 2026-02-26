@@ -4,7 +4,7 @@ title: 'The Gaps in the Archive: Measuring Representation'
 moduleId: critical-data
 prerequisites:
   - critical-data-01
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Identify missing or underrepresented groups in a structured dataset

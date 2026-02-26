@@ -4,7 +4,7 @@ title: 'The Lab Notebook: Why Documentation Matters'
 moduleId: reproducibility
 prerequisites:
   - python-basics
-estimatedTimeMinutes: 25
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Explain why computational reproducibility matters in digital humanities research

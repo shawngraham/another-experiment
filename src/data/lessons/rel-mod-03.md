@@ -4,7 +4,7 @@ title: Vector Arithmetic in 2D Space
 moduleId: relational-models
 prerequisites:
   - rel-mod-02
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Perform element-wise vector addition and subtraction in Python

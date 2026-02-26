@@ -4,7 +4,7 @@ title: Pandas Basics
 moduleId: structured-data
 prerequisites:
   - structured-data-01
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Load data into a Pandas DataFrame using dictionaries

@@ -4,7 +4,7 @@ title: 'Memory in Motion: Building a Toy Recurrent Network'
 moduleId: llm-foundations
 prerequisites:
   - llm-02
-estimatedTimeMinutes: 60
+estimatedTimeMinutes: 10
 difficulty: advanced
 learningObjectives:
   - Explain how a recurrent network maintains hidden state across time steps

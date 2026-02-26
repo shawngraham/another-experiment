@@ -4,7 +4,7 @@ title: Using VADER for Social Data
 moduleId: sentiment-analysis
 prerequisites:
   - sentiment-01
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Explain the four heuristics VADER uses to modify sentiment scores

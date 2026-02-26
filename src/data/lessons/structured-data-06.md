@@ -4,7 +4,7 @@ title: Working with Metadata
 moduleId: structured-data
 prerequisites:
   - structured-data-02
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Distinguish between descriptive, administrative, and structural metadata

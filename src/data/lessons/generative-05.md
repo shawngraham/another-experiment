@@ -4,7 +4,7 @@ title: Visualizing Poetry
 moduleId: generative-poetics
 prerequisites:
   - data-visualization
-estimatedTimeMinutes: 60
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Map text strings to 2D coordinates (X, Y)

@@ -4,7 +4,7 @@ title: Creating Networks with NetworkX
 moduleId: network-analysis
 prerequisites:
   - network-analysis-01
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Import and initialize the NetworkX library

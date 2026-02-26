@@ -4,7 +4,7 @@ title: Calculating Map Data
 moduleId: geospatial-analysis
 prerequisites:
   - data-viz-02
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Represent geographic locations as coordinate data (latitude/longitude) in Python

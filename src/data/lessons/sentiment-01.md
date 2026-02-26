@@ -4,7 +4,7 @@ title: Dictionary vs ML Approaches
 moduleId: sentiment-analysis
 prerequisites:
   - text-analysis-fundamentals
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Distinguish between lexicon-based (dictionary) and machine learning sentiment analysis

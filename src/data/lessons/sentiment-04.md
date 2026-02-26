@@ -4,7 +4,7 @@ title: Limitations and Bias
 moduleId: sentiment-analysis
 prerequisites:
   - sentiment-02
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Identify linguistic failure points such as negation, sarcasm, and irony

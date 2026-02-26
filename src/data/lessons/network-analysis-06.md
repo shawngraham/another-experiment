@@ -5,7 +5,7 @@ moduleId: network-analysis
 prerequisites:
   - network-analysis-05
   - structured-data-01
-estimatedTimeMinutes: 25
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Understand the Edge List format as the standard for network data exchange

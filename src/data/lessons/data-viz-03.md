@@ -4,7 +4,7 @@ title: Customizing Visualizations
 moduleId: data-visualization
 prerequisites:
   - data-viz-02
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Modify plot styles and color palettes for readability

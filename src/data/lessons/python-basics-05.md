@@ -4,7 +4,7 @@ title: Reading and Writing Files
 moduleId: python-basics
 prerequisites:
   - python-basics-04
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Safely open files using Context Managers (the "with" statement)

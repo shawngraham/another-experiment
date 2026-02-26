@@ -4,7 +4,7 @@ title: Predicting the Unknown
 moduleId: relational-models
 prerequisites:
   - rel-mod-03
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Explain how models perform "Link Prediction"

@@ -4,7 +4,7 @@ title: Introduction to CSV and Tabular Data
 moduleId: structured-data
 prerequisites:
   - python-basics-05
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Understand the tabular nature of humanities data (e.g., prosopography)

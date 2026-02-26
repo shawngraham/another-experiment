@@ -4,7 +4,7 @@ title: Grouping and Aggregation
 moduleId: structured-data
 prerequisites:
   - structured-data-03
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Understand the "Split-Apply-Combine" pattern of data analysis

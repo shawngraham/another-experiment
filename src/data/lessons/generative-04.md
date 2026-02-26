@@ -4,7 +4,7 @@ title: Erasure and Deformance
 moduleId: generative-poetics
 prerequisites:
   - text-analysis-fundamentals
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Define "Deformance" as a critical DH method

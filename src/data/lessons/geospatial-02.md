@@ -5,7 +5,7 @@ moduleId: geospatial-analysis
 prerequisites:
   - geospatial-01
   - structured-data-02
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Understand the structure of a GeoDataFrame

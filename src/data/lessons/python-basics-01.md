@@ -4,7 +4,7 @@ title: Variables and Data Types
 moduleId: python-basics
 prerequisites:
   - digital-literacy-foundations
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Declare and update variables

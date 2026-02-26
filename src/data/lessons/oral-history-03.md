@@ -4,7 +4,7 @@ title: 'Turn-Taking and Power: Analyzing Conversation Structure'
 moduleId: oral-history
 prerequisites:
   - oral-history-02
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Analyze turn-taking patterns to reveal power dynamics in oral history interviews

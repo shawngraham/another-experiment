@@ -4,7 +4,7 @@ title: 'Feedback Loops: When Output Becomes Input'
 moduleId: critical-data
 prerequisites:
   - critical-data-02
-estimatedTimeMinutes: 50
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Explain how algorithmic feedback loops amplify small initial biases into large disparities

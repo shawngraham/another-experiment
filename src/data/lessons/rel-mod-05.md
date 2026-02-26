@@ -4,7 +4,7 @@ title: 'Measuring Truth: Evaluation Metrics'
 moduleId: relational-models
 prerequisites:
   - rel-mod-04
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Define "Negative Sampling" and why it is necessary for training

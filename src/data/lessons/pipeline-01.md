@@ -6,7 +6,7 @@ prerequisites:
   - python-basics
   - text-analysis-fundamentals
   - structured-data
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Normalize text fields using lowercase conversion and regex punctuation removal

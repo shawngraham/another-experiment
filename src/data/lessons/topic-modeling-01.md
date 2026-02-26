@@ -4,7 +4,7 @@ title: 'Topic Modeling: Conceptual Foundations'
 moduleId: topic-modeling
 prerequisites:
   - text-analysis-04
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Explain the logic of Latent Dirichlet Allocation (LDA)

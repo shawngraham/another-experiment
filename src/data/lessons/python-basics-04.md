@@ -4,7 +4,7 @@ title: 'Functions: Building Your DH Toolkit'
 moduleId: python-basics
 prerequisites:
   - python-basics-03
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Encapsulate logic into reusable Functions

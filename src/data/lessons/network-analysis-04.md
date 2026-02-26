@@ -4,7 +4,7 @@ title: Visualizing Networks
 moduleId: network-analysis
 prerequisites:
   - network-analysis-03
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Create visual plots of graphs using the NetworkX and Matplotlib

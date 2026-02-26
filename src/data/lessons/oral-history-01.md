@@ -4,7 +4,7 @@ title: 'The Shape of Speech: Understanding Transcripts as Data'
 moduleId: oral-history
 prerequisites:
   - python-basics
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Explain how oral history transcripts differ structurally from literary or archival texts

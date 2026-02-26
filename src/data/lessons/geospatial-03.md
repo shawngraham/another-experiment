@@ -4,7 +4,7 @@ title: Plotting Maps
 moduleId: geospatial-analysis
 prerequisites:
   - geospatial-02
-estimatedTimeMinutes: 40
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Create static maps using the GeoDataFrame .plot() method

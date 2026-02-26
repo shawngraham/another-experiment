@@ -4,7 +4,7 @@ title: Principles of Effective Visualization
 moduleId: data-visualization
 prerequisites:
   - python-basics-05
-estimatedTimeMinutes: 25
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Understand the rhetorical power of visualization in "Distant Reading"

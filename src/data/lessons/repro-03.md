@@ -4,7 +4,7 @@ title: 'Checksums and Integrity: Proving Nothing Changed'
 moduleId: reproducibility
 prerequisites:
   - repro-02
-estimatedTimeMinutes: 30
+estimatedTimeMinutes: 10
 difficulty: intermediate
 learningObjectives:
   - Explain what a checksum is and why data integrity matters in research

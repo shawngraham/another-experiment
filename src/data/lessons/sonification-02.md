@@ -4,7 +4,7 @@ title: Rhythms of the Archive
 moduleId: data-sonification
 prerequisites:
   - sonification-01
-estimatedTimeMinutes: 35
+estimatedTimeMinutes: 10
 difficulty: beginner
 learningObjectives:
   - Map temporal data (timestamps) to musical duration and onset time
