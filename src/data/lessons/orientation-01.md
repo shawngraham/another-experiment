@@ -48,10 +48,10 @@ The idea is that each lesson follows the same format, using the ADEPT framework:
 
 | Section | Purpose | Approximate time |
 |---|---|---|
-| **A — Analogy** | Connect to a familiar concept; use a humanities-relevant metaphor | 2 min |
-| **D — Diagram** | Visual representation; describe a flowchart or concept map in text | 2 min |
+| **A — Analogy** | Connect to a familiar concept | 2 min |
+| **D — Diagram** | We give a diagram or describe in text, or show some code  | 2 min |
 | **E — Example** | Concrete case from DH research with real, working code | 5 min |
-| **P — Practice** | Guided coding exercise (the `::: try-it` block) | 10 min |
+| **P — Practice** | Guided coding exercise | 10 min |
 | **T — Transfer** | Connect to a new situation or the learner's own research | 5 min |
 
 :::definition
@@ -62,7 +62,7 @@ See that floating 'notes' button over to the bottom right? Click that now. It wi
 
 ### Documenting Your Process
 
-DH isn't about what you accomplish; very often, it's about the process of how you've done it. The lessons here put an emphasis on thinking through the consequences of those procedural choices. See the `export` button in the menu bar? That will allow you **to export your notes _and_ all of the lessons, as an interlinked stack of markdown text files using wikilink conventions**. That means, you can open the entire folder of materials on your own machine using personal knowledge management software like [obsidian](https://obsidian.md) for future reference and exploration. Because it's all wikilinked, your tags also become pathways through the materials reflecting the way you think.
+DH isn't about what you accomplish; very often, it's about the process of how you've done it. The lessons here put an emphasis on thinking through the consequences of those procedural choices. See the `export` button in the menu bar? That will allow you **to export your notes _and_ all of the lessons, as an interlinked stack of markdown text files using wikilink conventions**. That means, you can open the entire folder of materials on your own machine using personal knowledge management software like **[obsidian \[link\]](https://obsidian.md)** for future reference and exploration. Because it's all wikilinked, your tags also become pathways through the materials reflecting the way you think.
 
 ## Practice
 
@@ -84,7 +84,7 @@ Make a research note with pointers on things to remember when using this sandbox
 
 These tutorials will not necessarily make you into a 'coder'. Rather, we are aiming to help you understand the concepts and issues that confront DH research so that you have the necessary digital literacy to appraise what you read and indeed, to know what you do not know so that you can move forward. 
 
-Maybe, after doing the text analysis lessons here, you realize that text analysis is exactly what your project wants. Now you have the knowledge to ask the right questions and to understand the tacit assumptions of materials like [The Programming Historian](https://programminghistorian.org) or Melanie Walsh's [Introduction to Cultural Analytics](https://melaniewalsh.github.io/Intro-Cultural-Analytics/welcome.html)
+Maybe, after doing the text analysis lessons here, you realize that text analysis is exactly what your project wants. Now you have the knowledge to ask the right questions and to understand the tacit assumptions of materials like **[The Programming Historian\[link\]](https://programminghistorian.org)** or Melanie Walsh's **[Introduction to Cultural Analytics \[link\]](https://melaniewalsh.github.io/Intro-Cultural-Analytics/welcome.html)** 
 
 ## Python on your own machine
 
@@ -97,8 +97,10 @@ When you are ready and have outgrown this sandbox, you'll want to install Python
 For now, here are two code snippets that might be handy later on. Don't worry about remembering these; just know that you can always return to this lesson via the `library` link at top and you can copy and modify this example should you ever need it. Of course, if you were working with Python on your own machine, you wouldn't need this work-around.
 
 ### Code Example: Getting a file _out_ of the sandbox
+
+Here is some code for making a file you save in the sandbox appear in your browser downloads; you don't need this right away (perhaps never) but this seemed like a good time to make it available, just in case.
+
 ```python
-# code for making a file you save in the sandbox appear in your browser downloads
 
 import js
 from js import document, URL, Blob
