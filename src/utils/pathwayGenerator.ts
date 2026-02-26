@@ -19,6 +19,7 @@ const INTEREST_MODULE_MAP: Record<string, string[]> = {
   'metadata':         ['structured-data'],
   'archives':         ['web-data-collection', 'structured-data'],
   'network-analysis': ['network-analysis', 'relational-models'],
+  'orientation': ['orientation'],
 };
 
 /**
@@ -52,7 +53,7 @@ function topModulesForDiscipline(discipline: string, interests: string[]): strin
 }
 
 export function generatePathway(profile: UserProfile): Pathway {
-  const selectedModules: string[] = [];
+  const selectedModules: string[] = ['orientation'];
 
   // Determine recommended language
   const textHeavyInterests = ['text-analysis', 'regex', 'topic-modeling'];
@@ -94,8 +95,8 @@ export function generatePathway(profile: UserProfile): Pathway {
     }
   }
 
-  // If no specific modules added, add defaults
-  if (selectedModules.length <= 2) {
+  // If no specific modules added, add defaults (and orientation already in there)
+  if (selectedModules.length <= 3) {
     for (const mod of ['text-analysis-fundamentals', 'data-visualization']) {
       if (!selectedModules.includes(mod)) {
         selectedModules.push(mod);
