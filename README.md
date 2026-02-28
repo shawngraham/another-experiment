@@ -139,5 +139,3 @@ npm run preview
 - Vitest + React Testing Library
 
 
-## decompile lessons.tsx
-`npx tsx scripts/decompile.mjs`
